@@ -1,0 +1,122 @@
+:root {
+  --dark-green: #1e3932;
+  --medium-green: #006241;
+  --light-green: #00754a;
+  --light-background: #d4e9e2;
+  --golden: #cba258;
+  --gris: #edebe9;
+  --font-dark: #000000de;
+  --font-light: #424242;
+  --bordes: #a9b8ad;
+}
+
+
+/* General */
+/* los estilos de .content estan en style.css */
+.info-container {
+  background-color:white;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.informacion {
+  width:100%;
+  margin-top: 0%;
+}
+
+.texto-container {
+  display: flex;
+  flex-direction: row;
+  border-radius: 8px;
+  margin-top: 10px;
+  padding: 7px;
+  background-color: var(--light-background);
+}
+
+.icono {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.info-inicio {
+  flex: 7;
+  display: flex;
+  flex-direction: column;
+
+ /* border-radius: 8px;
+  margin-top: 10px;
+  padding: 7px;
+  background-color: var(--light-background);*/
+}
+
+.info-inicio p {
+ /* color: var(--font-light);*/
+  color: var(--font-light);
+  font-size: 15px;
+  font-weight: 400;
+  margin: 2px;
+}
+
+.info-inicio h2 {
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 0px;
+  margin-right: 0px;
+  color: var(--dark-green);
+  font-family:  'Encode Sans', sans-serif;
+}
+
+/* Términos */
+.terminos {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+#ver-terminos {
+  background-color: var(--dark-green);
+  border: none;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 300;
+  color: white;
+}
+
+#ver-terminos:hover {
+  background-color:var(--medium-green);
+  color: white;
+}
+
+#acceptTerms {
+  margin-top: 4px;
+}
+
+.check {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--font-light);
+  margin-left: 5px;
+}
+
+input {
+  width: 15px;
+  height: 15px;
+}
+
+
+
+

@@ -1,0 +1,21 @@
+<div class="consumo-container">
+  <div class="meses-container">
+    <div class="mes" *ngFor="let mes of meses; let i = index" [class.disabled]="i !== 0 && meses[i - 1].consumo === null" [ngClass]="{'completado': esMesCompletado(mes)}">
+      <span>Mes {{ mes.numero }}</span>
+      <div class="consumo">
+        <img src="assets/icon-electricidad.png" id="marca" class="custom-icon" alt="Icono de electricidad">
+        <input 
+          id="input-{{i}}"
+          type="number"
+          [(ngModel)]="mes.consumo"
+          [disabled]="i !== 0 && meses[i - 1].consumo === null"
+          (keyup.enter)="focusNextInput($event, i + 1)"
+          placeholder=""
+        />
+        <span id="kWh-text">kWh</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,86 @@
+/*COLORES*/
+
+:root {
+  --dark-green: #1e3932;
+  --medium-green: #006241;
+  --light-green: #00754a;
+  --light-background: #d4e9e2;
+  --golden: #cba258;
+  --gris: #edebe9;
+  --font-dark: #000000de;
+  --font-light: #424242;
+  --bordes: #a9b8ad;
+}
+
+.consumo-container {
+  width: 98%;
+  background-color: white;
+  padding: 5px;
+  border-radius: 8px;
+ /* border: 2px solid #c1d2c0;*/
+  border: 2px solid var(--light-background);
+}
+
+.meses-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas */
+  gap: 8px;
+}
+
+.mes {
+ /* background-color: #DFF0D8;*/
+ background-color: var(--gris);
+  border: 2px solid #e2eee1;
+  /* border: 2px solid #c1d2c0; *//* Color por defecto */
+  padding: 5px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mes.completado {
+  border-color: var(--medium-green); /* Color cuando está completado */
+  background-color: var(--light-background);
+}
+
+.mes.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.mes, span {
+  color: var(--dark-green);
+}
+
+.custom-icon {
+  width: 20px;
+  height: auto;
+}
+
+.consumo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.consumo input[type="number"] {
+  width: 100px;
+  height: auto;
+  border: 2px solid #c1d2c0;
+  border-radius: 4px;
+  padding: 2px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.consumo input[type="number"]:focus {
+  outline: none;
+  border-color: var(--medium-green);
+}
+
+/* Estilos para el span con id kWh-text */
+#kWh-text {
+  color:var(--dark-green);
+  font-weight: bold;
+}

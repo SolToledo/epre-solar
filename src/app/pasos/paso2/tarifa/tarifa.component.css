@@ -1,0 +1,64 @@
+/*COLORES*/
+:root {
+  --dark-green: #1e3932;
+  --medium-green: #006241;
+  --light-green: #00754a;
+  --light-background: #d4e9e2;
+  --golden: #cba258;
+  --gris: #edebe9;
+  --font-dark: #000000de;
+  --font-light: #424242;
+  --bordes: #a9b8ad;
+}
+
+
+
+.tarifa-container {
+    width: 228px;  /* Ancho total */
+    height: 80px; /* Alto total */
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    /*border: 2px solid #c1d2c0;*/
+    border: 2px solid var(--light-background);
+  }
+
+  .texto-container {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+  }
+  
+  .titulo {
+    font-size: 19px; 
+    color: var(--dark-green); 
+    margin-bottom:15px; 
+  }
+  
+  .mat-form-field {
+    width: 100%; /* Asegurar que el ancho ocupe el 100% del contenedor */
+    height: auto; /* Ajustar altura automática */
+    margin: 0;
+  }
+  
+  .mat-select {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .mat-select-trigger {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 9px; /* Ajustar tamaño del texto del select */
+   
+    
+  }
+  
+  .mat-option {
+    font-size: 12px; /* Ajustar tamaño del texto de las opciones */
+    line-height: 1.2;
+    color:#417B6F ;
+  }
+  

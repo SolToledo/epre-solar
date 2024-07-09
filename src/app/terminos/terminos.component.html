@@ -1,0 +1,23 @@
+<div class="modal-container" *ngIf="isVisible">
+  <div class="modal-content">
+    <span class="close-button" (click)="closeModal()">×</span>
+    <h2>Términos y Condiciones</h2>
+    <div class="terms-content">
+      <!-- Contenido de los términos y condiciones -->
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ultricies dolor id orci blandit, eu sollicitudin lacus facilisis. Mauris scelerisque interdum justo, id auctor risus vehicula nec. Suspendisse potenti. Quisque ut velit urna. Suspendisse potenti. Nulla eget felis id libero eleifend fermentum in ut nisi. Curabitur fringilla sagittis sapien, at tempus magna ultricies vel. Integer ullamcorper fringilla velit, non interdum urna.</p>
+      <p>Pellentesque malesuada auctor ex, ut fermentum sem accumsan eget. Fusce nec felis nec nunc varius scelerisque. Aenean malesuada turpis vel urna gravida, quis euismod eros ultrices. Nullam ultricies est ut dolor fermentum, quis egestas lorem congue. Nam tristique velit a auctor auctor. Quisque sed dui dictum, ultricies lacus et, venenatis felis. Integer viverra sem non metus vehicula, nec feugiat purus feugiat. Sed dapibus massa non magna consequat aliquam.</p>
+      <p>Aliquam erat volutpat. Ut fringilla lectus in dignissim consequat. Vestibulum consectetur varius nisi, a viverra nisl egestas a. Praesent vehicula facilisis elit, et sagittis mi. Duis consectetur magna vel libero interdum, id congue arcu interdum. Sed rhoncus dapibus nulla, in tempor justo feugiat a. Vivamus condimentum elit sed erat gravida convallis. Nulla volutpat neque ut nulla finibus, sit amet scelerisque risus tempor. Sed dignissim libero sit amet sollicitudin iaculis.</p>
+    </div>
+    <div class="check">
+      <input type="checkbox" id="acceptTerms" [(ngModel)]="isTermsAccepted" (change)="toggleAcceptButton($event)" />
+      <label for="acceptTerms">Acepto los términos y condiciones</label>
+    </div>
+    
+    <div class="button-group">  
+      <button id="cerrar" (click)="closeModal()">Cerrar</button>
+      <button id="aceptar" [disabled]="!isTermsAccepted" (click)="acceptTerms()">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+

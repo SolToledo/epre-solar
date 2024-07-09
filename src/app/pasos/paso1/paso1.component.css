@@ -1,0 +1,181 @@
+
+:root {
+  --dark-green: #1e3932;
+  --medium-green: #006241;
+  --light-green: #00754a;
+  --light-background: #d4e9e2;
+  --golden: #cba258;
+  --gris: #edebe9;
+  --font-dark: #000000de;
+  --font-light: #424242;
+  --bordes: #a9b8ad;
+}
+/* General */
+/*los estilos de .content estan en style.css*/
+.info-container {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+ 
+}
+/*-----------------------------------------------------------*/
+.toolbar-pasos{
+  width: 100%;
+  margin-top: 0px;
+}
+
+/********************************************************************/
+.informacion {
+  width:100%;
+  margin-top: 0%;
+}
+
+.advertencia #recomendacion {
+  text-align: left;
+  color: var(--font-light);
+  font-size: 15px;
+  font-weight: 400;
+  margin-top: 14px;
+}
+
+.info-inicio {
+  display: flex;
+  flex-direction: column;
+ /* border: 2px solid #c1d2c0;*/
+  border: 2px solid var(--light-background);
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: 32px;
+  padding: 10px;
+  text-align: left;
+}
+
+.titulo-container{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 14px;
+}
+
+.icono-inicio {
+  margin-right: 5px;
+}
+
+#marca{
+  width: 30px;
+  height:30px;
+}
+
+.info-inicio h2 {
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--dark-green);
+  margin-bottom: 0px;
+  margin-right: 0px;
+  font-family:  'Encode Sans', sans-serif;
+}
+
+/**********************************************************/
+.input-boton{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+/* estilos para input */
+#pac-input {
+  width: 100%;
+  height: 35px; 
+  padding: 10px; 
+  border-radius: 5px; 
+  border: 2px solid #ccc; 
+  box-sizing: border-box; 
+  font-size: 15px; 
+ /* background-color: #eaecea; */
+ background-color: var(--gris);
+  color:var(--font-light); 
+}
+
+#pac-input::placeholder {
+  color:var(--font-light);
+}
+
+#pac-input:focus {
+  border-color: var(--medium-green);
+  outline: none; 
+}
+
+.pac-item, .pac-item:hover {
+  background-color: #ffffff !important; /* Asegurar el fondo blanco en los elementos del historial */
+  color: #3C763D !important; /* Color de texto de los elementos del historial */
+}
+
+/*boton del input*/
+#buscar {
+  /*background-color: #a0be96;*/
+  background-color: var(--dark-green);
+  color: white;
+  font-weight: 300;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 30px;
+}
+
+#buscar:hover {
+  background-color:var(--medium-green);
+}
+
+/*----------------------------------------------------------------------------------------------------------*/  
+.botones{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#borrar {
+  background-color: white;
+  color: var(--dark-green);
+  font-weight:300;
+  border: 2px solid var(--dark-green); /* Borde de 2px con el color especificado */
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#borrar:hover {
+  border-color: var(--medium-green); /* Cambio de color del borde al pasar el cursor */
+  color: var(--medium-green); /* Cambio de color de la letra al pasar el cursor */
+}
+
+
+#marcar {
+  background-color: var(--dark-green);
+  color: white;
+  font-weight:300;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+#marcar:hover {
+  background-color:var(--medium-green);
+}
+
+/*------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+

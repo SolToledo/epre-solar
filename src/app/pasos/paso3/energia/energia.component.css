@@ -1,0 +1,69 @@
+:root {
+  --dark-green: #1e3932;
+  --medium-green: #006241;
+  --light-green: #00754a;
+  --light-background: #d4e9e2;
+  --golden: #cba258;
+  --gris: #edebe9;
+  --font-dark: #000000de;
+  --font-light: #00000094;
+}
+
+
+
+/* energia.component.css */
+.energia-container {
+  width: 228px;  /* Ancho total */
+  height: 80px; /* Alto total */
+ /* background-color: #a9b8ad; *//* Color de fondo similar al de la imagen */
+ background-color: var(--light-background);
+ /* border: 2px solid #417B6F; */
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.icon-container {
+  flex-shrink: 0;
+}
+
+.custom-icon{
+  width: 50px;
+  height: 50px;
+  display: block;
+}
+
+.texto-container {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.titulo {
+  font-size: 19px; 
+ /* color: #417B6F; */
+  color: var(--dark-green);
+  margin-bottom:15px; 
+}
+
+.energia {
+  font-size: 28px;
+ /* color: #417B6F; */
+  color: var(--medium-green);
+  font-weight: 600;
+  margin-bottom:3px;
+}
+.unidad{
+  color: var(--dark-green);
+}
+.texto-inferior{
+ /* color: #417B6F;*/
+  color: var(--dark-green);
+  font-size: 10px;
+  margin-bottom: 0%;
+  margin-top: 0% ;
+  font-weight:300 ;
+}

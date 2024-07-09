@@ -1,0 +1,23 @@
+<div class="toolbar">
+  <app-toolbar></app-toolbar>
+</div>
+
+<div class="content">
+  <div class="mapa">
+    <app-mapa></app-mapa>
+  </div>
+
+  <div class="paso" [class.collapsed]="isCollapsed">
+    <div class="toggle-tab" (click)="toggleCollapse()">
+      <mat-icon>{{ isCollapsed ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+    </div>
+    
+    <ng-container *ngIf="currentStep > 0; else informacion">
+      <!-- <app-toolbar-pasos [currentStep]="currentStep"></app-toolbar-pasos>-->
+      <router-outlet></router-outlet>
+    </ng-container>
+    <ng-template #informacion>
+      <app-paso0></app-paso0>
+    </ng-template>
+  </div>
+</div>

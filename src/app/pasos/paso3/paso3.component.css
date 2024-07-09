@@ -1,0 +1,171 @@
+/* General */
+/*los estilos de .content estan en style.css*/
+.info-container {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+}
+
+/********************************************************************/
+.informacion{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/*----------------------------------------------------------------------------------------------------------*/  
+/* Estilos para los botones secundarios */
+.action-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.action-buttons button {
+ /* background-color: #a0be96;*/
+ background-color:var(--golden);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.action-buttons button:hover {
+ /* background-color: #639a61;*/
+ background-color:#cfb27b; 
+}
+
+/* Estilos para los iconos */
+.action-buttons img.icono {
+  margin-right: 8px; /* Espacio entre el icono y el texto */
+  width: 20px; /* Tamaño del icono */
+  height: auto;
+}
+
+
+
+/*------------------------------------------------*/
+.info-mostrar{
+  width: 100%;
+  display: flex;
+  flex-direction: column; 
+}
+.info-row{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px; 
+}
+
+/*------------------------------------------------*/
+.grafico{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5px;
+  border-radius: 8px;
+  padding-top: 7px;
+  padding-bottom: 5px;
+ /* border: 2px solid #c1d2c0;*/
+  border: 2px solid var(--medium-green);
+}
+
+.periodo{
+  width: 95%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid #ccc; /* Borde inferior de 1px y color gris */
+  margin-bottom: 10px;
+}
+
+.custom-icon{
+  width: 50px;
+  height: auto;
+}
+
+.texto-meses{
+  font-size:19px ;
+ /* color: #417B6F; */
+ color: var(--medium-green);
+}
+
+.numero-meses{
+  display: flex;
+  flex-direction: column;
+  padding-top: 5px;
+}
+.numero{
+  font-size: 28px;
+ /* color: #417B6F; */
+ color: var(--medium-green);
+  font-weight: 600;
+  margin-bottom: 0%;
+}
+.meses{
+  font-size:17px ;
+ /* color: #417B6F; */
+ color: var(--medium-green);
+  font-weight: bold;
+}
+/*----------------------------------------------------------------*/
+.grafico-imagen{
+  width: 490px;
+  height:160px;
+  margin-bottom: 0px;
+}
+/*-----------------------------------------------------------------*/
+.texto-inferior{
+  width: 95%;
+  text-align: right;
+  height: 20px;
+}
+.texto-inferior,p{
+  color: #417B6F;
+  font-size: 12px;
+}
+/*------------------------------------------------------------------*/
+/* Estilos para el modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-contenido {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  color: var(--font-light);
+}
+
+.botones-modal {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal.mostrar {
+  display: flex;
+}
+
+
+

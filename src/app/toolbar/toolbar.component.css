@@ -1,0 +1,17 @@
+
+#toolbar-1{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 100px;
+    padding-right: 100px;
+    background-color: white;
+    border-bottom: 2px solid #8ab4ac; /* Añadir borde inferior */
+
+}
+
+.toolbar img { 
+    max-width: 140px;
+}

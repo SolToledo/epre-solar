@@ -1,0 +1,49 @@
+
+ <div class="content">
+
+    <div class="titulo">
+        <h2 id="titulo">Consumo</h2>
+    </div>
+    <div class="toolbar-pasos">
+        <app-toolbar-pasos [currentStep]="currentStep"></app-toolbar-pasos>   
+    </div>
+
+    <div class="info-container">
+        <p id="sub-titulo">Ingrese los datos del consumo energético de los últimos 12 meses.</p>
+        <p id="texto">Si necesita ayuda para encontrar esta información <span id="span-general">haga click aquí.</span></p>  
+    
+        <div class="informacion">
+
+            <div class="info-cargar">
+                <app-consumo></app-consumo>
+            </div>
+           
+            <div class="info-mostrar">
+                <app-tarifa></app-tarifa>
+                <app-resultado></app-resultado>
+            </div>  
+
+        </div> 
+
+      
+        <!--botones-->
+        <div class="button-container">
+            <div class="boton">
+              <button id="boton-volver" (click)="goBack()">Volver</button>
+              <br>
+              <button id="boton-siguiente" (click)="goToPaso3()">Realizar cálculo</button>        
+            </div>
+        </div>
+  
+    </div>
+</div> <!--content-->
+
+
+
+
+
+
+
+
+
+
