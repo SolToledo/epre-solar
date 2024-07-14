@@ -41,6 +41,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -79,7 +80,8 @@ import { MatIconModule } from '@angular/material/icon';
     LazyLoadImageModule,
     MatSnackBarModule,
     MatCheckboxModule,
-    MatIconModule
+    MatIconModule,
+    HttpClientModule,
     
   ],
   providers: [],

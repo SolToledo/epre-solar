@@ -15,7 +15,7 @@
         <div class="informacion">
 
             <div class="info-cargar">
-                <app-consumo></app-consumo>
+                <app-consumo (allFieldsCompleted)="onAllFieldsCompleted($event)"></app-consumo>
             </div>
            
             <div class="info-mostrar">
@@ -31,7 +31,7 @@
             <div class="boton">
               <button id="boton-volver" (click)="goBack()">Volver</button>
               <br>
-              <button id="boton-siguiente" (click)="goToPaso3()">Realizar cálculo</button>        
+              <button id="boton-siguiente" [disabled]="!allFieldsFilled" (click)="goToPaso3()">Realizar cálculo</button> <!-- todo: agregar mensaje de que debe llenar todos los campos -->       
             </div>
         </div>
   

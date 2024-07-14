@@ -37,6 +37,7 @@ export class Paso3Component {
     this.router.navigateByUrl('/pasos/0', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/pasos/0']);
     });
+    localStorage.clear();
   }
 
   goBack() {

@@ -57,3 +57,10 @@
   display: flex;
   justify-content: space-between;
 }
+
+button[disabled] {
+  background-color: #d3d3d3; /* Color gris */
+  color: #a9a9a9; /* Texto gris */
+  cursor: not-allowed; /* Cursor no permitido */
+  opacity: 0.6; /* Opacidad reducida */
+}

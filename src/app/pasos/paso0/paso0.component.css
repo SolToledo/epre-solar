@@ -10,18 +10,17 @@
   --bordes: #a9b8ad;
 }
 
-
 /* General */
 /* los estilos de .content estan en style.css */
 .info-container {
-  background-color:white;
+  background-color: white;
   display: flex;
   flex-direction: column;
   padding: 10px;
 }
 
 .informacion {
-  width:100%;
+  width: 100%;
   margin-top: 0%;
 }
 
@@ -47,14 +46,14 @@
   display: flex;
   flex-direction: column;
 
- /* border-radius: 8px;
+  /* border-radius: 8px;
   margin-top: 10px;
   padding: 7px;
   background-color: var(--light-background);*/
 }
 
 .info-inicio p {
- /* color: var(--font-light);*/
+  /* color: var(--font-light);*/
   color: var(--font-light);
   font-size: 15px;
   font-weight: 400;
@@ -68,7 +67,7 @@
   margin-bottom: 0px;
   margin-right: 0px;
   color: var(--dark-green);
-  font-family:  'Encode Sans', sans-serif;
+  font-family: "Encode Sans", sans-serif;
 }
 
 /* Términos */
@@ -91,7 +90,7 @@
 }
 
 #ver-terminos:hover {
-  background-color:var(--medium-green);
+  background-color: var(--medium-green);
   color: white;
 }
 
@@ -116,7 +115,3 @@ input {
   width: 15px;
   height: 15px;
 }
-
-
-
-

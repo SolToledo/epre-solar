@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MapaComponent } from './mapa/mapa.component';
 import { Paso1Component } from './pasos/paso1/paso1.component';
 import { Paso2Component } from './pasos/paso2/paso2.component';
 import { Paso3Component } from './pasos/paso3/paso3.component';

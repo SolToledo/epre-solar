@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 })
 export class Paso2Component {
   currentStep: number = 2;
+  allFieldsFilled: boolean = false;
+
   constructor(private router: Router) {}
 
   goBack() {
@@ -16,5 +18,9 @@ export class Paso2Component {
 
   goToPaso3() {
     this.router.navigate(['pasos/3']);
+  }
+
+  onAllFieldsCompleted(event: boolean): void {
+    this.allFieldsFilled = event;
   }
 }
