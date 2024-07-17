@@ -46,7 +46,7 @@
   border: 2px solid var(--light-background);
   border-radius: 8px;
   margin-top: 10px;
-  margin-bottom: 32px;
+  margin-bottom: 34px;
   padding: 10px;
   text-align: left;
 }
@@ -113,7 +113,6 @@
 
 /*boton del input*/
 #buscar {
-  /*background-color: #a0be96;*/
   background-color: var(--dark-green);
   color: white;
   font-weight: 300;
@@ -122,14 +121,33 @@
   border-radius: 5px;
   cursor: pointer;
   margin-left: 30px;
+  display: flex;
+  align-items: center;
 }
+
+#buscar .material-icons {
+  margin-left: 8px; /* Espacio entre el texto y el ícono */
+  color: white; /* Asegura que el ícono sea blanco */
+  font-size: 18px; /* Ajusta el tamaño del ícono */
+}
+
+.input-boton {
+  display: flex;
+  align-items: center;
+}
+
+.controls {
+  margin-right: 8px; /* Espacio entre el input y el botón */
+}
+
 
 #buscar:hover {
   background-color:var(--medium-green);
 }
 
 /*----------------------------------------------------------------------------------------------------------*/  
-.botones{
+
+.botones {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -138,11 +156,19 @@
 #borrar {
   background-color: white;
   color: var(--dark-green);
-  font-weight:300;
+  font-weight: 300;
   border: 2px solid var(--dark-green); /* Borde de 2px con el color especificado */
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+#borrar .material-icons {
+  margin-left: 8px; /* Espacio entre el texto y el ícono */
+  color: var(--dark-green); /* Asegura que el ícono tenga el mismo color que el texto */
+  font-size: 18px; /* Ajusta el tamaño del ícono */
 }
 
 #borrar:hover {
@@ -150,20 +176,35 @@
   color: var(--medium-green); /* Cambio de color de la letra al pasar el cursor */
 }
 
+#borrar:hover .material-icons {
+  color: var(--medium-green); /* Cambio de color del ícono al pasar el cursor */
+}
 
 #marcar {
   background-color: var(--dark-green);
   color: white;
-  font-weight:300;
+  font-weight: 300;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
+
+#marcar .material-icons {
+  margin-left: 8px; /* Espacio entre el texto y el ícono */
+  color: white; /* Asegura que el ícono sea blanco */
+  font-size: 16px; /* Ajusta el tamaño del ícono */
 }
 
 #marcar:hover {
-  background-color:var(--medium-green);
+  background-color: var(--medium-green);
+}
+
+#marcar:hover .material-icons {
+  color: white; /* Asegura que el ícono se mantenga blanco al pasar el cursor */
 }
 
 /*------------------------------------------------*/

@@ -99,7 +99,7 @@ h1,h2,h3,h4,h5{
 }
 /**********************************************/
 /* Botones */
-.button-container {
+/*.button-container {
   width: 100%;
   display: flex;
   align-items: center;
@@ -144,6 +144,98 @@ button[disabled] {
 
 #boton-volver:hover {
   border: 2px solid #8a978e;
+}*/
+
+
+/* Botones */
+.button-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
 }
+
+.boton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#boton-siguiente {
+  background-color: var(--dark-green);
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+#boton-siguiente:hover {
+  background-color: var(--medium-green);
+}
+
+#boton-siguiente .material-icons {
+  margin-left: 8px; /* Espacio entre el texto y el ícono */
+  color: white; /* Asegura que el ícono sea blanco */
+  font-size: 18px; /* Ajusta el tamaño del ícono */
+}
+
+button[disabled] {
+  cursor: not-allowed;
+}
+
+#boton-volver {
+  background-color: white; 
+  color: var(--medium-green); 
+  font-weight: 500;
+  border: 2px solid #a9b8ad;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+#boton-volver:hover {
+  border: 2px solid #8a978e;
+}
+
+#boton-volver .material-icons {
+  margin-right: 8px; /* Espacio entre el ícono y el texto */
+  color: var(--medium-green); /* Asegura que el ícono tenga el mismo color que el texto */
+  font-size: 18px; /* Ajusta el tamaño del ícono */
+}
+
 /**********************************************/
 
+#boton-editar {
+  background-color: white;
+  color: var(--dark-green);
+  font-weight: 300;
+  border: 2px solid var(--dark-green); /* Borde de 2px con el color especificado */
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+#boton-editar .material-icons {
+  margin-left: 8px; /* Espacio entre el texto y el ícono */
+  color: var(--dark-green); /* Asegura que el ícono tenga el mismo color que el texto */
+  font-size: 16px; /* Ajusta el tamaño del ícono */
+}
+
+#boton-editar:hover {
+  border-color: var(--medium-green); /* Cambio de color del borde al pasar el cursor */
+  color: var(--medium-green); /* Cambio de color de la letra al pasar el cursor */
+}
+
+#boton-editar:hover .material-icons {
+  color: var(--medium-green); /* Cambio de color del ícono al pasar el cursor */
+}
