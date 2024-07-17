@@ -15,7 +15,7 @@
         <div class="informacion">
 
             <div class="info-cargar">
-                <app-consumo></app-consumo>
+                <app-consumo (allFieldsCompleted)="onAllFieldsCompleted($event)"></app-consumo>
             </div>
            
             <div class="info-mostrar">

@@ -14,19 +14,28 @@ export class MapaComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     const mapElement = document.getElementById('map');
+    const userPosition = localStorage.getItem('userPosition');
 
+    let latitude = -31.510673;
+    let longitude = -68.4760306;
+    if(userPosition) {
+      const position = JSON.parse(userPosition);
+      latitude = position.latitude;
+      longitude = position.longitude;
+    }
+    
     if (mapElement !== null) {
       const map = new google.maps.Map(mapElement, {
-        zoom: 12,
+        zoom: 17,
        /* center: { lat: -31.510673, lng: -68.5560306 },*/
-        center: { lat: -31.510673, lng: -68.4760306 }, // Ajusta ligeramente la longitud hacia el oeste
+        center: { lat: latitude, lng: longitude  }, // Ajusta ligeramente la longitud hacia el oeste
         mapTypeId: 'satellite',
         disableDefaultUI: true
       });
 
       const marker = new google.maps.Marker({
         map: map,
-        position: { lat: -31.5370004, lng: -68.5252409 },
+        position: { lat: latitude, lng: longitude  },
         title: "San Juan, Argentina"
       });
 
