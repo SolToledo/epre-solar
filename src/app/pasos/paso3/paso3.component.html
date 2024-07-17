@@ -67,9 +67,20 @@
       <!--botones-->
     <div class="button-container">
       <div class="boton">
-        <button id="boton-volver" (click)="goBack()">Volver</button>
+        
+        <button id="boton-volver" (click)="goBack()">
+          <span class="material-icons">chevron_left</span> Volver
+        </button>  
+       <!-- <button id="boton-volver" (click)="goBack()">Volver</button> -->
         <br>
-        <button id="boton-siguiente" (click)="mostrarAdvertencia()">Nuevo cálculo</button>
+        <button id="boton-editar">
+          Editar área
+          <span class="material-icons">edit</span>
+        </button>
+        <br>
+        <button id="boton-siguiente" (click)="mostrarAdvertencia()">Nuevo cálculo
+          <span class="material-icons">chevron_right</span>
+        </button>
       </div>
     </div>
     

@@ -48,7 +48,7 @@
     </div>
 
     <!-- Botones -->
-    <div class="button-container">
+  <!--  <div class="button-container">
       <div class="boton">
         <button id="boton-volver" (click)="goBack()">Volver</button>
         <br>
@@ -58,6 +58,19 @@
                 (click)="goToPaso1()"
                 [disabled]="!isTermsAccepted">Siguiente</button>
       </div>
+    </div>-->
+    <div class="button-container">
+      <div class="boton">
+        <button id="boton-volver" (click)="goBack()">
+          <span class="material-icons">chevron_left</span> Volver
+        </button>
+        <br>
+        <button id="boton-siguiente" (mouseenter)="showTooltip($event)" (mouseleave)="hideTooltip($event)" (click)="goToPaso1()" [disabled]="!isTermsAccepted">
+          Siguiente <span class="material-icons">chevron_right</span>
+        </button>
+      </div>
     </div>
+    
+
   </div>
 </div>

@@ -1,3 +1,17 @@
+/*COLORES*/
+:root {
+  --dark-green: #1e3932;
+  --medium-green: #006241;
+  --light-green: #00754a;
+  --light-background: #d4e9e2;
+  --golden: #cba258;
+  --gris: #edebe9;
+  --font-dark: #000000de;
+  --font-light: #424242;
+  --bordes: #a9b8ad;
+}
+
+
 /* General */
 /*los estilos de .content estan en style.css*/
 .info-container {
@@ -50,8 +64,6 @@
   height: auto;
 }
 
-
-
 /*------------------------------------------------*/
 .info-mostrar{
   width: 100%;
@@ -76,7 +88,8 @@
   padding-top: 7px;
   padding-bottom: 5px;
  /* border: 2px solid #c1d2c0;*/
-  border: 2px solid var(--medium-green);
+ /* border: 2px solid var(--medium-green);*/
+ border: 2px solid var(--light-background);
 }
 
 .periodo{
