@@ -1,11 +1,10 @@
-
 @import "~@fortawesome/fontawesome-free/css/all.css";
 
 /*FUENTES*/
 * {
-    margin: 0;
-    padding: 0;
-    font-family:  'Encode Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: "Encode Sans", sans-serif;
 }
 
 /*COLORES*/
@@ -28,31 +27,35 @@
   font-weight: bold; /* Cambia el estilo del texto, opcional */
 }
 
-.toolbar{
-    height: 90px;
+.toolbar {
+  height: 90px;
 }
 
-h1,h2,h3,h4,h5{
-  font-family:  'Encode Sans', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Encode Sans", sans-serif;
 }
 
 /* General */
 .content {
-    width: 530px;
-    height: calc(100vh - 90px);
-    background-color:white;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .info-container {
-    width: auto;
-    height:100%;
-  }
-  
+  width: 530px;
+  height: calc(100vh - 90px);
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-container {
+  width: auto;
+  height: 100%;
+}
+
 /************************************************/
 #titulo {
-  background-color:var(--dark-green);
+  background-color: var(--dark-green);
   width: 100%;
   height: 42px;
   text-transform: uppercase;
@@ -63,17 +66,17 @@ h1,h2,h3,h4,h5{
   align-items: center;
   padding-top: 8px;
   margin-bottom: 0;
-  font-family:  'Encode Sans', sans-serif;
+  font-family: "Encode Sans", sans-serif;
 }
 
 #sub-titulo {
   text-transform: uppercase;
   /*color: var(--font-light);*/
-  color:#424242;
+  color: #424242;
   font-size: 16px;
   font-weight: 500;
   text-align: left;
-  font-family:  'Encode Sans', sans-serif;
+  font-family: "Encode Sans", sans-serif;
   margin-top: 7px;
   margin-bottom: 7px;
 }
@@ -88,13 +91,13 @@ h1,h2,h3,h4,h5{
 }
 
 #span-general:hover {
-  color:var(--light-green);
+  color: var(--light-green);
 }
 /**********************************************/
 /*iconos*/
 .custom-icon {
-  width: 45px; 
-  height: 45px; 
+  width: 45px;
+  height: 45px;
   display: block;
 }
 /**********************************************/
@@ -146,7 +149,6 @@ button[disabled] {
   border: 2px solid #8a978e;
 }*/
 
-
 /* Botones */
 .button-container {
   width: 100%;
@@ -190,8 +192,8 @@ button[disabled] {
 }
 
 #boton-volver {
-  background-color: white; 
-  color: var(--medium-green); 
+  background-color: white;
+  color: var(--medium-green);
   font-weight: 500;
   border: 2px solid #a9b8ad;
   padding: 10px 20px;
@@ -207,7 +209,9 @@ button[disabled] {
 
 #boton-volver .material-icons {
   margin-right: 8px; /* Espacio entre el ícono y el texto */
-  color: var(--medium-green); /* Asegura que el ícono tenga el mismo color que el texto */
+  color: var(
+    --medium-green
+  ); /* Asegura que el ícono tenga el mismo color que el texto */
   font-size: 18px; /* Ajusta el tamaño del ícono */
 }
 
@@ -227,15 +231,23 @@ button[disabled] {
 
 #boton-editar .material-icons {
   margin-left: 8px; /* Espacio entre el texto y el ícono */
-  color: var(--dark-green); /* Asegura que el ícono tenga el mismo color que el texto */
+  color: var(
+    --dark-green
+  ); /* Asegura que el ícono tenga el mismo color que el texto */
   font-size: 16px; /* Ajusta el tamaño del ícono */
 }
 
 #boton-editar:hover {
-  border-color: var(--medium-green); /* Cambio de color del borde al pasar el cursor */
-  color: var(--medium-green); /* Cambio de color de la letra al pasar el cursor */
+  border-color: var(
+    --medium-green
+  ); /* Cambio de color del borde al pasar el cursor */
+  color: var(
+    --medium-green
+  ); /* Cambio de color de la letra al pasar el cursor */
 }
 
 #boton-editar:hover .material-icons {
   color: var(--medium-green); /* Cambio de color del ícono al pasar el cursor */
 }
+
+
