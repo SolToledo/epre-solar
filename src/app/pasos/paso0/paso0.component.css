@@ -124,9 +124,3 @@ input {
   }
 } */
 
-@media (max-width: 1366px) {
-  .content {
-    height: 90vh;
-  }
-  
-}
