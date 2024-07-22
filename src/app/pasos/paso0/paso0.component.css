@@ -10,25 +10,37 @@
   --bordes: #a9b8ad;
 }
 
+.content-paso-cero {
+
 /* General */
 /* los estilos de .content estan en style.css */
 .info-container {
   background-color: white;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  justify-content: space-between;
+  padding: 8px 10px;
+  gap: 10px;
 }
-
+.content-informacion {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  height: 86%;
+}
 .informacion {
   width: auto;
   margin-top: 0%;
 }
 
+
 .texto-container {
+  height: 30%;
   display: flex;
   border-radius: 8px;
-  margin-top: 10px;
   padding: 7px;
+  gap: 10px;
   background-color: var(--light-background);
 }
 
@@ -37,22 +49,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
+  width: 10%;
+}
+
+.info-inicio  {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .info-inicio p {
   color: var(--font-light);
   font-weight: 400;
   margin: 2px;
+  font-size: 1vw;
 }
 
-.font {
-  font-size: 15px;
-}
+
 
 .info-inicio h2 {
   text-transform: uppercase;
-  font-size: 18px;
+  /*font-size: 16px;*/
+  font-size: 1.2vw;
   font-weight: 500;
   margin-bottom: 0px;
   margin-right: 0px;
@@ -65,7 +84,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
 }
 
 #ver-terminos {
@@ -106,21 +124,10 @@ input {
   height: 15px;
 }
 
-/* @media (max-width: 1366px) {
-  .content {
-    height: 100%;
-  }
-  .info-container {
-    overflow-y: hidden;
-  }
-  .custom-icon {
-    scale: 0.9;
-  }
-  .texto-container {
-    height: 85px;
-  }
-  .texto-container > .info-inicio.font {
-    font-size: 14px;
-  }
-} */
+.custom-snackbar {
+ --mdc-snackbar-container-color: #3c81bb !important;
+}
+}
+
+ 
 
