@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component, Input, OnInit } from '@angular/core';
+import { ConsumoService } from 'src/app/services/consumo.service';
 
 interface Tarifa {
   value: string;
@@ -9,19 +9,18 @@ interface Tarifa {
 @Component({
   selector: 'app-tarifa',
   templateUrl: './tarifa.component.html',
-  styleUrls: ['./tarifa.component.css']
+  styleUrls: ['./tarifa.component.css'],
 })
-export class TarifaComponent {
+export class TarifaComponent implements OnInit {
+  tarifaContratada: string = '';
+  @Input()
+  allFieldsFilled!: boolean;
 
-  tarifas: Tarifa[] = [
-    {value: 'recidencial', viewValue: 'Residencial'},
-    {value: 'opcion1', viewValue: 'T1-R1'},
-    {value: 'opcion2', viewValue: 'T1-R2'},
-    {value: 'opcion3', viewValue: 'T1-R3'},
-  ];
+  constructor(private consumoService: ConsumoService) {}
 
-  selectedTarifa = this.tarifas[0].value;
-
-
+  ngOnInit(): void {
+    this.consumoService.categoria$.subscribe((categoria) => {
+      this.tarifaContratada = categoria;
+    });
+  }
 }
-

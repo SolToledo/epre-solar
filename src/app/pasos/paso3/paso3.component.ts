@@ -1,17 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Resultados } from 'src/app/interfaces/resultados';
+import { GmailService } from 'src/app/services/gmail.service';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
   styleUrls: ['./paso3.component.css']
 })
-export class Paso3Component {
+export class Paso3Component implements OnInit {
   currentStep: number = 3;
   mostrarModal: boolean = false;
+  resultados: Resultados | undefined;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private readonly gmailService: GmailService) {}
+  ngOnInit(): void {
+  }
 
   print(): void {
     window.print();
@@ -36,7 +41,7 @@ export class Paso3Component {
   }
 
   sendEmail(): void {
-    
+    this.gmailService.sendEmailWithResults();
   }
 
   mostrarAdvertencia(): void {

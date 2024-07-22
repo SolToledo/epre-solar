@@ -19,13 +19,12 @@
             </div>
            
             <div class="info-mostrar">
-                <app-tarifa></app-tarifa>
+                <app-tarifa [allFieldsFilled]="allFieldsFilled"></app-tarifa>
                 <app-resultado></app-resultado>
             </div>  
 
         </div> 
 
-      
         <!--botones-->
         <div class="button-container">
             <div class="boton">
@@ -33,7 +32,7 @@
                     <span class="material-icons">chevron_left</span> Volver
                 </button>
               <br>
-              <button id="boton-siguiente" (click)="goToPaso3()">
+              <button id="boton-siguiente" (click)="goToPaso3()" [disabled]="!allFieldsFilled">
                 Realizar Cálculo <span class="material-icons">chevron_right</span>
               </button>        
             </div>
@@ -41,13 +40,3 @@
   
     </div>
 </div> <!--content-->
-
-
-
-
-
-
-
-
-
-

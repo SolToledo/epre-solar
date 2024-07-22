@@ -1,11 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MesesConsumo } from 'src/app/interfaces/mesesConsumo';
 import { ConsumoService } from 'src/app/services/consumo.service';
+import { SolarApiService } from 'src/app/services/solar-api.service';
 
-interface MesConsumo {
-  numero: number;
-  consumo: any;
-  completado: boolean; // Propiedad para determinar si el mes está completado
-}
 interface ResultadoCalculo {
   totalConsumo: number;
   categoria: string;
@@ -18,8 +15,9 @@ interface ResultadoCalculo {
 })
 export class ConsumoComponent implements OnInit {
   @Output() allFieldsCompleted = new EventEmitter<boolean>();
+  allCompleted: boolean = false;
 
-  meses: MesConsumo[] = [
+  meses: MesesConsumo[] = [
     { numero: 1, consumo: null, completado: false },
     { numero: 2, consumo: null, completado: false },
     { numero: 3, consumo: null, completado: false },
@@ -36,11 +34,10 @@ export class ConsumoComponent implements OnInit {
   resultado: ResultadoCalculo | null = null;
   totalConsumo: number = 0;
 
-  constructor(private consumoService: ConsumoService) {}
+  constructor(private consumoService: ConsumoService, private solarApiService: SolarApiService) {}
 
   ngOnInit(): void {
     this.focusFirstInput();
-    this.calcularTotalConsumo();
   }
 
   focusFirstInput(): void {
@@ -53,7 +50,7 @@ export class ConsumoComponent implements OnInit {
   }
 
   focusNextInput(event: any, index: number): void {
-    event.preventDefault(); // Evitar comportamiento por defecto al presionar enter
+    event.preventDefault();
 
     if (index < this.meses.length) {
       const nextInput = document.getElementById(
@@ -66,7 +63,7 @@ export class ConsumoComponent implements OnInit {
     }
   }
 
-  esMesCompletado(mes: MesConsumo): boolean {
+  esMesCompletado(mes: MesesConsumo): boolean {
     return mes.consumo !== null; // Determina si el mes está completado según el valor de consumo
   }
 
@@ -76,31 +73,18 @@ export class ConsumoComponent implements OnInit {
       0
     );
     this.consumoService.setTotalConsumo(totalConsumo);
-    let categoria = '';
-    if (totalConsumo < 1000) {
-      categoria = 'Bajo';
-    } else if (totalConsumo < 3000) {
-      categoria = 'Medio';
-    } else {
-      categoria = 'Alto';
-    }
-
-    this.resultado = {
-      totalConsumo,
-      categoria,
-    };
-    localStorage.setItem('anualConsumo', JSON.stringify(this.resultado));
-    console.log('Objeto con datos ingresados:', {
-      meses: this.meses,
-      totalConsumo,
-      categoria,
-    });
     this.checkAllFieldsCompleted();
+    if(this.allCompleted) {
+      localStorage.setItem('annualKWhEnergyConsumption', JSON.stringify(totalConsumo))
+    }
   }
 
   checkAllFieldsCompleted(): void {
-    const allCompleted = this.meses.every(mes => mes.consumo !== null);
-    this.allFieldsCompleted.emit(allCompleted);
+    this.allCompleted = this.meses.every(mes => mes.consumo !== null);
+    this.allFieldsCompleted.emit(this.allCompleted);
+    if(this.allCompleted){
+      this.solarApiService.cargarConsumosAnuales(this.meses)
+    }
   }
   
   onConsumoChange(): void {

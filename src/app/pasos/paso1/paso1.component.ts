@@ -17,6 +17,7 @@ export class Paso1Component implements OnInit {
   drawingManager: google.maps.drawing.DrawingManager | undefined;
   overlays: google.maps.Polygon[] = [];
   areaMarked: boolean = false;
+  selectedArea: number = 0; 
   
   constructor(
     private router: Router,
@@ -38,7 +39,7 @@ export class Paso1Component implements OnInit {
       };
       const script = document.createElement('script');
       script.src =
-        'https://maps.googleapis.com/maps/api/js?key=AIzaSyA96BDNGNezoM13_Z0FnE3hcDjiOudMKRQ&libraries=drawing,places&callback=initMap';
+        'https://maps.googleapis.com/maps/api/js?key=AIzaS yA96BDNGNezoM13_Z0FnE3hcDjiOudMKRQ&libraries=drawing,places&callback=initMap';
       document.body.appendChild(script);
     }
   }
@@ -78,12 +79,10 @@ export class Paso1Component implements OnInit {
         return;
       }
 
-      // Clear out the old markers.
       if (this.marker) {
         this.marker.setMap(null);
       }
 
-      // For each place, get the icon, name and location.
       const bounds = new google.maps.LatLngBounds();
       places.forEach((place: google.maps.places.PlaceResult) => {
         if (!place.geometry || !place.geometry.location) {
@@ -124,20 +123,14 @@ export class Paso1Component implements OnInit {
     });
     this.drawingManager?.setMap(this.map);
     google.maps.event.addListener(this.drawingManager, "drawingmode_changed", () => {
-      
       const drawingMode = this.drawingManager?.getDrawingMode();
       if (drawingMode) {
-        console.log("ha comenzado a dibujar")
         if(this.overlays.length > 0) {
           alert("Por favor, antes borre la selección anterior.");
           return;
         }
-      }else {
-        console.log("ha cambiado ", drawingMode);
-        
       }
     })
-    
 
     google.maps.event.addListener(
       this.drawingManager,
@@ -156,6 +149,8 @@ export class Paso1Component implements OnInit {
           const polygonCoordinates = paths[0].getArray().map((coord) => {
             return { lat: coord.lat(), lng: coord.lng() };
           });
+          this.selectedArea = google.maps.geometry.spherical.computeArea(polygon.getPath());
+          alert('Área seleccionada en metros cuadrados:' + this.selectedArea);
           this.enviarCoordenadasAlBackend(polygonCoordinates);
         }
       }
@@ -165,7 +160,6 @@ export class Paso1Component implements OnInit {
   enviarCoordenadasAlBackend(coordenadas: any[]): void {
     this.solarApiService.enviarCoordenadas(coordenadas).subscribe({
       next: (response: any) => {
-        console.log('Datos calculados recibidos:', response);
         localStorage.setItem('solarData', JSON.stringify(response));
       },
       error: (error) => {
@@ -175,7 +169,6 @@ export class Paso1Component implements OnInit {
   }
 
   habilitarMarcado(): void {
-    
     if (this.drawingManager) {
       this.drawingManager.setDrawingMode(
         google.maps.drawing.OverlayType.POLYGON
@@ -231,9 +224,13 @@ export class Paso1Component implements OnInit {
         JSON.stringify({
           latitude: position.lat(),
           longitude: position.lng(),
+          selectedAreaM2: this.selectedArea
         })
       );
+      this.router.navigate(['/pasos/2']);
+    }else{
+      alert("Debe proporcionar una ubicación")
     }
-    this.router.navigate(['/pasos/2']);
+    
   }
 }

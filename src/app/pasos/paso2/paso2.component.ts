@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConsumoService } from 'src/app/services/consumo.service';
 
 @Component({
   selector: 'app-paso2',
@@ -9,7 +10,8 @@ import { Router } from '@angular/router';
 export class Paso2Component {
   currentStep: number = 2;
   allFieldsFilled: boolean = false;
-
+  tarifaContratada: string = '';
+  
   constructor(private router: Router) {}
 
   goBack() {

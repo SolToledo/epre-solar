@@ -1,16 +1,8 @@
 <div class="tarifa-container">
   <div class="texto-container">
-    <p class="titulo">Tarifa contratada</p>
+    <p class="titulo">⚡ Tarifa contratada</p>
   </div>
-
-
-   <!--<h3>⚡ Tarifa contratada</h3>-->
-  
-   <!-- <mat-form-field class="content" appearance="fill">
-      <mat-select class="selec" [(value)]="selectedTarifa">
-        <mat-option class="option" [value]="option.value" *ngFor="let option of tarifas">{{ option.viewValue }}</mat-option>
-      </mat-select>
-    </mat-form-field>-->
+   <p *ngIf="allFieldsFilled">{{ tarifaContratada }}</p>
 </div>
   
 
