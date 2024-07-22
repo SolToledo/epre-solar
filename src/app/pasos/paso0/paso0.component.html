@@ -1,9 +1,10 @@
-<div class="content">
+<div class="content content-paso-cero">
   <div class="titulo">
     <h2 id="titulo">información</h2>
   </div>
   <div class="info-container">
     <p id="sub-titulo">Por favor, tenga a mano la siguiente información.</p>
+    <div class="content-informacion">
     <div class="texto-container">
       <div class="icono">
         <img src="assets/icon-lugar.png" class="custom-icon" alt="Icono de ubicación">
@@ -39,6 +40,8 @@
       <button id="ver-terminos" (click)="showTerms()">Ver Términos y Condiciones</button>
       <app-terminos [isVisible]="showModal" (accepted)="handleAccepted($event)"></app-terminos>
     </div>
+    </div>
+  
     <div class="button-container">
       <div class="boton">
         <button id="boton-volver" (click)="goBack()">

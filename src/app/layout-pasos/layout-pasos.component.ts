@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
@@ -6,7 +7,14 @@ import { filter } from 'rxjs';
 @Component({
   selector: 'app-layout-pasos',
   templateUrl: './layout-pasos.component.html',
-  styleUrls: ['./layout-pasos.component.css']
+  styleUrls: ['./layout-pasos.component.css'],
+  animations: [
+    trigger('menuCollapsed', [
+      state('expand', style({width: 'visibility: hidden'})),
+      state('collapsed', style({width: '100%'})),
+      transition('expand <=> collapsed', animate('200ms'))
+    ])
+  ]
 })
 export class LayoutPasosComponent implements OnInit {
 
@@ -30,7 +38,4 @@ export class LayoutPasosComponent implements OnInit {
 
   isCollapsed = false;
 
-  toggleCollapse() {
-    this.isCollapsed = !this.isCollapsed;
-  }
 }

@@ -1,27 +1,24 @@
-
-/*COLORES*/
-:root {
-  --dark-green: #1e3932;
-  --medium-green: #006241;
-  --light-green: #00754a;
-  --light-background: #d4e9e2;
-  --golden: #cba258;
-  --gris: #edebe9;
-  --font-dark: #000000de;
-  --font-light: #00000094;
+.contenido-general{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
+
 /* estilos de content */
-.content {
+.content-total {
     box-sizing: border-box;
     background-color: white;
-    height: calc(100vh - 90px); /* la altura total menos 90px del toolbar */
-    width: 100vw;
+    height: calc(100% - 90px); /* la altura total menos 90px del toolbar */
+    width: 100%;
     display: flex;
     flex-direction: row;
     position: relative;
   }
 
+  
+  
  /* componentes donde renderizo todo */
  .mapa {
     width: 100%;
@@ -29,9 +26,8 @@
   }
   
   .paso {
-  /*  width: 560px;*/
-    width: 560px;
-    height: calc(100vh - 90px); /* altura total menos la toolbar */
+    width: 589px;
+    height: 100%; /* altura total menos la toolbar */
     position: absolute;
     right: 0;
     top: 0;

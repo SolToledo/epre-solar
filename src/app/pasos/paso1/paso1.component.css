@@ -10,13 +10,17 @@
   --font-light: #424242;
   --bordes: #a9b8ad;
 }
-/* General */
+.content-paso-uno {
+  
+  /* General */
 /*los estilos de .content estan en style.css*/
 .info-container {
   background-color: white;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   padding: 10px;
+  gap: 10px;
  
 }
 /*-----------------------------------------------------------*/
@@ -28,37 +32,44 @@
 /********************************************************************/
 .informacion {
   width:100%;
+  height: 86%;
+  max-height: 86%;
   margin-top: 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 25px;
 }
 
 .advertencia #recomendacion {
   text-align: left;
   color: var(--font-light);
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 400;
-  margin-top: 14px;
+  margin: 0px;
 }
 
 .info-inicio {
+  height: 50%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
  /* border: 2px solid #c1d2c0;*/
   border: 2px solid var(--light-background);
   border-radius: 8px;
-  margin-top: 10px;
-  margin-bottom: 34px;
   padding: 10px;
   text-align: left;
+  gap: 10px;
 }
 
 .titulo-container{
   display: flex;
   flex-direction: row;
-  margin-bottom: 14px;
+  gap: 5px;
 }
 
 .icono-inicio {
-  margin-right: 5px;
+ 
 }
 
 #marca{
@@ -68,7 +79,7 @@
 
 .info-inicio h2 {
   text-transform: uppercase;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--dark-green);
   margin-bottom: 0px;
@@ -82,6 +93,8 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  align-items: center;
+  gap: 38px;
 }
 /* estilos para input */
 #pac-input {
@@ -91,7 +104,7 @@
   border-radius: 5px; 
   border: 2px solid #ccc; 
   box-sizing: border-box; 
-  font-size: 15px; 
+  font-size: 12px; 
  /* background-color: #eaecea; */
  background-color: var(--gris);
   color:var(--font-light); 
@@ -120,7 +133,6 @@
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  margin-left: 30px;
   display: flex;
   align-items: center;
 }
@@ -131,13 +143,9 @@
   font-size: 18px; /* Ajusta el tamaño del ícono */
 }
 
-.input-boton {
-  display: flex;
-  align-items: center;
-}
 
 .controls {
-  margin-right: 8px; /* Espacio entre el input y el botón */
+ 
 }
 
 
@@ -213,6 +221,8 @@ button[disabled] {
   color: #a9a9a9; /* Texto gris */
   cursor: not-allowed; /* Cursor no permitido */
   opacity: 0.6; /* Opacidad reducida */
+}
+
 }
 
 

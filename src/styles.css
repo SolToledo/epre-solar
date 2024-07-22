@@ -18,7 +18,36 @@
   --font-dark: #000000de;
   --font-light: #424242;
   --bordes: #a9b8ad;
+
+--fs-8pxr: 0.5rem;
+--fs-9pxr: 0.5625rem;
+--fs-10pxr: 0.625rem;
+--fs-11pxr: 0.6875rem;
+--fs-12pxr: 0.75rem;
+--fs-13pxr: 0.8125rem;
+--fs-14pxr: 0.875rem;
+--fs-15pxr: 0.9375rem;
+--fs-16pxr: 1rem;
+--fs-17pxr: 1.0625rem;
+--fs-18pxr: 1.125rem;
+--fs-19pxr: 1.1875rem;
+--fs-20pxr: 1.25rem;
+--fs-21pxr: 1.3125rem;
+--fs-22pxr: 1.375rem;
+--fs-23pxr: 1.4375rem;
+--fs-24pxr: 1.5;
+--fs-25pxr: 1.5625rem;
+--fs-26pxr: 1.625rem;
+--fs-27pxr: 1.6875rem;
+--fs-28pxr: 1.75rem;
+--fs-29pxr: 1.8125rem;
+--fs-30pxr: 1.875rem;
+--fs-31pxr: 1.9375rem;
+--fs-32pxr: 2rem;
+--fs-52pxr: 3.2rem;
 }
+
+
 
 /* Archivo styles.css */
 .mat-snack-bar-container.custom-snackbar {
@@ -28,9 +57,9 @@
 }
 
 .toolbar {
+  width: 100%;
   height: 90px;
 }
-
 h1,
 h2,
 h3,
@@ -41,11 +70,10 @@ h5 {
 
 /* General */
 .content {
-  width: 530px;
-  height: calc(100vh - 90px);
   background-color: white;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .info-container {
@@ -73,12 +101,13 @@ h5 {
   text-transform: uppercase;
   /*color: var(--font-light);*/
   color: #424242;
-  font-size: 16px;
+  /*font-size: 14px;*/
+  font-size: 1vw;
   font-weight: 500;
   text-align: left;
   font-family: "Encode Sans", sans-serif;
-  margin-top: 7px;
-  margin-bottom: 7px;
+    margin: 0px;
+    height: 5%;
 }
 /*************************************************/
 /*span*/
@@ -96,66 +125,19 @@ h5 {
 /**********************************************/
 /*iconos*/
 .custom-icon {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   display: block;
 }
-/**********************************************/
-/* Botones */
-/*.button-container {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: auto;
-}
 
-.boton {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-#boton-siguiente {
-  background-color:var(--dark-green);
-  color: #fff;
-  font-weight: 500;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#boton-siguiente:hover {
-  background-color: var(--medium-green);
-}
-
-button[disabled] {
-  cursor: not-allowed;
-}
-
-#boton-volver {
-  background-color: white; 
-  color: var(--medium-green); 
-  font-weight: 500;
-  border: 2px solid #a9b8ad;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#boton-volver:hover {
-  border: 2px solid #8a978e;
-}*/
 
 /* Botones */
 .button-container {
+  height: 9%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: auto;
 }
 
 .boton {
@@ -250,4 +232,6 @@ button[disabled] {
   color: var(--medium-green); /* Cambio de color del ícono al pasar el cursor */
 }
 
-
+.custom-snackbar {
+  --mdc-snackbar-container-color: #cba258!important;
+ }

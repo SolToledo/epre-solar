@@ -5,26 +5,26 @@
   </div>
 
   <div class="info-container">
+    <div class="action-buttons">
+      <button id="printButton" (click)="print()">
+        <img src="assets/icon-imprimir-bco.png" alt="Icono imprimir" class="icono">
+        Imprimir
+      </button>
+      
+      <button id="downloadButton" (click)="downloadPDF()">
+        <img src="assets/icon-descargar-bco.png" alt="Icono descargar PDF" class="icono">
+        Descargar en PDF
+      </button>
+      
+      <button id="emailButton" (click)="sendEmail()">
+        <img src="assets/icon-correo-bco.png" alt="Icono enviar correo" class="icono">
+        Enviar por correo
+      </button>
+    </div>
       <div class="informacion">
 
-        <div class="action-buttons">
-          <button id="printButton" (click)="print()">
-            <img src="assets/icon-imprimir-bco.png" alt="Icono imprimir" class="icono">
-            Imprimir
-          </button>
-          
-          <button id="downloadButton" (click)="downloadPDF()">
-            <img src="assets/icon-descargar-bco.png" alt="Icono descargar PDF" class="icono">
-            Descargar en PDF
-          </button>
-          
-          <button id="emailButton" (click)="sendEmail()">
-            <img src="assets/icon-correo-bco.png" alt="Icono enviar correo" class="icono">
-            Enviar por correo
-          </button>
-        </div>
-        
-          <div class="info-mostrar">
+        <div class="content-scroll">
+            <div class="info-mostrar">
             <div class="info-row">
                 <app-resultado></app-resultado>
                 <app-energia></app-energia>   
@@ -34,6 +34,15 @@
               <app-paneles></app-paneles>
               <app-retorno></app-retorno>  
           </div>
+
+          <div class="info-row">
+            <app-resultado></app-resultado>
+            <app-energia></app-energia>   
+        </div>
+          <div class="info-row">
+            <app-paneles></app-paneles>
+            <app-retorno></app-retorno>  
+        </div>
          </div>
       
         
@@ -61,6 +70,8 @@
             <p>Calculado según los datos ingresados</p>
           </div>-->
         </div>   <!--termina grafico-->
+        </div>
+        
       </div>  <!--termina informacion-->
 
 

@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content content-paso-uno">
   <div class="titulo">
     <h2 id="titulo">Ubicación</h2>
   </div>
@@ -78,17 +78,19 @@
           </p>
         </div>
       </div>
-
-      <!--botones-->
-      <div class="button-container">
-        <div class="boton">
-          <button id="boton-volver" (click)="goBack()">
-            <span class="material-icons">chevron_left</span> Volver</button>
-          <br />
-          <button id="boton-siguiente" [disabled]="!areaMarked" (click)="goToPaso2()">Siguiente
-            <span class="material-icons">chevron_right</span>
-          </button> <!-- todo: agregar mensaje de que debe hacer una seleccion de la zona -->
-        </div>
+      
+      
+    </div>
+     <!--botones-->
+     <div class="button-container">
+      <div class="boton">
+        <button id="boton-volver" (click)="goBack()">
+          <span class="material-icons">chevron_left</span> Volver</button>
+        <br />
+        <button id="boton-siguiente" [disabled]="!areaMarked" (click)="goToPaso2()">Siguiente
+          <span class="material-icons">chevron_right</span>
+        </button> <!-- todo: agregar mensaje de que debe hacer una seleccion de la zona -->
       </div>
     </div>
-   
+  </div>
+</div>
