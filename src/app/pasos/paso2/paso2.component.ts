@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { ConsumoService } from 'src/app/services/consumo.service';
 
 @Component({
   selector: 'app-paso2',
@@ -12,7 +12,7 @@ export class Paso2Component {
   allFieldsFilled: boolean = false;
   tarifaContratada: string = '';
   
-  constructor(private router: Router) {}
+  constructor(private router: Router, private snackBar: MatSnackBar) {}
 
   goBack() {
     this.router.navigate(['pasos/1']);
@@ -24,5 +24,18 @@ export class Paso2Component {
 
   onAllFieldsCompleted(event: boolean): void {
     this.allFieldsFilled = event;
+  }
+
+  showTooltip(event: MouseEvent) {
+    if (!this.allFieldsFilled) {
+      this.snackBar.open('Debe ingresar todos los meses para poder continuar.', '', {
+        duration: 2000,
+        panelClass: ['custom-snackbar']
+      });
+    }
+  }
+
+  hideTooltip(event: MouseEvent) {
+    this.snackBar.dismiss();
   }
 }

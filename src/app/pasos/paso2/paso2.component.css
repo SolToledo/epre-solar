@@ -68,3 +68,7 @@ button[disabled] {
   cursor: not-allowed; /* Cursor no permitido */
   opacity: 0.6; /* Opacidad reducida */
 }
+
+.custom-snackbar {
+  --mdc-snackbar-container-color: #3c81bb !important;
+}

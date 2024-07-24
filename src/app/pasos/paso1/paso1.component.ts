@@ -1,7 +1,9 @@
 /// <reference types="google.maps" />
 
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { driver } from 'driver.js';
 import { SolarApiService } from 'src/app/services/solar-api.service';
 
 declare var google: any;
@@ -17,17 +19,74 @@ export class Paso1Component implements OnInit {
   drawingManager: google.maps.drawing.DrawingManager | undefined;
   overlays: google.maps.Polygon[] = [];
   areaMarked: boolean = false;
-  selectedArea: number = 0; 
-  
+  selectedArea: number = 0;
+
   constructor(
     private router: Router,
-    private solarApiService: SolarApiService
+    private solarApiService: SolarApiService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.loadGoogleMaps(() => {
       this.initMap();
     });
+    const driverObj = driver({
+      showProgress: true,
+      steps: [
+        {
+          element: '#sub-titulo',
+          popover: {
+            title: 'Información importante',
+            description:
+              'Lugar donde se instalarían los paneles fotovoltaicos.Seleccionar el lugar donde estará ubicada la instalación.',
+            side: 'left',
+            align: 'start',
+          },
+        },
+        {
+          element: '#pac-input',
+          popover: {
+            title: 'Ubicación',
+            description:
+              'Debe indicarse el lugar donde se planea instalar los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
+            side: 'left',
+            align: 'start',
+          },
+        },
+        {
+          element: '#marcar',
+          popover: {
+            title: 'Selección manual de la ubicación',
+            description:
+              'Presione para activar el selector de ubicación en el mapa. Puede marcar y ajustar los vértices del lugar donde se instalarían los paneles fotovoltaicos.',
+            side: 'left',
+            align: 'start',
+          },
+        },
+        {
+          element: '#borrar',
+          popover: {
+            title: 'Selección manual de la ubicación',
+            description:
+              'Presione para borrar la selección y realizar una nueva.',
+            side: 'right',
+            align: 'end',
+          },
+        },
+        {
+          element: '#boton-siguiente',
+          popover: {
+            title: 'Advertencia',
+            description:
+              'Para poder continuar al siguiente paso, debe tener seleccionada una zona de instalación.',
+            side: 'left',
+            align: 'start',
+          },
+        },
+      ],
+    });
+    driverObj.drive();
   }
 
   loadGoogleMaps(callback: () => void): void {
@@ -48,16 +107,22 @@ export class Paso1Component implements OnInit {
     const userPosition = JSON.parse(
       localStorage.getItem('userPosition') || '{}'
     );
-    const { latitude, longitude } =  {
-      latitude: -31.510673,
-      longitude: -68.4760306,
-    }; // todo: agregar userPosition || 
+    const { latitude, longitude } = {
+      latitude: -31.53,
+      longitude: -68.51,
+    };
 
     this.map = new google.maps.Map(document.getElementById('map'), {
       center: { lat: latitude, lng: longitude },
-      zoom: 15,
+      zoom: 14,
       mapTypeId: 'satellite',
       disableDefaultUI: true,
+      zoomControl: true,
+      mapTypeControl: false,
+      scaleControl: true,
+      streetViewControl: false,
+      rotateControl: false,
+      fullscreenControl: false,
     });
 
     this.marker = new google.maps.Marker({
@@ -105,7 +170,7 @@ export class Paso1Component implements OnInit {
       });
       this.map.fitBounds(bounds);
     });
-    
+
     this.initDrawingManager();
   }
 
@@ -114,7 +179,7 @@ export class Paso1Component implements OnInit {
       drawingMode: null,
       drawingControl: false,
       drawingControlOptions: {
-        position: google.maps.ControlPosition.TOP_CENTER,
+        position: google.maps.ControlPosition.TOP_LEFT,
         drawingModes: [google.maps.drawing.OverlayType.POLYGON],
       },
       polygonOptions: {
@@ -122,15 +187,19 @@ export class Paso1Component implements OnInit {
       },
     });
     this.drawingManager?.setMap(this.map);
-    google.maps.event.addListener(this.drawingManager, "drawingmode_changed", () => {
-      const drawingMode = this.drawingManager?.getDrawingMode();
-      if (drawingMode) {
-        if(this.overlays.length > 0) {
-          alert("Por favor, antes borre la selección anterior.");
-          return;
+    google.maps.event.addListener(
+      this.drawingManager,
+      'drawingmode_changed',
+      () => {
+        const drawingMode = this.drawingManager?.getDrawingMode();
+        if (drawingMode) {
+          if (this.overlays.length > 0) {
+            alert('Por favor, antes borre la selección anterior.');
+            return;
+          }
         }
       }
-    })
+    );
 
     google.maps.event.addListener(
       this.drawingManager,
@@ -138,8 +207,8 @@ export class Paso1Component implements OnInit {
       (event: any) => {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
           this.overlays.push(event.overlay);
-          if(this.overlays.length > 1) {
-            alert("Por favor, antes borre la selección anterior.");
+          if (this.overlays.length > 1) {
+            alert('Por favor, antes borre la selección anterior.');
             return;
           }
           this.areaMarked = true;
@@ -149,8 +218,9 @@ export class Paso1Component implements OnInit {
           const polygonCoordinates = paths[0].getArray().map((coord) => {
             return { lat: coord.lat(), lng: coord.lng() };
           });
-          this.selectedArea = google.maps.geometry.spherical.computeArea(polygon.getPath());
-          alert('Área seleccionada en metros cuadrados:' + this.selectedArea);
+          this.selectedArea = google.maps.geometry.spherical.computeArea(
+            polygon.getPath()
+          );
           this.enviarCoordenadasAlBackend(polygonCoordinates);
         }
       }
@@ -164,7 +234,7 @@ export class Paso1Component implements OnInit {
       },
       error: (error) => {
         console.error(error);
-      }
+      },
     });
   }
 
@@ -224,13 +294,28 @@ export class Paso1Component implements OnInit {
         JSON.stringify({
           latitude: position.lat(),
           longitude: position.lng(),
-          selectedAreaM2: this.selectedArea
+          selectedAreaM2: this.selectedArea,
         })
       );
       this.router.navigate(['/pasos/2']);
-    }else{
-      alert("Debe proporcionar una ubicación")
+    } else {
+      this.snackBar.open('Debe seleccionar una zona de instalación para continuar.', '', {
+        duration: 2000,
+        panelClass: ['custom-snackbar']
+      });
     }
-    
+  }
+
+  showTooltip(event: MouseEvent) {
+    if (!this.areaMarked) {
+      this.snackBar.open('Debe seleccionar una zona de instalación para continuar.', '', {
+        duration: 2000,
+        panelClass: ['custom-snackbar']
+      });
+    }
+  }
+
+  hideTooltip(event: MouseEvent) {
+    this.snackBar.dismiss();
   }
 }

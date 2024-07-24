@@ -194,5 +194,8 @@
   display: flex;
 }
 
-
+.custom-snackbar {
+  background-color: #4caf50; 
+  color: #fff; 
+}
 
