@@ -55,8 +55,8 @@
 }
 
 .custom-icon{
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   display: block;
 }
 
@@ -67,8 +67,7 @@
 }
 
 .titulo {
-  font-size: 17px; 
-  /*color: #417B6F; */
+  font-size: 16px; 
   color: var(--dark-green);
   margin-bottom:15px; 
 }
@@ -86,13 +85,11 @@
 }
 .cantidad { 
   font-size: 40px;
-  /*color: #417B6F; */
   color: var(--medium-green);
   font-weight: 600;
 }
 
 .texto-inferior{
- /* color: #417B6F;*/
   color: var(--dark-green);
   font-size: 12px;
   margin-bottom: 0%;
@@ -101,7 +98,6 @@
 }
 
 .dimensiones{
-  /*color: #417B6F;*/
   color: var(--dark-green);
   font-size: 11px;
   margin-bottom: 0%;

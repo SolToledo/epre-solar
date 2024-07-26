@@ -9,20 +9,6 @@
   --font-light: #00000094;
 }
 
-
-
-/* energia.component.css */
-/*.energia-container {
-  width: 228px;  
-  height: 80px; 
-  background-color: var(--light-background);
-  padding: 10px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}*/
  .energia-container {
     position: relative;
     width: 228px;  
@@ -54,8 +40,8 @@
 }
 
 .custom-icon{
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   display: block;
 }
 
@@ -66,24 +52,22 @@
 }
 
 .titulo {
-  font-size: 19px; 
- /* color: #417B6F; */
+  font-size: 16px; 
   color: var(--dark-green);
   margin-bottom:15px; 
 }
 
 .energia {
   font-size: 28px;
- /* color: #417B6F; */
   color: var(--medium-green);
   font-weight: 600;
   margin-bottom:3px;
 }
 .unidad{
   color: var(--dark-green);
+  font-size: 25px;
 }
 .texto-inferior{
- /* color: #417B6F;*/
   color: var(--dark-green);
   font-size: 10px;
   margin-bottom: 0%;

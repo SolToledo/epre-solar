@@ -11,19 +11,6 @@
     --bordes: #a9b8ad;
   }
   
-
- /* .retorno-container {
-    width: 228px; 
-    height: 80px; 
-    background-color: white;
-    border: 2px solid var(--light-background);
-    padding: 10px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }*/
   .potencia-container {
     position: relative;
     width: 228px;  
@@ -67,22 +54,21 @@
   }
   
   .titulo {
-    /*font-size: 19px; */
-    font-size: 17px;
+    font-size: 16px;
     color: var(--dark-green);
     margin-bottom:15px; 
   }
   
   .potencia {
     font-size: 28px;
-   /* color: #417B6F; */
-   color: var(--medium-green);
+    color: var(--medium-green);
     font-weight: 600;
     margin-bottom:3px;
   }
   
   .unidad{
     color: var(--dark-green);
+    font-size: 25px;
   }
 
   .texto-lateral{
@@ -92,8 +78,7 @@
 
   .texto-inferior{
     color:var(--dark-green);
-   /* font-size: 12px;*/
-   font-size: 11px;
+    font-size: 10px;
     margin-bottom: 0%;
     margin-top: 0% ;
     font-weight:300 ;

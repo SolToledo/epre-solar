@@ -1,12 +1,35 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 
 /*FUENTES*/
+@font-face {
+  font-family: 'Sodo Sans';
+  src: url('/assets/fonts/SodoSans-Regular.woff2') format('woff2'),
+       url('/assets/fonts/SodoSans-Regular.woff') format('woff'),
+       url('/assets/fonts/SodoSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sodo Sans';
+  src: url('/assets/fonts/SodoSans-Bold.woff2') format('woff2'),
+       url('/assets/fonts/SodoSans-Bold.woff') format('woff'),
+       url('/assets/fonts/SodoSans-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+
 * {
   margin: 0;
   padding: 0;
- /* font-family: "Encode Sans", sans-serif;*/
- font-family: 'Sodo sans', 'sans serif';
+ font-family: 'Sodo Sans', sans-serif;
 }
+
+body {
+  font-family: 'Sodo Sans', sans-serif;
+}
+
 
 /*COLORES*/
 :root {
@@ -66,7 +89,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'Sodo sans', 'sans serif';
+  font-family: 'Sodo Sans', sans-serif;
 }
 
 /* General */
@@ -95,8 +118,9 @@ h5 {
   align-items: center;
   padding-top: 8px;
   margin-bottom: 0;
-  font-family: 'Sodo sans', 'sans serif';
+  font-family: 'Sodo Sans', sans-serif;
 }
+
 
 #sub-titulo {
   text-transform: uppercase;
@@ -106,7 +130,7 @@ h5 {
   font-size: 1vw;
   font-weight: 500;
   text-align: left;
-  font-family: 'Sodo sans', 'sans serif';
+  font-family: 'Sodo Sans', sans-serif;
     margin: 0px;
     height: 5%;
 }
@@ -118,6 +142,7 @@ h5 {
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
+  font-family: 'Sodo Sans', sans-serif;
 }
 
 #span-general:hover {
