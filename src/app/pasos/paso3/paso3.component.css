@@ -34,7 +34,7 @@
   justify-content: center;
   gap: 10px;
 
-  .content-scroll {
+ /* .content-scroll {
     height: 55vh;
     max-height: 55vh;
     overflow: scroll;
@@ -42,7 +42,37 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 10px;
+  }*/
+  .content-scroll {
+    height: 55vh;
+    max-height: 55vh;
+    overflow-y: scroll; /* Solo permite desplazamiento vertical */
+    overflow-x: hidden; /* Oculta la barra de desplazamiento horizontal */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
   }
+  
+  /* Estilos para personalizar la barra de desplazamiento vertical */
+  .content-scroll::-webkit-scrollbar {
+    width: 8px; /* Ancho de la barra de desplazamiento vertical */
+  }
+  
+  .content-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color de fondo del track */
+  }
+  
+  .content-scroll::-webkit-scrollbar-thumb {
+    background: #b8b6b6; /* Color de la barra de desplazamiento */
+    border-radius: 4px; /* Redondear los bordes de la barra */
+  }
+  
+  .content-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color de la barra de desplazamiento al pasar el cursor */
+  }
+  
+
 }
 /*----------------------------------------------------------------------------------------------------------*/  
 /* Estilos para los botones secundarios */

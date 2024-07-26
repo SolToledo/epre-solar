@@ -9,22 +9,31 @@
     </div>
 
     <div class="info-container">
-        <div class="content-title">
-        <p id="sub-titulo">Ingrese los datos del consumo energético de los últimos 12 meses.</p>
-        <p id="texto">Si necesita ayuda para encontrar esta información <span id="span-general">haga click aquí.</span></p>       
+
+        <div class="informacion">
+            <div class="content-title">
+                <p id="sub-titulo">Seleccione el tipo de tarifa contratada.</p> 
+                <p id="texto">Si necesita ayuda para encontrar esta información <span id="span-general">haga click aquí.</span></p>      
+            </div>
+            <div class="info-cargar">
+                <app-tarifa [allFieldsFilled]="allFieldsFilled"></app-tarifa>
+            </div>
         </div>
         
-        <div class="informacion">
+           
+        <div class="informacion">    
+            <div class="content-title">
+                <p id="sub-titulo">Ingrese los datos del consumo energético de los últimos 12 meses.</p>
+                <p id="texto">Si necesita ayuda para encontrar esta información <span id="span-general">haga click aquí.</span></p>    
+            </div>
 
             <div class="info-cargar">
                 <app-consumo (allFieldsCompleted)="onAllFieldsCompleted($event)"></app-consumo>
             </div>
-           
-            <div class="info-mostrar">
-                <app-tarifa [allFieldsFilled]="allFieldsFilled"></app-tarifa>
-                <app-resultado></app-resultado>
-            </div>  
-
+            
+            <div class="total">
+                <app-total></app-total> 
+            </div>       
         </div> 
 
         <!--botones-->

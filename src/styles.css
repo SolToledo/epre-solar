@@ -4,7 +4,8 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: "Encode Sans", sans-serif;
+ /* font-family: "Encode Sans", sans-serif;*/
+ font-family: 'Sodo sans', 'sans serif';
 }
 
 /*COLORES*/
@@ -65,7 +66,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: "Encode Sans", sans-serif;
+  font-family: 'Sodo sans', 'sans serif';
 }
 
 /* General */
@@ -94,7 +95,7 @@ h5 {
   align-items: center;
   padding-top: 8px;
   margin-bottom: 0;
-  font-family: "Encode Sans", sans-serif;
+  font-family: 'Sodo sans', 'sans serif';
 }
 
 #sub-titulo {
@@ -105,7 +106,7 @@ h5 {
   font-size: 1vw;
   font-weight: 500;
   text-align: left;
-  font-family: "Encode Sans", sans-serif;
+  font-family: 'Sodo sans', 'sans serif';
     margin: 0px;
     height: 5%;
 }
@@ -235,3 +236,6 @@ button[disabled] {
 .custom-snackbar {
   --mdc-snackbar-container-color: #cba258!important;
  }
+
+
+ /*************************************/

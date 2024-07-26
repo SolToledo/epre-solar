@@ -12,19 +12,42 @@
 
 
 /* energia.component.css */
-.energia-container {
-  width: 228px;  /* Ancho total */
-  height: 80px; /* Alto total */
- /* background-color: #a9b8ad; *//* Color de fondo similar al de la imagen */
- background-color: var(--light-background);
- /* border: 2px solid #417B6F; */
+/*.energia-container {
+  width: 228px;  
+  height: 80px; 
+  background-color: var(--light-background);
   padding: 10px;
   border-radius: 8px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-}
+}*/
+ .energia-container {
+    position: relative;
+    width: 228px;  
+    height: 80px; 
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .energia-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--light-background);
+    border-radius: 8px; 
+    pointer-events: none; 
+    box-sizing: border-box;
+  }
 
 .icon-container {
   flex-shrink: 0;

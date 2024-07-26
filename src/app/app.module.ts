@@ -42,6 +42,16 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
+import { AhorroComponent } from './pasos/paso3/ahorro/ahorro.component';
+import { PlazoComponent } from './pasos/paso3/plazo/plazo.component';
+import { PotenciaComponent } from './pasos/paso3/potencia/potencia.component';
+import { SuperficieComponent } from './pasos/paso3/superficie/superficie.component';
+import { CoberturaComponent } from './pasos/paso3/cobertura/cobertura.component';
+import { EmisionesComponent } from './pasos/paso3/emisiones/emisiones.component';
+import { CostoComponent } from './pasos/paso3/costo/costo.component';
+import { TarifaIntercambioComponent } from './pasos/paso3/tarifa-intercambio/tarifa-intercambio.component';
+import { TotalComponent } from './pasos/paso2/total/total.component';
+
 
 
 
@@ -66,6 +76,15 @@ import { HttpClientModule } from '@angular/common/http';
     RetornoComponent,
     TerminosComponent,
     Paso0Component,
+    AhorroComponent,
+    PlazoComponent,
+    PotenciaComponent,
+    SuperficieComponent,
+    CoberturaComponent,
+    EmisionesComponent,
+    CostoComponent,
+    TarifaIntercambioComponent,
+    TotalComponent,
   ],
   imports: [
     BrowserModule,

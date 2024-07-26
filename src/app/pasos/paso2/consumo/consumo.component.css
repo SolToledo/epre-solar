@@ -4,9 +4,34 @@
   background-color: white;
   padding: 5px;
   border-radius: 8px;
- /* border: 2px solid #c1d2c0;*/
   border: 2px solid var(--light-background);
+
+  height: 21vh;
+  max-height: 21vh;
+  overflow-y: scroll;
+  overflow-x: hidden; 
 }
+
+ /* Estilos para personalizar la barra de desplazamiento vertical */
+ .consumo-container::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento vertical */
+}
+
+.consumo-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color de fondo del track */
+}
+
+.consumo-container::-webkit-scrollbar-thumb {
+  background: #b8b6b6; /* Color de la barra de desplazamiento */
+  border-radius: 4px; /* Redondear los bordes de la barra */
+}
+
+.consumo-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color de la barra de desplazamiento al pasar el cursor */
+}
+
+
+
 
 .meses-container {
   display: grid;

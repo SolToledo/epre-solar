@@ -1,8 +1,10 @@
 <div class="tarifa-container">
-  <div class="texto-container">
-    <p class="titulo">⚡ Tarifa contratada</p>
-  </div>
-   <p *ngIf="allFieldsFilled">{{ tarifaContratada }}</p>
+  <select [(ngModel)]="tarifaContratada">
+    <option value="" disabled selected>Selecciones su tipo de tarifa</option>
+    <option *ngFor="let tarifa of tarifas" [value]="tarifa.value">
+      {{ tarifa.viewValue }}
+    </option>
+  </select>
 </div>
-  
+
 

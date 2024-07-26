@@ -6,10 +6,10 @@
 
   <div class="info-container">
     <div class="action-buttons">
-      <button id="printButton" (click)="print()">
+    <!--  <button id="printButton" (click)="print()">
         <img src="assets/icon-imprimir-bco.png" alt="Icono imprimir" class="icono">
         Imprimir
-      </button>
+      </button>-->
       
       <button id="downloadButton" (click)="downloadPDF()">
         <img src="assets/icon-descargar-bco.png" alt="Icono descargar PDF" class="icono">
@@ -25,7 +25,7 @@
 
         <div class="content-scroll">
             <div class="info-mostrar">
-            <div class="info-row">
+           <!-- <div class="info-row">
                 <app-resultado></app-resultado>
                 <app-energia></app-energia>   
             </div>
@@ -33,16 +33,29 @@
             <div class="info-row">
               <app-paneles></app-paneles>
               <app-retorno></app-retorno>  
-          </div>
+          </div> -->
 
           <div class="info-row">
-            <app-resultado></app-resultado>
-            <app-energia></app-energia>   
-        </div>
+            <app-ahorro></app-ahorro>
+            <app-plazo></app-plazo> 
+          </div>
           <div class="info-row">
             <app-paneles></app-paneles>
-            <app-retorno></app-retorno>  
-        </div>
+            <app-potencia></app-potencia>
+          </div>
+          <div class="info-row">
+            <app-superficie></app-superficie>
+            <app-cobertura></app-cobertura>
+          </div>
+          <div class="info-row">
+            <app-energia></app-energia>
+            <app-emisiones></app-emisiones>
+          </div>
+          <div class="info-row">
+            <app-costo></app-costo>
+            <app-tarifa-intercambio></app-tarifa-intercambio>
+          </div>
+
          </div>
       
         

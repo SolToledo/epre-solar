@@ -62,6 +62,7 @@
     font-weight: 400;
     margin: 2px;
     font-size: 1vw;
+    font-family: 'Sodo sans', 'sans serif';
   }
 
   .info-inicio h2 {
@@ -72,7 +73,7 @@
     margin-bottom: 0px;
     margin-right: 0px;
     color: var(--dark-green);
-    font-family: "Encode Sans", sans-serif;
+    font-family: 'Sodo sans', 'sans serif';
   }
 
   /* Términos */
