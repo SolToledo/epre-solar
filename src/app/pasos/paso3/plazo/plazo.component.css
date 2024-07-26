@@ -12,7 +12,7 @@
   }
   
 
-  .retorno-container {
+  .plazo-container {
     width: 228px;  /* Ancho total */
     height: 80px; /* Alto total */
     background-color: white;
@@ -43,22 +43,21 @@
   }
   
   .titulo {
-   /* font-size: 19px; */
-    font-size: 17px; 
+    font-size: 16px; 
     color: var(--dark-green);
     margin-bottom:15px; 
   }
   
   .plazo {
     font-size: 28px;
-   /* color: #417B6F; */
-   color: var(--medium-green);
+    color: var(--medium-green);
     font-weight: 600;
     margin-bottom:3px;
   }
   
   .unidad{
     color: var(--dark-green);
+    font-size: 24px;
   }
 
   .texto-lateral{
@@ -69,7 +68,7 @@
   .texto-inferior{
     color:var(--dark-green);
    /* font-size: 12px;*/
-   font-size: 11px;
+   font-size: 10px;
     margin-bottom: 0%;
     margin-top: 0% ;
     font-weight:300 ;

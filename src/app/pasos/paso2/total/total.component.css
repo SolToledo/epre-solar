@@ -16,8 +16,8 @@
   .resultado-container {
    /* width: 228px;  
     height: 80px; */
-    height:30px ;
-    width:350px;
+    height:35px ;
+   /* width:350px;*/
     background-color: var(--light-background);
     border-radius: 8px;
     padding: 10px;
@@ -25,6 +25,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
   }
   
   .icon-container {

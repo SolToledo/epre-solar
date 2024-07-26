@@ -12,7 +12,7 @@
   }
   
 
-  .retorno-container {
+  .ahorro-container {
     width: 228px;  /* Ancho total */
     height: 80px; /* Alto total */
     background-color: white;
@@ -44,33 +44,30 @@
   
   .titulo {
     font-size: 17px; 
-    /*color: #417B6F; */
     color: var(--dark-green);
-   /* margin-bottom:15px; */
-   margin-bottom: 15px;
+    margin-bottom: 15px;
   }
   
   .ahorro {
     font-size: 28px;
-   /* color: #417B6F; */
-   color: var(--medium-green);
+    color: var(--medium-green);
     font-weight: 600;
     margin-bottom:3px;
   }
   
   .unidad{
     color: var(--dark-green);
+    font-size: 25px;
   }
 
   .texto-lateral{
-    font-size: 16px;
+    font-size: 13px;
     color: var(--dark-green);
   }
 
   .texto-inferior{
     color:var(--dark-green);
-   /* font-size: 12px;*/
-   font-size: 11px;
+    font-size: 10px;
     margin-bottom: 0%;
     margin-top: 0% ;
     font-weight:300 ;
