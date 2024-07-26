@@ -5,6 +5,7 @@ import html2canvas from 'html2canvas';
 import { Resultados } from 'src/app/interfaces/resultados';
 import { GmailService } from 'src/app/services/gmail.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SolarApiService } from 'src/app/services/solar-api.service';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -18,9 +19,14 @@ export class Paso3Component implements OnInit {
   constructor(
     private router: Router,
     private readonly gmailService: GmailService,
-    private snackBar: MatSnackBar
-  ) {}
-  ngOnInit(): void {}
+    private snackBar: MatSnackBar,
+    private solarService: SolarApiService
+  ) {
+    this.solarService.calculate();
+  }
+  ngOnInit(): void {
+    
+  }
 
   print(): void {
     window.print();

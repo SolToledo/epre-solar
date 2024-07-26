@@ -83,7 +83,8 @@ export class ConsumoComponent implements OnInit {
     this.allCompleted = this.meses.every(mes => mes.consumo !== null);
     this.allFieldsCompleted.emit(this.allCompleted);
     if(this.allCompleted){
-      this.solarApiService.cargarConsumosAnuales(this.meses)
+      // this.solarApiService.cargarConsumosAnuales(this.meses)
+      localStorage.setItem("meses", JSON.stringify(this.meses))
     }
   }
   

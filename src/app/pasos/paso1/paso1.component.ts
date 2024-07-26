@@ -221,7 +221,8 @@ export class Paso1Component implements OnInit {
           this.selectedArea = google.maps.geometry.spherical.computeArea(
             polygon.getPath()
           );
-          this.enviarCoordenadasAlBackend(polygonCoordinates);
+          // this.enviarCoordenadasAlBackend(polygonCoordinates);
+          localStorage.setItem("polygonCoordinates", JSON.stringify(polygonCoordinates));
         }
       }
     );
