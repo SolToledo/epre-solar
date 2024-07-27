@@ -46,4 +46,19 @@ export class SolarApiService {
           console.error('Error al enviar los consumos anuales:', error),
       });
   }
+
+  calculate(){
+    const annualConsumptionStr = localStorage.getItem('annualKWhEnergyConsumption');
+    const coordenadasStr = localStorage.getItem('polygonCoordinates');
+    if(annualConsumptionStr && coordenadasStr) {
+      const datosCalculo = {
+        annualConsumption: JSON.parse(annualConsumptionStr),
+        coordenadas: JSON.parse(coordenadasStr)
+      }
+      this.http
+      .post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo).subscribe({
+        next: (response) => console.log(response)
+      })
+    }
+  }
 }

@@ -11,10 +11,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="styles.css" rel="stylesheet">
+  <script>
+    function loadGoogleMapsAPI() {
+      return fetch('/assets/env.json')
+        .then(response => response.json())
+        .then(env => {
+          return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${env.GOOGLE_MAPS_API_KEY}&libraries=drawing,places`;
+            script.async = true;
+            script.defer = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        });
+    }
+
+    window.loadGoogleMapsAPI = loadGoogleMapsAPI;
+  </script>
 </head>
 
 <!--API DE GOOGLE-->
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA96BDNGNezoM13_Z0FnE3hcDjiOudMKRQ&libraries=drawing,places"></script>
+<!-- <script src="http://maps.googleapis.com/maps/api/js?key=&libraries=drawing,places"></script> -->
 
 <!--tipo de letra-->
 <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@400;700&display=swap" rel="stylesheet">

@@ -1,5 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { GoogleMapsService } from '../services/google-maps.service';
 
 declare var google: any;
 
@@ -10,38 +11,34 @@ declare var google: any;
 })
 export class MapaComponent implements AfterViewInit {
 
-  constructor(private location: Location) { }
+  constructor(private location: Location, private googleMapsService: GoogleMapsService) { }
 
-  ngAfterViewInit() {
-    const mapElement = document.getElementById('map');
-    const userPosition = localStorage.getItem('userPosition');
-
-    let latitude = -31.53;
-    let longitude = -68.51;
-    if(userPosition) {
-      const position = JSON.parse(userPosition);
-      latitude = position.latitude;
-      longitude = position.longitude;
+    ngAfterViewInit(): void {
+      this.googleMapsService.loadGoogleMaps().then(() => {
+        this.initMap();
+      }).catch(error => {
+        console.error('Google Maps no está disponible.', error);
+      });
     }
-    
-    if (mapElement !== null) {
-      const map = new google.maps.Map(mapElement, {
+  
+    loadGoogleMaps(): void {
+      (window as any).loadGoogleMapsAPI()
+        .then(() => {
+          this.initMap();
+        })
+        .catch((error: any) => {
+          console.error('Error al cargar Google Maps', error);
+        });
+    }
+
+    private initMap(): void {
+      const map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -31.53, lng: -68.51 },
         zoom: 13,
-        center: { lat: latitude, lng: longitude  }, 
         mapTypeId: 'satellite',
         disableDefaultUI: true
       });
-
-      /* const marker = new google.maps.Marker({
-        map: map,
-        position: { lat: latitude, lng: longitude  },
-        title: "San Juan, Argentina"
-      }); */
-    } else {
-      console.error("No se encontró el elemento 'map'");
     }
-  }
-
   goBack(): void {
     this.location.back();
   }
