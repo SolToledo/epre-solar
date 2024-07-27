@@ -23,7 +23,7 @@
 * {
   margin: 0;
   padding: 0;
- font-family: 'Sodo Sans', sans-serif;
+  font-family: 'Sodo Sans', sans-serif;
 }
 
 body {
@@ -123,16 +123,14 @@ h5 {
 
 
 #sub-titulo {
-  text-transform: uppercase;
-  /*color: var(--font-light);*/
+ /* text-transform: uppercase;*/
   color: #424242;
-  /*font-size: 14px;*/
-  font-size: 1vw;
+  font-size: 16px;
   font-weight: 500;
   text-align: left;
   font-family: 'Sodo Sans', sans-serif;
-    margin: 0px;
-    height: 5%;
+  margin: 0px;
+  height: 5%;
 }
 /*************************************************/
 /*span*/
@@ -176,7 +174,7 @@ h5 {
 #boton-siguiente {
   background-color: var(--dark-green);
   color: #fff;
-  font-weight: 500;
+  font-weight: bold;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
@@ -202,7 +200,8 @@ button[disabled] {
 #boton-volver {
   background-color: white;
   color: var(--medium-green);
-  font-weight: 500;
+  /*font-weight: 500;*/
+  font-weight: bold;
   border: 2px solid #a9b8ad;
   padding: 10px 20px;
   border-radius: 5px;

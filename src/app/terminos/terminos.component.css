@@ -57,7 +57,8 @@ h2 {
 #aceptar {
   background-color:var(--dark-green);
   color: #fff;
-  font-weight: 300;
+  /*font-weight: 300;*/
+  font-weight: bold;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
@@ -76,7 +77,7 @@ h2 {
 #cerrar {
   background-color: white; 
   color: var(--medium-green); 
-  font-weight: 300;
+  font-weight: bold;
   border: 2px solid #a9b8ad;
   padding: 10px 20px;
   border-radius: 5px;

@@ -67,13 +67,13 @@
 
   .info-inicio h2 {
     text-transform: uppercase;
-    /*font-size: 16px;*/
     font-size: 1.2vw;
     font-weight: 500;
     margin-bottom: 0px;
     margin-right: 0px;
     color: var(--dark-green);
     font-family: 'Sodo Sans', sans-serif;
+    font-weight: bold;
   }
 
   /* Términos */
