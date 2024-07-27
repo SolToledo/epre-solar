@@ -1,22 +1,21 @@
 /*COLORES*/
 :root {
-    --dark-green: #1e3932;
-    --medium-green: #006241;
-    --light-green: #00754a;
-    --light-background: #d4e9e2;
-    --golden: #cba258;
-    --gris: #edebe9;
-    --font-dark: #000000de;
-    --font-light: #424242;
-    --bordes: #a9b8ad;
-  }
-  
+  --dark-green: #1e3932;
+  --medium-green: #006241;
+  --light-green: #00754a;
+  --light-background: #d4e9e2;
+  --golden: #cba258;
+  --gris: #edebe9;
+  --font-dark: #000000de;
+  --font-light: #424242;
+  --bordes: #a9b8ad;
+}
+
 
   .ahorro-container {
     width: 228px;  /* Ancho total */
     height: 80px; /* Alto total */
     background-color: white;
-   /* border: 2px solid var(--light-background);*/
     background-color: var(--light-background);
     padding: 10px;
     border-radius: 8px;
