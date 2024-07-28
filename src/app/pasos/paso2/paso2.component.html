@@ -1,53 +1,66 @@
+<div class="content">
+  <div class="titulo">
+    <h2 id="titulo">Consumo</h2>
+  </div>
+  <div class="toolbar-pasos">
+    <app-toolbar-pasos [currentStep]="currentStep"></app-toolbar-pasos>
+  </div>
 
- <div class="content">
-
-    <div class="titulo">
-        <h2 id="titulo">Consumo</h2>
+  <div class="info-container">
+    <div class="informacion">
+      <div class="content-title">
+        <p id="sub-titulo">Seleccione el tipo de tarifa contratada.</p>
+        <p id="texto">
+          Si necesita ayuda para encontrar esta información
+          <span id="span-general">haga click aquí.</span>
+        </p>
+      </div>
+      <div class="info-cargar">
+        <app-tarifa></app-tarifa>
+      </div>
     </div>
-    <div class="toolbar-pasos">
-        <app-toolbar-pasos [currentStep]="currentStep"></app-toolbar-pasos>   
+
+    <div class="informacion">
+      <div class="content-title">
+        <p id="sub-titulo">
+          Ingrese el consumo energético de los últimos 12 meses.
+        </p>
+        <p id="texto">
+          Si necesita ayuda para encontrar esta información
+          <span id="span-general">haga click aquí.</span>
+        </p>
+      </div>
+
+      <div class="info-cargar">
+        <app-consumo
+          (allFieldsCompleted)="onAllFieldsCompleted($event)"
+        ></app-consumo>
+      </div>
+
+      <div class="total">
+        <app-total></app-total>
+      </div>
     </div>
 
-    <div class="info-container">
-
-        <div class="informacion">
-            <div class="content-title">
-                <p id="sub-titulo">Seleccione el tipo de tarifa contratada.</p> 
-                <p id="texto">Si necesita ayuda para encontrar esta información <span id="span-general">haga click aquí.</span></p>      
-            </div>
-            <div class="info-cargar">
-                <app-tarifa [allFieldsFilled]="allFieldsFilled"></app-tarifa>
-            </div>
-        </div>
-        
-           
-        <div class="informacion">    
-            <div class="content-title">
-                <p id="sub-titulo">Ingrese el consumo energético de los últimos 12 meses.</p>
-                <p id="texto">Si necesita ayuda para encontrar esta información <span id="span-general">haga click aquí.</span></p>    
-            </div>
-
-            <div class="info-cargar">
-                <app-consumo (allFieldsCompleted)="onAllFieldsCompleted($event)"></app-consumo>
-            </div>
-            
-            <div class="total">
-                <app-total></app-total> 
-            </div>       
-        </div> 
-
-        <!--botones-->
-        <div class="button-container">
-            <div class="boton">
-                <button id="boton-volver" (click)="goBack()">
-                    <span class="material-icons">chevron_left</span> Volver
-                </button>
-              <br>
-              <button id="boton-siguiente" (click)="goToPaso3()" [disabled]="!allFieldsFilled" (mouseenter)="showTooltip($event)" (mouseleave)="hideTooltip($event)">
-                Realizar Cálculo <span class="material-icons">chevron_right</span>
-              </button>        
-            </div>
-        </div>
-  
+    <!--botones-->
+    <div class="button-container">
+      <div class="boton">
+        <button id="boton-volver" (click)="goBack()">
+          <span class="material-icons">chevron_left</span> Volver
+        </button>
+        <br />
+        <button
+          id="boton-siguiente"
+          #botonSiguiente
+          (click)="goToPaso3()"
+          [disabled]="!allFieldsFilled"
+          (mouseenter)="showTooltip($event)"
+          (mouseleave)="hideTooltip($event)"
+        >
+          Realizar Cálculo <span class="material-icons">chevron_right</span>
+        </button>
+      </div>
     </div>
-</div> <!--content-->
+  </div>
+</div>
+<!--content-->

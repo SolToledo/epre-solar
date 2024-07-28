@@ -2,63 +2,61 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, lastValueFrom, Observable, throwError } from 'rxjs';
 import { MesesConsumo } from '../interfaces/mesesConsumo';
+import { ResultadoService } from './resultado.service';
+import { Resultados } from '../interfaces/resultados';
+import { SharedService } from './shared.service';
+import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SolarApiService {
-  private apiUrl = 'http://localhost:3000';
+  private readonly apiUrl: string = 'http://localhost:3000';
+  private _resultados!: ResultadosFrontDTO;
   // private apiUrl = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
-  
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private readonly resultadoService: ResultadoService
+  ) {}
 
-  enviarCoordenadas(coordenadas: any[]): Observable<any> {
-    return this.http
-      .post<any>(`${this.apiUrl}/solar/calcular`, coordenadas)
-      .pipe(
-        catchError((error) => {
-          let errorMessage = 'An error occurred while fetching solar data.';
-          if (
-            error.status === 400 &&
-            error.error.message === 'Location out of coverage'
-          ) {
-            errorMessage =
-              'La ubicación seleccionada se encuentra fuera de la cobertura de la solar API.';
-          }
-          alert(errorMessage); // Mostrar alerta en el frontend
-          return throwError(() => new Error(errorMessage));
-        })
-      );
-  }
-
-  cargarConsumosAnuales(meses: MesesConsumo[]): void {
-    this.http
-      .post<MesesConsumo[]>(
-        `${this.apiUrl}/google-sheets/cargarConsumos`,
-        meses
-      )
-      .subscribe({
-        next: (response) => console.log('Consumos anuales enviados:', response),
-        error: (error) =>
-          console.error('Error al enviar los consumos anuales:', error),
-      });
-  }
-
-  calculate(){
-    const annualConsumptionStr = localStorage.getItem('annualKWhEnergyConsumption');
+  async calculate(): Promise<any> {
+    const annualConsumptionStr = localStorage.getItem(
+      'annualKWhEnergyConsumption'
+    );
     const coordenadasStr = localStorage.getItem('polygonCoordinates');
-    if(annualConsumptionStr && coordenadasStr) {
+    const selectedAreaStr = localStorage.getItem('selectedAreaM2');
+    const categoriaSeleccionada = localStorage.getItem('categoriaSeleccionada');
+    if (
+      annualConsumptionStr &&
+      coordenadasStr &&
+      selectedAreaStr &&
+      categoriaSeleccionada
+    ) {
       const datosCalculo = {
         annualConsumption: JSON.parse(annualConsumptionStr),
-        coordenadas: JSON.parse(coordenadasStr)
+        coordenadas: JSON.parse(coordenadasStr),
+        categoriaSeleccionada: JSON.parse(categoriaSeleccionada),
+        selectedAreaM2: JSON.parse(selectedAreaStr),
+      };
+
+      try {
+        const response = await lastValueFrom(
+          this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
+        );
+        this._resultados = this.resultadoService.generarResultados(response);
+        return this.getResultados;
+      } catch (error) {
+        console.error('Error:', error);
       }
-      this.http
-      .post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo).subscribe({
-        next: (response) => console.log(response)
-      })
+    } else {
+      console.error('Missing required data for calculation.');
     }
+  }
+
+  get getResultados(): ResultadosFrontDTO {
+    return this._resultados;
   }
 }

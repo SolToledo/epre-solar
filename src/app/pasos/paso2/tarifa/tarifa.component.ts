@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ConsumoService } from 'src/app/services/consumo.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 interface Tarifa {
   value: string;
@@ -13,7 +14,6 @@ interface Tarifa {
 })
 export class TarifaComponent implements OnInit {
   tarifaContratada: string = '';
-  @Input() allFieldsFilled!: boolean;
 
   tarifas: Tarifa[] = [
     { value: 'T1-R1', viewValue: 'Pequeña Demanda Residencial (T1-R1, T1-R2 o T1-R3)' },
@@ -26,16 +26,19 @@ export class TarifaComponent implements OnInit {
     { value: 'TRA-SD', viewValue: 'Riego Agrícola (TRA-SD)' }
   ];
 
-  constructor(private consumoService: ConsumoService) {}
+  constructor(private sharedService: SharedService) {}
 
   ngOnInit(): void {
-    this.consumoService.categoria$.subscribe((categoria) => {
-      this.tarifaContratada = categoria;
-    });
+   this.tarifaContratada = this.sharedService.getTarifaContratada();
   }
 
   isOptionSelected(): boolean {
     return this.tarifaContratada !== '';
+  }
+
+  onTarifaChange(): void {
+    this.sharedService.setTarifaContratada(this.tarifaContratada);
+    localStorage.setItem('categoriaSeleccionada', JSON.stringify(this.tarifaContratada));
   }
 }
 

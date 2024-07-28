@@ -7,40 +7,34 @@ declare var google: any;
 @Component({
   selector: 'app-mapa',
   templateUrl: './mapa.component.html',
-  styleUrls: ['./mapa.component.css']
+  styleUrls: ['./mapa.component.css'],
 })
 export class MapaComponent implements AfterViewInit {
+  constructor(
+    private location: Location,
+    private googleMapsService: GoogleMapsService
+  ) {}
 
-  constructor(private location: Location, private googleMapsService: GoogleMapsService) { }
-
-    ngAfterViewInit(): void {
-      this.googleMapsService.loadGoogleMaps().then(() => {
+  ngAfterViewInit(): void {
+    this.googleMapsService
+      .loadGoogleMaps()
+      .then(() => {
         this.initMap();
-      }).catch(error => {
+      })
+      .catch((error) => {
         console.error('Google Maps no está disponible.', error);
       });
-    }
-  
-    loadGoogleMaps(): void {
-      (window as any).loadGoogleMapsAPI()
-        .then(() => {
-          this.initMap();
-        })
-        .catch((error: any) => {
-          console.error('Error al cargar Google Maps', error);
-        });
-    }
+  }
 
-    private initMap(): void {
-      const map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -31.53, lng: -68.51 },
-        zoom: 13,
-        mapTypeId: 'satellite',
-        disableDefaultUI: true
-      });
-    }
+  private initMap(): void {
+    const map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: -31.53, lng: -68.51 },
+      zoom: 14,
+      mapTypeId: 'satellite',
+      disableDefaultUI: true,
+    });
+  }
   goBack(): void {
     this.location.back();
   }
 }
-

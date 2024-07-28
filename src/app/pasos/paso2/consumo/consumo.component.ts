@@ -83,12 +83,23 @@ export class ConsumoComponent implements OnInit {
     this.allCompleted = this.meses.every(mes => mes.consumo !== null);
     this.allFieldsCompleted.emit(this.allCompleted);
     if(this.allCompleted){
-      // this.solarApiService.cargarConsumosAnuales(this.meses)
       localStorage.setItem("meses", JSON.stringify(this.meses))
     }
   }
   
   onConsumoChange(): void {
+    this.meses.forEach(mes => {
+      if (mes.consumo&&mes.consumo < 0) {
+        mes.consumo = null; 
+      }
+    });
     this.calcularTotalConsumo();
+  }
+
+  preventInvalidInput(event: KeyboardEvent): void {
+    // Permitir solo dígitos numéricos, tecla de retroceso, y la tecla de tabulación
+    if (!/[0-9]/.test(event.key) && event.key !== 'Backspace' && event.key !== 'Tab') {
+      event.preventDefault();
+    }
   }
 }

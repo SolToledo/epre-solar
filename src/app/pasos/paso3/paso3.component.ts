@@ -6,6 +6,8 @@ import { Resultados } from 'src/app/interfaces/resultados';
 import { GmailService } from 'src/app/services/gmail.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SolarApiService } from 'src/app/services/solar-api.service';
+import { SharedService } from 'src/app/services/shared.service';
+import { ResultadosFrontDTO } from '../../interfaces/resultados-front-dto';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -15,18 +17,20 @@ export class Paso3Component implements OnInit {
   currentStep: number = 3;
   mostrarModal: boolean = false;
   resultados: Resultados | undefined;
-
+  private resultadosFront!: ResultadosFrontDTO;
   constructor(
     private router: Router,
     private readonly gmailService: GmailService,
     private snackBar: MatSnackBar,
-    private solarService: SolarApiService
+    private solarService: SolarApiService,
+    private sharedService: SharedService
   ) {
-    this.solarService.calculate();
+    this.solarService
+      .calculate()
+      .then((resultados) => (this.resultadosFront = resultados))
+      .then(() => console.log(this.resultadosFront))
   }
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 
   print(): void {
     window.print();
@@ -51,8 +55,7 @@ export class Paso3Component implements OnInit {
   }
 
   sendEmail(): void {
-    this.gmailService.sendEmailWithResults()
-    .then(() => {
+    this.gmailService.sendEmailWithResults().then(() => {
       this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
         duration: 3000,
         panelClass: ['custom-snackbar'],
@@ -70,12 +73,10 @@ export class Paso3Component implements OnInit {
 
   confirmarSalir(): void {
     this.mostrarModal = false;
-    this.router
-      .navigateByUrl('/pasos/0', { skipLocationChange: true })
-      .then(() => {
-        this.router.navigate(['/pasos/0']);
-      });
     localStorage.clear();
+    this.router.navigate(['/pasos/1']).then(() => {
+      this.sharedService.setTutorialShown(true);
+    });
   }
 
   goBack() {

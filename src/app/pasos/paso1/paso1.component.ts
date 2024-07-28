@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
+import { SharedService } from 'src/app/services/shared.service';
 import { SolarApiService } from 'src/app/services/solar-api.service';
 
 declare var google: any;
@@ -20,17 +21,28 @@ export class Paso1Component implements OnInit {
   overlays: google.maps.Polygon[] = [];
   areaMarked: boolean = false;
   selectedArea: number = 0;
+  tutorialShown: boolean = false;
 
   constructor(
     private router: Router,
-    private solarApiService: SolarApiService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private sharedService: SharedService
   ) {}
 
   ngOnInit(): void {
     this.loadGoogleMaps(() => {
       this.initMap();
     });
+
+    this.sharedService.tutorialShown$.subscribe((shown) => {
+      this.tutorialShown = shown;
+    });
+    if (!this.tutorialShown) {
+      this.showTutorial();
+    }
+  }
+
+  showTutorial() {
     const driverObj = driver({
       showProgress: true,
       steps: [
@@ -87,6 +99,7 @@ export class Paso1Component implements OnInit {
       ],
     });
     driverObj.drive();
+    this.sharedService.setTutorialShown(false);
   }
 
   loadGoogleMaps(callback: () => void): void {
@@ -104,9 +117,6 @@ export class Paso1Component implements OnInit {
   }
 
   initMap(): void {
-    const userPosition = JSON.parse(
-      localStorage.getItem('userPosition') || '{}'
-    );
     const { latitude, longitude } = {
       latitude: -31.53,
       longitude: -68.51,
@@ -221,22 +231,20 @@ export class Paso1Component implements OnInit {
           this.selectedArea = google.maps.geometry.spherical.computeArea(
             polygon.getPath()
           );
-          // this.enviarCoordenadasAlBackend(polygonCoordinates);
-          localStorage.setItem("polygonCoordinates", JSON.stringify(polygonCoordinates));
+          localStorage.setItem(
+            'selectedAreaM2',
+            JSON.stringify({
+              value: this.selectedArea,
+            })
+          );
+          localStorage.setItem(
+            'polygonCoordinates',
+            JSON.stringify(polygonCoordinates)
+          );
+          
         }
       }
     );
-  }
-
-  enviarCoordenadasAlBackend(coordenadas: any[]): void {
-    this.solarApiService.enviarCoordenadas(coordenadas).subscribe({
-      next: (response: any) => {
-        localStorage.setItem('solarData', JSON.stringify(response));
-      },
-      error: (error) => {
-        console.error(error);
-      },
-    });
   }
 
   habilitarMarcado(): void {
@@ -295,24 +303,32 @@ export class Paso1Component implements OnInit {
         JSON.stringify({
           latitude: position.lat(),
           longitude: position.lng(),
-          selectedAreaM2: this.selectedArea,
         })
       );
+      
       this.router.navigate(['/pasos/2']);
     } else {
-      this.snackBar.open('Debe seleccionar una zona de instalación para continuar.', '', {
-        duration: 2000,
-        panelClass: ['custom-snackbar']
-      });
+      this.snackBar.open(
+        'Debe seleccionar una zona de instalación para continuar.',
+        '',
+        {
+          duration: 2000,
+          panelClass: ['custom-snackbar'],
+        }
+      );
     }
   }
 
   showTooltip(event: MouseEvent) {
     if (!this.areaMarked) {
-      this.snackBar.open('Debe seleccionar una zona de instalación para continuar.', '', {
-        duration: 2000,
-        panelClass: ['custom-snackbar']
-      });
+      this.snackBar.open(
+        'Debe seleccionar una zona de instalación para continuar.',
+        '',
+        {
+          duration: 2000,
+          panelClass: ['custom-snackbar'],
+        }
+      );
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,8 +6,12 @@ import { Router } from '@angular/router';
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.css'],
 })
-export class WelcomeComponent {
+export class WelcomeComponent implements OnInit {
+  
   constructor(private router: Router) {}
+  ngOnInit(): void {
+    localStorage.clear();
+  }
 
   goToInformacion() {
     if (navigator.geolocation) {
