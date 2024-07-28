@@ -11,6 +11,7 @@ export class Paso2Component implements OnInit {
   currentStep: number = 2;
   allFieldsFilled: boolean = false;
   tarifaContratada: string = '';
+  isCategorySelected: boolean = false;
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
 
   constructor(private router: Router, private snackBar: MatSnackBar) {}
@@ -28,11 +29,9 @@ export class Paso2Component implements OnInit {
 
   onAllFieldsCompleted(event: boolean): void {
     this.allFieldsFilled = event;
-    if (this.allFieldsFilled && this.botonSiguiente) {
-      setTimeout(() => {
-        this.botonSiguiente.nativeElement.focus(); 
-      }, 0);
-    }
+  }
+  onCategorySelected(event: boolean): void {
+    this.isCategorySelected = event;
   }
 
   showTooltip(event: MouseEvent) {

@@ -28,22 +28,34 @@
           <div class="info-mostrar">
             <div class="info-row">
               <app-ahorro></app-ahorro>
-              <app-plazo></app-plazo>
+              <app-plazo
+                [plazoRecuperoInversion]="plazoRecuperoInversion"
+              ></app-plazo>
             </div>
             <div class="info-row">
-              <app-paneles></app-paneles>
-              <app-potencia></app-potencia>
+              <app-paneles
+                [panelesCantidad]="panelesCantidad"
+                [dimensionPanel]="dimensionPanel"
+                [panelCapacityW]="panelCapacityW"
+              ></app-paneles>
+              <app-potencia
+                [instalacionPotencia]="
+                  (panelesCantidad * panelCapacityW) / 1000
+                "
+              ></app-potencia>
             </div>
             <div class="info-row">
               <app-superficie></app-superficie>
-              <app-cobertura></app-cobertura>
+              <app-cobertura [TIR]="getTIR()"></app-cobertura>
             </div>
             <div class="info-row">
               <app-energia></app-energia>
-              <app-emisiones></app-emisiones>
+              <app-emisiones
+                [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"
+              ></app-emisiones>
             </div>
             <div class="info-row">
-              <app-costo></app-costo>
+              <app-costo [costoInstalacion]="getCostoInstalacion()"></app-costo>
               <app-tarifa-intercambio></app-tarifa-intercambio>
             </div>
           </div>
@@ -64,14 +76,27 @@
                 </p>
               </div>
               <div class="numero-meses">
-                <p class="numero">18</p>
+                <p class="numero">{{plazoRecuperoInversion * 12}}</p>
                 <p class="meses">meses</p>
               </div>
             </div>
             <!--termina periodo-->
 
             <div class="grafico-imagen">
-              <app-graficos></app-graficos>
+              <app-graficos
+                [periodoVeinteanalEmisionesGEIEvitadas]="
+                  getEmisionesGEIEvitadas()
+                "
+                [periodoVeinteanalFlujoEnergia]="
+                  getFlujoEnergia()
+                "
+                [periodoVeinteanalFlujoIngresosMonetarios]="
+                  getFlujoIngresosMonetarios()
+                "
+                [periodoVeinteanalGeneracionFotovoltaica]="
+                  getGeneracionFotovoltaica()
+                "
+              ></app-graficos>
             </div>
           </div>
           <!--termina grafico-->

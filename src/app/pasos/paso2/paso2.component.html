@@ -16,7 +16,7 @@
         </p>
       </div>
       <div class="info-cargar">
-        <app-tarifa></app-tarifa>
+        <app-tarifa (isCategorySelected)="onCategorySelected($event)"></app-tarifa>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
           id="boton-siguiente"
           #botonSiguiente
           (click)="goToPaso3()"
-          [disabled]="!allFieldsFilled"
+          [disabled]="!isCategorySelected || !allFieldsFilled"
           (mouseenter)="showTooltip($event)"
           (mouseleave)="hideTooltip($event)"
         >
