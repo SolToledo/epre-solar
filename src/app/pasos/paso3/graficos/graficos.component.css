@@ -1,8 +1,6 @@
-h3{
-    background-color: rgb(192, 208, 175);
-}
+
 /* graficos.component.css */
-:host {
+/* :host {
     display: block;
     width: 100%;
     height: 100%;
@@ -11,5 +9,14 @@ h3{
   canvas {
     max-width: 100%;
     max-height: 100%;
+  } */
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
+  .grafico {
+    width: 80%;
+    margin: 20px 0;
+  }

@@ -51,7 +51,7 @@ import { EmisionesComponent } from './pasos/paso3/emisiones/emisiones.component'
 import { CostoComponent } from './pasos/paso3/costo/costo.component';
 import { TarifaIntercambioComponent } from './pasos/paso3/tarifa-intercambio/tarifa-intercambio.component';
 import { TotalComponent } from './pasos/paso2/total/total.component';
-
+import { NgChartsModule } from 'ng2-charts';
 
 
 
@@ -101,7 +101,7 @@ import { TotalComponent } from './pasos/paso2/total/total.component';
     MatCheckboxModule,
     MatIconModule,
     HttpClientModule,
-    
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

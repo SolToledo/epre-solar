@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 
 @Component({
   selector: 'app-paneles',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class PanelesComponent {
 
+  @Input()
+  panelesCantidad: number = 0;
+  @Input()
+  dimensionPanel!: DimensionPanel;
+  @Input()
+  panelCapacityW: number = 0;
 }

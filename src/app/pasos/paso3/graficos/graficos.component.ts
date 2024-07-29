@@ -1,47 +1,125 @@
-import { Component, OnInit } from '@angular/core';
-import { Chart } from 'chart.js/auto';
+import { Component, Input, OnInit } from '@angular/core';
+import { Chart, ChartDataset, ChartOptions, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-graficos',
   templateUrl: './graficos.component.html',
-  styleUrls: ['./graficos.component.css']
+  styleUrls: ['./graficos.component.css'],
 })
 export class GraficosComponent implements OnInit {
+  @Input() periodoVeinteanalEmisionesGEIEvitadas!: any[];
+  @Input() periodoVeinteanalFlujoEnergia!: any[];
+  @Input() periodoVeinteanalFlujoIngresosMonetarios!: any[];
+  @Input() periodoVeinteanalGeneracionFotovoltaica!: any[];
+
+  public barChartOptions: ChartOptions = {
+    responsive: true,
+  };
+  public barChartLabels: string[] = [];
+  public barChartType: ChartType = 'bar';
+  public barChartLegend = true;
+  public barChartPlugins = [];
+
+  public barChartData: ChartDataset[] = [];
 
   ngOnInit(): void {
-    this.loadChart();
+    this.initializeChartLabels();
+    this.loadCharts();
   }
 
-  loadChart(): void {
-    const canvas = document.getElementById('investmentChart') as HTMLCanvasElement;
+  initializeChartLabels(): void {
+    this.barChartLabels = this.periodoVeinteanalEmisionesGEIEvitadas.map(
+      (_, index) => `Año ${index + 1}`
+    );
+  }
+
+  loadCharts(): void {
+    this.createChart(
+      'emisionesChart',
+      'line',
+      'Emisiones GEI Evitadas',
+      this.periodoVeinteanalEmisionesGEIEvitadas.map(
+        (item) => item.emisionesTonCO2
+      ),
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(75, 192, 192, 1)'
+    );
+
+    this.createChartDouble('energiaChart', 'line', [
+      {
+        label: 'Autoconsumida',
+        data: this.periodoVeinteanalFlujoEnergia.map(
+          (item) => item.autoconsumida
+        ),
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+      },
+      {
+        label: 'Inyectada',
+        data: this.periodoVeinteanalFlujoEnergia.map((item) => item.inyectada),
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+      },
+    ]);
+
+    this.createChartDouble('ingresosChart', 'line', [
+      {
+        label: 'Ahorro Eléctrico Usd',
+        data: this.periodoVeinteanalFlujoIngresosMonetarios.map(
+          (item) => item.ahorroEnElectricidadTotalUsd
+        ),
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+      },
+      {
+        label: 'Ingreso usd por Inyección',
+        data: this.periodoVeinteanalFlujoIngresosMonetarios.map(
+          (item) => item.ingresoPorInyeccionElectricaUsd
+        ),
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+      },
+    ]);
+    
+    this.createChart(
+      'fotovoltaicaChart',
+      'line',
+      'Generación Fotovoltaica',
+      this.periodoVeinteanalGeneracionFotovoltaica.map(item => item.generacionFotovoltaicaKWh),
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(153, 102, 255, 1)'
+    ); 
+  }
+
+  createChart(
+    elementId: string,
+    type: ChartType,
+    label: string,
+    data: number[],
+    backgroundColor: string,
+    borderColor: string
+  ): void {
+    const canvas = document.getElementById(elementId) as HTMLCanvasElement;
     if (canvas) {
       const ctx = canvas.getContext('2d');
       if (ctx) {
         new Chart(ctx, {
-          type: 'line',
+          type: type,
           data: {
-            labels: ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5'],
-            datasets: [{
-              label: 'Retorno de inversión',
-              data: [50000, 100000, 150000, 200000, 250000],
-              borderColor: 'orange',
-              backgroundColor: 'rgba(255, 165, 0, 0.2)', // Color de fondo para el área bajo la línea
-              pointBackgroundColor: 'orange', // Color de los puntos
-              pointBorderColor: 'white', // Color del borde de los puntos
-              pointHoverBackgroundColor: 'white', // Color de los puntos al hacer hover
-              pointHoverBorderColor: 'orange', // Color del borde de los puntos al hacer hover
-              fill: true // Rellenar el área bajo la línea
-            }, {
-              label: 'Inversión inicial',
-              data: [50000, 50000, 50000, 50000, 50000],
-              borderColor: '#417B6F',
-              backgroundColor: ' rgba(65, 123, 111, 0.2)', // Color de fondo para el área bajo la línea
-              pointBackgroundColor:'#417B6F', // Color de los puntos
-              pointBorderColor: 'white', // Color del borde de los puntos
-              pointHoverBackgroundColor: 'white', // Color de los puntos al hacer hover
-              pointHoverBorderColor: '#417B6F', // Color del borde de los puntos al hacer hover
-              fill: true // Rellenar el área bajo la línea
-            }]
+            labels: this.barChartLabels,
+            datasets: [
+              {
+                label: label,
+                data: data,
+                borderColor: borderColor,
+                backgroundColor: backgroundColor,
+                pointBackgroundColor: borderColor,
+                pointBorderColor: 'white',
+                pointHoverBackgroundColor: 'white',
+                pointHoverBorderColor: borderColor,
+                fill: true,
+              },
+            ],
           },
           options: {
             responsive: true,
@@ -50,18 +128,75 @@ export class GraficosComponent implements OnInit {
                 display: true,
                 title: {
                   display: true,
-                  text: 'Meses'
-                }
+                  text: 'Años',
+                },
               },
               y: {
                 display: true,
                 title: {
                   display: true,
-                  text: 'Valor en $'
-                }
-              }
-            }
-          }
+                  text: 'Valor',
+                },
+              },
+            },
+          },
+        });
+      } else {
+        console.error('Failed to get 2D context');
+      }
+    } else {
+      console.error('Canvas element not found');
+    }
+  }
+
+  createChartDouble(
+    elementId: string,
+    type: ChartType,
+    datasets: Array<{
+      label: string;
+      data: number[];
+      backgroundColor: string;
+      borderColor: string;
+    }>
+  ): void {
+    const canvas = document.getElementById(elementId) as HTMLCanvasElement;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        new Chart(ctx, {
+          type: type,
+          data: {
+            labels: this.barChartLabels,
+            datasets: datasets.map((dataset) => ({
+              ...dataset,
+              borderColor: dataset.borderColor,
+              backgroundColor: dataset.backgroundColor,
+              pointBackgroundColor: dataset.borderColor,
+              pointBorderColor: 'white',
+              pointHoverBackgroundColor: 'white',
+              pointHoverBorderColor: dataset.borderColor,
+              fill: true,
+            })),
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                display: true,
+                title: {
+                  display: true,
+                  text: 'Años',
+                },
+              },
+              y: {
+                display: true,
+                title: {
+                  display: true,
+                  text: 'Valor',
+                },
+              },
+            },
+          },
         });
       } else {
         console.error('Failed to get 2D context');
