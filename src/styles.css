@@ -264,7 +264,8 @@ button[disabled] {
 
   .component-container{
     width: 228px;  
-    height: 80px; 
+   /* height: 80px; */
+    height: 90px; 
     background-color: white;
     background-color: var(--light-background);
     padding: 10px;
@@ -286,7 +287,7 @@ button[disabled] {
   .component-container-borde {
     position: relative;
     width: 228px;  
-    height: 80px; 
+    height: 100px; 
     background-color: white;
     padding: 10px;
     border-radius: 8px;
@@ -326,7 +327,7 @@ button[disabled] {
   }
   
   .titulo{
-    font-size: 16px; 
+    font-size: 15px; 
     color: var(--dark-green);
     margin-bottom: 15px;
   }
