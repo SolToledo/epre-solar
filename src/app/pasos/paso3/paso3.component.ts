@@ -44,7 +44,8 @@ export class Paso3Component implements OnInit {
         this.panelCapacityW =
           this.resultadosFront.solarData.panels.panelCapacityW;
         this.carbonOffsetFactorTnPerMWh = parseFloat((this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000).toFixed(2));
-      });
+      })
+      
   }
   ngOnInit(): void {}
 

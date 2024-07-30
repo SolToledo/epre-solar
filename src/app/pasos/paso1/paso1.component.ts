@@ -53,9 +53,9 @@ export class Paso1Component implements OnInit {
               'Lugar donde se instalarían los paneles fotovoltaicos.Seleccionar el lugar donde estará ubicada la instalación.',
             side: 'left',
             align: 'start',
-            nextBtnText: 'Siguiente', 
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
         {
@@ -66,9 +66,9 @@ export class Paso1Component implements OnInit {
               'Debe indicarse el lugar donde se planea instalar los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
             side: 'left',
             align: 'start',
-            nextBtnText: 'Siguiente', 
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
         {
@@ -79,9 +79,9 @@ export class Paso1Component implements OnInit {
               'Presione para activar el selector de ubicación en el mapa. Puede marcar y ajustar los vértices del lugar donde se instalarían los paneles fotovoltaicos.',
             side: 'left',
             align: 'start',
-            nextBtnText: 'Siguiente', 
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
         {
@@ -92,9 +92,9 @@ export class Paso1Component implements OnInit {
               'Presione para borrar la selección y realizar una nueva.',
             side: 'right',
             align: 'end',
-            nextBtnText: 'Siguiente', 
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
         {
@@ -105,8 +105,8 @@ export class Paso1Component implements OnInit {
               'Para poder continuar al siguiente paso, debe tener seleccionada una zona de instalación.',
             side: 'left',
             align: 'start',
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
       ],
@@ -207,12 +207,12 @@ export class Paso1Component implements OnInit {
       },
       polygonOptions: {
         fillColor: '#ffffff',
-        fillOpacity: 1,
+        fillOpacity: 0,
         strokeWeight: 2,
         strokeColor: '#000000',
         clickable: true,
         editable: true,
-        zIndex: 1
+        zIndex: 1,
       },
     });
     this.drawingManager?.setMap(this.map);
@@ -260,7 +260,8 @@ export class Paso1Component implements OnInit {
             'polygonCoordinates',
             JSON.stringify(polygonCoordinates)
           );
-          
+          // Apply the texture to the polygon
+          this.applyTextureToPolygon(polygon);
         }
       }
     );
@@ -324,7 +325,7 @@ export class Paso1Component implements OnInit {
           longitude: position.lng(),
         })
       );
-      
+
       this.router.navigate(['/pasos/2']);
     } else {
       this.snackBar.open(
@@ -353,5 +354,71 @@ export class Paso1Component implements OnInit {
 
   hideTooltip(event: MouseEvent) {
     this.snackBar.dismiss();
+  }
+
+   applyTextureToPolygon(polygon: google.maps.Polygon): void {
+    const bounds = new google.maps.LatLngBounds();
+    polygon.getPath().forEach((path: google.maps.LatLng) => {
+      bounds.extend(path);
+    });
+  
+    const overlay = new google.maps.GroundOverlay(
+      'assets/img/solar-panel-texture.jpeg', 
+      bounds,
+      {
+        opacity: 0.7, 
+        clickable: false,
+      }
+    );
+  
+    overlay.setMap(this.map);
+    polygon.addListener('mouseover', () => {
+      overlay.setOpacity(0.8);
+    });
+    polygon.addListener('mouseout', () => {
+      overlay.setOpacity(0.6);
+    });
+  }
+
+  /* applyTextureToPolygon(polygon: google.maps.Polygon): void {
+      const svgNS = "http://www.w3.org/2000/svg";
+      const pattern = document.createElementNS(svgNS, "pattern");
+      pattern.setAttribute("id", "solarTexture");
+      pattern.setAttribute("patternUnits", "userSpaceOnUse");
+      pattern.setAttribute("width", "100");
+      pattern.setAttribute("height", "100");
+  
+      const image = document.createElementNS(svgNS, "image");
+      image.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "assets/img/solar-panel-texture.jpeg");
+      image.setAttribute("width", "100");
+      image.setAttribute("height", "100");
+  
+      pattern.appendChild(image);
+      document.getElementById("map")?.appendChild(pattern);
+  
+      polygon.setOptions({
+        fillColor: "url(#solarTexture)",
+        fillOpacity: 0.4
+      });
+    } */
+
+  /* applyTextureToPolygon(polygon: google.maps.Polygon): void {
+    const overlay = new google.maps.GroundOverlay(
+      'src/assets/img/solar-panel-texture.jpeg',
+      this.getBoundsForPolygon(polygon),
+      {
+        clickable: false,
+        opacity: 0.5,
+        map: this.map,
+      }
+    );
+  } */
+
+  getBoundsForPolygon(polygon: google.maps.Polygon): google.maps.LatLngBounds {
+    const bounds = new google.maps.LatLngBounds();
+    polygon.getPath().forEach((coord: google.maps.LatLng) => {
+      bounds.extend(coord);
+    });
+    return bounds;
   }
 }

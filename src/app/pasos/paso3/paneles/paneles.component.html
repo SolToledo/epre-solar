@@ -1,25 +1,30 @@
 <div class="componentes-resultados-paso3">
   <div class="component-container-borde">
     <div class="icon-container">
-      <img src="assets/icon-panel.png" id="marca" class="custom-icon" alt="Icono de panel solar">
+      <img
+        src="assets/icon-panel.png"
+        id="marca"
+        class="custom-icon"
+        alt="Icono de panel solar"
+      />
     </div>
     <div class="texto-container">
       <p class="titulo">Paneles a instalar</p>
       <div class="datos">
         <div class="caracteristicas">
           <p class="texto-inferior-panel">Detalle del panel</p>
-          <p class="dimensiones">{{dimensionPanel.height * 100}} x {{dimensionPanel.width * 100}}cm - {{panelCapacityW}}W</p>
+          <p class="dimensiones">
+            {{ dimensionPanel.height * 100 }} x
+            {{ dimensionPanel.width * 100 }}cm - {{ panelCapacityW }}W
+          </p>
         </div>
         <div class="numero">
-          <p class="cantidad">{{panelesCantidad}}</p>
+          <p class="cantidad">{{ panelesCantidad }}</p>
         </div>
-      </div>      
+      </div>
+      <mat-slider min="4" max="20"  step="1" (change)="onSliderChange($event)"  discrete [displayWith]="formatLabel">
+        <input matSliderThumb [(ngModel)]="panelesCantidad" #slider>
+      </mat-slider>
     </div>
   </div>
 </div>
-
-
-
-
-
-
