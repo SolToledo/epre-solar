@@ -110,14 +110,14 @@
     justify-content: center;
   }
 
-  label {
+ :is(label) {
     font-size: 13px;
     font-weight: 500;
     color: var(--font-light);
     margin-left: 5px;
   }
 
-  input {
+  :is(input) {
     width: 15px;
     height: 15px;
   }

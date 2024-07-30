@@ -2,11 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, lastValueFrom, Observable, throwError } from 'rxjs';
-import { MesesConsumo } from '../interfaces/mesesConsumo';
+import { lastValueFrom } from 'rxjs';
 import { ResultadoService } from './resultado.service';
-import { Resultados } from '../interfaces/resultados';
-import { SharedService } from './shared.service';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 
 @Injectable({

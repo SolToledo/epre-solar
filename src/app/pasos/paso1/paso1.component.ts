@@ -5,7 +5,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
 import { SharedService } from 'src/app/services/shared.service';
-import { SolarApiService } from 'src/app/services/solar-api.service';
 
 declare var google: any;
 @Component({
@@ -54,6 +53,9 @@ export class Paso1Component implements OnInit {
               'Lugar donde se instalarían los paneles fotovoltaicos.Seleccionar el lugar donde estará ubicada la instalación.',
             side: 'left',
             align: 'start',
+            nextBtnText: 'Siguiente', 
+            prevBtnText: 'Anterior', 
+            doneBtnText: 'Terminar'
           },
         },
         {
@@ -64,6 +66,9 @@ export class Paso1Component implements OnInit {
               'Debe indicarse el lugar donde se planea instalar los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
             side: 'left',
             align: 'start',
+            nextBtnText: 'Siguiente', 
+            prevBtnText: 'Anterior', 
+            doneBtnText: 'Terminar'
           },
         },
         {
@@ -74,6 +79,9 @@ export class Paso1Component implements OnInit {
               'Presione para activar el selector de ubicación en el mapa. Puede marcar y ajustar los vértices del lugar donde se instalarían los paneles fotovoltaicos.',
             side: 'left',
             align: 'start',
+            nextBtnText: 'Siguiente', 
+            prevBtnText: 'Anterior', 
+            doneBtnText: 'Terminar'
           },
         },
         {
@@ -84,6 +92,9 @@ export class Paso1Component implements OnInit {
               'Presione para borrar la selección y realizar una nueva.',
             side: 'right',
             align: 'end',
+            nextBtnText: 'Siguiente', 
+            prevBtnText: 'Anterior', 
+            doneBtnText: 'Terminar'
           },
         },
         {
@@ -94,6 +105,8 @@ export class Paso1Component implements OnInit {
               'Para poder continuar al siguiente paso, debe tener seleccionada una zona de instalación.',
             side: 'left',
             align: 'start',
+            prevBtnText: 'Anterior', 
+            doneBtnText: 'Terminar'
           },
         },
       ],
@@ -187,13 +200,19 @@ export class Paso1Component implements OnInit {
   initDrawingManager(): void {
     this.drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: null,
-      drawingControl: false,
+      drawingControl: true,
       drawingControlOptions: {
         position: google.maps.ControlPosition.TOP_LEFT,
         drawingModes: [google.maps.drawing.OverlayType.POLYGON],
       },
       polygonOptions: {
+        fillColor: '#ffffff',
+        fillOpacity: 1,
+        strokeWeight: 2,
+        strokeColor: '#000000',
+        clickable: true,
         editable: true,
+        zIndex: 1
       },
     });
     this.drawingManager?.setMap(this.map);

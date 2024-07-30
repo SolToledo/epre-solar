@@ -24,20 +24,25 @@
               "src/styles.css",
               "node_modules/driver.js/dist/driver.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "core-js/modules/es.array.index-of.js",
+              "core-js/modules/es.array.iterator.js",
+              "core-js/modules/es.array.reduce.js"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kb",
+                  "maximumError": "6kb"
                 }
               ],
               "outputHashing": "all"
