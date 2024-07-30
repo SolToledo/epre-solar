@@ -1,6 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { TarifaComponent } from './tarifa/tarifa.component';
+
 
 @Component({
   selector: 'app-paso2',
@@ -12,11 +14,17 @@ export class Paso2Component implements OnInit {
   allFieldsFilled: boolean = false;
   tarifaContratada: string = '';
   isCategorySelected: boolean = false;
+
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
+  @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent; // Añadido: referencia al componente TarifaComponent
 
   constructor(private router: Router, private snackBar: MatSnackBar) {}
   ngOnInit(): void {
     
+  }
+
+  ngAfterViewInit(): void {
+    this.tarifaComponent.focusSelect();
   }
   
   goBack() {
