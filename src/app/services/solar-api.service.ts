@@ -2,20 +2,17 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, lastValueFrom, Observable, throwError } from 'rxjs';
-import { MesesConsumo } from '../interfaces/mesesConsumo';
+import { lastValueFrom } from 'rxjs';
 import { ResultadoService } from './resultado.service';
-import { Resultados } from '../interfaces/resultados';
-import { SharedService } from './shared.service';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SolarApiService {
-  private readonly apiUrl: string = 'http://localhost:3000';
+  // private readonly apiUrl: string = 'http://localhost:3000';
   private _resultados!: ResultadosFrontDTO;
-  // private apiUrl = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
+  private apiUrl = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
 
   constructor(
     private http: HttpClient,
