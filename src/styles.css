@@ -1,20 +1,16 @@
-@import "~@fortawesome/fontawesome-free/css/all.css";
-
 /*FUENTES*/
 @font-face {
   font-family: 'Sodo Sans';
-  src: url('/assets/fonts/SodoSans-Regular.woff2') format('woff2'),
-       url('/assets/fonts/SodoSans-Regular.woff') format('woff'),
-       url('/assets/fonts/SodoSans-Regular.ttf') format('truetype');
+  src: url('./assets/font/SodoSans-Regular.woff2') format('woff2'),
+       url('./assets/font/SodoSans-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Sodo Sans';
-  src: url('/assets/fonts/SodoSans-Bold.woff2') format('woff2'),
-       url('/assets/fonts/SodoSans-Bold.woff') format('woff'),
-       url('/assets/fonts/SodoSans-Bold.ttf') format('truetype');
+  src: url('./assets/font/SodoSans-Bold.woff2') format('woff2'),
+       url('./assets/font/SodoSans-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
