@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Resultados } from '../interfaces/resultados';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 
 @Injectable({
