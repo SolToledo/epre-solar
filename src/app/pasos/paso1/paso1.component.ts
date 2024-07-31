@@ -356,14 +356,14 @@ export class Paso1Component implements OnInit {
     this.snackBar.dismiss();
   }
 
-   applyTextureToPolygon(polygon: google.maps.Polygon): void {
+   /* applyTextureToPolygon(polygon: google.maps.Polygon): void {
     const bounds = new google.maps.LatLngBounds();
     polygon.getPath().forEach((path: google.maps.LatLng) => {
       bounds.extend(path);
     });
   
     const overlay = new google.maps.GroundOverlay(
-      'assets/img/solar-panel-texture.jpeg', 
+      '', 
       bounds,
       {
         opacity: 0.7, 
@@ -378,9 +378,9 @@ export class Paso1Component implements OnInit {
     polygon.addListener('mouseout', () => {
       overlay.setOpacity(0.6);
     });
-  }
+  } */
 
-  /* applyTextureToPolygon(polygon: google.maps.Polygon): void {
+  applyTextureToPolygon(polygon: google.maps.Polygon): void {
       const svgNS = "http://www.w3.org/2000/svg";
       const pattern = document.createElementNS(svgNS, "pattern");
       pattern.setAttribute("id", "solarTexture");
@@ -400,7 +400,7 @@ export class Paso1Component implements OnInit {
         fillColor: "url(#solarTexture)",
         fillOpacity: 0.4
       });
-    } */
+    }
 
   /* applyTextureToPolygon(polygon: google.maps.Polygon): void {
     const overlay = new google.maps.GroundOverlay(

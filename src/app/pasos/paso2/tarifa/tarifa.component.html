@@ -1,12 +1,3 @@
-<!--<div class="tarifa-container">
-  <select [(ngModel)]="tarifaContratada" (change)="onTarifaChange()">
-    <option value="" disabled selected>Selecciones su tipo de tarifa</option>
-    <option *ngFor="let tarifa of tarifas" [value]="tarifa.value">
-      {{ tarifa.viewValue }}
-    </option>
-  </select>
-</div> -->
-
 <div class="tarifa-container">
   <select #tarifaSelect [(ngModel)]="tarifaContratada" (change)="onTarifaChange()">
     <option value="" disabled selected>Selecciones su tipo de tarifa</option>

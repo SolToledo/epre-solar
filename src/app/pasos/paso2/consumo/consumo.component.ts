@@ -1,12 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MesesConsumo } from 'src/app/interfaces/mesesConsumo';
+import { ResultadoCalculo } from 'src/app/interfaces/resultado-calculo';
+import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { ConsumoService } from 'src/app/services/consumo.service';
 import { SolarApiService } from 'src/app/services/solar-api.service';
-
-interface ResultadoCalculo {
-  totalConsumo: number;
-  categoria: string;
-}
 
 @Component({
   selector: 'app-consumo',
@@ -33,11 +31,22 @@ export class ConsumoComponent implements OnInit {
   ];
   resultado: ResultadoCalculo | null = null;
   totalConsumo: number = 0;
-
-  constructor(private consumoService: ConsumoService, private solarApiService: SolarApiService) {}
+  subscription: Subscription;
+  
+  constructor(private consumoService: ConsumoService, private solarApiService: SolarApiService, consumoTarifaService: ConsumoTarifaService) {
+    this.subscription = consumoTarifaService.consumosMensuales$.subscribe(
+      (consumos: number[]) => {
+        this.updateConsumosMensuales(consumos);
+      }
+    );
+  }
 
   ngOnInit(): void {
     this.focusFirstInput();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   focusFirstInput(): void {
@@ -64,7 +73,7 @@ export class ConsumoComponent implements OnInit {
   }
 
   esMesCompletado(mes: MesesConsumo): boolean {
-    return mes.consumo !== null; // Determina si el mes está completado según el valor de consumo
+    return mes.consumo !== null; 
   }
 
   calcularTotalConsumo(): void {
@@ -97,9 +106,16 @@ export class ConsumoComponent implements OnInit {
   }
 
   preventInvalidInput(event: KeyboardEvent): void {
-    // Permitir solo dígitos numéricos, tecla de retroceso, y la tecla de tabulación
     if (!/[0-9]/.test(event.key) && event.key !== 'Backspace' && event.key !== 'Tab') {
       event.preventDefault();
     }
+  }
+
+  updateConsumosMensuales(consumos: number[]): void {
+    this.meses.forEach((mes, index) => {
+      mes.consumo = consumos[index] || null;
+      mes.completado = consumos[index] !== null;
+    });
+    this.calcularTotalConsumo();
   }
 }
