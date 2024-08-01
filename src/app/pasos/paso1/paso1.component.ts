@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
+import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 declare var google: any;
@@ -25,12 +26,23 @@ export class Paso1Component implements OnInit {
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private mapService: MapService
   ) {}
 
   ngOnInit(): void {
     this.loadGoogleMaps(() => {
-      this.initMap();
+      const mapConfig = this.mapService.getMapConfig();
+      const areaCoords = this.mapService.getAreaCoords();
+
+      if (mapConfig && areaCoords.length > 0) {
+        this.initMap(mapConfig.center, mapConfig.zoom);
+        this.loadPolygon(areaCoords);
+      } else {
+        this.initMap({ lat: -31.53, lng: -68.51 }, 14);
+      }
+
+      // this.mapService.setMap(this.map);
     });
 
     this.sharedService.tutorialShown$.subscribe((shown) => {
@@ -129,15 +141,10 @@ export class Paso1Component implements OnInit {
     }
   }
 
-  initMap(): void {
-    const { latitude, longitude } = {
-      latitude: -31.53,
-      longitude: -68.51,
-    };
-
+  initMap(center: { lat: number; lng: number }, zoom: number): void {
     this.map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: latitude, lng: longitude },
-      zoom: 14,
+      center: center,
+      zoom: zoom,
       mapTypeId: 'satellite',
       disableDefaultUI: true,
       zoomControl: true,
@@ -149,7 +156,7 @@ export class Paso1Component implements OnInit {
     });
 
     this.marker = new google.maps.Marker({
-      position: { lat: latitude, lng: longitude },
+      position: center,
       map: this.map,
       draggable: true,
     });
@@ -207,7 +214,7 @@ export class Paso1Component implements OnInit {
       },
       polygonOptions: {
         fillColor: '#ffffff',
-        fillOpacity: 0,
+        fillOpacity: 0.5,
         strokeWeight: 2,
         strokeColor: '#000000',
         clickable: true,
@@ -216,6 +223,7 @@ export class Paso1Component implements OnInit {
       },
     });
     this.drawingManager?.setMap(this.map);
+
     google.maps.event.addListener(
       this.drawingManager,
       'drawingmode_changed',
@@ -247,26 +255,40 @@ export class Paso1Component implements OnInit {
           const polygonCoordinates = paths[0].getArray().map((coord) => {
             return { lat: coord.lat(), lng: coord.lng() };
           });
+
           this.selectedArea = google.maps.geometry.spherical.computeArea(
             polygon.getPath()
           );
-          localStorage.setItem(
-            'selectedAreaM2',
-            JSON.stringify({
-              value: this.selectedArea,
-            })
-          );
-          localStorage.setItem(
-            'polygonCoordinates',
-            JSON.stringify(polygonCoordinates)
-          );
-          // Apply the texture to the polygon
-          this.applyTextureToPolygon(polygon);
+
+          this.mapService.setAreaCoords(polygonCoordinates);
+          this.mapService.setSelectedArea(this.selectedArea);
+          this.mapService.setMapConfig({
+            center: this.map.getCenter().toJSON(),
+            zoom: this.map.getZoom(),
+          });
         }
       }
     );
   }
 
+  loadPolygon(coords: { lat: number; lng: number }[]): void {
+    const polygon = new google.maps.Polygon({
+      paths: coords,
+      fillColor: '#ffffff',
+      fillOpacity: 0,
+      strokeWeight: 2,
+      strokeColor: '#000000',
+      clickable: true,
+      editable: true,
+      zIndex: 1,
+    });
+    polygon.setMap(this.map);
+    this.overlays.push(polygon);
+    this.areaMarked = true;
+
+    this.map.fitBounds(this.getBoundsForPolygon(polygon));
+  }
+  
   habilitarMarcado(): void {
     if (this.drawingManager) {
       this.drawingManager.setDrawingMode(
@@ -356,31 +378,7 @@ export class Paso1Component implements OnInit {
     this.snackBar.dismiss();
   }
 
-   /* applyTextureToPolygon(polygon: google.maps.Polygon): void {
-    const bounds = new google.maps.LatLngBounds();
-    polygon.getPath().forEach((path: google.maps.LatLng) => {
-      bounds.extend(path);
-    });
-  
-    const overlay = new google.maps.GroundOverlay(
-      '', 
-      bounds,
-      {
-        opacity: 0.7, 
-        clickable: false,
-      }
-    );
-  
-    overlay.setMap(this.map);
-    polygon.addListener('mouseover', () => {
-      overlay.setOpacity(0.8);
-    });
-    polygon.addListener('mouseout', () => {
-      overlay.setOpacity(0.6);
-    });
-  } */
-
-  applyTextureToPolygon(polygon: google.maps.Polygon): void {
+  /* applyTextureToPolygon(polygon: google.maps.Polygon): void {
       const svgNS = "http://www.w3.org/2000/svg";
       const pattern = document.createElementNS(svgNS, "pattern");
       pattern.setAttribute("id", "solarTexture");
@@ -400,19 +398,7 @@ export class Paso1Component implements OnInit {
         fillColor: "url(#solarTexture)",
         fillOpacity: 0.4
       });
-    }
-
-  /* applyTextureToPolygon(polygon: google.maps.Polygon): void {
-    const overlay = new google.maps.GroundOverlay(
-      'src/assets/img/solar-panel-texture.jpeg',
-      this.getBoundsForPolygon(polygon),
-      {
-        clickable: false,
-        opacity: 0.5,
-        map: this.map,
-      }
-    );
-  } */
+    } */
 
   getBoundsForPolygon(polygon: google.maps.Polygon): google.maps.LatLngBounds {
     const bounds = new google.maps.LatLngBounds();

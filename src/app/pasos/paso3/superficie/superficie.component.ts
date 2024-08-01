@@ -10,7 +10,7 @@ export class SuperficieComponent {
 
   constructor() {
     const item = localStorage.getItem("selectedAreaM2");
-    this.selectedAreaM2 = item ? JSON.parse(item).value.toFixed(2) : {};
+    this.selectedAreaM2 = item ? JSON.parse(item) : {};
   }
   
 }
