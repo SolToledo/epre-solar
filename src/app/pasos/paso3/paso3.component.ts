@@ -165,42 +165,4 @@ export class Paso3Component implements OnInit {
   getCostoInstalacion() {
     return 3500;
   }
-
-  drawPanels(): void {
-    const areaCoords = this.mapService.getAreaCoords();
-    if (!areaCoords.length) {
-      return;
-    }
-
-    const numberOfPanels = 10; // Este valor debería ser calculado
-    const bounds = new google.maps.LatLngBounds();
-    areaCoords.forEach((coord) =>
-      bounds.extend(new google.maps.LatLng(coord.lat, coord.lng))
-    );
-
-    const panelWidth = 1.04;
-    const panelHeight = 1.87;
-
-    for (let i = 0; i < numberOfPanels; i++) {
-      const lat = bounds.getNorthEast().lat() - i * panelHeight;
-      const lng = bounds.getSouthWest().lng();
-
-      const panelCoords = [
-        { lat: lat, lng: lng },
-        { lat: lat, lng: lng + panelWidth },
-        { lat: lat - panelHeight, lng: lng + panelWidth },
-        { lat: lat - panelHeight, lng: lng },
-      ];
-
-      const panelPolygon = new google.maps.Polygon({
-        paths: panelCoords,
-        strokeColor: '#0000FF',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#0000FF',
-        fillOpacity: 0.35,
-      });
-      panelPolygon.setMap(this.map);
-    }
-  }
 }
