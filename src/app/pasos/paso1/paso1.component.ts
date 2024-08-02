@@ -1,5 +1,3 @@
-/// <reference types="google.maps" />
-
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -7,7 +5,6 @@ import { driver } from 'driver.js';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 
-declare var google: any;
 @Component({
   selector: 'app-paso1',
   templateUrl: './paso1.component.html',
@@ -111,6 +108,27 @@ export class Paso1Component implements OnInit {
     this.sharedService.setTutorialShown(false);
   }
 
+ 
+
+  showTooltip(event: MouseEvent) {
+    if (!this.areaMarked) {
+      this.snackBar.open(
+        'Debe seleccionar una zona de instalación para continuar.',
+        '',
+        {
+          duration: 2000,
+          panelClass: ['custom-snackbar'],
+        }
+      );
+    }
+  }
+
+  hideTooltip(event: MouseEvent) {
+    this.snackBar.dismiss();
+  }
+
+  buscarUbicacion(value:any){}
+
   goBack() {
     this.router.navigate(['/pasos/0']);
   }
@@ -137,22 +155,5 @@ export class Paso1Component implements OnInit {
         }
       );
     }
-  }
-
-  showTooltip(event: MouseEvent) {
-    if (!this.areaMarked) {
-      this.snackBar.open(
-        'Debe seleccionar una zona de instalación para continuar.',
-        '',
-        {
-          duration: 2000,
-          panelClass: ['custom-snackbar'],
-        }
-      );
-    }
-  }
-
-  hideTooltip(event: MouseEvent) {
-    this.snackBar.dismiss();
   }
 }

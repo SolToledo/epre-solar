@@ -102,7 +102,7 @@ import { MatSliderModule } from '@angular/material/slider';
     MatIconModule,
     HttpClientModule,
     NgChartsModule,
-    MatSliderModule
+    MatSliderModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
