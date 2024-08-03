@@ -42,7 +42,6 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
-import { AhorroComponent } from './pasos/paso3/ahorro/ahorro.component';
 import { PlazoComponent } from './pasos/paso3/plazo/plazo.component';
 import { PotenciaComponent } from './pasos/paso3/potencia/potencia.component';
 import { SuperficieComponent } from './pasos/paso3/superficie/superficie.component';
@@ -53,6 +52,10 @@ import { TarifaIntercambioComponent } from './pasos/paso3/tarifa-intercambio/tar
 import { TotalComponent } from './pasos/paso2/total/total.component';
 import { NgChartsModule } from 'ng2-charts';
 import { MatSliderModule } from '@angular/material/slider';
+import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
+
+
+
 
 
 
@@ -76,7 +79,6 @@ import { MatSliderModule } from '@angular/material/slider';
     RetornoComponent,
     TerminosComponent,
     Paso0Component,
-    AhorroComponent,
     PlazoComponent,
     PotenciaComponent,
     SuperficieComponent,
@@ -85,7 +87,9 @@ import { MatSliderModule } from '@angular/material/slider';
     CostoComponent,
     TarifaIntercambioComponent,
     TotalComponent,
+    AhorrosComponent,
   ],
+  
   imports: [
     BrowserModule,
     AppRoutingModule,
