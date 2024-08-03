@@ -22,11 +22,6 @@
   font-family: 'Sodo Sans', sans-serif;
 }
 
-body {
-  font-family: 'Sodo Sans', sans-serif;
-}
-
-
 /*COLORES*/
 :root {
   --dark-green: #1e3932;
@@ -66,8 +61,6 @@ body {
 --fs-32pxr: 2rem;
 --fs-52pxr: 3.2rem;
 }
-
-
 
 /* Archivo styles.css */
 .mat-snack-bar-container.custom-snackbar {

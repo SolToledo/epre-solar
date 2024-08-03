@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms'; // Importa FormsModule
@@ -53,8 +53,14 @@ import { TarifaIntercambioComponent } from './pasos/paso3/tarifa-intercambio/tar
 import { TotalComponent } from './pasos/paso2/total/total.component';
 import { NgChartsModule } from 'ng2-charts';
 import { MatSliderModule } from '@angular/material/slider';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { AppConfigModule } from './app-config.module';
+import { EnvironmentService } from './services/environment.service';
+import { firstValueFrom } from 'rxjs';
 
-
+export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
+  return (): Promise<void> => firstValueFrom(environmentService.loadGoogleMapsApiKey());
+}
 
 @NgModule({
   declarations: [
@@ -103,8 +109,19 @@ import { MatSliderModule } from '@angular/material/slider';
     HttpClientModule,
     NgChartsModule,
     MatSliderModule,
+    GoogleMapsModule,
+    AppConfigModule,
+    
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    EnvironmentService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [EnvironmentService],
+      multi: true,
+    },
+  ],
+  bootstrap: [AppComponent] 
 })
 export class AppModule { }

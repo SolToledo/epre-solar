@@ -16,24 +16,18 @@
     flex-direction: row;
     position: relative;
   }
-
-  
   
  /* componentes donde renderizo todo */
- .mapa {
-    width: 100%;
-    height: 100%;
-  }
-  
   .paso {
     width: 589px;
     height: 100%; /* altura total menos la toolbar */
-    position: absolute;
+    position: absolute; 
     right: 0;
     top: 0;
     transition: width 0.3s ease; /* transición para el colapso */
     display: flex;
     flex-direction: row;
+    z-index: 1; 
   }
   
   .paso.collapsed {

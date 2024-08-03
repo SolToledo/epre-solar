@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
+import { LocationService } from 'src/app/services/location.service';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 
@@ -14,24 +15,55 @@ export class Paso1Component implements OnInit {
   currentStep: number = 1;
   selectedArea: number = 0;
   tutorialShown: boolean = false;
-  marker: any;
   areaMarked: boolean = false;
+  @ViewChild('pacInput', { static: false }) pacInput!: ElementRef;
+  private marker: google.maps.marker.AdvancedMarkerElement | undefined;
+  private map!: google.maps.Map;
 
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
     private sharedService: SharedService,
-    private mapService: MapService
+    private mapService: MapService,
+    private locationService: LocationService
   ) {}
 
   ngOnInit(): void {
-    
     this.sharedService.tutorialShown$.subscribe((shown) => {
       this.tutorialShown = shown;
     });
+
     if (!this.tutorialShown) {
       this.showTutorial();
     }
+
+    this.mapService.overlayComplete$().subscribe((value) => {
+      this.areaMarked = value;
+    });
+
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+    const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+      'marker'
+    )) as google.maps.MarkerLibrary;
+    this.map = this.mapService.getMap();
+    if (!this.map) {
+      console.error('El mapa no está inicializado.');
+      return;
+    }
+
+    this.marker = new AdvancedMarkerElement({
+      map: this.map
+    });
+
+    if (this.pacInput) {
+      this.initializeAutocomplete();
+    } else {
+      console.error('pacInput no está definido.');
+    }
+
+    this.mapService.initializeDrawingManager();
   }
 
   showTutorial() {
@@ -108,8 +140,6 @@ export class Paso1Component implements OnInit {
     this.sharedService.setTutorialShown(false);
   }
 
- 
-
   showTooltip(event: MouseEvent) {
     if (!this.areaMarked) {
       this.snackBar.open(
@@ -127,20 +157,37 @@ export class Paso1Component implements OnInit {
     this.snackBar.dismiss();
   }
 
-  buscarUbicacion(value:any){}
+  async buscarUbicacion(value: string) {
+    if (!this.marker) {
+      console.error('El marcador no está inicializado.');
+      return;
+    }
+    try {
+      const location = await this.locationService.validateLocation(value, this.map, this.marker);
+
+      if (location) {
+        this.marker.position = location;
+        this.areaMarked = true;
+      } else {
+        console.error('La ubicación no es válida.');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   goBack() {
     this.router.navigate(['/pasos/0']);
   }
 
   goToPaso2() {
-    const position = this.marker.getPosition();
+    const position = this.marker?.position;
     if (position) {
       localStorage.setItem(
         'userInstallationPosition',
         JSON.stringify({
-          latitude: position.lat(),
-          longitude: position.lng(),
+          latitude: position.lat,
+          longitude: position.lng,
         })
       );
 
@@ -155,5 +202,45 @@ export class Paso1Component implements OnInit {
         }
       );
     }
+  }
+
+  private async initializeAutocomplete() {
+    const input = document.getElementById('pac-input') as HTMLInputElement;
+    const searchBox = new google.maps.places.SearchBox(input);
+
+    this.map.addListener('bounds_changed', () => {
+      searchBox.setBounds(this.map.getBounds() as google.maps.LatLngBounds);
+    });
+
+    searchBox.addListener('places_changed', async () => {
+      const places = searchBox.getPlaces();
+
+      if (places && places.length > 0) {
+        if (places.length == 0) {
+          return;
+        }
+
+        const place = places[0];
+        if (place.geometry && place.geometry.location) {
+          if (this.marker) {
+            const location = await this.locationService.validateLocation(place.name || 'default', this.map, this.marker);
+            this.map.setCenter(location);
+          }
+        }
+      }
+    });
+  }
+
+  enableDrawingMode() {
+    this.mapService.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+  }
+
+  disableDrawingMode() {
+    this.mapService.setDrawingMode(null);
+  }
+  
+  clearDrawing() {
+    this.mapService.clearPolygons();
+    this.areaMarked = false;
   }
 }
