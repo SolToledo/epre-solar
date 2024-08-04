@@ -5,6 +5,7 @@ import { Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class MapService {
+  
   private map!: google.maps.Map;
   private drawingManager!: google.maps.drawing.DrawingManager;
   private center: google.maps.LatLngLiteral = { lat: -31.5364, lng: -68.50639 };
@@ -41,9 +42,15 @@ export class MapService {
   clearPolygons() {
     this.polygons.forEach((polygon) => polygon.setMap(null));
     this.polygons = [];
+  }
 
+  clearPanels() {
     this.panels.forEach((panel) => panel.setMap(null));
     this.panels = [];
+  }
+
+  getPolygons() {
+    return this.polygons
   }
 
   getMap() {
@@ -74,7 +81,7 @@ export class MapService {
 
   initializeDrawingManager() {
     this.drawingManager = new google.maps.drawing.DrawingManager({
-      drawingMode: null, // No drawing mode enabled by default
+      drawingMode: null, 
       drawingControl: false,
       drawingControlOptions: {
         position: google.maps.ControlPosition.TOP_CENTER,
@@ -97,8 +104,16 @@ export class MapService {
       (event: any) => {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
           this.clearPolygons();
+          this.clearPanels();
           const newPolygon = event.overlay as google.maps.Polygon;
           this.polygons.push(newPolygon);
+
+          // Agregar el listener para el evento set_at
+          google.maps.event.addListener(newPolygon.getPath(), 'set_at', () => {
+            this.clearPanels(); 
+            this.drawPanels(newPolygon);
+        });
+
           this.overlayCompleteSubject.next(true);
           this.drawPanels(newPolygon);
         }

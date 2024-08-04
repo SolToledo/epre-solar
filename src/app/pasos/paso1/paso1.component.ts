@@ -40,7 +40,6 @@ export class Paso1Component implements OnInit {
     this.mapService.overlayComplete$().subscribe((value) => {
       this.areaMarked = value;
     });
-
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -54,7 +53,7 @@ export class Paso1Component implements OnInit {
     }
 
     this.marker = new AdvancedMarkerElement({
-      map: this.map
+      map: this.map,
     });
 
     if (this.pacInput) {
@@ -163,7 +162,11 @@ export class Paso1Component implements OnInit {
       return;
     }
     try {
-      const location = await this.locationService.validateLocation(value, this.map, this.marker);
+      const location = await this.locationService.validateLocation(
+        value,
+        this.map,
+        this.marker
+      );
 
       if (location) {
         this.marker.position = location;
@@ -181,27 +184,54 @@ export class Paso1Component implements OnInit {
   }
 
   goToPaso2() {
-    const position = this.marker?.position;
-    if (position) {
-      localStorage.setItem(
-        'userInstallationPosition',
-        JSON.stringify({
-          latitude: position.lat,
-          longitude: position.lng,
-        })
-      );
-
-      this.router.navigate(['/pasos/2']);
-    } else {
+    if (!this.areaMarked) {
       this.snackBar.open(
-        'Debe seleccionar una zona de instalación para continuar.',
-        '',
-        {
-          duration: 2000,
-          panelClass: ['custom-snackbar'],
-        }
+          'Debe seleccionar una zona de instalación para continuar.',
+          '',
+          {
+              duration: 2000,
+              panelClass: ['custom-snackbar'],
+          }
       );
-    }
+      return; // No avanzar si no hay área marcada
+  }
+
+  // Verificar el tamaño del área seleccionada (en metros cuadrados)
+  const area = google.maps.geometry.spherical.computeArea(this.mapService.getPolygons()[0]?.getPath());
+  const minimumAreaThreshold = 10; // Define un umbral mínimo, por ejemplo, 10 m²
+  const maximunAreaThreshold = 2000;
+  const polygons = this.mapService.getPolygons();
+
+  if (area < minimumAreaThreshold) {
+      this.snackBar.open(
+          `El área seleccionada es demasiado pequeña. Debe ser mayor a ${minimumAreaThreshold} m².`,
+          '',
+          {
+              duration: 2000,
+              panelClass: ['custom-snackbar'],
+          }
+      );
+      polygons[0].setEditable(true);
+      this.mapService.setDrawingMode(null);
+      return; // No avanzar si el área es demasiado pequeña
+  }
+  if (area > maximunAreaThreshold) {
+      this.snackBar.open(
+          `El área seleccionada es demasiado grande. Debe ser menor a ${maximunAreaThreshold} m².`,
+          '',
+          {
+              duration: 2000,
+              panelClass: ['custom-snackbar'],
+          }
+      );
+      polygons[0].setEditable(true);
+      this.mapService.setDrawingMode(null);
+      return; // No avanzar si el área es demasiado pequeña
+  }
+
+  // Si todo está bien, avanzar al siguiente paso
+  polygons[0].setEditable(false);
+  this.router.navigate(['/pasos/2']);
   }
 
   private async initializeAutocomplete() {
@@ -223,7 +253,11 @@ export class Paso1Component implements OnInit {
         const place = places[0];
         if (place.geometry && place.geometry.location) {
           if (this.marker) {
-            const location = await this.locationService.validateLocation(place.name || 'default', this.map, this.marker);
+            const location = await this.locationService.validateLocation(
+              place.name || 'default',
+              this.map,
+              this.marker
+            );
             this.map.setCenter(location);
             input.value = '';
           }
