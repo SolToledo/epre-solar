@@ -225,6 +225,7 @@ export class Paso1Component implements OnInit {
           if (this.marker) {
             const location = await this.locationService.validateLocation(place.name || 'default', this.map, this.marker);
             this.map.setCenter(location);
+            input.value = '';
           }
         }
       }
@@ -238,7 +239,7 @@ export class Paso1Component implements OnInit {
   disableDrawingMode() {
     this.mapService.setDrawingMode(null);
   }
-  
+
   clearDrawing() {
     this.mapService.clearPolygons();
     this.areaMarked = false;

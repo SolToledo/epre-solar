@@ -5,13 +5,13 @@ import { Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class MapService {
-  
   private map!: google.maps.Map;
   private drawingManager!: google.maps.drawing.DrawingManager;
   private center: google.maps.LatLngLiteral = { lat: -31.5364, lng: -68.50639 };
-  private zoom = 14;
+  private zoom = 22;
   private mapSubject = new Subject<google.maps.Map>();
   private polygons: google.maps.Polygon[] = [];
+  private panels: google.maps.Rectangle[] = [];
   private overlayCompleteSubject = new Subject<boolean>();
 
   constructor() {}
@@ -20,7 +20,7 @@ export class MapService {
     const { Map } = (await google.maps.importLibrary(
       'maps'
     )) as google.maps.MapsLibrary;
-    
+
     this.map = new Map(mapElement, {
       center: this.center,
       zoom: this.zoom,
@@ -41,6 +41,9 @@ export class MapService {
   clearPolygons() {
     this.polygons.forEach((polygon) => polygon.setMap(null));
     this.polygons = [];
+
+    this.panels.forEach((panel) => panel.setMap(null));
+    this.panels = [];
   }
 
   getMap() {
@@ -78,7 +81,7 @@ export class MapService {
         drawingModes: [google.maps.drawing.OverlayType.POLYGON],
       },
       polygonOptions: {
-        fillColor: '#00ff00',
+        fillColor: '#808080',
         fillOpacity: 0.35,
         strokeWeight: 2,
         clickable: true,
@@ -97,6 +100,7 @@ export class MapService {
           const newPolygon = event.overlay as google.maps.Polygon;
           this.polygons.push(newPolygon);
           this.overlayCompleteSubject.next(true);
+          this.drawPanels(newPolygon);
         }
       }
     );
@@ -105,12 +109,97 @@ export class MapService {
   setDrawingMode(mode: google.maps.drawing.OverlayType | null) {
     if (this.drawingManager) {
       this.drawingManager.setDrawingMode(mode);
-      this.drawingManager.setOptions({drawingControl:true})
+      this.drawingManager.setOptions({ drawingControl: true });
     }
   }
 
-
   overlayComplete$(): Observable<boolean> {
     return this.overlayCompleteSubject.asObservable();
+  }
+
+  private drawPanels(polygon: google.maps.Polygon) {
+    const bounds = new google.maps.LatLngBounds();
+    polygon.getPath().forEach((latLng) => {
+      bounds.extend(latLng);
+    });
+  
+    const area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+    const panelWidthMeters = 1.8; // Ancho en metros (180 cm)
+    const panelHeightMeters = 1.1; // Alto en metros (110 cm)
+  
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
+  
+    const centerLat = (northEast.lat() + southWest.lat()) / 2;
+    const centerLng = (northEast.lng() + southWest.lng()) / 2;
+    const radiansLat = centerLat * (Math.PI / 180);
+  
+    const panelWidthDegrees = panelWidthMeters / (111320 * Math.cos(radiansLat));
+    const panelHeightDegrees = panelHeightMeters / 110574;
+    const boundsWidth = Math.abs(northEast.lng() - southWest.lng());
+    const boundsHeight = Math.abs(northEast.lat() - southWest.lat());
+  
+    const numPanelsX = Math.floor(boundsWidth / panelWidthDegrees);
+    const numPanelsY = Math.floor(boundsHeight / panelHeightDegrees);
+  
+    const offsetX = (boundsWidth - (numPanelsX * panelWidthDegrees)) / 2;
+    const offsetY = (boundsHeight - (numPanelsY * panelHeightDegrees)) / 2;
+    
+    const panels: google.maps.Rectangle[] = [];
+  
+    for (let i = 0; i < numPanelsX; i++) {
+      for (let j = 0; j < numPanelsY; j++) {
+        const panelBounds = new google.maps.LatLngBounds(
+          {
+            lat: southWest.lat() + offsetY + j * panelHeightDegrees,
+            lng: southWest.lng() + offsetX + i * panelWidthDegrees,
+          },
+          {
+            lat: southWest.lat() + offsetY + (j + 1) * panelHeightDegrees,
+            lng: southWest.lng() + offsetX + (i + 1) * panelWidthDegrees,
+          }
+        );
+
+        // Asegurarse de que el rectángulo esté dentro de los límites del polígono
+        if (
+          bounds.contains(panelBounds.getNorthEast()) &&
+          bounds.contains(panelBounds.getSouthWest())
+        ) {
+          const panelRectangle = new google.maps.Rectangle({
+            bounds: panelBounds,
+            fillColor: '#000000',
+            fillOpacity: 0.7,
+            strokeColor: '#FFA500',
+            strokeWeight: 0.5,
+            map: this.map,
+            zIndex: 1,
+          });
+          panels.push(panelRectangle);
+        }
+      }
+    }
+    this.panels = panels;
+    this.clipPanelsToPolygon(polygon, panels);
+  }
+
+  clipPanelsToPolygon(polygon: google.maps.Polygon, panels: google.maps.Rectangle[]) {
+    panels.forEach(panel => {
+      const panelBounds = panel.getBounds();
+      const northEast = panelBounds!.getNorthEast();
+      const southWest = panelBounds!.getSouthWest();
+  
+      const vertices = [
+        northEast,
+        new google.maps.LatLng(northEast.lat(), southWest.lng()),
+        southWest,
+        new google.maps.LatLng(southWest.lat(), northEast.lng())
+      ];
+  
+      const inside = vertices.every(vertex => google.maps.geometry.poly.containsLocation(vertex, polygon));
+  
+      if (!inside) {
+        panel.setMap(null);
+      }
+    });
   }
 }
