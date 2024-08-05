@@ -224,7 +224,8 @@ button[disabled] {
 .resultados-paso3{
 
   .component-container-borde{
-    width: 250px;
+   /* width: 250px;*/
+    width: 225px;
     height: 120px;
     border-radius: 8px;
     position: relative;
@@ -233,7 +234,8 @@ button[disabled] {
 
   .component-container{
     background-color: var(--light-background);
-    width: 250px;
+    /*width: 250px;*/
+    width: 225px;
     height: 120px;
     border-radius: 8px;
   }  
@@ -331,7 +333,8 @@ button[disabled] {
     }
   
     .resultado{
-      font-size: 29px;
+     /* font-size: 29px;*/
+      font-size: 25px;
       color: var(--medium-green);
       font-weight: 600;
       margin: 0%;
@@ -365,6 +368,40 @@ button[disabled] {
       margin: 0%;
       padding: 0%;
     }
+
+    .unidad-simple-dism{
+      color: var(--dark-green);
+      font-size: 17px;
+      font-weight: bold;
+      margin: 0%;
+      margin: 0%;
+      padding: 0%;
+    }
+
+/**************************************/
+/*para el componente INVERSION*/
+.resultado-centro-inversion{
+  width:55%;
+  height: 100%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin: 0%;
+  display: flex;
+}
+
+.unidad-component-inversion{
+  width: 25%;
+  line-height: 1.1; 
+  margin-bottom: 0%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+
+
+
 
   /*cuando la unidad es texto por ejemplo meses*/
 .unidad-component-texto{
@@ -409,7 +446,6 @@ button[disabled] {
   padding: 0%;
   line-height: 0.8; 
 }
-
 
 .texto-lateral-comp{
   font-size: 12px;

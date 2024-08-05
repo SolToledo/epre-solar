@@ -35,34 +35,37 @@
               <app-plazo
                 [plazoRecuperoInversion]="plazoRecuperoInversion"
               ></app-plazo>
+              <app-paneles
+              [panelesCantidad]="panelesCantidad"
+              [dimensionPanel]="dimensionPanel"
+              [panelCapacityW]="panelCapacityW"
+            ></app-paneles>
             </div>
 
-            <div class="info-row">
-              <app-paneles
-                [panelesCantidad]="panelesCantidad"
-                [dimensionPanel]="dimensionPanel"
-                [panelCapacityW]="panelCapacityW"
-              ></app-paneles>
+            <div class="info-row">      
               <app-potencia
                 [instalacionPotencia]="
                   (panelesCantidad * panelCapacityW) / 1000
                 "
               ></app-potencia>
-            </div>
-
-            <div class="info-row">
               <app-superficie></app-superficie>
               <app-cobertura [TIR]="getTIR()"></app-cobertura>
             </div>
+
             <div class="info-row">
               <app-energia></app-energia>
               <app-emisiones
                 [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"
               ></app-emisiones>
-            </div>
-            <div class="info-row">
               <app-costo [costoInstalacion]="getCostoInstalacion()"></app-costo>
+
+            </div>
+
+            <div class="info-row">  
               <app-tarifa-intercambio></app-tarifa-intercambio>
+              <div class="grafico-component">
+                <p>grafico</p>
+              </div>
             </div>
           </div>
 

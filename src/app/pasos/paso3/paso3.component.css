@@ -33,11 +33,12 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
- /* background-color: #8fb92d;*/
+ 
 
   .content-scroll {
    /* height: 55vh;
     max-height: 55vh;*/
+    width: 100%;/*******************************/
     height: 60vh;
     max-height: 60vh;
     overflow-y: scroll; /* Solo permite desplazamiento vertical */
@@ -80,7 +81,7 @@
   
 }
 .descargar-enviar-component{
-  width: 22%;
+  width: 17%;
   height: 95%;
   display: flex;
   flex-direction: row;
@@ -271,3 +272,11 @@
   color: #fff; 
 }
 
+/********************************************/
+/*espacio para grafico*/
+.grafico-component{
+  background-color: #a1b6b2;
+  width: 80%;
+  border-radius: 8px;
+  margin-left:10px;
+}
