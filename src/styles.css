@@ -184,7 +184,7 @@ button[disabled] {
 }
 
 /**********************************************/
-#boton-editar {
+/*#boton-editar {
   background-color: white;
   color: var(--dark-green);
   font-weight: 300;
@@ -209,7 +209,7 @@ button[disabled] {
 
 #boton-editar:hover .material-icons {
   color: var(--medium-green); 
-}
+}*/
 
 .custom-snackbar {
   --mdc-snackbar-container-color: #cba258!important;
