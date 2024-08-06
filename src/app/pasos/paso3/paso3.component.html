@@ -1,146 +1,157 @@
-<div class="content" id="contentToConvert">
-  <div class="content">
-    <div class="titulo">
-      <h2 id="titulo">resultados</h2>
-    </div>
-    <div class="info-container">
-      <div class="action-buttons">
-        <button id="downloadButton" (click)="downloadPDF()">
-          <img
-            src="assets/icon-descargar-bco.png"
-            alt="Icono descargar PDF"
-            class="icono"
-          />
-          Descargar en PDF
-        </button>
-
-        <button id="emailButton" (click)="sendEmail()">
-          <img
-            src="assets/icon-correo-bco.png"
-            alt="Icono enviar correo"
-            class="icono"
-          />
-          Enviar por correo
-        </button>
-      </div>
-      <div class="informacion">
-        <div class="content-scroll">
-          <div class="info-mostrar">
-            <div class="info-row">
-              <app-ahorro></app-ahorro>
-              <app-plazo
-                [plazoRecuperoInversion]="plazoRecuperoInversion"
-              ></app-plazo>
-            </div>
-            <div class="info-row">
-              <app-paneles
-                [panelesCantidad]="panelesCantidad"
-                [dimensionPanel]="dimensionPanel"
-                [panelCapacityW]="panelCapacityW"
-              ></app-paneles>
-              <app-potencia
-                [instalacionPotencia]="
-                  (panelesCantidad * panelCapacityW) / 1000
-                "
-              ></app-potencia>
-            </div>
-            <div class="info-row">
-              <app-superficie></app-superficie>
-              <app-cobertura [TIR]="getTIR()"></app-cobertura>
-            </div>
-            <div class="info-row">
-              <app-energia></app-energia>
-              <app-emisiones
-                [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"
-              ></app-emisiones>
-            </div>
-            <div class="info-row">
-              <app-costo [costoInstalacion]="getCostoInstalacion()"></app-costo>
-              <app-tarifa-intercambio></app-tarifa-intercambio>
-            </div>
-          </div>
-
-          <!--grafico-->
-          <div class="grafico">
-            <div class="periodo">
-              <div class="icono">
-                <img
-                  src="assets/dinero-tiempo.png"
-                  id="marca"
-                  class="custom-icon"
-                />
-              </div>
-              <div>
-                <p class="texto-meses">
-                  Período de recuperación de la inversión aproximada
-                </p>
-              </div>
-              <div class="numero-meses">
-                <p class="numero">{{plazoRecuperoInversion * 12}}</p>
-                <p class="meses">meses</p>
-              </div>
-            </div>
-            <!--termina periodo-->
-
-            <div class="grafico-imagen">
-              <app-graficos
-                [periodoVeinteanalEmisionesGEIEvitadas]="
-                  getEmisionesGEIEvitadas()
-                "
-                [periodoVeinteanalFlujoEnergia]="
-                  getFlujoEnergia()
-                "
-                [periodoVeinteanalFlujoIngresosMonetarios]="
-                  getFlujoIngresosMonetarios()
-                "
-                [periodoVeinteanalGeneracionFotovoltaica]="
-                  getGeneracionFotovoltaica()
-                "
-              ></app-graficos>
-            </div>
-          </div>
-          <!--termina grafico-->
-        </div>
-      </div>
-      <!--termina informacion-->
-
-      <!--botones-->
-      <div class="button-container">
-        <div class="boton">
-          <button id="boton-volver" (click)="goBack()">
-            <span class="material-icons">chevron_left</span> Volver
-          </button>
-         <br />
-          <button id="boton-editar">
-            Editar área
-            <span class="material-icons">edit</span>
-          </button>
-          <br />
-          <button id="boton-siguiente" (click)="mostrarAdvertencia()">
-            Nuevo cálculo
-            <span class="material-icons">chevron_right</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Modal de advertencia -->
-      <div class="modal" [ngClass]="{ mostrar: mostrarModal }">
-        <div class="modal-contenido">
-          <p>
-            ¿Estás seguro de que deseas salir? Cualquier información no guardada
-            se perderá.
-          </p>
-          <div class="botones-modal">
-            <button id="boton-volver" (click)="cancelarSalir()">
-              Cancelar
-            </button>
-            <button id="boton-siguiente" (click)="confirmarSalir()">
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--content-->
+<div class="spinner-container" *ngIf="isLoading">
+  <ngx-spinner
+    bdColor="transparent"
+    size="large"
+    color="#fff"
+    type="ball-spin-clockwise"
+  >
+  </ngx-spinner>
 </div>
+<span class="resultados" *ngIf="!isLoading">
+  <div class="content" id="contentToConvert">
+    <div class="content">
+      <div class="titulo">
+        <h2 id="titulo">resultados</h2>
+      </div>
+      <div class="info-container">
+        <div class="action-buttons">
+          <button id="downloadButton" (click)="downloadPDF()">
+            <img
+              src="assets/icon-descargar-bco.png"
+              alt="Icono descargar PDF"
+              class="icono"
+            />
+            Descargar en PDF
+          </button>
+
+          <button id="emailButton" (click)="sendEmail()">
+            <img
+              src="assets/icon-correo-bco.png"
+              alt="Icono enviar correo"
+              class="icono"
+            />
+            Enviar por correo
+          </button>
+        </div>
+        <div class="informacion">
+          <div class="content-scroll">
+            <div class="info-mostrar">
+              <div class="info-row">
+                <app-ahorro></app-ahorro>
+                <app-plazo
+                  [plazoRecuperoInversion]="plazoRecuperoInversion"
+                ></app-plazo>
+              </div>
+              <div class="info-row">
+                <app-paneles
+                  [panelesCantidad]="panelesCantidad"
+                  [dimensionPanel]="dimensionPanel"
+                  [panelCapacityW]="panelCapacityW"
+                ></app-paneles>
+                <app-potencia
+                  [instalacionPotencia]="
+                    (panelesCantidad * panelCapacityW) / 1000
+                  "
+                ></app-potencia>
+              </div>
+              <div class="info-row">
+                <app-superficie></app-superficie>
+                <app-cobertura [TIR]="getTIR()"></app-cobertura>
+              </div>
+              <div class="info-row">
+                <app-energia></app-energia>
+                <app-emisiones
+                  [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"
+                ></app-emisiones>
+              </div>
+              <div class="info-row">
+                <app-costo
+                  [costoInstalacion]="getCostoInstalacion()"
+                ></app-costo>
+                <app-tarifa-intercambio></app-tarifa-intercambio>
+              </div>
+            </div>
+
+            <!--grafico-->
+            <div class="grafico">
+              <div class="periodo">
+                <div class="icono">
+                  <img
+                    src="assets/dinero-tiempo.png"
+                    id="marca"
+                    class="custom-icon"
+                  />
+                </div>
+                <div>
+                  <p class="texto-meses">
+                    Período de recuperación de la inversión aproximada
+                  </p>
+                </div>
+                <div class="numero-meses">
+                  <p class="numero">{{ plazoRecuperoInversion * 12 }}</p>
+                  <p class="meses">meses</p>
+                </div>
+              </div>
+              <!--termina periodo-->
+
+              <div class="grafico-imagen">
+                <app-graficos
+                  [periodoVeinteanalEmisionesGEIEvitadas]="
+                    getEmisionesGEIEvitadas()
+                  "
+                  [periodoVeinteanalFlujoEnergia]="getFlujoEnergia()"
+                  [periodoVeinteanalFlujoIngresosMonetarios]="
+                    getFlujoIngresosMonetarios()
+                  "
+                  [periodoVeinteanalGeneracionFotovoltaica]="
+                    getGeneracionFotovoltaica()
+                  "
+                ></app-graficos>
+              </div>
+            </div>
+            <!--termina grafico-->
+          </div>
+        </div>
+        <!--termina informacion-->
+
+        <!--botones-->
+        <div class="button-container">
+          <div class="boton">
+            <button id="boton-volver" (click)="goBack()">
+              <span class="material-icons">chevron_left</span> Volver
+            </button>
+            <br />
+            <button id="boton-editar" (click)="enabledDrawing()">
+              Editar área
+              <span class="material-icons">edit</span>
+            </button>
+            <br />
+            <button id="boton-siguiente" (click)="mostrarAdvertencia()">
+              Nuevo cálculo
+              <span class="material-icons">chevron_right</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal de advertencia -->
+        <div class="modal" [ngClass]="{ mostrar: mostrarModal }">
+          <div class="modal-contenido">
+            <p>
+              ¿Estás seguro de que deseas salir? Cualquier información no
+              guardada se perderá.
+            </p>
+            <div class="botones-modal">
+              <button id="boton-volver" (click)="cancelarSalir()">
+                Cancelar
+              </button>
+              <button id="boton-siguiente" (click)="confirmarSalir()">
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--content-->
+  </div>
+</span>

@@ -40,6 +40,10 @@ export class Paso1Component implements OnInit {
     this.mapService.overlayComplete$().subscribe((value) => {
       this.areaMarked = value;
     });
+
+    this.mapService.clearDrawing();
+    this.areaMarked = false;
+    this.mapService.hideDrawingControl();
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -186,52 +190,56 @@ export class Paso1Component implements OnInit {
   goToPaso2() {
     if (!this.areaMarked) {
       this.snackBar.open(
-          'Debe seleccionar una zona de instalación para continuar.',
-          '',
-          {
-              duration: 2000,
-              panelClass: ['custom-snackbar'],
-          }
+        'Debe seleccionar una zona de instalación para continuar.',
+        '',
+        {
+          duration: 2000,
+          panelClass: ['custom-snackbar'],
+        }
       );
       return; // No avanzar si no hay área marcada
-  }
+    }
 
-  // Verificar el tamaño del área seleccionada (en metros cuadrados)
-  const area = google.maps.geometry.spherical.computeArea(this.mapService.getPolygons()[0]?.getPath());
-  const minimumAreaThreshold = 10; // Define un umbral mínimo, por ejemplo, 10 m²
-  const maximunAreaThreshold = 2000;
-  const polygons = this.mapService.getPolygons();
+    // Verificar el tamaño del área seleccionada (en metros cuadrados)
+    const area = google.maps.geometry.spherical.computeArea(
+      this.mapService.getPolygons()[0]?.getPath()
+    );
+    const minimumAreaThreshold = 5;
+    const maximunAreaThreshold = 2000;
+    const polygons = this.mapService.getPolygons();
 
-  if (area < minimumAreaThreshold) {
+    if (area < minimumAreaThreshold) {
       this.snackBar.open(
-          `El área seleccionada es demasiado pequeña. Debe ser mayor a ${minimumAreaThreshold} m².`,
-          '',
-          {
-              duration: 2000,
-              panelClass: ['custom-snackbar'],
-          }
+        `El área seleccionada es demasiado pequeña. Debe ser mayor a ${minimumAreaThreshold} m².`,
+        '',
+        {
+          duration: 2000,
+          panelClass: ['custom-snackbar'],
+        }
       );
       polygons[0].setEditable(true);
       this.mapService.setDrawingMode(null);
       return; // No avanzar si el área es demasiado pequeña
-  }
-  if (area > maximunAreaThreshold) {
+    }
+    if (area > maximunAreaThreshold) {
       this.snackBar.open(
-          `El área seleccionada es demasiado grande. Debe ser menor a ${maximunAreaThreshold} m².`,
-          '',
-          {
-              duration: 2000,
-              panelClass: ['custom-snackbar'],
-          }
+        `El área seleccionada es demasiado grande. Debe ser menor a ${maximunAreaThreshold} m².`,
+        '',
+        {
+          duration: 2000,
+          panelClass: ['custom-snackbar'],
+        }
       );
       polygons[0].setEditable(true);
       this.mapService.setDrawingMode(null);
-      return; // No avanzar si el área es demasiado pequeña
-  }
+      return;
+    }
 
-  // Si todo está bien, avanzar al siguiente paso
-  polygons[0].setEditable(false);
-  this.router.navigate(['/pasos/2']);
+    // Si todo está bien, avanzar al siguiente paso
+    polygons[0].setEditable(false);
+    this.mapService.setDrawingMode(null);
+
+    this.router.navigate(['/pasos/2']);
   }
 
   private async initializeAutocomplete() {
@@ -267,15 +275,10 @@ export class Paso1Component implements OnInit {
   }
 
   enableDrawingMode() {
-    this.mapService.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
-  }
-
-  disableDrawingMode() {
-    this.mapService.setDrawingMode(null);
+    this.mapService.enableDrawingMode();
   }
 
   clearDrawing() {
-    this.mapService.clearPolygons();
-    this.areaMarked = false;
+    this.mapService.clearDrawing();
   }
 }

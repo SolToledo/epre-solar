@@ -9,6 +9,8 @@ export class ResultadoService {
   constructor() {}
 
   generarResultados(response: any): ResultadosFrontDTO {
+    console.log("entra a resultados con response :", response);
+    
     return (this.resultados = {
       solarData: response.solarData,
       periodoVeinteanalGeneracionFotovoltaica: response.periodoVeinteanalGeneracionFotovoltaica,

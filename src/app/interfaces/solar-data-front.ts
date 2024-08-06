@@ -8,6 +8,7 @@ export interface SolarDataFront {
             width: number
         },
         panelsCount:number,
+        maxPanelsCount: number
     },
     tarifaCategory: string,
     yearlyEnergyDcKwh: number

@@ -5,6 +5,10 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { ResultadoService } from './resultado.service';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
+import { ConsumoService } from './consumo.service';
+import { MapService } from './map.service';
+import { SharedService } from './shared.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -16,29 +20,39 @@ export class SolarApiService {
 
   constructor(
     private http: HttpClient,
-    private readonly resultadoService: ResultadoService
+    private readonly resultadoService: ResultadoService,
+    private consumoService: ConsumoService,
+    private mapService: MapService,
+    private sharedService: SharedService,
+    private router: Router
   ) {}
 
   async calculate(): Promise<any> {
-    const annualConsumptionStr = localStorage.getItem(
-      'annualKWhEnergyConsumption'
-    );
-    const coordenadasStr = localStorage.getItem('polygonCoordinates');
-    const selectedAreaStr = localStorage.getItem('selectedAreaM2');
-    const categoriaSeleccionada = localStorage.getItem('categoriaSeleccionada');
+    const polygonCoordinates = this.mapService.getPolygonCoordinates();
+    const polygonArea = this.mapService.getPolygonArea();
+    const categoriaSeleccionada = this.sharedService.getTarifaContratada();
+    let annualConsumption: number = 0;
+    const panelsSupported: number = this.mapService.getPanelsCount();
+    this.consumoService.totalConsumo$.subscribe(total => {
+      annualConsumption = total;
+    });
+    
     if (
-      annualConsumptionStr &&
-      coordenadasStr &&
-      selectedAreaStr &&
-      categoriaSeleccionada
+      annualConsumption &&
+      polygonCoordinates &&
+      polygonArea &&
+      categoriaSeleccionada &&
+      panelsSupported
     ) {
       const datosCalculo = {
-        annualConsumption: JSON.parse(annualConsumptionStr),
-        coordenadas: JSON.parse(coordenadasStr),
-        categoriaSeleccionada: JSON.parse(categoriaSeleccionada),
-        selectedAreaM2: JSON.parse(selectedAreaStr),
+        annualConsumption,
+        polygonCoordinates,
+        categoriaSeleccionada,
+        polygonArea,
+        panelsSupported
       };
-
+      
+      
       try {
         const response = await lastValueFrom(
           this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
@@ -50,6 +64,7 @@ export class SolarApiService {
       }
     } else {
       console.error('Missing required data for calculation.');
+      this.router.navigate(['/pasos/1']);
     }
   }
 

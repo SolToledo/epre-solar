@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angula
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TarifaComponent } from './tarifa/tarifa.component';
+import { MapService } from 'src/app/services/map.service';
 
 
 @Component({
@@ -18,9 +19,10 @@ export class Paso2Component implements OnInit {
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
   @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent; 
 
-  constructor(private router: Router, private snackBar: MatSnackBar) {}
+  constructor(private router: Router, private snackBar: MatSnackBar, private mapService: MapService) {}
+  
   ngOnInit(): void {
-    
+    this.mapService.hideDrawingControl();
   }
 
   ngAfterViewInit(): void {

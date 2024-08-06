@@ -9,6 +9,7 @@ import { SharedService } from 'src/app/services/shared.service';
 import { ResultadosFrontDTO } from '../../interfaces/resultados-front-dto';
 import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 import { MapService } from 'src/app/services/map.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -24,6 +25,9 @@ export class Paso3Component implements OnInit {
   panelCapacityW: number = 0;
   carbonOffsetFactorTnPerMWh: number = 0;
   map: any;
+  maxPanelsCount!: number;
+  private polygons!: any[];
+  isLoading: boolean = true;
 
   constructor(
     private router: Router,
@@ -31,13 +35,15 @@ export class Paso3Component implements OnInit {
     private snackBar: MatSnackBar,
     private solarService: SolarApiService,
     private sharedService: SharedService,
-    private mapService: MapService
-  ) {
+    private mapService: MapService,
+    private spinner: NgxSpinnerService 
+  ) {}
+  ngOnInit(): void {
+    this.spinner.show();
     this.solarService
       .calculate()
       .then((resultados) => (this.resultadosFront = resultados))
       .then(() => {
-        console.log('RESULTADOS :', this.resultadosFront);
         this.plazoRecuperoInversion =
           this.resultadosFront.resultados._indicadoresFinancieros.payBackSimpleYears;
         this.panelesCantidad =
@@ -50,9 +56,13 @@ export class Paso3Component implements OnInit {
             this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000
           ).toFixed(2)
         );
+      })
+      .finally(() => {
+        this.spinner.hide();
+        this.isLoading = false; 
       });
+      
   }
-  ngOnInit(): void {}
 
   print(): void {
     window.print();
@@ -97,6 +107,8 @@ export class Paso3Component implements OnInit {
     this.mostrarModal = false;
     localStorage.clear();
     this.sharedService.setTarifaContratada('');
+    this.mapService.clearPanels();
+    this.mapService.clearPolygons();
     this.router.navigate(['/pasos/1']).then(() => {
       this.sharedService.setTutorialShown(true);
     });
@@ -164,5 +176,11 @@ export class Paso3Component implements OnInit {
 
   getCostoInstalacion() {
     return 3500;
+  }
+
+  enabledDrawing() {
+    this.polygons = this.mapService.getPolygons();
+    this.polygons[0].setEditable(true);
+    this.mapService.setDrawingMode(null);
   }
 }

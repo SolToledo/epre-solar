@@ -27,14 +27,10 @@ import { RetornoComponent } from './pasos/paso3/retorno/retorno.component';
 import { TerminosComponent } from './terminos/terminos.component';
 import { Paso0Component } from './pasos/paso0/paso0.component';
 
-
-
-
 //Angular Material
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -57,6 +53,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { AppConfigModule } from './app-config.module';
 import { EnvironmentService } from './services/environment.service';
 import { firstValueFrom } from 'rxjs';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
   return (): Promise<void> => firstValueFrom(environmentService.loadGoogleMapsApiKey());
@@ -111,7 +108,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     MatSliderModule,
     GoogleMapsModule,
     AppConfigModule,
-    
+    NgxSpinnerModule.forRoot()
   ],
   providers: [
     EnvironmentService,

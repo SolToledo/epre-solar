@@ -84,6 +84,7 @@ export class ConsumoComponent implements OnInit {
     this.consumoService.setTotalConsumo(totalConsumo);
     this.checkAllFieldsCompleted();
     if(this.allCompleted) {
+      this.consumoService.setTotalConsumo(totalConsumo);
       localStorage.setItem('annualKWhEnergyConsumption', JSON.stringify(totalConsumo))
     }
   }
