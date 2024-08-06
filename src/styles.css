@@ -224,7 +224,6 @@ button[disabled] {
 .resultados-paso3{
 
   .component-container-borde{
-   /* width: 250px;*/
     width: 225px;
     height: 120px;
     border-radius: 8px;
@@ -234,7 +233,6 @@ button[disabled] {
 
   .component-container{
     background-color: var(--light-background);
-    /*width: 250px;*/
     width: 225px;
     height: 120px;
     border-radius: 8px;
@@ -258,6 +256,7 @@ button[disabled] {
     .titulo-general p{
       margin: 0%;
     }
+
    /*para titulos mas largos*/ 
     .titulo-general-long{
       background-color: #96c0b2 ;
@@ -333,7 +332,6 @@ button[disabled] {
     }
   
     .resultado{
-     /* font-size: 29px;*/
       font-size: 25px;
       color: var(--medium-green);
       font-weight: 600;
@@ -369,119 +367,14 @@ button[disabled] {
       padding: 0%;
     }
 
-  #max-bor{
-    height: 110px;
-  }
-
-  .component-container-borde {
-    position: relative;
-    width: 228px;  
-    height: 100px; 
-    background-color: white;
-    padding: 10px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .component-container-borde::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border: 2px solid var(--light-background);
-    border-radius: 8px; 
-    pointer-events: none; 
-    box-sizing: border-box;
-  }
-
-  .icon-container{
-    flex-shrink: 0;
-  }
-  
-  .custom-icon{
-    width: 40px;
-    height: 40px;
-    display: block;
-  }
-  
-  .texto-container{
-    display: flex;
-    flex-direction: column;
-    text-align: right;
-  }
-  
-  .titulo{
-    font-size: 15px; 
-    color: var(--dark-green);
-    margin-bottom: 15px;
-  }
-  
-  .resultado-component {
-    font-size: 28px;
-    color: var(--medium-green);
-    font-weight: 600;
-    margin-bottom:3px;
-  }
-  
-  .unidad{
-    color: var(--dark-green);
-    font-size: 25px;
-  }
-
-  #unidad-min{
-    font-size:19px;
-  }
-  
-  .texto-lateral{
-    font-size: 13px;
-    color: var(--dark-green);
-  }
-  
-  .texto-inferior{
-    color:var(--dark-green);
-    font-size: 10px;
-    margin-bottom: 0%;
-    margin-top: 0% ;
-    font-weight:300 ;
-  }
-
-  /*solo para el componente paneles ***********************/
-  .datos{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-  .numero{
-    margin-top: 9px;
-    margin-left: 10px;
-  }
-  .cantidad { 
-    font-size: 40px;
-    color: var(--medium-green);
-    font-weight: 600;
-  }
-  
-  .texto-inferior-panel{
-    color: var(--dark-green);
-    font-size: 12px;
-    margin-bottom: 0%;
-    margin-top: 0% ;
-    font-weight:300 ;
-  }
-  
-  .dimensiones{
-    color: var(--dark-green);
-    font-size: 10px;
-    margin-bottom: 0%;
-    margin-top: 0% ;
-    font-weight:bold;
-  }
+    .unidad-simple-dism{
+      color: var(--dark-green);
+      font-size: 17px;
+      font-weight: bold;
+      margin: 0%;
+      margin: 0%;
+      padding: 0%;
+    }
 
 /**************************************/
 /*para el componente INVERSION*/
@@ -503,10 +396,6 @@ button[disabled] {
   flex-direction: column;
   align-items: end;
 }
-
-
-
-
 
   /*cuando la unidad es texto por ejemplo meses*/
 .unidad-component-texto{

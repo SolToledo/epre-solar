@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { GmailService } from 'src/app/services/gmail.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,6 +9,7 @@ import { ResultadosFrontDTO } from '../../interfaces/resultados-front-dto';
 import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 import { MapService } from 'src/app/services/map.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',

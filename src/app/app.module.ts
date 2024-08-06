@@ -109,6 +109,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     MatSliderModule,
     GoogleMapsModule,
     NgxSpinnerModule.forRoot()
+    
   ],
   providers: [
     EnvironmentService,
