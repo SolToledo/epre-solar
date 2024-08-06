@@ -6,7 +6,9 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SharedService {
   private tarifaContratada: string = '';
-
+  private tutorialShownSubject = new BehaviorSubject<boolean>(false);
+  tutorialShown$ = this.tutorialShownSubject.asObservable();
+  
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
   }
@@ -14,9 +16,6 @@ export class SharedService {
   getTarifaContratada(): string {
     return this.tarifaContratada;
   }
-
-  private tutorialShownSubject = new BehaviorSubject<boolean>(false);
-  tutorialShown$ = this.tutorialShownSubject.asObservable();
 
   setTutorialShown(value: boolean): void {
     this.tutorialShownSubject.next(value);

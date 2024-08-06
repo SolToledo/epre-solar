@@ -16,7 +16,7 @@ export class Paso2Component implements OnInit {
   isCategorySelected: boolean = false;
 
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
-  @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent; // Añadido: referencia al componente TarifaComponent
+  @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent; 
 
   constructor(private router: Router, private snackBar: MatSnackBar) {}
   ngOnInit(): void {
@@ -24,7 +24,7 @@ export class Paso2Component implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.tarifaComponent.focusSelect();
+   
   }
   
   goBack() {
