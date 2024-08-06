@@ -1,12 +1,26 @@
-<div class="componentes-resultados-paso3">
+<div class="resultados-paso3">
   <div class="component-container-borde">
-     <div class="icon-container">
-       <img src="assets/icon-sup.png" id="marca" class="custom-icon" alt="Icono de retorno">
-     </div>
-     <div class="texto-container">
-       <p class="titulo">Superficie aproximada</p>
-       <p class="resultado-component">{{selectedAreaM2 | number:'1.2-2'}}<span class="unidad"> m2</span></p>
-       <p class="texto-inferior">Calculado según la superficie definida</p>
-     </div>
-   </div>
+      <div class="titulo-general">
+          <p>Superficie aproximada</p>
+      </div>
+      <div class="informacion-general">
+          <div class="ajustar-contenido">
+              <div class="info-component">      
+                  <div class="icono">
+                      <img src="assets/icon-sup.png"  class="tamaño-icon" alt="Icono de retorno">
+                  </div>
+                  <div class="resultado-centro">
+                      <p class="resultado">{{selectedAreaM2 | number:'1.2-2'}}</p>
+                  </div>
+                  <div class="unidad-component-simple">
+                      <p class="unidad-simple">m2</p>
+                  </div>
+              </div>
+          </div>
+         <hr>
+         <div class="texto-inferior-component">
+          <p>Calculado según la superficie definida</p>
+         </div>
+      </div>
+  </div>
 </div>

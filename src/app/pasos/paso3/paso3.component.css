@@ -26,31 +26,37 @@
 /********************************************************************/
 .informacion {
   width: 100%;
+ /* height: 82%;*/
   height: 82%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
+ 
 
   .content-scroll {
-    height: 55vh;
-    max-height: 55vh;
+   /* height: 55vh;
+    max-height: 55vh;*/
+    width: 100%;/*******************************/
+    height: 60vh;
+    max-height: 60vh;
     overflow-y: scroll; /* Solo permite desplazamiento vertical */
-    overflow-x: hidden; /* Oculta la barra de desplazamiento horizontal */
+    overflow-x: hidden; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 10px;
+   /* background-color: rgb(190, 146, 155);*/
   }
 
   /* Estilos para personalizar la barra de desplazamiento vertical */
   .content-scroll::-webkit-scrollbar {
-    width: 8px; /* Ancho de la barra de desplazamiento vertical */
+    width: 8px; 
   }
 
   .content-scroll::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Color de fondo del track */
+    background: #f1f1f1;
   }
 
   .content-scroll::-webkit-scrollbar-thumb {
@@ -62,43 +68,92 @@
     background: #555; /* Color de la barra de desplazamiento al pasar el cursor */
   }
 }
-/*----------------------------------------------------------------------------------------------------------*/
-/* Estilos para los botones secundarios */
-.action-buttons {
+/*----------------------------------------------------------------------------------------------------------*/  
+/* Estilos para los botones secundarios  EDITAR/DESCARGAR/ENVIAR*/
+.action-buttons{
   width: 100%;
   height: 9%;
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+}
+.descargar-enviar-component{
+  width: 17%;
+  height: 95%;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
 }
 
-.action-buttons button {
-  /* background-color: #a0be96;*/
-  background-color: var(--golden);
-  color: #fff;
-  font-weight: 600;
-  border: none;
+#downloadButton{
+  background-color: white;
+  color: var(--dark-green);
+  border: 2px solid var(--dark-green); 
+  padding: 5px 13px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center; 
+  box-sizing: border-box; 
+}
+
+#emailButton{
+  background-color:white;
+  color: var(--dark-green);
+  border: 2px solid var(--dark-green); 
+  padding: 5px 11px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center; 
+  box-sizing: border-box; 
+}
+
+#emailButton:hover {
+  border-color: var(--medium-green); 
+  color: var(--medium-green); 
+}
+
+#downloadButton:hover {
+  border-color: var(--medium-green); 
+  color: var(--medium-green); 
+}
+
+/*...............................................*/
+#boton-editar {
+  color: white;
+  background-color: var(--dark-green);
+  font-weight: bold;
+ /* border: 2px solid var(--dark-green); */
   padding: 10px 20px;
-  height: 42px;
   border-radius: 5px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  border-right: 2px solid #000; /* Borde de 2px a la derecha */
+  border-bottom: 2px solid #000; /* Borde de 2px abajo */
 }
 
-.action-buttons button:hover {
-  /* background-color: #639a61;*/
-  background-color: #cfb27b;
+#boton-editar .material-icons {
+  margin-left: 8px; 
+  color:white; 
+  font-size: 16px; 
 }
 
-/* Estilos para los iconos */
-.action-buttons img.icono {
-  margin-right: 8px; /* Espacio entre el icono y el texto */
-  width: 20px; /* Tamaño del icono */
-  height: auto;
+#boton-editar:hover {
+  border-right: 2px solid var(--dark-green); /* Borde de 2px a la derecha */
+  border-bottom: 2px solid var(--dark-green); /* Borde de 2px abajo */
+  background-color: var(--medium-green);
+  color: white; 
 }
 
-/*------------------------------------------------*/
-.info-mostrar {
+#boton-editar:hover .material-icons {
+  color: white; 
+}
+
+/***********************************************************************/
+.info-mostrar{
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -109,6 +164,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+ /* justify-content: space-around;*/
 }
 
 /*------------------------------------------------*/
@@ -119,8 +175,6 @@
   border-radius: 8px;
   padding-top: 7px;
   padding-bottom: 5px;
-  /* border: 2px solid #c1d2c0;*/
-  /* border: 2px solid var(--medium-green);*/
   border: 2px solid var(--light-background);
 }
 
@@ -151,7 +205,6 @@
 }
 .numero {
   font-size: 28px;
-  /* color: #417B6F; */
   color: var(--medium-green);
   font-weight: 600;
   margin-bottom: 0%;
@@ -237,3 +290,10 @@ p {
   color: #fff; /* Color del spinner */
   z-index: 10000; /* Asegurarse de que esté al frente del fondo semi-transparente */
 }
+  
+  .grafico-component{
+    background-color: #a1b6b2;
+    width: 80%;
+    border-radius: 8px;
+    margin-left:10px;
+  }

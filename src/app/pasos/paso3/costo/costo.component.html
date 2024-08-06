@@ -1,12 +1,26 @@
-<div class="componentes-resultados-paso3">
-  <div class="component-container" id="max">
-    <div class="icon-container">
-      <img src="assets/icon-costo-inst.png" id="marca" class="custom-icon" alt="Icono de retorno">
-    </div>
-    <div class="texto-container">
-      <p class="titulo">Costo de la instalación </p>
-      <p class="resultado-component">{{costoInstalacion}}<span class="unidad"> USD</span></p>
-      <p class="texto-inferior">Calculado con los precios y tasa de cambio actuales</p>
-    </div>
+<div class="resultados-paso3">
+  <div class="component-container">
+      <div class="titulo-general">
+          <p>Costo de la instalación</p>
+      </div>
+      <div class="informacion-general">
+          <div class="ajustar-contenido">
+              <div class="info-component">      
+                  <div class="icono">
+                      <img src="assets/icon-costo-inst.png"  class="tamaño-icon" alt="Icono de costo">
+                  </div>       
+                  <div class="resultado-centro">
+                      <p class="resultado">{{costoInstalacion}}</p>
+                  </div>           
+                  <div class="unidad-component-simple">
+                      <p class="unidad-simple">USD</p>
+                  </div>
+              </div>
+          </div>
+         <hr>
+         <div class="texto-inferior-component">
+          <p>Calculado con los precios y tasa de cambio actuales</p>
+         </div>
+      </div>
   </div>
 </div>

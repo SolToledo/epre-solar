@@ -38,7 +38,6 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
-import { AhorroComponent } from './pasos/paso3/ahorro/ahorro.component';
 import { PlazoComponent } from './pasos/paso3/plazo/plazo.component';
 import { PotenciaComponent } from './pasos/paso3/potencia/potencia.component';
 import { SuperficieComponent } from './pasos/paso3/superficie/superficie.component';
@@ -54,6 +53,7 @@ import { AppConfigModule } from './app-config.module';
 import { EnvironmentService } from './services/environment.service';
 import { firstValueFrom } from 'rxjs';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
 
 export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
   return (): Promise<void> => firstValueFrom(environmentService.loadGoogleMapsApiKey());
@@ -79,7 +79,6 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     RetornoComponent,
     TerminosComponent,
     Paso0Component,
-    AhorroComponent,
     PlazoComponent,
     PotenciaComponent,
     SuperficieComponent,
@@ -88,7 +87,9 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     CostoComponent,
     TarifaIntercambioComponent,
     TotalComponent,
+    AhorrosComponent,
   ],
+  
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -107,7 +108,6 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     NgChartsModule,
     MatSliderModule,
     GoogleMapsModule,
-    AppConfigModule,
     NgxSpinnerModule.forRoot()
   ],
   providers: [

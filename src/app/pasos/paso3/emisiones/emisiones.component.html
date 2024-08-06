@@ -1,14 +1,28 @@
-<div class="componentes-resultados-paso3">
 
+<div class="resultados-paso3">
   <div class="component-container-borde">
-    <div class="icon-container">
-      <img src="assets/icon-CO2.png" id="marca" class="custom-icon" alt="Icono de retorno">
-    </div>
-    <div class="texto-container">
-      <p class="titulo">Emisiones CO2 evitadas </p>
-      <p class="resultado-component">{{carbonOffsetFactorTnPerMWh}}<span class="unidad" id="unidad-min"> tCO2/MWh</span></p>
-      <p class="texto-inferior">Según los paneles seleccionados</p> 
-    </div>
+      <div class="titulo-general">
+          <p>Emisiones CO2 evitadas</p>
+      </div>
+      <div class="informacion-general">
+          <div class="ajustar-contenido">
+              <div class="info-component">      
+                  <div class="icono">
+                      <img src="assets/icon-CO2.png"  class="tamaño-icon" alt="Icono de Emisiones CO2">
+                  </div>       
+                  <div class="resultado-centro">
+                      <p class="resultado">{{carbonOffsetFactorTnPerMWh}}</p>
+                  </div>           
+                  <div class="unidad-component">
+                      <p class="unidad-comp">tCO2/</p>
+                      <P class="texto-lateral-comp">MWh</P>
+                  </div>
+              </div>
+          </div>
+         <hr>
+         <div class="texto-inferior-component">
+          <p>Según los paneles seleccionados</p>
+         </div>
+      </div>
   </div>
-
 </div>
