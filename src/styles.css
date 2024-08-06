@@ -575,7 +575,7 @@ button[disabled] {
   width: 10%;
   margin-bottom: 0%;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
 }
 

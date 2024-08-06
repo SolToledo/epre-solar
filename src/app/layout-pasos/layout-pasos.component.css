@@ -98,15 +98,14 @@
   }
   
   .paso.collapsed {
-    width: 30px; /* Ancho del contenedor cuando está colapsado */
+    width: 30px; 
     overflow: hidden;
-    /* Ajusta la posición si es necesario */
-   right: 0;
+    right: 0;
   }
   
   .paso.expanded {
-    width: 55%; /* Ancho del contenedor cuando renderiza paso3 */
-   /* background-color: brown;*/
+    width: 55%; 
+    background-color: brown;
   }
 
  

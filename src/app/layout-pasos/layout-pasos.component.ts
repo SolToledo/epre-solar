@@ -63,6 +63,13 @@ import { filter } from 'rxjs';
     ])
   ]
 })
+/*trigger('menuCollapsed', [
+  state('expand', style({width: 'visibility: hidden'})),
+  state('collapsed', style({width: '100%'})),
+  transition('expand <=> collapsed', animate('200ms'))
+])*/
+
+
 export class LayoutPasosComponent implements OnInit {
 
   currentStep: number = 0;
