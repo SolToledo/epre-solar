@@ -36,5 +36,8 @@
             </div> 
          </div>
       </div>
+      <mat-slider min="4" [max]="maxPanelsCount"  step="1" (change)="onSliderChange($event)"  discrete [displayWith]="formatLabel">
+        <input matSliderThumb [(ngModel)]="panelesCantidad" #slider>
+      </mat-slider>
   </div>
 </div>

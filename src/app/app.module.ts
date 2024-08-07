@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms'; // Importa FormsModule
@@ -27,14 +27,10 @@ import { RetornoComponent } from './pasos/paso3/retorno/retorno.component';
 import { TerminosComponent } from './terminos/terminos.component';
 import { Paso0Component } from './pasos/paso0/paso0.component';
 
-
-
-
 //Angular Material
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -52,12 +48,16 @@ import { TarifaIntercambioComponent } from './pasos/paso3/tarifa-intercambio/tar
 import { TotalComponent } from './pasos/paso2/total/total.component';
 import { NgChartsModule } from 'ng2-charts';
 import { MatSliderModule } from '@angular/material/slider';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { AppConfigModule } from './app-config.module';
+import { EnvironmentService } from './services/environment.service';
+import { firstValueFrom } from 'rxjs';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
 
-
-
-
-
+export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
+  return (): Promise<void> => firstValueFrom(environmentService.loadGoogleMapsApiKey());
+}
 
 @NgModule({
   declarations: [
@@ -106,9 +106,20 @@ import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
     MatIconModule,
     HttpClientModule,
     NgChartsModule,
-    MatSliderModule
+    MatSliderModule,
+    GoogleMapsModule,
+    NgxSpinnerModule.forRoot()
+    
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    EnvironmentService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [EnvironmentService],
+      multi: true,
+    },
+  ],
+  bootstrap: [AppComponent] 
 })
 export class AppModule { }

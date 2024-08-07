@@ -16,8 +16,6 @@
     flex-direction: row;
     position: relative;
   }
-
-  
   
  
  .mapa {
@@ -34,6 +32,7 @@
     transition: width 0.3s ease; 
     display: flex;
     flex-direction: row;
+    z-index: 1; 
   }
   
   .paso.collapsed {

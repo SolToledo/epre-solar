@@ -1,40 +1,23 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { GoogleMapsService } from '../services/google-maps.service';
-
-declare var google: any;
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MapService } from '../services/map.service';
 
 @Component({
   selector: 'app-mapa',
   templateUrl: './mapa.component.html',
   styleUrls: ['./mapa.component.css'],
 })
-export class MapaComponent implements AfterViewInit {
-  constructor(
-    private location: Location,
-    private googleMapsService: GoogleMapsService
-  ) {}
+export class MapaComponent implements OnInit, AfterViewInit {
+  @ViewChild('mapElement') mapElement!: ElementRef;
+
+  constructor(private mapService: MapService) {
+    
+  }
+  
+  ngOnInit(): void {
+  }
 
   ngAfterViewInit(): void {
-    this.googleMapsService
-      .loadGoogleMaps()
-      .then(() => {
-        this.initMap();
-      })
-      .catch((error) => {
-        console.error('Google Maps no está disponible.', error);
-      });
+    this.mapService.initializeMap(this.mapElement.nativeElement);
   }
-
-  private initMap(): void {
-    const map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: -31.53, lng: -68.51 },
-      zoom: 14,
-      mapTypeId: 'satellite',
-      disableDefaultUI: true,
-    });
-  }
-  goBack(): void {
-    this.location.back();
-  }
+ 
 }

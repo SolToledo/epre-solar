@@ -6,13 +6,9 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
+import { Tarifa } from 'src/app/interfaces/tarifa';
 import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { SharedService } from 'src/app/services/shared.service';
-
-interface Tarifa {
-  value: string;
-  viewValue: string;
-}
 
 @Component({
   selector: 'app-tarifa',
@@ -29,25 +25,42 @@ export class TarifaComponent implements OnInit {
     {
       value: 'T1-R',
       viewValue: 'Pequeña Demanda Residencial (T1-R1, T1-R2 o T1-R3)',
+      potenciaMaxAsignada: 10,
     },
     {
       value: 'T1-G',
       viewValue: 'Pequeña Demanda General (T1-G1, T1-G2 o T1-G3)',
+      potenciaMaxAsignada: 10,
     },
     {
       value: 'T2-SMP',
       viewValue: 'Mediana Demanda sin Medición de Potencia (T2-SMP)',
+      potenciaMaxAsignada: 20,
     },
     {
       value: 'T2-CMP',
       viewValue: 'Mediana Demanda con Medición de Potencia (T2-CMP)',
+      potenciaMaxSugerida: 25,
+      potenciaMaxAsignada: 35,
     },
-    { value: 'T3-BT', viewValue: 'Grande Demanda en Baja Tensión (T3-BT)' },
+    {
+      value: 'T3-BT',
+      viewValue: 'Grande Demanda en Baja Tensión (T3-BT)',
+      potenciaMaxSugerida: 95,
+      potenciaMaxAsignada: 50,
+    },
     {
       value: 'T3-MT13.2R',
       viewValue: 'Grande Demanda en Media Tensión (T3-MT13,2 kV, T3-MT 33 kV)',
+      potenciaMaxSugerida: 155,
+      potenciaMaxAsignada: 50,
     },
-    { value: 'TRA-SD', viewValue: 'Riego Agrícola (TRA-SD)' },
+    {
+      value: 'TRA-SD',
+      viewValue: 'Riego Agrícola (TRA-SD)',
+      potenciaMaxSugerida: 55,
+      potenciaMaxAsignada: 35,
+    },
   ];
 
   constructor(
@@ -67,10 +80,6 @@ export class TarifaComponent implements OnInit {
 
   onTarifaChange(): void {
     this.sharedService.setTarifaContratada(this.tarifaContratada);
-    localStorage.setItem(
-      'categoriaSeleccionada',
-      JSON.stringify(this.tarifaContratada)
-    );
     this.isCategorySelected.emit(this.isOptionSelected());
     this.updateConsumosMensuales();
   }
@@ -79,6 +88,6 @@ export class TarifaComponent implements OnInit {
     this.consumosMensuales = this.consumoTarifaService.getConsumoMensual(
       this.tarifaContratada
     );
-    this.consumoTarifaService.updateConsumosMensuales(this.consumosMensuales);
+    /* this.consumoTarifaService.updateConsumosMensuales(this.consumosMensuales); */
   }
 }

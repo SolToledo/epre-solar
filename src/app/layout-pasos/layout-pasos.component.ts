@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
-
 @Component({
   selector: 'app-layout-pasos',
   templateUrl: './layout-pasos.component.html',
@@ -16,8 +15,8 @@ import { filter } from 'rxjs';
     ])
   ]
 })
-export class LayoutPasosComponent implements OnInit {
 
+export class LayoutPasosComponent implements OnInit {
   currentStep: number = 0;
 
   constructor(private route: ActivatedRoute, private router: Router) {

@@ -31,9 +31,9 @@
             class="controls"
             type="text"
             placeholder="Ubicación"
-            #search
+            #pacInput 
           />
-          <button id="buscar" (click)="buscarUbicacion(search.value)">
+          <button id="buscar" (click)="buscarUbicacion(pacInput.value)">
             Buscar
             <span class="material-icons">search</span>
           </button>
@@ -63,11 +63,11 @@
         </div>
 
         <div class="botones">
-          <button id="marcar" (click)="habilitarMarcado()">Marcar
+          <button id="marcar" (click)="enableDrawingMode()">Marcar
             <span class="material-icons">edit</span>
           </button>
 
-          <button id="borrar" (click)="borrarDibujo()">Borrar dibujo
+          <button id="borrar" (click)="clearDrawing()">Borrar dibujo
             <span class="material-icons">delete</span>
           </button>
         </div>

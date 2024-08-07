@@ -1,13 +1,11 @@
-/// <reference types="google.maps" />
-
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
+import { LocationService } from 'src/app/services/location.service';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 
-declare var google: any;
 @Component({
   selector: 'app-paso1',
   templateUrl: './paso1.component.html',
@@ -15,42 +13,60 @@ declare var google: any;
 })
 export class Paso1Component implements OnInit {
   currentStep: number = 1;
-  map: any;
-  marker: any;
-  drawingManager: google.maps.drawing.DrawingManager | undefined;
-  overlays: google.maps.Polygon[] = [];
-  areaMarked: boolean = false;
   selectedArea: number = 0;
   tutorialShown: boolean = false;
+  areaMarked: boolean = false;
+  @ViewChild('pacInput', { static: false }) pacInput!: ElementRef;
+  private marker: google.maps.marker.AdvancedMarkerElement | undefined;
+  private map!: google.maps.Map;
 
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
     private sharedService: SharedService,
-    private mapService: MapService
+    private mapService: MapService,
+    private locationService: LocationService
   ) {}
 
   ngOnInit(): void {
-    this.loadGoogleMaps(() => {
-      const mapConfig = this.mapService.getMapConfig();
-      const areaCoords = this.mapService.getAreaCoords();
-
-      if (mapConfig && areaCoords.length > 0) {
-        this.initMap(mapConfig.center, mapConfig.zoom);
-        this.loadPolygon(areaCoords);
-      } else {
-        this.initMap({ lat: -31.53, lng: -68.51 }, 14);
-      }
-
-      // this.mapService.setMap(this.map);
-    });
-
     this.sharedService.tutorialShown$.subscribe((shown) => {
       this.tutorialShown = shown;
     });
+
     if (!this.tutorialShown) {
       this.showTutorial();
     }
+
+    this.mapService.overlayComplete$().subscribe((value) => {
+      this.areaMarked = value;
+    });
+
+    this.mapService.clearDrawing();
+    this.areaMarked = false;
+    this.mapService.hideDrawingControl();
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+    const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+      'marker'
+    )) as google.maps.MarkerLibrary;
+    this.map = this.mapService.getMap();
+    if (!this.map) {
+      console.error('El mapa no está inicializado.');
+      return;
+    }
+
+    this.marker = new AdvancedMarkerElement({
+      map: this.map,
+    });
+
+    if (this.pacInput) {
+      this.initializeAutocomplete();
+    } else {
+      console.error('pacInput no está definido.');
+    }
+
+    this.mapService.initializeDrawingManager();
   }
 
   showTutorial() {
@@ -127,240 +143,6 @@ export class Paso1Component implements OnInit {
     this.sharedService.setTutorialShown(false);
   }
 
-  loadGoogleMaps(callback: () => void): void {
-    if (typeof google !== 'undefined' && google.maps) {
-      callback();
-    } else {
-      window['initMap'] = () => {
-        callback();
-      };
-      const script = document.createElement('script');
-      script.src =
-        'https://maps.googleapis.com/maps/api/js?key=AIzaS yA96BDNGNezoM13_Z0FnE3hcDjiOudMKRQ&libraries=drawing,places&callback=initMap';
-      document.body.appendChild(script);
-    }
-  }
-
-  initMap(center: { lat: number; lng: number }, zoom: number): void {
-    this.map = new google.maps.Map(document.getElementById('map'), {
-      center: center,
-      zoom: zoom,
-      mapTypeId: 'satellite',
-      disableDefaultUI: true,
-      zoomControl: true,
-      mapTypeControl: false,
-      scaleControl: true,
-      streetViewControl: false,
-      rotateControl: false,
-      fullscreenControl: false,
-    });
-
-    this.marker = new google.maps.Marker({
-      position: center,
-      map: this.map,
-      draggable: true,
-    });
-
-    const input = document.getElementById('pac-input') as HTMLInputElement;
-    const searchBox = new google.maps.places.SearchBox(input);
-
-    this.map.addListener('bounds_changed', () => {
-      searchBox.setBounds(this.map.getBounds() as google.maps.LatLngBounds);
-    });
-
-    searchBox.addListener('places_changed', () => {
-      const places = searchBox.getPlaces();
-      if (places.length == 0) {
-        return;
-      }
-
-      if (this.marker) {
-        this.marker.setMap(null);
-      }
-
-      const bounds = new google.maps.LatLngBounds();
-      places.forEach((place: google.maps.places.PlaceResult) => {
-        if (!place.geometry || !place.geometry.location) {
-          console.log('Returned place contains no geometry');
-          return;
-        }
-
-        this.marker = new google.maps.Marker({
-          map: this.map,
-          title: place.name,
-          position: place.geometry.location,
-          draggable: true,
-        });
-
-        if (place.geometry.viewport) {
-          bounds.union(place.geometry.viewport);
-        } else {
-          bounds.extend(place.geometry.location);
-        }
-      });
-      this.map.fitBounds(bounds);
-    });
-
-    this.initDrawingManager();
-  }
-
-  initDrawingManager(): void {
-    this.drawingManager = new google.maps.drawing.DrawingManager({
-      drawingMode: null,
-      drawingControl: true,
-      drawingControlOptions: {
-        position: google.maps.ControlPosition.TOP_LEFT,
-        drawingModes: [google.maps.drawing.OverlayType.POLYGON],
-      },
-      polygonOptions: {
-        fillColor: '#ffffff',
-        fillOpacity: 0.5,
-        strokeWeight: 2,
-        strokeColor: '#000000',
-        clickable: true,
-        editable: true,
-        zIndex: 1,
-      },
-    });
-    this.drawingManager?.setMap(this.map);
-
-    google.maps.event.addListener(
-      this.drawingManager,
-      'drawingmode_changed',
-      () => {
-        const drawingMode = this.drawingManager?.getDrawingMode();
-        if (drawingMode) {
-          if (this.overlays.length > 0) {
-            alert('Por favor, antes borre la selección anterior.');
-            return;
-          }
-        }
-      }
-    );
-
-    google.maps.event.addListener(
-      this.drawingManager,
-      'overlaycomplete',
-      (event: any) => {
-        if (event.type === google.maps.drawing.OverlayType.POLYGON) {
-          this.overlays.push(event.overlay);
-          if (this.overlays.length > 1) {
-            alert('Por favor, antes borre la selección anterior.');
-            return;
-          }
-          this.areaMarked = true;
-
-          const polygon = event.overlay as google.maps.Polygon;
-          const paths = polygon.getPaths().getArray();
-          const polygonCoordinates = paths[0].getArray().map((coord) => {
-            return { lat: coord.lat(), lng: coord.lng() };
-          });
-
-          this.selectedArea = google.maps.geometry.spherical.computeArea(
-            polygon.getPath()
-          );
-
-          this.mapService.setAreaCoords(polygonCoordinates);
-          this.mapService.setSelectedArea(this.selectedArea);
-          this.mapService.setMapConfig({
-            center: this.map.getCenter().toJSON(),
-            zoom: this.map.getZoom(),
-          });
-        }
-      }
-    );
-  }
-
-  loadPolygon(coords: { lat: number; lng: number }[]): void {
-    const polygon = new google.maps.Polygon({
-      paths: coords,
-      fillColor: '#ffffff',
-      fillOpacity: 0,
-      strokeWeight: 2,
-      strokeColor: '#000000',
-      clickable: true,
-      editable: true,
-      zIndex: 1,
-    });
-    polygon.setMap(this.map);
-    this.overlays.push(polygon);
-    this.areaMarked = true;
-
-    this.map.fitBounds(this.getBoundsForPolygon(polygon));
-  }
-  
-  habilitarMarcado(): void {
-    if (this.drawingManager) {
-      this.drawingManager.setDrawingMode(
-        google.maps.drawing.OverlayType.POLYGON
-      );
-      this.drawingManager.setOptions({
-        drawingControl: true,
-      });
-    }
-  }
-
-  borrarDibujo(): void {
-    this.overlays.forEach((overlay) => overlay.setMap(null));
-    this.overlays = [];
-    this.areaMarked = false;
-    if (this.drawingManager) {
-      this.drawingManager.setDrawingMode(null);
-      this.drawingManager.setOptions({
-        drawingControl: false,
-      });
-    }
-  }
-
-  buscarUbicacion(searchValue: string): void {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode(
-      { address: searchValue },
-      (results: { geometry: { location: any } }[], status: string) => {
-        if (status === 'OK' && results) {
-          if (this.map) {
-            this.map.setCenter(results[0].geometry.location);
-          }
-          if (this.marker) {
-            this.marker.setPosition(results[0].geometry.location);
-          }
-        } else {
-          alert(
-            'Geocode was not successful for the following reason: ' + status
-          );
-        }
-      }
-    );
-  }
-
-  goBack() {
-    this.router.navigate(['/pasos/0']);
-  }
-
-  goToPaso2() {
-    const position = this.marker.getPosition();
-    if (position) {
-      localStorage.setItem(
-        'userInstallationPosition',
-        JSON.stringify({
-          latitude: position.lat(),
-          longitude: position.lng(),
-        })
-      );
-
-      this.router.navigate(['/pasos/2']);
-    } else {
-      this.snackBar.open(
-        'Debe seleccionar una zona de instalación para continuar.',
-        '',
-        {
-          duration: 2000,
-          panelClass: ['custom-snackbar'],
-        }
-      );
-    }
-  }
-
   showTooltip(event: MouseEvent) {
     if (!this.areaMarked) {
       this.snackBar.open(
@@ -378,33 +160,125 @@ export class Paso1Component implements OnInit {
     this.snackBar.dismiss();
   }
 
-  /* applyTextureToPolygon(polygon: google.maps.Polygon): void {
-      const svgNS = "http://www.w3.org/2000/svg";
-      const pattern = document.createElementNS(svgNS, "pattern");
-      pattern.setAttribute("id", "solarTexture");
-      pattern.setAttribute("patternUnits", "userSpaceOnUse");
-      pattern.setAttribute("width", "100");
-      pattern.setAttribute("height", "100");
-  
-      const image = document.createElementNS(svgNS, "image");
-      image.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "assets/img/solar-panel-texture.jpeg");
-      image.setAttribute("width", "100");
-      image.setAttribute("height", "100");
-  
-      pattern.appendChild(image);
-      document.getElementById("map")?.appendChild(pattern);
-  
-      polygon.setOptions({
-        fillColor: "url(#solarTexture)",
-        fillOpacity: 0.4
-      });
-    } */
+  async buscarUbicacion(value: string) {
+    if (!this.marker) {
+      console.error('El marcador no está inicializado.');
+      return;
+    }
+    try {
+      const location = await this.locationService.validateLocation(
+        value,
+        this.map,
+        this.marker
+      );
 
-  getBoundsForPolygon(polygon: google.maps.Polygon): google.maps.LatLngBounds {
-    const bounds = new google.maps.LatLngBounds();
-    polygon.getPath().forEach((coord: google.maps.LatLng) => {
-      bounds.extend(coord);
+      if (location) {
+        this.marker.position = location;
+        this.areaMarked = true;
+      } else {
+        console.error('La ubicación no es válida.');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  goBack() {
+    this.router.navigate(['/pasos/0']);
+  }
+
+  goToPaso2() {
+    if (!this.areaMarked) {
+      this.snackBar.open(
+        'Debe seleccionar una zona de instalación para continuar.',
+        '',
+        {
+          duration: 2000,
+          panelClass: ['custom-snackbar'],
+        }
+      );
+      return; // No avanzar si no hay área marcada
+    }
+
+    // Verificar el tamaño del área seleccionada (en metros cuadrados)
+    const area = google.maps.geometry.spherical.computeArea(
+      this.mapService.getPolygons()[0]?.getPath()
+    );
+    const minimumAreaThreshold = 5;
+    const maximunAreaThreshold = 2000;
+    const polygons = this.mapService.getPolygons();
+
+    if (area < minimumAreaThreshold) {
+      this.snackBar.open(
+        `El área seleccionada es demasiado pequeña. Debe ser mayor a ${minimumAreaThreshold} m².`,
+        '',
+        {
+          duration: 2000,
+          panelClass: ['custom-snackbar'],
+        }
+      );
+      polygons[0].setEditable(true);
+      this.mapService.setDrawingMode(null);
+      return; // No avanzar si el área es demasiado pequeña
+    }
+    if (area > maximunAreaThreshold) {
+      this.snackBar.open(
+        `El área seleccionada es demasiado grande. Debe ser menor a ${maximunAreaThreshold} m².`,
+        '',
+        {
+          duration: 2000,
+          panelClass: ['custom-snackbar'],
+        }
+      );
+      polygons[0].setEditable(true);
+      this.mapService.setDrawingMode(null);
+      return;
+    }
+
+    // Si todo está bien, avanzar al siguiente paso
+    polygons[0].setEditable(false);
+    this.mapService.setDrawingMode(null);
+
+    this.router.navigate(['/pasos/2']);
+  }
+
+  private async initializeAutocomplete() {
+    const input = document.getElementById('pac-input') as HTMLInputElement;
+    const searchBox = new google.maps.places.SearchBox(input);
+
+    this.map.addListener('bounds_changed', () => {
+      searchBox.setBounds(this.map.getBounds() as google.maps.LatLngBounds);
     });
-    return bounds;
+
+    searchBox.addListener('places_changed', async () => {
+      const places = searchBox.getPlaces();
+
+      if (places && places.length > 0) {
+        if (places.length == 0) {
+          return;
+        }
+
+        const place = places[0];
+        if (place.geometry && place.geometry.location) {
+          if (this.marker) {
+            const location = await this.locationService.validateLocation(
+              place.name || 'default',
+              this.map,
+              this.marker
+            );
+            this.map.setCenter(location);
+            input.value = '';
+          }
+        }
+      }
+    });
+  }
+
+  enableDrawingMode() {
+    this.mapService.enableDrawingMode();
+  }
+
+  clearDrawing() {
+    this.mapService.clearDrawing();
   }
 }
