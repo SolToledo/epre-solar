@@ -1,33 +1,5 @@
- <!-- <div class="contenido-general">
 
-  <div class="toolbar">
-    <app-toolbar></app-toolbar>
-  </div>
-  
-  <div class="content-total">
-      <app-mapa></app-mapa>
-  
-    <div class="paso" [class.collapsed]="isCollapsed">
-      <div class="toggle-tab" (click)="isCollapsed = !isCollapsed">
-        <mat-icon>{{ isCollapsed ? 'chevron_left' : 'chevron_right' }}</mat-icon>
-      </div>
-      <div [@menuCollapsed]="isCollapsed ? 'expand' : 'collapsed'">
-           <ng-container *ngIf="currentStep > 0; else informacion">
-        <router-outlet></router-outlet>
-      </ng-container>
-      <ng-template #informacion>
-        <app-paso0></app-paso0>
-      </ng-template>  
-      </div>
-    </div>
-  </div>
-</div>  -->
-
-
-
-
- <div class="contenido-general">
-
+<div class="contenido-general">
   <div class="toolbar">
     <app-toolbar></app-toolbar>
   </div>
@@ -37,8 +9,8 @@
       <app-mapa></app-mapa>
     </div>
   
-    <div class="paso" [class.collapsed]="isCollapsed" [ngClass]="{'expanded': isPaso3}">
-      <div class="toggle-tab" (click)="isCollapsed = !isCollapsed">
+    <div class="paso" [class.collapsed]="isCollapsed" [ngClass]="{'expanded': isPaso3 && !isCollapsed}">
+      <div class="toggle-tab" (click)="toggleCollapse()">
         <mat-icon>{{ isCollapsed ? 'chevron_left' : 'chevron_right' }}</mat-icon>
       </div>
       <div [@menuCollapsed]="isCollapsed ? 'expand' : 'collapsed'">
@@ -51,7 +23,11 @@
       </div>
     </div>
   </div>
-</div>  
+</div>
+
+
+
+
 
 
 
