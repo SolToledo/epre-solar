@@ -14,9 +14,9 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class SolarApiService {
-  private readonly apiUrl: string = 'http://localhost:3000';
+  // private readonly apiUrl: string = 'http://localhost:3000';
   private _resultados!: ResultadosFrontDTO;
-  // private apiUrl = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
+  private apiUrl = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
 
   constructor(
     private http: HttpClient,

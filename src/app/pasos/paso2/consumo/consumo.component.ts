@@ -4,6 +4,7 @@ import { MesesConsumo } from 'src/app/interfaces/mesesConsumo';
 import { ResultadoCalculo } from 'src/app/interfaces/resultado-calculo';
 import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { ConsumoService } from 'src/app/services/consumo.service';
+import { SharedService } from 'src/app/services/shared.service';
 import { SolarApiService } from 'src/app/services/solar-api.service';
 
 @Component({
@@ -33,7 +34,7 @@ export class ConsumoComponent implements OnInit {
   totalConsumo: number = 0;
   subscription: Subscription;
   
-  constructor(private consumoService: ConsumoService, private solarApiService: SolarApiService, consumoTarifaService: ConsumoTarifaService) {
+  constructor(private consumoService: ConsumoService, private solarApiService: SolarApiService, consumoTarifaService: ConsumoTarifaService, private sharedService: SharedService) {
     this.subscription = consumoTarifaService.consumosMensuales$.subscribe(
       (consumos: number[]) => {
         this.updateConsumosMensuales(consumos);
@@ -42,6 +43,7 @@ export class ConsumoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.resetMesesConsumo();
     this.focusFirstInput();
   }
 
@@ -118,5 +120,15 @@ export class ConsumoComponent implements OnInit {
       mes.completado = consumos[index] !== null;
     });
     this.calcularTotalConsumo();
+  }
+
+  resetMesesConsumo(): void {
+    this.meses.forEach(mes => {
+      mes.consumo = null;
+      mes.completado = false;
+    });
+    this.allCompleted = false;
+    this.allFieldsCompleted.emit(this.allCompleted);
+    this.sharedService.setTarifaContratada('');
   }
 }
