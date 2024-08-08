@@ -13,8 +13,8 @@ export class MapService {
   private polygons: google.maps.Polygon[] = [];
   private panels: google.maps.Rectangle[] = [];
   private overlayCompleteSubject = new Subject<boolean>();
-  private maxPanelsPerSuperficeSubject = new BehaviorSubject<number>(0);
   private areaSubject = new BehaviorSubject<number>(0);
+  private panelsCountSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   constructor() {}
 
@@ -143,7 +143,7 @@ export class MapService {
     return this.overlayCompleteSubject.asObservable();
   }
   overlayMaxPanelsPerSuperfice$(): Observable<number> {
-    return this.maxPanelsPerSuperficeSubject.asObservable();
+    return this.panelsCountSubject.asObservable();
   }
   area$(): Observable<number> {
     return this.areaSubject.asObservable();
@@ -212,8 +212,6 @@ export class MapService {
     }
 
     this.panels = panels;
-    const maxPanelsCount = panels.length;
-    this.maxPanelsPerSuperficeSubject.next(maxPanelsCount);
     this.clipPanelsToPolygon(polygon, panels);
   }
 
@@ -241,6 +239,10 @@ export class MapService {
         panel.setMap(null);
       }
     });
+    const clippedPanelsCount = panels.filter(
+      (panel) => panel.getMap() !== null
+    ).length;
+    this.setPanelsCount(clippedPanelsCount);
   }
 
   getPolygonCoordinates(): google.maps.LatLngLiteral[] | null {
@@ -263,8 +265,12 @@ export class MapService {
     return null; // Si no hay polígono, devuelve null
   }
 
-  getPanelsCount(): number {
-    return this.panels.length;
+  getPanelsCount(): Observable<number> {
+    return this.panelsCountSubject.asObservable();
+  }
+  
+  setPanelsCount(count: number): void {
+    this.panelsCountSubject.next(count);
   }
 
   hideDrawingControl() {
@@ -296,4 +302,7 @@ export class MapService {
     this.clearPanels();
     this.disableDrawingMode();
   }
+
+  
+
 }

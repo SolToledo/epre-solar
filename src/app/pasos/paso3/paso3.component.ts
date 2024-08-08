@@ -27,7 +27,7 @@ export class Paso3Component implements OnInit {
   map: any;
   maxPanelsCount!: number;
   private polygons!: any[];
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   constructor(
     private router: Router,
@@ -36,10 +36,10 @@ export class Paso3Component implements OnInit {
     private solarService: SolarApiService,
     private sharedService: SharedService,
     private mapService: MapService,
-    private spinner: NgxSpinnerService 
+    private spinner: NgxSpinnerService
   ) {}
   ngOnInit(): void {
-    this.spinner.show();
+    // this.spinner.show();
     this.solarService
       .calculate()
       .then((resultados) => (this.resultadosFront = resultados))
@@ -58,10 +58,9 @@ export class Paso3Component implements OnInit {
         );
       })
       .finally(() => {
-        this.spinner.hide();
-        this.isLoading = false; 
+        // this.spinner.hide();
+        this.isLoading = false;
       });
-      
   }
 
   print(): void {

@@ -13,7 +13,7 @@
                      <mat-slider
                      class="custom-slider"
                      min="4"
-                     max="20"
+                     [max]="maxPanelsCount"
                      step="1"
                      (change)="onSliderChange($event)"
                      discrete

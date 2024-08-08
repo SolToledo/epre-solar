@@ -32,12 +32,6 @@
   
         // Restablece isCollapsed cuando se navega a un nuevo paso
         this.isCollapsed = false;
-  
-        // Depuración
-        console.log('Current URL:', url);
-        console.log('Last Segment:', lastSegment);
-        console.log('Current Step:', this.currentStep);
-        console.log('Is Paso3:', this.isPaso3);
       });
     }
   

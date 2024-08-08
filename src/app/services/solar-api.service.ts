@@ -1,5 +1,3 @@
-// solar-api.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
@@ -14,9 +12,8 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class SolarApiService {
-  // private readonly apiUrl: string = 'http://localhost:3000';
+  private readonly apiUrl: string = 'http://localhost:3000';
   private _resultados!: ResultadosFrontDTO;
-  private apiUrl = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
 
   constructor(
     private http: HttpClient,
@@ -32,11 +29,18 @@ export class SolarApiService {
     const polygonArea = this.mapService.getPolygonArea();
     const categoriaSeleccionada = this.sharedService.getTarifaContratada();
     let annualConsumption: number = 0;
-    const panelsSupported: number = this.mapService.getPanelsCount();
-    this.consumoService.totalConsumo$.subscribe(total => {
+    let panelsSupported: number = 0;
+
+    // Obtener el total de consumo anual
+    this.consumoService.totalConsumo$.subscribe((total) => {
       annualConsumption = total;
     });
-    
+
+    // Obtener el número de paneles soportados
+    await lastValueFrom(this.mapService.getPanelsCount()).then(count => {
+      panelsSupported = count;
+    });
+
     if (
       annualConsumption &&
       polygonCoordinates &&
@@ -49,10 +53,9 @@ export class SolarApiService {
         polygonCoordinates,
         categoriaSeleccionada,
         polygonArea,
-        panelsSupported
+        panelsSupported,
       };
-      
-      
+
       try {
         const response = await lastValueFrom(
           this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)

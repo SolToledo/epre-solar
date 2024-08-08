@@ -10,12 +10,9 @@ import { MapService } from 'src/app/services/map.service';
   styleUrls: ['./paneles.component.css'],
 })
 export class PanelesComponent implements OnInit, OnDestroy {
-  @Input()
-  panelesCantidad: number = 0;
-  @Input()
-  dimensionPanel!: DimensionPanel;
-  @Input()
-  panelCapacityW: number = 0;
+  @Input() panelesCantidad: number = 0;
+  @Input() dimensionPanel!: DimensionPanel;
+  @Input() panelCapacityW: number = 0;
   @ViewChild(MatSlider) slider!: MatSlider;
   private panelsCountSubscription!: Subscription;
   maxPanelsCount: number = 0;
@@ -35,11 +32,16 @@ export class PanelesComponent implements OnInit, OnDestroy {
       });
 
     // Obtener el valor inicial si ya está disponible
-    this.maxPanelsCount = this.mapService.getPanelsCount();
-    if (this.panelesCantidad > this.maxPanelsCount) {
-      this.panelesCantidad = this.maxPanelsCount;
-    }
+    this.mapService.getPanelsCount().subscribe({
+      next: (value) => {
+        this.maxPanelsCount = value;
+        if (this.panelesCantidad > this.maxPanelsCount) {
+          this.panelesCantidad = this.maxPanelsCount;
+        }
+      },
+    });
   }
+
   ngOnDestroy(): void {
     if (this.panelsCountSubscription) {
       this.panelsCountSubscription.unsubscribe();
@@ -47,7 +49,10 @@ export class PanelesComponent implements OnInit, OnDestroy {
   }
 
   onSliderChange(event: any) {
-    this.panelesCantidad = event.value;
+    this.mapService.setPanelsCount(event.value);
+    if (this.panelesCantidad > this.maxPanelsCount) {
+      this.panelesCantidad = this.maxPanelsCount;
+    }
   }
 
   formatLabel(value: number): string {
@@ -55,5 +60,15 @@ export class PanelesComponent implements OnInit, OnDestroy {
       return Math.round(value / 1000) + 'k';
     }
     return `${value}`;
+  }
+
+  get totalCapacityKW(): number {
+    return (this.panelCapacityW * this.panelesCantidad) / 1000;
+  }
+
+  get surfaceArea(): number {
+    const panelHeight = this.dimensionPanel.height / 100;
+    const panelWidth = this.dimensionPanel.width / 100;
+    return panelHeight * panelWidth * this.panelesCantidad;
   }
 }
