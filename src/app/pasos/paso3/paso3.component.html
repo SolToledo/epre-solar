@@ -35,88 +35,62 @@
 
         <div class="informacion">
           <div class="content-scroll">
+
             <div class="info-mostrar">
-              <div class="info-row">
-                <app-ahorros></app-ahorros>
-                <app-plazo
-                  [plazoRecuperoInversion]="plazoRecuperoInversion"
-                ></app-plazo>
-                <app-paneles
-                  [dimensionPanel]="dimensionPanel"
-                  [panelCapacityW]="panelCapacityW"
-                ></app-paneles>
-              </div>
-
-              <div class="info-row">
-                <app-potencia
-                  [instalacionPotencia]="
-                    (panelesCantidad * panelCapacityW) / 1000
-                  "
-                ></app-potencia>
-                <app-superficie></app-superficie>
-                <app-cobertura [TIR]="getTIR()"></app-cobertura>
-              </div>
-
-              <div class="info-row">
-                <app-energia></app-energia>
-                <app-emisiones
-                  [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"
-                ></app-emisiones>
-                <app-costo
-                  [costoInstalacion]="getCostoInstalacion()"
-                ></app-costo>
-              </div>
-
-              <div class="info-row">
-                <app-tarifa-intercambio></app-tarifa-intercambio>
-                <div class="grafico-component">
-                  <p>grafico</p>
-                </div>
+              <div *ngFor="let item of items" class="info-item">
+                <ng-container [ngSwitch]="item.type">
+                  <!-- Renderiza el componente correspondiente según el tipo -->
+                  <app-ahorros *ngSwitchCase="'ahorros'"></app-ahorros>
+            
+                  <app-plazo *ngSwitchCase="'plazo'" [plazoRecuperoInversion]="item.plazoRecuperoInversion"></app-plazo>
+            
+                  <app-paneles *ngSwitchCase="'paneles'"
+                               [dimensionPanel]="item.dimensionPanel"
+                               [panelCapacityW]="item.panelCapacityW"></app-paneles>
+            
+                  <app-potencia *ngSwitchCase="'potencia'"
+                                [instalacionPotencia]="item.instalacionPotencia"></app-potencia>
+            
+                  <app-superficie *ngSwitchCase="'superficie'"></app-superficie>
+            
+                  <app-cobertura *ngSwitchCase="'cobertura'" [TIR]="item.TIR"></app-cobertura>
+            
+                  <app-energia *ngSwitchCase="'energia'"></app-energia>
+            
+                  <app-emisiones *ngSwitchCase="'emisiones'"
+                                 [carbonOffsetFactorTnPerMWh]="item.carbonOffsetFactorTnPerMWh"></app-emisiones>
+            
+                  <app-costo *ngSwitchCase="'costo'" [costoInstalacion]="item.costoInstalacion"></app-costo>
+            
+                  <app-tarifa-intercambio *ngSwitchCase="'tarifa-intercambio'"></app-tarifa-intercambio>
+            
+                  
+                </ng-container>
               </div>
             </div>
 
-            <!--grafico-->
-            <div class="grafico">
-              <div class="periodo">
-                <div class="icono">
-                  <img
-                    src="assets/dinero-tiempo.png"
-                    id="marca"
-                    class="custom-icon"
-                  />
-                </div>
-                <div>
-                  <p class="texto-meses">
-                    Período de recuperación de la inversión aproximada
-                  </p>
-                </div>
-                <div class="numero-meses">
-                  <p class="numero">{{ plazoRecuperoInversion * 12 }}</p>
-                  <p class="meses">meses</p>
-                </div>
-              </div>
-              <!--termina periodo-->
 
-              <div class="grafico-imagen">
-                <app-graficos
-                  [periodoVeinteanalEmisionesGEIEvitadas]="
-                    getEmisionesGEIEvitadas()
-                  "
-                  [periodoVeinteanalFlujoEnergia]="getFlujoEnergia()"
-                  [periodoVeinteanalFlujoIngresosMonetarios]="
-                    getFlujoIngresosMonetarios()
-                  "
-                  [periodoVeinteanalGeneracionFotovoltaica]="
-                    getGeneracionFotovoltaica()
-                  "
-                ></app-graficos>
-              </div>
-            </div>
+            <!--informacion que necesita el componente para renderizar GRAFICOS-->
+            <app-graficos
+            [periodoVeinteanalEmisionesGEIEvitadas]="
+              getEmisionesGEIEvitadas()
+            "
+            [periodoVeinteanalFlujoEnergia]="
+              getFlujoEnergia()
+            "
+            [periodoVeinteanalFlujoIngresosMonetarios]="
+              getFlujoIngresosMonetarios()
+            "
+            [periodoVeinteanalGeneracionFotovoltaica]="
+              getGeneracionFotovoltaica()
+            "
+          ></app-graficos>
+
             <!--termina grafico-->
-          </div>
-        </div>
-        <!--termina informacion-->
-
+          </div><!--termina content-scroll-->
+        </div><!--termina informacion-->
+        
+  
         <!--botones-->
         <div class="button-container">
           <div class="boton">

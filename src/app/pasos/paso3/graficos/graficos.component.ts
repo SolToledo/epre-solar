@@ -33,7 +33,7 @@ export class GraficosComponent implements OnInit {
     );
   }
 
-  loadCharts(): void {
+  loadCharts(): void {   
     this.createChart(
       'emisionesChart',
       'line',
@@ -44,6 +44,7 @@ export class GraficosComponent implements OnInit {
       'rgba(75, 192, 192, 0.2)',
       'rgba(75, 192, 192, 1)'
     );
+
 
     this.createChartDouble('energiaChart', 'line', [
       {
@@ -100,6 +101,7 @@ export class GraficosComponent implements OnInit {
     borderColor: string
   ): void {
     const canvas = document.getElementById(elementId) as HTMLCanvasElement;
+    console.log({canvas})
     if (canvas) {
       const ctx = canvas.getContext('2d');
       if (ctx) {

@@ -210,8 +210,16 @@ button[disabled] {
 }*/
 
 .custom-snackbar {
-  --mdc-snackbar-container-color: #cba258 !important;
+  --mdc-snackbar-container-color: #cba258!important;
+ }
+
+ .custom-snackbar .material-icons {
+  font-size: 20px; /* Tamaño del ícono */
+  vertical-align: middle; /* Alineación vertical */
+  margin-right: 8px; /* Espacio entre el ícono y el texto */
+  color: #000000; /* Color del ícono */
 }
+
 
 /*********************************************************************/
 /*Estilos para los componentes que se renderizan en paso3 */
