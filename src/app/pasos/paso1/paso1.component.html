@@ -85,7 +85,7 @@
         <button id="boton-volver" (click)="goBack()">
           <span class="material-icons">chevron_left</span> Volver</button>
         <br />
-        <button id="boton-siguiente" [disabled]="!areaMarked" (click)="goToPaso2()"  (mouseenter)="showTooltip($event)" (mouseleave)="hideTooltip($event)">Siguiente
+        <button id="boton-siguiente" [disabled]="!areaMarked" (click)="goToPaso2()"  (mouseenter)="showTooltip()">Siguiente
           <span class="material-icons">chevron_right</span>
         </button> 
       </div>

@@ -1,22 +1,23 @@
-// solar-api.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, Subscriber, Subscription } from 'rxjs';
 import { ResultadoService } from './resultado.service';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { ConsumoService } from './consumo.service';
 import { MapService } from './map.service';
 import { SharedService } from './shared.service';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SolarApiService {
-   private readonly apiUrl: string = 'http://localhost:3000';
+  private readonly apiUrl: string = 'http://localhost:3000';
   private _resultados!: ResultadosFrontDTO;
- // private apiUrl = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
+  annualConsumption: number = 0;
+  private panelsSupportedSubscription!: Subscription;
+  panelsSupported: number = 0;
 
   constructor(
     private http: HttpClient,
@@ -24,47 +25,62 @@ export class SolarApiService {
     private consumoService: ConsumoService,
     private mapService: MapService,
     private sharedService: SharedService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   async calculate(): Promise<any> {
-    const polygonCoordinates = this.mapService.getPolygonCoordinates();
-    const polygonArea = this.mapService.getPolygonArea();
-    const categoriaSeleccionada = this.sharedService.getTarifaContratada();
-    let annualConsumption: number = 0;
-    const panelsSupported: number = this.mapService.getPanelsCount();
-    this.consumoService.totalConsumo$.subscribe(total => {
-      annualConsumption = total;
-    });
-    
-    if (
-      annualConsumption &&
-      polygonCoordinates &&
-      polygonArea &&
-      categoriaSeleccionada &&
-      panelsSupported
-    ) {
+    try {
+      const polygonCoordinates = this.mapService.getPolygonCoordinates();
+      const polygonArea = this.mapService.getPolygonArea();
+      const categoriaSeleccionada = this.sharedService.getTarifaContratada();
+
+      this.consumoService.totalConsumo$.subscribe({
+        next: value => this.annualConsumption = value,
+      });
+      
+      this.panelsSupportedSubscription = this.mapService.maxPanelsPerArea$.subscribe({
+        next: value => this.panelsSupported = value
+      })
+      // Verifica los datos y muestra mensajes específicos
+      const missingFields = [];
+      if (!this.annualConsumption) missingFields.push('Consumo anual');
+      if (!polygonCoordinates) missingFields.push('Coordenadas del polígono');
+      if (!polygonArea) missingFields.push('Área del polígono');
+      if (!categoriaSeleccionada) missingFields.push('Categoría seleccionada');
+      if (!this.panelsSupported) missingFields.push('Paneles soportados');
+
+      if (missingFields.length > 0) {
+        this.snackBar.open(
+          `Faltan los siguientes datos: ${missingFields.join(', ')}`,
+          'Cerrar',
+          {
+            duration: 5000,
+          }
+        );
+        
+        setTimeout(() => {
+          this.router.navigate(['/pasos/1']);
+        }, 5000);
+        return; 
+      }
+
       const datosCalculo = {
-        annualConsumption,
+        annualConsumption: this.annualConsumption,
         polygonCoordinates,
         categoriaSeleccionada,
         polygonArea,
-        panelsSupported
+        panelsSupported: this.panelsSupported,
       };
-      
-      
-      try {
-        const response = await lastValueFrom(
-          this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
-        );
-        this._resultados = this.resultadoService.generarResultados(response);
-        return this.getResultados;
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    } else {
-      console.error('Missing required data for calculation.');
-     // this.router.navigate(['/pasos/1']);
+      console.log(datosCalculo);
+
+      const response = await lastValueFrom(
+        this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
+      );
+      this._resultados = this.resultadoService.generarResultados(response);
+      return this.getResultados;
+    } catch (error) {
+      console.error('Error en el cálculo:', error);
     }
   }
 

@@ -143,21 +143,17 @@ export class Paso1Component implements OnInit {
     this.sharedService.setTutorialShown(false);
   }
 
-  showTooltip(event: MouseEvent) {
+  showTooltip() {
     if (!this.areaMarked) {
       this.snackBar.open(
         'Debe seleccionar una zona de instalación para continuar.',
         '',
         {
-          duration: 2000,
+          duration: 3000,
           panelClass: ['custom-snackbar'],
         }
       );
     }
-  }
-
-  hideTooltip(event: MouseEvent) {
-    this.snackBar.dismiss();
   }
 
   async buscarUbicacion(value: string) {

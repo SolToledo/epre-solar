@@ -54,8 +54,7 @@
           #botonSiguiente
           (click)="goToPaso3()"
           [disabled]="!isCategorySelected || !allFieldsFilled"
-          (mouseenter)="showTooltip($event)"
-          (mouseleave)="hideTooltip($event)"
+          (mouseenter)="showTooltip()"
         >
           Realizar Cálculo <span class="material-icons">chevron_right</span>
         </button>

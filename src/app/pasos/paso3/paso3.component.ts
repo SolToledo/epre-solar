@@ -17,8 +17,6 @@ import jsPDF from 'jspdf';
 })
 export class Paso3Component implements OnInit {
   items: any[] = [];
-
-
   currentStep: number = 3;
   mostrarModal: boolean = false;
   private resultadosFront!: ResultadosFrontDTO;
@@ -30,7 +28,7 @@ export class Paso3Component implements OnInit {
   map: any;
   maxPanelsCount!: number;
   private polygons!: any[];
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   constructor(
     private router: Router,
@@ -39,11 +37,9 @@ export class Paso3Component implements OnInit {
     private solarService: SolarApiService,
     private sharedService: SharedService,
     private mapService: MapService,
-    private spinner: NgxSpinnerService 
+    private spinner: NgxSpinnerService
   ) {}
   ngOnInit(): void {
-
-
     this.items = [
       { type: 'ahorros' },
       { type: 'plazo', plazoRecuperoInversion: this.plazoRecuperoInversion },
@@ -58,29 +54,8 @@ export class Paso3Component implements OnInit {
       { type: 'grafico', content: 'grafico' }
     ];
 
+   // this.spinner.show();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    this.spinner.show();
     this.solarService
       .calculate()
       .then((resultados) => (this.resultadosFront = resultados))
@@ -98,11 +73,11 @@ export class Paso3Component implements OnInit {
           ).toFixed(2)
         );
       })
+      .catch(error =>  console.error('Error en calculate:', error))
       .finally(() => {
-        this.spinner.hide();
-        this.isLoading = false; 
+        // this.spinner.hide();
+        this.isLoading = false;
       });
-      
   }
 
   print(): void {
