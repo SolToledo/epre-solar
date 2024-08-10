@@ -40,6 +40,7 @@ export class Paso3Component implements OnInit {
     private spinner: NgxSpinnerService
   ) {}
   ngOnInit(): void {
+
     this.items = [
       { type: 'ahorros' },
       { type: 'plazo', plazoRecuperoInversion: this.plazoRecuperoInversion },
@@ -54,7 +55,10 @@ export class Paso3Component implements OnInit {
       { type: 'grafico', content: 'grafico' }
     ];
 
-   // this.spinner.show();
+    // this.spinner.show();
+    setTimeout(() => {
+      this.mapService.recenterMapToVisibleArea();
+    }, 300); 
 
     this.solarService
       .calculate()

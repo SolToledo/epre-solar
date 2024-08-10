@@ -5,6 +5,7 @@ import { BehaviorSubject, combineLatest, map, Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class MapService {
+  
   private map!: google.maps.Map;
   private drawingManager!: google.maps.drawing.DrawingManager;
   private center: google.maps.LatLngLiteral = { lat: -31.5364, lng: -68.50639 };
@@ -12,7 +13,7 @@ export class MapService {
   private mapSubject = new Subject<google.maps.Map>();
   private polygons: google.maps.Polygon[] = [];
   private panels: google.maps.Rectangle[] = [];
-  
+
   private overlayCompleteSubject = new Subject<boolean>();
   private areaSubject = new BehaviorSubject<number>(0);
   area$ = this.areaSubject.asObservable();
@@ -22,9 +23,7 @@ export class MapService {
   private panelWidthMeters = 1.045;
   private panelHeightMeters = 1.879;
 
-  constructor() {
-    
-  }
+  constructor() {}
 
   async initializeMap(mapElement: HTMLElement) {
     const { Map } = (await google.maps.importLibrary(
@@ -59,7 +58,7 @@ export class MapService {
     this.panels.forEach((panel) => panel.setMap(null));
     this.panels = [];
   }
-  
+
   getMap() {
     return this.map;
   }
@@ -68,6 +67,36 @@ export class MapService {
     this.center = { lat, lng };
     if (this.map) {
       this.map.setCenter(this.center);
+    }
+  }
+
+  recenterMapToVisibleArea() {
+    const bounds = new google.maps.LatLngBounds();
+    this.getPolygons().forEach(polygon => {
+      polygon.getPath().forEach(latLng => bounds.extend(latLng));
+    });
+  
+    const mapCenter = bounds.getCenter();
+  
+    // Calcular el nuevo centro considerando el desplazamiento hacia la izquierda de 1/4 del ancho de la pantalla
+    const screenWidth = window.innerWidth; // Ancho de la pantalla en píxeles
+    const offsetX = screenWidth / 4; // Desplazamiento de 1/4 del ancho de la pantalla
+  
+    const zoom = this.map.getZoom() ?? 1;
+    const scale = Math.pow(2, zoom);
+    const worldCoordinateCenter = this.map.getProjection()?.fromLatLngToPoint(mapCenter);
+    
+    if (worldCoordinateCenter) {
+      const pixelOffset = offsetX / scale;
+      const newCenter = this.map.getProjection()?.fromPointToLatLng(
+        new google.maps.Point(worldCoordinateCenter.x + pixelOffset, worldCoordinateCenter.y)
+      );
+  
+      if (newCenter) {
+        this.map.panTo(newCenter);
+      } else {
+        console.error('No se pudo calcular el nuevo centro del mapa.');
+      }
     }
   }
 
@@ -150,13 +179,14 @@ export class MapService {
   overlayComplete$(): Observable<boolean> {
     return this.overlayCompleteSubject.asObservable();
   }
-  
+
   private drawPanels(
     polygon: google.maps.Polygon,
-    maxPanels: number = Infinity
+    maxPanels: number = Infinity,
+    reDraw: boolean = false
   ) {
     this.clearPanels();
-
+    const isReDraw = reDraw;
     const bounds = new google.maps.LatLngBounds();
     polygon.getPath().forEach((latLng) => {
       bounds.extend(latLng);
@@ -221,12 +251,13 @@ export class MapService {
     }
 
     this.panels = panels;
-    this.clipPanelsToPolygon(polygon, panels);
+    this.clipPanelsToPolygon(polygon, panels, isReDraw);
   }
 
   clipPanelsToPolygon(
     polygon: google.maps.Polygon,
-    panels: google.maps.Rectangle[]
+    panels: google.maps.Rectangle[],
+    isReDraw: boolean
   ) {
     panels.forEach((panel) => {
       const panelBounds = panel.getBounds();
@@ -251,9 +282,14 @@ export class MapService {
     const clippedPanelsCount = panels.filter(
       (panel) => panel.getMap() !== null
     ).length;
-    console.log("paneles totales : " , clippedPanelsCount);
-    
-    this.maxPanelsPerAreaSubject.next(clippedPanelsCount);
+
+    if (!isReDraw) {
+      this.maxPanelsPerAreaSubject.next(clippedPanelsCount);
+    }
+  }
+
+  reDrawPanels(panelesCantidad: number) {
+    this.drawPanels(this.getPolygons()[0], panelesCantidad, true);
   }
 
   getPolygons() {
@@ -279,12 +315,12 @@ export class MapService {
       this.areaSubject.next(area);
       return area;
     }
-    this.areaSubject.next(0); 
+    this.areaSubject.next(0);
     return 0;
   }
 
-  getMaxPanelsPerArea(area: number): number {
-    const maxPanels = Math.floor(area / this.panelArea);
+  getMaxPanelsPerArea(): number {
+    const maxPanels = Math.floor(this.getPolygonArea() / this.panelArea);
     this.maxPanelsPerAreaSubject.next(maxPanels);
     return maxPanels;
   }

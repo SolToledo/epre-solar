@@ -3,6 +3,7 @@
   import { Component, OnInit } from '@angular/core';
   import { Router, NavigationEnd } from '@angular/router';
   import { filter } from 'rxjs';
+import { MapService } from '../services/map.service';
   
   @Component({
     selector: 'app-layout-pasos',
@@ -21,7 +22,7 @@
     isPaso3: boolean = false;
     isCollapsed = false;
   
-    constructor(private router: Router) {
+    constructor(private router: Router, private mapService: MapService) {
       this.router.events.pipe(
         filter(event => event instanceof NavigationEnd)
       ).subscribe(() => {
@@ -32,16 +33,27 @@
   
         // Restablece isCollapsed cuando se navega a un nuevo paso
         this.isCollapsed = false;
+        
       });
     }
   
     ngOnInit(): void {
-      // Inicialización si es necesario
+      
     }
   
     toggleCollapse() {
       // Permitir colapsar y expandir cualquier paso
       this.isCollapsed = !this.isCollapsed;
+      if (this.mapService.getPolygons().length > 0) {
+        this.recenterMap();
+      }
     }
+
+    private recenterMap() {
+      setTimeout(() => {
+        this.mapService.recenterMapToVisibleArea();
+      }, 300); 
+    }
+    
   }
   
