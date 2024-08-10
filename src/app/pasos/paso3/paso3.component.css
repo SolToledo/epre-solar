@@ -15,7 +15,6 @@
 /*los estilos de .content estan en style.css*/
 .info-container {
   background-color: white;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +26,6 @@
 /********************************************************************/
 .informacion{
   width: 100%;
- /* height: 82%;*/
   height: 82%;
   display: flex;
   flex-direction: column;
@@ -35,24 +33,26 @@
   justify-content: center;
   gap: 10px;
 
-  background-color: #4caf50;
- 
-
   .content-scroll {
-   /* height: 55vh;
-    max-height: 55vh;*/
-    width: 100%;/*******************************/
-    height: 60vh;
-    max-height: 60vh;
-    overflow-y: scroll; /* Solo permite desplazamiento vertical */
+    width: 100%;
+   /* height: 60vh;
+    max-height: 60vh;*/
+    height: 58vh;
+    overflow-y: scroll; 
     overflow-x: hidden; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 10px;
-   /* background-color: rgb(190, 146, 155);*/
+  }
+
+  .info-mostrar {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en varias filas si no hay suficiente espacio en una sola fila */
+    gap: 5px; /* Espacio entre los elementos */
   }
   
+  /*------------------------------------------------*/
   /* Estilos para personalizar la barra de desplazamiento vertical */
   .content-scroll::-webkit-scrollbar {
     width: 8px; 
@@ -63,29 +63,25 @@
   }
   
   .content-scroll::-webkit-scrollbar-thumb {
-    background: #b8b6b6; /* Color de la barra de desplazamiento */
-    border-radius: 4px; /* Redondear los bordes de la barra */
+    background: #b8b6b6;
+    border-radius: 4px; 
   }
   
   .content-scroll::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Color de la barra de desplazamiento al pasar el cursor */
+    background: #555; 
   }
   
-
 }
 /*----------------------------------------------------------------------------------------------------------*/  
 /* Estilos para los botones secundarios  EDITAR/DESCARGAR/ENVIAR*/
 .action-buttons{
   width: 100%;
-/*  height: 9%;*/
   height: 40px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 .descargar-enviar-component{
- /* width: 17%;*/
- /* height: 95%;*/
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -136,16 +132,11 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  
-  /* Borde derecho e inferior en negro */
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
-  
-  /* Elimina los bordes superior e izquierdo */
   border-top: none;
   border-left: none;
 }
-
 
 #boton-editar .material-icons {
   margin-left: 8px; 
@@ -164,107 +155,7 @@
   color: white; 
 }
 
-/***********************************************************************/
 
-.info-mostrar {
-  display: flex;
-  flex-wrap: wrap; /* Permite que los elementos se ajusten en varias filas si no hay suficiente espacio en una sola fila */
-  gap: 5px; /* Espacio entre los elementos */
- 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*.info-mostrar{
-  width: 100%;
-  display: flex;
-  flex-direction: column; 
-  gap: 10px;
-  background-color: firebrick;
-}
-.info-row{
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}*/
-
-/*------------------------------------------------*/
-.grafico{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 8px;
-  padding-top: 7px;
-  padding-bottom: 5px;
-  border: 2px solid var(--light-background);
-}
-
-.periodo{
-  width: 95%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border-bottom: 1px solid #ccc; /* Borde inferior de 1px y color gris */
-  margin-bottom: 10px;
-}
-
-.custom-icon{
-  width: 50px;
-  height: auto;
-}
-
-.texto-meses{
-  font-size:19px ;
- /* color: #417B6F; */
- color: var(--medium-green);
-}
-
-.numero-meses{
-  display: flex;
-  flex-direction: column;
-  padding-top: 5px;
-}
-.numero{
-  font-size: 28px;
-  color: var(--medium-green);
-  font-weight: 600;
-  margin-bottom: 0%;
-}
-.meses{
-  font-size:17px ;
- /* color: #417B6F; */
- color: var(--medium-green);
-  font-weight: bold;
-}
-/*----------------------------------------------------------------*/
-.grafico-imagen{
-  width: 490px;
-  height:160px;
-  margin-bottom: 0px;
-}
-/*-----------------------------------------------------------------*/
-.texto-inferior{
-  width: 95%;
-  text-align: right;
-  height: 20px;
-}
-.texto-inferior,p{
-  color: #417B6F;
-  font-size: 12px;
-}
 /*------------------------------------------------------------------*/
 /* Estilos para el modal */
 .modal {
@@ -332,3 +223,20 @@
   color: #fff; /* Color del spinner */
   z-index: 10000; /* Asegurarse de que esté al frente del fondo semi-transparente */
 }
+
+
+  /**********************************************************/
+  @media only screen and (min-width: 1400px) {
+    .informacion{
+      height:100%;
+      background-color: #4caf50;
+    }
+
+    .content-scroll {
+      height: 70vh;
+      background-color: brown;
+    }
+  }
+  
+  
+
