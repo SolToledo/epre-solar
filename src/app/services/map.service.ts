@@ -5,6 +5,7 @@ import { BehaviorSubject, combineLatest, map, Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class MapService {
+  
   private map!: google.maps.Map;
   private drawingManager!: google.maps.drawing.DrawingManager;
   private center: google.maps.LatLngLiteral = { lat: -31.5364, lng: -68.50639 };
@@ -66,6 +67,36 @@ export class MapService {
     this.center = { lat, lng };
     if (this.map) {
       this.map.setCenter(this.center);
+    }
+  }
+
+  recenterMapToVisibleArea() {
+    const bounds = new google.maps.LatLngBounds();
+    this.getPolygons().forEach(polygon => {
+      polygon.getPath().forEach(latLng => bounds.extend(latLng));
+    });
+  
+    const mapCenter = bounds.getCenter();
+  
+    // Calcular el nuevo centro considerando el desplazamiento hacia la izquierda de 1/4 del ancho de la pantalla
+    const screenWidth = window.innerWidth; // Ancho de la pantalla en píxeles
+    const offsetX = screenWidth / 4; // Desplazamiento de 1/4 del ancho de la pantalla
+  
+    const zoom = this.map.getZoom() ?? 1;
+    const scale = Math.pow(2, zoom);
+    const worldCoordinateCenter = this.map.getProjection()?.fromLatLngToPoint(mapCenter);
+    
+    if (worldCoordinateCenter) {
+      const pixelOffset = offsetX / scale;
+      const newCenter = this.map.getProjection()?.fromPointToLatLng(
+        new google.maps.Point(worldCoordinateCenter.x + pixelOffset, worldCoordinateCenter.y)
+      );
+  
+      if (newCenter) {
+        this.map.panTo(newCenter);
+      } else {
+        console.error('No se pudo calcular el nuevo centro del mapa.');
+      }
     }
   }
 
@@ -258,7 +289,7 @@ export class MapService {
   }
 
   reDrawPanels(panelesCantidad: number) {
-    this.drawPanels(this.getPolygons()[0], panelesCantidad + 1, true);
+    this.drawPanels(this.getPolygons()[0], panelesCantidad, true);
   }
 
   getPolygons() {

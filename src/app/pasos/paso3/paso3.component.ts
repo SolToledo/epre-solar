@@ -40,6 +40,9 @@ export class Paso3Component implements OnInit {
   ) {}
   ngOnInit(): void {
     // this.spinner.show();
+    setTimeout(() => {
+      this.mapService.recenterMapToVisibleArea();
+    }, 300); 
     this.solarService
       .calculate()
       .then((resultados) => (this.resultadosFront = resultados))
