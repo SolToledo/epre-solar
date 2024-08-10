@@ -10,56 +10,35 @@ import { MapService } from 'src/app/services/map.service';
   styleUrls: ['./paneles.component.css'],
 })
 export class PanelesComponent implements OnInit, OnDestroy {
-  @Input() panelesCantidad: number = 0;
   @Input() dimensionPanel!: DimensionPanel;
   @Input() panelCapacityW: number = 0;
   @ViewChild(MatSlider) slider!: MatSlider;
-  private panelsCountSubscription!: Subscription;
-  maxPanelsCount: number = 0;
+  private maxPanelsPerAreaSubscription!: Subscription;
+  maxPanelsArea$: number = 0;
+  
+  panelesCantidad: number = 0;
 
   constructor(private mapService: MapService) {}
 
   ngOnInit(): void {
-    this.panelsCountSubscription = this.mapService
-      .overlayMaxPanelsPerSuperfice$()
-      .subscribe({
-        next: (value) => {
-          this.maxPanelsCount = value;
-          if (this.panelesCantidad > this.maxPanelsCount) {
-            this.panelesCantidad = this.maxPanelsCount;
-          }
-        },
-      });
-
-    // Obtener el valor inicial si ya está disponible
-    this.mapService.getPanelsCount().subscribe({
-      next: (value) => {
-        this.maxPanelsCount = value;
-        if (this.panelesCantidad > this.maxPanelsCount) {
-          this.panelesCantidad = this.maxPanelsCount;
-        }
-      },
-    });
+    this.maxPanelsPerAreaSubscription = this.mapService.maxPanelsPerArea$.subscribe({
+      next: value => this.maxPanelsArea$ = value
+    })
+    this.panelesCantidad = this.maxPanelsArea$;
   }
 
   ngOnDestroy(): void {
-    if (this.panelsCountSubscription) {
-      this.panelsCountSubscription.unsubscribe();
+    if (this.maxPanelsPerAreaSubscription) {
+      this.maxPanelsPerAreaSubscription.unsubscribe();
     }
   }
 
-  onSliderChange(event: any) {
-    this.mapService.setPanelsCount(event.value);
-    if (this.panelesCantidad > this.maxPanelsCount) {
-      this.panelesCantidad = this.maxPanelsCount;
-    }
+  onSliderChange() {
+    
   }
 
   formatLabel(value: number): string {
-    if (value >= 1000) {
-      return Math.round(value / 1000) + 'k';
-    }
-    return `${value}`;
+    return value >= 1000 ? Math.round(value / 1000) + 'k' : `${value}`;
   }
 
   get totalCapacityKW(): number {

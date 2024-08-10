@@ -15,14 +15,9 @@ export class SuperficieComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
-    this.areaSubscription = this.mapService.area$().subscribe({
+    this.areaSubscription = this.mapService.area$.subscribe({
       next: (value) => this.selectedAreaM2 = value
     });
-    
-    const initialArea = this.mapService.getPolygonArea();
-    if (initialArea !== null) {
-      this.selectedAreaM2 = initialArea;
-    }
   }
 
   ngOnDestroy() {

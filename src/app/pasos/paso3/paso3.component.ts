@@ -57,6 +57,7 @@ export class Paso3Component implements OnInit {
           ).toFixed(2)
         );
       })
+      .catch(error =>  console.error('Error en calculate:', error))
       .finally(() => {
         // this.spinner.hide();
         this.isLoading = false;

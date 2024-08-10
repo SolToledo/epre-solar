@@ -1,9 +1,14 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TarifaComponent } from './tarifa/tarifa.component';
 import { MapService } from 'src/app/services/map.service';
-
 
 @Component({
   selector: 'app-paso2',
@@ -17,18 +22,20 @@ export class Paso2Component implements OnInit {
   isCategorySelected: boolean = false;
 
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
-  @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent; 
+  @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent;
 
-  constructor(private router: Router, private snackBar: MatSnackBar, private mapService: MapService) {}
-  
+  constructor(
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private mapService: MapService
+  ) {}
+
   ngOnInit(): void {
     this.mapService.hideDrawingControl();
   }
 
-  ngAfterViewInit(): void {
-   
-  }
-  
+  ngAfterViewInit(): void {}
+
   goBack() {
     this.router.navigate(['pasos/1']);
   }
@@ -44,8 +51,8 @@ export class Paso2Component implements OnInit {
     this.isCategorySelected = event;
   }
 
-  showTooltip(event: MouseEvent) {
-    if (!this.allFieldsFilled) {
+  showTooltip() {
+    if (!this.allFieldsFilled || !this.isCategorySelected) {
       this.snackBar.open(
         'Debe ingresar todos los meses para poder continuar.',
         '',
@@ -57,7 +64,7 @@ export class Paso2Component implements OnInit {
     }
   }
 
-  hideTooltip(event: MouseEvent) {
+  hideTooltip() {
     this.snackBar.dismiss();
   }
 }

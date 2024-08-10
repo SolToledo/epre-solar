@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +12,19 @@ export class MapService {
   private mapSubject = new Subject<google.maps.Map>();
   private polygons: google.maps.Polygon[] = [];
   private panels: google.maps.Rectangle[] = [];
+  
   private overlayCompleteSubject = new Subject<boolean>();
   private areaSubject = new BehaviorSubject<number>(0);
-  private panelsCountSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  area$ = this.areaSubject.asObservable();
+  private maxPanelsPerAreaSubject = new BehaviorSubject<number>(0);
+  maxPanelsPerArea$ = this.maxPanelsPerAreaSubject.asObservable();
 
-  constructor() {}
+  private panelWidthMeters = 1.045;
+  private panelHeightMeters = 1.879;
+
+  constructor() {
+    
+  }
 
   async initializeMap(mapElement: HTMLElement) {
     const { Map } = (await google.maps.importLibrary(
@@ -51,11 +59,7 @@ export class MapService {
     this.panels.forEach((panel) => panel.setMap(null));
     this.panels = [];
   }
-
-  getPolygons() {
-    return this.polygons;
-  }
-
+  
   getMap() {
     return this.map;
   }
@@ -101,6 +105,7 @@ export class MapService {
     });
     this.drawingManager.setMap(this.map);
 
+    // Listener para overlaycomplete
     google.maps.event.addListener(
       this.drawingManager,
       'overlaycomplete',
@@ -108,22 +113,23 @@ export class MapService {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
           this.clearPolygons();
           this.clearPanels();
+
           const newPolygon = event.overlay as google.maps.Polygon;
           this.polygons.push(newPolygon);
-          const area = google.maps.geometry.spherical.computeArea(
-            newPolygon.getPath()
-          );
-          this.areaSubject.next(area);
-          // Agregar el listener para el evento set_at
-          google.maps.event.addListener(newPolygon.getPath(), 'set_at', () => {
+
+          const path = newPolygon.getPath();
+
+          // Listener para el evento set_at en el polígono
+          google.maps.event.addListener(path, 'set_at', () => {
+            newPolygon.setMap(this.map); // Muestra el polígono
             this.clearPanels();
             this.drawPanels(newPolygon);
-            const area = google.maps.geometry.spherical.computeArea(
-              newPolygon.getPath()
-            );
+            const area = google.maps.geometry.spherical.computeArea(path);
             this.areaSubject.next(area);
-            
           });
+
+          const area = google.maps.geometry.spherical.computeArea(path);
+          this.areaSubject.next(area);
 
           this.overlayCompleteSubject.next(true);
           this.drawPanels(newPolygon);
@@ -133,23 +139,24 @@ export class MapService {
   }
 
   setDrawingMode(mode: google.maps.drawing.OverlayType | null) {
-    if (this.drawingManager) {
-      this.drawingManager.setDrawingMode(mode);
-      this.drawingManager.setOptions({ drawingControl: true });
+    if (!this.drawingManager) {
+      this.initializeDrawingManager();
+      return;
     }
+    this.drawingManager.setDrawingMode(mode);
+    this.drawingManager.setOptions({ drawingControl: true });
   }
 
   overlayComplete$(): Observable<boolean> {
     return this.overlayCompleteSubject.asObservable();
   }
-  overlayMaxPanelsPerSuperfice$(): Observable<number> {
-    return this.panelsCountSubject.asObservable();
-  }
-  area$(): Observable<number> {
-    return this.areaSubject.asObservable();
-  }
+  
+  private drawPanels(
+    polygon: google.maps.Polygon,
+    maxPanels: number = Infinity
+  ) {
+    this.clearPanels();
 
-  private drawPanels(polygon: google.maps.Polygon) {
     const bounds = new google.maps.LatLngBounds();
     polygon.getPath().forEach((latLng) => {
       bounds.extend(latLng);
@@ -178,9 +185,10 @@ export class MapService {
     const offsetY = (boundsHeight - numPanelsY * panelHeightDegrees) / 2;
 
     const panels: google.maps.Rectangle[] = [];
+    let totalPanels = 0;
 
-    for (let i = 0; i < numPanelsX; i++) {
-      for (let j = 0; j < numPanelsY; j++) {
+    for (let i = 0; i < numPanelsX && totalPanels < maxPanels; i++) {
+      for (let j = 0; j < numPanelsY && totalPanels < maxPanels; j++) {
         const panelBounds = new google.maps.LatLngBounds(
           {
             lat: southWest.lat() + offsetY + j * panelHeightDegrees,
@@ -207,6 +215,7 @@ export class MapService {
             zIndex: 1,
           });
           panels.push(panelRectangle);
+          totalPanels++;
         }
       }
     }
@@ -242,7 +251,13 @@ export class MapService {
     const clippedPanelsCount = panels.filter(
       (panel) => panel.getMap() !== null
     ).length;
-    this.setPanelsCount(clippedPanelsCount);
+    console.log("paneles totales : " , clippedPanelsCount);
+    
+    this.maxPanelsPerAreaSubject.next(clippedPanelsCount);
+  }
+
+  getPolygons() {
+    return this.polygons;
   }
 
   getPolygonCoordinates(): google.maps.LatLngLiteral[] | null {
@@ -257,20 +272,25 @@ export class MapService {
     return null;
   }
 
-  getPolygonArea(): number | null {
+  getPolygonArea(): number {
     if (this.polygons.length > 0) {
       const path = this.polygons[0].getPath();
-      return google.maps.geometry.spherical.computeArea(path);
+      const area = google.maps.geometry.spherical.computeArea(path);
+      this.areaSubject.next(area);
+      return area;
     }
-    return null; // Si no hay polígono, devuelve null
+    this.areaSubject.next(0); 
+    return 0;
   }
 
-  getPanelsCount(): Observable<number> {
-    return this.panelsCountSubject.asObservable();
+  getMaxPanelsPerArea(area: number): number {
+    const maxPanels = Math.floor(area / this.panelArea);
+    this.maxPanelsPerAreaSubject.next(maxPanels);
+    return maxPanels;
   }
-  
-  setPanelsCount(count: number): void {
-    this.panelsCountSubject.next(count);
+
+  get panelArea(): number {
+    return this.panelWidthMeters * this.panelHeightMeters;
   }
 
   hideDrawingControl() {
@@ -302,7 +322,4 @@ export class MapService {
     this.clearPanels();
     this.disableDrawingMode();
   }
-
-  
-
 }
