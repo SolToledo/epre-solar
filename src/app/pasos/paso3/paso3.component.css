@@ -15,6 +15,7 @@
 /*los estilos de .content estan en style.css*/
 .info-container {
   background-color: white;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,6 +34,8 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+
+  background-color: #4caf50;
  
 
   .content-scroll {
@@ -74,18 +77,19 @@
 /* Estilos para los botones secundarios  EDITAR/DESCARGAR/ENVIAR*/
 .action-buttons{
   width: 100%;
-  height: 9%;
+/*  height: 9%;*/
+  height: 40px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  
 }
 .descargar-enviar-component{
-  width: 17%;
-  height: 95%;
+ /* width: 17%;*/
+ /* height: 95%;*/
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  gap: 3px;
 }
 
 #downloadButton{
@@ -127,15 +131,21 @@
   color: white;
   background-color: var(--dark-green);
   font-weight: bold;
- /* border: 2px solid var(--dark-green); */
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  border-right: 2px solid #000; /* Borde de 2px a la derecha */
-  border-bottom: 2px solid #000; /* Borde de 2px abajo */
+  
+  /* Borde derecho e inferior en negro */
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  
+  /* Elimina los bordes superior e izquierdo */
+  border-top: none;
+  border-left: none;
 }
+
 
 #boton-editar .material-icons {
   margin-left: 8px; 
@@ -155,19 +165,41 @@
 }
 
 /***********************************************************************/
-.info-mostrar{
+
+.info-mostrar {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos se ajusten en varias filas si no hay suficiente espacio en una sola fila */
+  gap: 5px; /* Espacio entre los elementos */
+ 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*.info-mostrar{
   width: 100%;
   display: flex;
   flex-direction: column; 
   gap: 10px;
+  background-color: firebrick;
 }
 .info-row{
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
- /* justify-content: space-around;*/
-}
+}*/
 
 /*------------------------------------------------*/
 .grafico{

@@ -16,6 +16,9 @@ import jsPDF from 'jspdf';
   styleUrls: ['./paso3.component.css'],
 })
 export class Paso3Component implements OnInit {
+  items: any[] = [];
+
+
   currentStep: number = 3;
   mostrarModal: boolean = false;
   private resultadosFront!: ResultadosFrontDTO;
@@ -39,6 +42,44 @@ export class Paso3Component implements OnInit {
     private spinner: NgxSpinnerService 
   ) {}
   ngOnInit(): void {
+
+
+    this.items = [
+      { type: 'ahorros' },
+      { type: 'plazo', plazoRecuperoInversion: this.plazoRecuperoInversion },
+      { type: 'paneles', panelesCantidad: this.panelesCantidad, dimensionPanel: this.dimensionPanel, panelCapacityW: this.panelCapacityW },
+      { type: 'potencia', instalacionPotencia: (this.panelesCantidad * this.panelCapacityW) / 1000 },
+      { type: 'superficie' },
+      { type: 'cobertura', TIR: this.getTIR() },
+      { type: 'energia' },
+      { type: 'emisiones', carbonOffsetFactorTnPerMWh: this.carbonOffsetFactorTnPerMWh },
+      { type: 'costo', costoInstalacion: this.getCostoInstalacion() },
+      { type: 'tarifa-intercambio' },
+      { type: 'grafico', content: 'grafico' }
+    ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     this.spinner.show();
     this.solarService
       .calculate()

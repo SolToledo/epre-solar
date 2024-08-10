@@ -95,11 +95,13 @@ export class Paso0Component implements OnInit {
       this.router.navigate(['pasos/1']);
     } else {
       this.snackBar.open(
-        'Debe aceptar los términos y condiciones para continuar.',
+        '<span class="material-icons">notifications</span> Debe aceptar los términos y condiciones para continuar.',
         '',
         {
           duration: 3000,
           panelClass: ['custom-snackbar'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
         }
       );
     }
