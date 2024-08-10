@@ -34,7 +34,11 @@ export class PanelesComponent implements OnInit, OnDestroy {
   }
 
   onSliderChange() {
-    
+    if (this.panelesCantidad > this.maxPanelsArea$) {
+      this.panelesCantidad = this.maxPanelsArea$; // Limitar a maxPanelsCount
+    }
+    console.log(this.panelesCantidad);
+    this.mapService.reDrawPanels(this.panelesCantidad);
   }
 
   formatLabel(value: number): string {

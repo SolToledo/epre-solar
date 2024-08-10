@@ -12,7 +12,7 @@ export class MapService {
   private mapSubject = new Subject<google.maps.Map>();
   private polygons: google.maps.Polygon[] = [];
   private panels: google.maps.Rectangle[] = [];
-  
+
   private overlayCompleteSubject = new Subject<boolean>();
   private areaSubject = new BehaviorSubject<number>(0);
   area$ = this.areaSubject.asObservable();
@@ -22,9 +22,7 @@ export class MapService {
   private panelWidthMeters = 1.045;
   private panelHeightMeters = 1.879;
 
-  constructor() {
-    
-  }
+  constructor() {}
 
   async initializeMap(mapElement: HTMLElement) {
     const { Map } = (await google.maps.importLibrary(
@@ -59,7 +57,7 @@ export class MapService {
     this.panels.forEach((panel) => panel.setMap(null));
     this.panels = [];
   }
-  
+
   getMap() {
     return this.map;
   }
@@ -150,13 +148,14 @@ export class MapService {
   overlayComplete$(): Observable<boolean> {
     return this.overlayCompleteSubject.asObservable();
   }
-  
+
   private drawPanels(
     polygon: google.maps.Polygon,
-    maxPanels: number = Infinity
+    maxPanels: number = Infinity,
+    reDraw: boolean = false
   ) {
     this.clearPanels();
-
+    const isReDraw = reDraw;
     const bounds = new google.maps.LatLngBounds();
     polygon.getPath().forEach((latLng) => {
       bounds.extend(latLng);
@@ -221,12 +220,13 @@ export class MapService {
     }
 
     this.panels = panels;
-    this.clipPanelsToPolygon(polygon, panels);
+    this.clipPanelsToPolygon(polygon, panels, isReDraw);
   }
 
   clipPanelsToPolygon(
     polygon: google.maps.Polygon,
-    panels: google.maps.Rectangle[]
+    panels: google.maps.Rectangle[],
+    isReDraw: boolean
   ) {
     panels.forEach((panel) => {
       const panelBounds = panel.getBounds();
@@ -251,9 +251,14 @@ export class MapService {
     const clippedPanelsCount = panels.filter(
       (panel) => panel.getMap() !== null
     ).length;
-    console.log("paneles totales : " , clippedPanelsCount);
-    
-    this.maxPanelsPerAreaSubject.next(clippedPanelsCount);
+
+    if (!isReDraw) {
+      this.maxPanelsPerAreaSubject.next(clippedPanelsCount);
+    }
+  }
+
+  reDrawPanels(panelesCantidad: number) {
+    this.drawPanels(this.getPolygons()[0], panelesCantidad + 1, true);
   }
 
   getPolygons() {
@@ -279,12 +284,12 @@ export class MapService {
       this.areaSubject.next(area);
       return area;
     }
-    this.areaSubject.next(0); 
+    this.areaSubject.next(0);
     return 0;
   }
 
-  getMaxPanelsPerArea(area: number): number {
-    const maxPanels = Math.floor(area / this.panelArea);
+  getMaxPanelsPerArea(): number {
+    const maxPanels = Math.floor(this.getPolygonArea() / this.panelArea);
     this.maxPanelsPerAreaSubject.next(maxPanels);
     return maxPanels;
   }
