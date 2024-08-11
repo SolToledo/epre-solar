@@ -33,11 +33,11 @@
   justify-content: center;
   gap: 10px;
 
-  .content-scroll {
+.content-scroll {
     width: 100%;
    /* height: 60vh;
     max-height: 60vh;*/
-    height: 58vh;
+    height: 60vh;
     overflow-y: scroll; 
     overflow-x: hidden; 
     display: flex;
@@ -46,12 +46,47 @@
     gap: 10px;
   }
 
-  .info-mostrar {
-    display: flex;
-    flex-wrap: wrap; /* Permite que los elementos se ajusten en varias filas si no hay suficiente espacio en una sola fila */
-    gap: 5px; /* Espacio entre los elementos */
+/*cards*/
+:root {
+  --gris: #edebe9;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+ 
+}
+
+.item {
+  background-color: var(--gris);
+  min-width: 210px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+}
+
+.container-graficos{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 10px;
+}
+
+.item-grafico{
+  min-width:300px;
+  min-height: 120px;
+}
+
+/* Estilos para resoluciones mayores a 1366px */
+@media only screen and (min-width: 1367px) {
+  .content-scroll{
+    height: 70vh;
   }
-  
+}
+
+
+
   /*------------------------------------------------*/
   /* Estilos para personalizar la barra de desplazamiento vertical */
   .content-scroll::-webkit-scrollbar {
@@ -190,20 +225,7 @@
   display: flex;
 }
 
-.custom-snackbar {
-  background-color: #4caf50; 
-  color: #fff; 
-}
-
 /********************************************/
-/*espacio para grafico*/
-.grafico-component{
-  background-color: #a1b6b2;
-  width: 80%;
-  border-radius: 8px;
-  margin-left:10px;
-}
-
 /* Estilo para el contenedor del spinner */
 .spinner-container {
   position: fixed;
@@ -223,20 +245,5 @@
   color: #fff; /* Color del spinner */
   z-index: 10000; /* Asegurarse de que esté al frente del fondo semi-transparente */
 }
-
-
-  /**********************************************************/
-  @media only screen and (min-width: 1400px) {
-    .informacion{
-      height:100%;
-      background-color: #4caf50;
-    }
-
-    .content-scroll {
-      height: 70vh;
-      background-color: brown;
-    }
-  }
-  
-  
+/**********************************************************/
 

@@ -38,11 +38,42 @@
   
         <div class="informacion">
           <div class="content-scroll">
+           <!-- <div class="info-mostrar">-->
 
-            <div class="info-mostrar">
-              <div *ngFor="let item of items" class="info-item">
+              <div class="container">
+                <div class="item"> <app-ahorros></app-ahorros> </div>
+                <div class="item"> <app-plazo></app-plazo> </div>
+                <div class="item"> <app-plazo></app-plazo> </div>
+               <!-- <div class="item"><app-paneles></app-paneles></div>-->
+                <div class="item"><app-potencia></app-potencia></div>
+                <div class="item"><app-superficie></app-superficie></div>
+                <div class="item"><app-cobertura></app-cobertura></div>
+                <div class="item"><app-energia></app-energia></div>
+                <div class="item"><app-emisiones></app-emisiones></div>
+                <div class="item"><app-costo></app-costo></div>
+                <div class="item"><app-tarifa-intercambio></app-tarifa-intercambio></div>      
+              </div>
+               
+              <div class="container-graficos">
+                <div class="item-grafico">
+                  <app-graficos></app-graficos>
+                </div>
+                <div class="item-grafico">
+                  <app-graficos></app-graficos>
+                </div>
+                <div class="item-grafico">
+                  <app-graficos></app-graficos>
+                </div>
+                <div class="item-grafico">
+                  <app-graficos></app-graficos>
+                </div>
+              </div>
+            
+
+
+            <!--  <div *ngFor="let item of items" class="info-item">
                 <ng-container [ngSwitch]="item.type">
-                  <!-- Renderiza el componente correspondiente según el tipo -->
+                  
                   <app-ahorros *ngSwitchCase="'ahorros'"></app-ahorros>
             
                   <app-plazo *ngSwitchCase="'plazo'" [plazoRecuperoInversion]="item.plazoRecuperoInversion"></app-plazo>
@@ -69,12 +100,17 @@
             
                   
                 </ng-container>
-              </div>
-            </div>
+              </div>-->
+
+
+
+
+    
+          <!--  </div>--> <!--termina infor-mostrar-->
 
 
             <!--informacion que necesita el componente para renderizar GRAFICOS-->
-            <app-graficos
+       <!--    <app-graficos
             [periodoVeinteanalEmisionesGEIEvitadas]="
               getEmisionesGEIEvitadas()
             "
@@ -87,7 +123,7 @@
             [periodoVeinteanalGeneracionFotovoltaica]="
               getGeneracionFotovoltaica()
             "
-          ></app-graficos>
+          ></app-graficos>     --> 
 
             <!--termina grafico-->
           </div><!--termina content-scroll-->
