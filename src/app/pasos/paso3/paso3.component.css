@@ -50,6 +50,7 @@
     display: flex;
     flex-wrap: wrap; /* Permite que los elementos se ajusten en varias filas si no hay suficiente espacio en una sola fila */
     gap: 5px; /* Espacio entre los elementos */
+    justify-content: space-evenly;
   }
   
   /*------------------------------------------------*/

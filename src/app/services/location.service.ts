@@ -14,6 +14,7 @@ export class LocationService {
       irradiacionAnual: 2062.23,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.595,
@@ -22,6 +23,7 @@ export class LocationService {
       irradiacionAnual: 2069.54,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.517,
@@ -30,6 +32,7 @@ export class LocationService {
       irradiacionAnual: 2068.55,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.829,
@@ -38,6 +41,7 @@ export class LocationService {
       irradiacionAnual: 2033.51,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.813,
@@ -46,6 +50,7 @@ export class LocationService {
       irradiacionAnual: 2041.43,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.897,
@@ -54,6 +59,7 @@ export class LocationService {
       irradiacionAnual: 2045.35,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.981,
@@ -62,6 +68,7 @@ export class LocationService {
       irradiacionAnual: 2033.96,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -32.002,
@@ -70,6 +77,7 @@ export class LocationService {
       irradiacionAnual: 2028.6,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.821,
@@ -78,6 +86,7 @@ export class LocationService {
       irradiacionAnual: 2071.04,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.72,
@@ -86,6 +95,7 @@ export class LocationService {
       irradiacionAnual: 2091.29,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.656,
@@ -94,6 +104,7 @@ export class LocationService {
       irradiacionAnual: 2093.13,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.683,
@@ -102,6 +113,7 @@ export class LocationService {
       irradiacionAnual: 1997.17,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.44,
@@ -110,6 +122,7 @@ export class LocationService {
       irradiacionAnual: 2109.98,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.562,
@@ -118,6 +131,7 @@ export class LocationService {
       irradiacionAnual: 2093.72,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.528,
@@ -126,6 +140,7 @@ export class LocationService {
       irradiacionAnual: 2046.8,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.457,
@@ -134,6 +149,7 @@ export class LocationService {
       irradiacionAnual: 2125.24,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.334,
@@ -142,6 +158,7 @@ export class LocationService {
       irradiacionAnual: 2298.79,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -30.422,
@@ -150,6 +167,7 @@ export class LocationService {
       irradiacionAnual: 2318.17,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -30.163,
@@ -158,6 +176,7 @@ export class LocationService {
       irradiacionAnual: 2055.4,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.648,
@@ -166,6 +185,7 @@ export class LocationService {
       irradiacionAnual: 2233.74,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -30.323,
@@ -174,6 +194,7 @@ export class LocationService {
       irradiacionAnual: 2283.57,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -30.198,
@@ -182,6 +203,7 @@ export class LocationService {
       irradiacionAnual: 2331.18,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -30.237,
@@ -190,6 +212,7 @@ export class LocationService {
       irradiacionAnual: 2213.65,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.524,
@@ -198,6 +221,7 @@ export class LocationService {
       irradiacionAnual: 2097.96,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.541,
@@ -206,6 +230,7 @@ export class LocationService {
       irradiacionAnual: 2090.94,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.387,
@@ -214,6 +239,7 @@ export class LocationService {
       irradiacionAnual: 2100.45,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.45,
@@ -222,6 +248,7 @@ export class LocationService {
       irradiacionAnual: 2091.04,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.496,
@@ -230,6 +257,7 @@ export class LocationService {
       irradiacionAnual: 2101.84,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.538,
@@ -238,6 +266,7 @@ export class LocationService {
       irradiacionAnual: 2069.53,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.554,
@@ -246,6 +275,7 @@ export class LocationService {
       irradiacionAnual: 2069.88,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -31.954,
@@ -254,6 +284,7 @@ export class LocationService {
       irradiacionAnual: 2072.77,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -30.954,
@@ -262,6 +293,7 @@ export class LocationService {
       irradiacionAnual: 1951.16,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
     {
       lat: -30.157,
@@ -270,6 +302,7 @@ export class LocationService {
       irradiacionAnual: 2135.85,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
+      radio: 971.91,
     },
   ];
 
@@ -279,41 +312,117 @@ export class LocationService {
   ) {}
 
   async validateLocation(
-    value: string,
+    placeName: string,
     map: google.maps.Map,
     marker: google.maps.marker.AdvancedMarkerElement
+  ): Promise<google.maps.LatLng | null> {
+    try {
+      const geocodeResult = await this.geocodingService.geocodeAddress(
+        placeName,
+        map,
+        marker
+      );
+  
+      if (geocodeResult) {
+        const lat = geocodeResult.lat;
+        const lng = geocodeResult.lng;
+        const predefinedLocation = this.findNearbyLocation(lat, lng);
+  
+        if (predefinedLocation) {
+          this.snackBar.open(
+            `Ubicación cerca de una ubicación predefinida: ${lat} - ${lng}. Usando datos predefinidos.`,
+            '',
+            {
+              duration: 3000,
+              panelClass: ['custom-snackbar'],
+            }
+          );
+  
+          const predefinedLatLng = new google.maps.LatLng(
+            predefinedLocation.lat,
+            predefinedLocation.lng
+          );
+          marker.position = predefinedLatLng;
+          map.setZoom(22);
+          map.setCenter(predefinedLatLng);
+          this.requestSavingsCalculation(predefinedLocation);
+  
+          return predefinedLatLng;
+        } else if (this.isWithinSanJuan(lat, lng)) {
+          const selectedLatLng = new google.maps.LatLng(lat, lng);
+          marker.position = selectedLatLng;
+          map.setZoom(22);
+          map.setCenter(selectedLatLng);
+          return selectedLatLng;
+        } else {
+          // Esta rama se ejecuta si la ubicación no está dentro de San Juan
+          const defaultLocation = new google.maps.LatLng(-31.5364, -68.50639);
+          map.setZoom(13);
+          map.setCenter(defaultLocation);
+          this.snackBar.open(
+            'El área seleccionada está fuera de la Provincia de San Juan.',
+            '',
+            {
+              duration: 4000,
+              panelClass: ['custom-snackbar'],
+            }
+          );
+          return defaultLocation;
+        }
+      } else {
+        throw new Error('No se pudo geocodificar la dirección.');
+      }
+    } catch (error) {
+      console.error('Error al validar la ubicación:', error);
+      return null;
+    }
+  }
+  
+
+  private isWithinSanJuan(lat: number, lng: number): boolean {
+    // Verifica si la ubicación está dentro de las coordenadas de la provincia de San Juan
+    return lat >= -31.878 && lat <= -30.175 && lng >= -69.192 && lng <= -66.879;
+  }
+  
+  async validatePolygonLocation(
+    polygon: google.maps.Polygon,
+    map: google.maps.Map
   ) {
-    const location = await this.geocodingService.geocodeAddress(
-      value,
-      map,
-      marker
-    );
-    const lat = location.lat;
-    const lng = location.lng;
+    const path = polygon.getPath().getArray();
 
-    // Verifica si la ubicación está cerca de alguna de las ubicaciones predeterminadas
-    const nearbyLocation = this.findNearbyLocation(lat, lng);
-
+    // 1. Calcular el centroide del polígono
+    const centroid = this.calculateCentroid(path);
+    const lat = centroid.lat;
+    const lng = centroid.lng;
     if (lat >= -31.878 && lat <= -30.175 && lng >= -69.192 && lng <= -66.879) {
-      map.setZoom(20);
-      if (marker) {
-        marker.position = location;
+      const nearbyLocation = this.findNearbyLocation(lat, lng);
+      if (nearbyLocation) {
+        console.log(nearbyLocation);
+
+        this.requestSavingsCalculation(nearbyLocation);
+        map.setZoom(22);
+        map.panTo(new google.maps.LatLng(lat, lng));
+        this.snackBar.open(
+          'El área seleccionada está dentro de ubicaciones predeterminadas con datos obtenidos de la base de datos PVGIS-ERA5.',
+          '',
+          {
+            duration: 4000,
+            panelClass: ['custom-snackbar'],
+          }
+        );
+        return nearbyLocation;
+      } else {
+        map.setZoom(22);
+        map.setCenter({ lat, lng });
+        
+        return { lat, lng };
       }
-      return location;
-    } else if (nearbyLocation) {
-      this.requestSavingsCalculation(nearbyLocation);
-      map.setZoom(20);
-      if (marker) {
-        marker.position = location;
-      }
-      return location;
     } else {
       const defaultLocation = { lat: -31.5364, lng: -68.50639 };
       map.setZoom(13);
       map.setCenter(defaultLocation);
-      marker.position = null;
       this.snackBar.open(
-        'La ubicación está fuera de los límites de la provincia de San Juan.',
+        'El área seleccionada está fuera de la Provincia de San Juan.',
         '',
         {
           duration: 2000,
@@ -324,14 +433,81 @@ export class LocationService {
     }
   }
 
-  private findNearbyLocation(lat: number, lng: number) {
-    const maxDistance = 0.01; // Distancia máxima en grados (~1km)
-    return this.predefinedLocations.find((location) => {
-      const distance = Math.sqrt(
-        Math.pow(location.lat - lat, 2) + Math.pow(location.lng - lng, 2)
-      );
-      return distance < maxDistance;
+  private calculateCentroid(path: google.maps.LatLng[]): {
+    lat: number;
+    lng: number;
+  } {
+    let latSum = 0;
+    let lngSum = 0;
+
+    path.forEach((latLng) => {
+      latSum += latLng.lat();
+      lngSum += latLng.lng();
     });
+
+    return {
+      lat: latSum / path.length,
+      lng: lngSum / path.length,
+    };
+  }
+
+  private findNearbyLocation(lat: number, lng: number) {
+    return this.predefinedLocations.find((location) => {
+      // Calcula la distancia en kilómetros entre las coordenadas dadas y la ubicación predefinida
+      const distance = this.calculateDistance(
+        lat,
+        lng,
+        location.lat,
+        location.lng
+      );
+
+      // Compara la distancia con el radio de la ubicación predefinida
+      const radioInKm = location.radio / 1000;
+      return distance <= radioInKm;
+    });
+  }
+  private findNearestPredefinedLocation(
+    location: google.maps.LatLng
+  ): any | null {
+    const distanceThreshold = 1; // 1 km de radio de búsqueda
+
+    for (const predefined of this.predefinedLocations) {
+      const distance = this.calculateDistance(
+        location.lat(),
+        location.lng(),
+        predefined.lat,
+        predefined.lng
+      );
+
+      if (distance <= distanceThreshold) {
+        return predefined;
+      }
+    }
+    return null;
+  }
+  // Método auxiliar para calcular la distancia entre dos puntos en la superficie de la Tierra
+  private calculateDistance(
+    lat1: number,
+    lng1: number,
+    lat2: number,
+    lng2: number
+  ): number {
+    const R = 6371; // Radio de la Tierra en kilómetros
+    const dLat = this.degreesToRadians(lat2 - lat1);
+    const dLng = this.degreesToRadians(lng2 - lng1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.degreesToRadians(lat1)) *
+        Math.cos(this.degreesToRadians(lat2)) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distancia en kilómetros
+  }
+
+  // Método auxiliar para convertir grados a radianes
+  private degreesToRadians(degrees: number): number {
+    return (degrees * Math.PI) / 180;
   }
 
   private requestSavingsCalculation(location: any) {
