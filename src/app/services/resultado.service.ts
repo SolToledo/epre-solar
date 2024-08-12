@@ -9,7 +9,7 @@ export class ResultadoService {
   constructor() {}
 
   generarResultados(response: any): ResultadosFrontDTO {
-    console.log("entra a resultados con response :", response);
+    console.log({response});
     
     return (this.resultados = {
       solarData: response.solarData,
@@ -18,7 +18,8 @@ export class ResultadoService {
       periodoVeinteanalFlujoIngresosMonetarios:
         response.periodoVeinteanalFlujoIngresosMonetarios,
       periodoVeinteanalEmisionesGEIEvitadas: response.periodoVeinteanalEmisionesGEIEvitadas,
-      resultados: response.resultados
+      periodoVeinteanalProyeccionTarifas: response.periodoVeinteanalProyeccionTarifas,
+      resultadosFinancieros: response.resultadosFinancieros
     });
   }
 }
