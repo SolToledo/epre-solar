@@ -60,7 +60,7 @@ export class SolarApiService {
         );
         
         setTimeout(() => {
-         // this.router.navigate(['/pasos/1']);
+         this.router.navigate(['/pasos/1']);
         }, 5000);
         return; 
       }
@@ -72,7 +72,6 @@ export class SolarApiService {
         polygonArea,
         panelsSupported: this.panelsSupported,
       };
-      console.log(datosCalculo);
 
       const response = await lastValueFrom(
         this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)

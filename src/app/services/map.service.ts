@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, Subject } from 'rxjs';
+import { LocationService } from './location.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapService {
-  
   private map!: google.maps.Map;
   private drawingManager!: google.maps.drawing.DrawingManager;
   private center: google.maps.LatLngLiteral = { lat: -31.5364, lng: -68.50639 };
@@ -23,7 +24,7 @@ export class MapService {
   private panelWidthMeters = 1.045;
   private panelHeightMeters = 1.879;
 
-  constructor() {}
+  constructor(private locationService: LocationService, private snackBar: MatSnackBar) {}
 
   async initializeMap(mapElement: HTMLElement) {
     const { Map } = (await google.maps.importLibrary(
@@ -68,34 +69,69 @@ export class MapService {
     if (this.map) {
       this.map.setCenter(this.center);
     }
+    this.recenterMapToVisibleArea();
   }
 
   recenterMapToVisibleArea() {
     const bounds = new google.maps.LatLngBounds();
-    this.getPolygons().forEach(polygon => {
-      polygon.getPath().forEach(latLng => bounds.extend(latLng));
+    this.getPolygons().forEach((polygon) => {
+      polygon.getPath().forEach((latLng) => bounds.extend(latLng));
     });
-  
+
     const mapCenter = bounds.getCenter();
-  
+
     // Calcular el nuevo centro considerando el desplazamiento hacia la izquierda de 1/4 del ancho de la pantalla
     const screenWidth = window.innerWidth; // Ancho de la pantalla en píxeles
     const offsetX = screenWidth / 4; // Desplazamiento de 1/4 del ancho de la pantalla
-  
+
     const zoom = this.map.getZoom() ?? 1;
     const scale = Math.pow(2, zoom);
-    const worldCoordinateCenter = this.map.getProjection()?.fromLatLngToPoint(mapCenter);
-    
+    const worldCoordinateCenter = this.map
+      .getProjection()
+      ?.fromLatLngToPoint(mapCenter);
+
     if (worldCoordinateCenter) {
       const pixelOffset = offsetX / scale;
-      const newCenter = this.map.getProjection()?.fromPointToLatLng(
-        new google.maps.Point(worldCoordinateCenter.x + pixelOffset, worldCoordinateCenter.y)
-      );
-  
+      const newCenter = this.map
+        .getProjection()
+        ?.fromPointToLatLng(
+          new google.maps.Point(
+            worldCoordinateCenter.x + pixelOffset,
+            worldCoordinateCenter.y
+          )
+        );
+
       if (newCenter) {
         this.map.panTo(newCenter);
       } else {
         console.error('No se pudo calcular el nuevo centro del mapa.');
+      }
+    }
+  }
+
+  recenterMapAfterLocationSet(location: google.maps.LatLng) {
+    const offsetX = window.innerWidth / 4; // Desplazamiento de 1/4 del ancho de la pantalla
+    const zoom = this.map.getZoom() ?? 1;
+    const scale = Math.pow(2, zoom);
+    const projection = this.map.getProjection();
+    
+    if (projection) {
+      const worldCoordinateCenter = projection.fromLatLngToPoint(location);
+      
+      if (worldCoordinateCenter) {
+        const pixelOffset = offsetX / scale;
+        const newCenter = projection.fromPointToLatLng(
+          new google.maps.Point(
+            worldCoordinateCenter.x + pixelOffset,
+            worldCoordinateCenter.y
+          )
+        );
+        
+        if (newCenter) {
+          this.map.panTo(newCenter);
+        } else {
+          console.error('No se pudo calcular el nuevo centro del mapa.');
+        }
       }
     }
   }
@@ -138,7 +174,7 @@ export class MapService {
     google.maps.event.addListener(
       this.drawingManager,
       'overlaycomplete',
-      (event: any) => {
+      async (event: any) => {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
           this.clearPolygons();
           this.clearPanels();
@@ -147,21 +183,33 @@ export class MapService {
           this.polygons.push(newPolygon);
 
           const path = newPolygon.getPath();
+          
+          const isLocationValid = await this.locationService.validatePolygonLocation(newPolygon, this.map);
 
-          // Listener para el evento set_at en el polígono
-          google.maps.event.addListener(path, 'set_at', () => {
-            newPolygon.setMap(this.map); // Muestra el polígono
-            this.clearPanels();
-            this.drawPanels(newPolygon);
+          if(isLocationValid) {
             const area = google.maps.geometry.spherical.computeArea(path);
             this.areaSubject.next(area);
-          });
-
-          const area = google.maps.geometry.spherical.computeArea(path);
-          this.areaSubject.next(area);
-
-          this.overlayCompleteSubject.next(true);
-          this.drawPanels(newPolygon);
+            this.overlayCompleteSubject.next(true);
+              // Listener para el evento set_at en el polígono
+            google.maps.event.addListener(path, 'set_at', () => {
+              newPolygon.setMap(this.map); // Muestra el polígono
+              this.clearPanels();
+              this.drawPanels(newPolygon);
+              const area = google.maps.geometry.spherical.computeArea(path);
+              this.areaSubject.next(area);
+            });
+            this.drawPanels(newPolygon);
+            this.recenterMapToVisibleArea();
+          }else{
+            this.snackBar.open(
+              'La ubicación ingresada no se puede procesar.',
+              '',
+              {
+                duration: 3000,
+                panelClass: ['custom-snackbar'],
+              }
+            );
+          }
         }
       }
     );
@@ -351,6 +399,7 @@ export class MapService {
 
   disableDrawingMode() {
     this.setDrawingMode(null);
+    this.hideDrawingControl();
   }
 
   clearDrawing() {

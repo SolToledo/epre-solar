@@ -64,8 +64,8 @@ export class Paso3Component implements OnInit {
       .calculate()
       .then((resultados) => (this.resultadosFront = resultados))
       .then(() => {
-        this.plazoRecuperoInversion =
-          this.resultadosFront.resultados._indicadoresFinancieros.payBackSimpleYears;
+        this.plazoRecuperoInversion = 
+          this.resultadosFront.resultadosFinancieros.indicadoresFinancieros.payBackSimpleYears;
         this.panelesCantidad =
           this.resultadosFront.solarData.panels.panelsCount;
         this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
@@ -81,6 +81,8 @@ export class Paso3Component implements OnInit {
       .finally(() => {
         // this.spinner.hide();
         this.isLoading = false;
+        console.log(this.resultadosFront);
+        
       });
   }
 
@@ -185,7 +187,7 @@ export class Paso3Component implements OnInit {
   getTIR() {
     try {
       if (this.resultadosFront) {
-        return this.resultadosFront.resultados._indicadoresFinancieros.TIR.toFixed(
+        return this.resultadosFront.resultadosFinancieros.indicadoresFinancieros.TIR.toFixed(
           2
         );
       }

@@ -262,7 +262,12 @@ export class Paso1Component implements OnInit {
               this.map,
               this.marker
             );
-            this.map.setCenter(location);
+            if (location) {
+              this.map.setCenter(location);
+              this.mapService.recenterMapAfterLocationSet(location);
+            } else {
+              console.warn('No se pudo establecer la ubicación en el mapa.');
+            }
             input.value = '';
           }
         }
