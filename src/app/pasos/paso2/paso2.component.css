@@ -32,7 +32,8 @@
 #texto {
   text-align: left !important;
   color:var(--font-light);
-  font-size: 15px;
+ /* font-size: 15px;*/
+  font-size: 1vw;
   font-weight: 400;
   margin: 0px;
 }
@@ -48,7 +49,17 @@
 /******************************************************/
 .info-cargar {
   width: 100%;
+  background-color: #cba258;
 }
+
+/* Estilos para resoluciones mayores a 1366px */
+@media only screen and (min-width: 1367px) {
+  .info-cargar {
+   height: 100%;
+    background-color: #da3f18;
+  }
+}
+
 
 .content-title {
   width: 100%;

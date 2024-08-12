@@ -21,7 +21,7 @@ select {
   border: 2px solid var(--light-background); /* Cambia el grosor y color del borde si lo deseas */
   border-radius: 8px; /* Opcional: añade bordes redondeados */
   padding: 5px; /* Ajusta el relleno según tus necesidades */
-  font-size: 15px; /* Ajusta el tamaño de la fuente según tus necesidades */
+  font-size: 1vw;
   color: var(--font-light);
   transition: border-color 0.3s ease; /* Añade una transición para un efecto suave */
 }

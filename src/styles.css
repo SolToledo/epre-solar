@@ -88,7 +88,7 @@ h5 {
 
 #sub-titulo {
   color: #424242;
-  font-size: 16px;
+  font-size: 1vw;
   font-weight: 500;
   text-align: left;
   font-family: "Sodo Sans", sans-serif;
@@ -99,7 +99,8 @@ h5 {
 /*span*/
 #span-general {
   color: var(--medium-green);
-  font-size: 14px;
+ /* font-size: 14px;*/
+ font-size: 1vw;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;

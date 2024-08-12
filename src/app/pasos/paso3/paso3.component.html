@@ -42,7 +42,7 @@
 
               <div class="container">
                 <div class="item"> <app-ahorros></app-ahorros> </div>
-                <div class="item"> <app-plazo></app-plazo> </div>
+                <div class="item"> <app-plazo></app-plazo></div>
                 <div class="item"> <app-plazo></app-plazo> </div>
                <!-- <div class="item"><app-paneles></app-paneles></div>-->
                 <div class="item"><app-potencia></app-potencia></div>
@@ -70,7 +70,6 @@
               </div>
             
 
-
             <!--  <div *ngFor="let item of items" class="info-item">
                 <ng-container [ngSwitch]="item.type">
                   
@@ -97,8 +96,6 @@
                   <app-costo *ngSwitchCase="'costo'" [costoInstalacion]="item.costoInstalacion"></app-costo>
             
                   <app-tarifa-intercambio *ngSwitchCase="'tarifa-intercambio'"></app-tarifa-intercambio>
-            
-                  
                 </ng-container>
               </div>-->
 
@@ -110,7 +107,7 @@
 
 
             <!--informacion que necesita el componente para renderizar GRAFICOS-->
-       <!--    <app-graficos
+         <app-graficos
             [periodoVeinteanalEmisionesGEIEvitadas]="
               getEmisionesGEIEvitadas()
             "
@@ -123,7 +120,7 @@
             [periodoVeinteanalGeneracionFotovoltaica]="
               getGeneracionFotovoltaica()
             "
-          ></app-graficos>     --> 
+          ></app-graficos>     
 
             <!--termina grafico-->
           </div><!--termina content-scroll-->

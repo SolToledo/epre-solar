@@ -41,7 +41,9 @@
   .advertencia #recomendacion {
     text-align: left;
     color: var(--font-light);
-    font-size: 14px;
+   /* font-size: 14px;*/
+    font-size: 1vw;
+    font-family: 'Sodo Sans', sans-serif;
     font-weight: 400;
     margin: 0px;
   }
@@ -64,7 +66,6 @@
     gap: 5px;
   }
 
-
   #marca {
     width: 30px;
     height: 30px;
@@ -72,12 +73,12 @@
 
   .info-inicio h2 {
     text-transform: uppercase;
-    font-size: 16px;
+    font-size: 1.2vw;
     font-weight: bold;
     color: var(--dark-green);
     margin-bottom: 0px;
     margin-right: 0px;
-    font-family: "Encode Sans", sans-serif;
+    font-family: "Sodo Sans", sans-serif;
   }
 
   /**********************************************************/
@@ -97,7 +98,8 @@
     border-radius: 5px;
     border: 2px solid #ccc;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: 1vw;
+    font-family: 'Sodo Sans', sans-serif;
     background-color: var(--gris);
     color: var(--font-light);
   }
