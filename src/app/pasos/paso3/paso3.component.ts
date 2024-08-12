@@ -29,6 +29,7 @@ export class Paso3Component implements OnInit {
   maxPanelsCount!: number;
   private polygons!: any[];
   isLoading: boolean = false;
+  instalacionPotencia: number = 0;
 
   constructor(
     private router: Router,
@@ -40,21 +41,6 @@ export class Paso3Component implements OnInit {
     private spinner: NgxSpinnerService
   ) {}
   ngOnInit(): void {
-
-    this.items = [
-      { type: 'ahorros' },
-      { type: 'plazo', plazoRecuperoInversion: this.plazoRecuperoInversion },
-      { type: 'paneles', panelesCantidad: this.panelesCantidad, dimensionPanel: this.dimensionPanel, panelCapacityW: this.panelCapacityW },
-      { type: 'potencia', instalacionPotencia: (this.panelesCantidad * this.panelCapacityW) / 1000 },
-      { type: 'superficie' },
-      { type: 'cobertura', TIR: this.getTIR() },
-      { type: 'energia' },
-      { type: 'emisiones', carbonOffsetFactorTnPerMWh: this.carbonOffsetFactorTnPerMWh },
-      { type: 'costo', costoInstalacion: this.getCostoInstalacion() },
-      { type: 'tarifa-intercambio' },
-      { type: 'grafico', content: 'grafico' }
-    ];
-
     // this.spinner.show();
     setTimeout(() => {
       this.mapService.recenterMapToVisibleArea();
@@ -65,17 +51,21 @@ export class Paso3Component implements OnInit {
       .then((resultados) => (this.resultadosFront = resultados))
       .then(() => {
         this.plazoRecuperoInversion = 
-          this.resultadosFront.resultadosFinancieros.indicadoresFinancieros.payBackSimpleYears;
+          this.resultadosFront.resultadosFinancieros.indicadoresFinancieros.payBackSimpleYears * 12;
+        console.log(this.plazoRecuperoInversion);
+        
         this.panelesCantidad =
-          this.resultadosFront.solarData.panels.panelsCount;
+          this.resultadosFront.solarData.panels.maxPanelsPerSuperface;
         this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
         this.panelCapacityW =
           this.resultadosFront.solarData.panels.panelCapacityW;
         this.carbonOffsetFactorTnPerMWh = parseFloat(
           (
             this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000
-          ).toFixed(2)
+          ).toFixed(3)
         );
+        
+        this.instalacionPotencia = this.resultadosFront.solarData.panels.maxPanelsPerSuperface * this.resultadosFront.solarData.panels.panelCapacityW;
       })
       .catch(error =>  console.error('Error en calculate:', error))
       .finally(() => {

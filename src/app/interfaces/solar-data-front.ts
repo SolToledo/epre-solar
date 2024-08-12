@@ -7,8 +7,8 @@ export interface SolarDataFront {
             height: number,
             width: number
         },
-        panelsCount:number,
-        maxPanelsCount: number
+        panelsCountApi:number,
+        maxPanelsPerSuperface: number
     },
     tarifaCategory: string,
     yearlyEnergyDcKwh: number

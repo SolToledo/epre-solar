@@ -35,37 +35,50 @@
 
         <div class="informacion">
           <div class="content-scroll">
-           <!-- <div class="info-mostrar">-->
+            <!-- <div class="info-mostrar">-->
 
-              <div class="container">
-                <div class="item"> <app-ahorros></app-ahorros> </div>
-                <div class="item"> <app-plazo></app-plazo></div>
-                <div class="item"> <app-plazo></app-plazo> </div>
-               <!-- <div class="item"><app-paneles></app-paneles></div>-->
-                <div class="item"><app-potencia></app-potencia></div>
-                <div class="item"><app-superficie></app-superficie></div>
-                <div class="item"><app-cobertura></app-cobertura></div>
-                <div class="item"><app-energia></app-energia></div>
-                <div class="item"><app-emisiones></app-emisiones></div>
-                <div class="item"><app-costo></app-costo></div>
-                <div class="item"><app-tarifa-intercambio></app-tarifa-intercambio></div>      
+            <div class="container">
+              <div class="item"><app-ahorros></app-ahorros></div>
+              <div class="item"><app-plazo [plazoRecuperoInversion]="plazoRecuperoInversion"></app-plazo></div>
+              <div class="item">
+                <app-paneles
+                  [dimensionPanel]="dimensionPanel"
+                  [panelCapacityW]="panelCapacityW"
+                ></app-paneles>
               </div>
-               
-              <div class="container-graficos">
-                <div class="item-grafico">
-                  <app-graficos></app-graficos>
-                </div>
-                <div class="item-grafico">
-                  <app-graficos></app-graficos>
-                </div>
-                <div class="item-grafico">
-                  <app-graficos></app-graficos>
-                </div>
-                <div class="item-grafico">
-                  <app-graficos></app-graficos>
-                </div>
+              <div class="item">
+                <app-potencia
+                  [instalacionPotencia]="instalacionPotencia"
+                ></app-potencia>
               </div>
-            
+              <div class="item"><app-superficie></app-superficie></div>
+              <div class="item"><app-cobertura></app-cobertura></div>
+              <div class="item"><app-energia></app-energia></div>
+              <div class="item">
+                <app-emisiones
+                  [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"
+                ></app-emisiones>
+              </div>
+              <div class="item"><app-costo></app-costo></div>
+              <div class="item">
+                <app-tarifa-intercambio></app-tarifa-intercambio>
+              </div>
+            </div>
+
+            <div class="container-graficos">
+              <div class="item-grafico">
+                <app-graficos></app-graficos>
+              </div>
+              <div class="item-grafico">
+                <app-graficos></app-graficos>
+              </div>
+              <div class="item-grafico">
+                <app-graficos></app-graficos>
+              </div>
+              <div class="item-grafico">
+                <app-graficos></app-graficos>
+              </div>
+            </div>
 
             <!--  <div *ngFor="let item of items" class="info-item">
                 <ng-container [ngSwitch]="item.type">
@@ -96,34 +109,29 @@
                 </ng-container>
               </div>-->
 
-
-
-
-    
-          <!--  </div>--> <!--termina infor-mostrar-->
-
+            <!--  </div>-->
+            <!--termina infor-mostrar-->
 
             <!--informacion que necesita el componente para renderizar GRAFICOS-->
-         <app-graficos
-            [periodoVeinteanalEmisionesGEIEvitadas]="
-              getEmisionesGEIEvitadas()
-            "
-            [periodoVeinteanalFlujoEnergia]="
-              getFlujoEnergia()
-            "
-            [periodoVeinteanalFlujoIngresosMonetarios]="
-              getFlujoIngresosMonetarios()
-            "
-            [periodoVeinteanalGeneracionFotovoltaica]="
-              getGeneracionFotovoltaica()
-            "
-          ></app-graficos>     
+            <app-graficos
+              [periodoVeinteanalEmisionesGEIEvitadas]="
+                getEmisionesGEIEvitadas()
+              "
+              [periodoVeinteanalFlujoEnergia]="getFlujoEnergia()"
+              [periodoVeinteanalFlujoIngresosMonetarios]="
+                getFlujoIngresosMonetarios()
+              "
+              [periodoVeinteanalGeneracionFotovoltaica]="
+                getGeneracionFotovoltaica()
+              "
+            ></app-graficos>
 
             <!--termina grafico-->
-          </div><!--termina content-scroll-->
-        </div><!--termina informacion-->
-        
-  
+          </div>
+          <!--termina content-scroll-->
+        </div>
+        <!--termina informacion-->
+
         <!--botones-->
         <div class="button-container">
           <div class="boton">
