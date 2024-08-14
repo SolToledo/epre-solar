@@ -34,9 +34,7 @@
         </div>
 
         <div class="informacion">
-          <div class="content-scroll">
-           <!-- <div class="info-mostrar">-->
-
+          
               <div class="container">
                 <div class="item"> <app-ahorros></app-ahorros> </div>
                 <div class="item"> <app-plazo></app-plazo></div>
@@ -66,43 +64,6 @@
                 </div>
               </div>
             
-
-            <!--  <div *ngFor="let item of items" class="info-item">
-                <ng-container [ngSwitch]="item.type">
-                  
-                  <app-ahorros *ngSwitchCase="'ahorros'"></app-ahorros>
-            
-                  <app-plazo *ngSwitchCase="'plazo'" [plazoRecuperoInversion]="item.plazoRecuperoInversion"></app-plazo>
-            
-                  <app-paneles *ngSwitchCase="'paneles'"
-                               [dimensionPanel]="item.dimensionPanel"
-                               [panelCapacityW]="item.panelCapacityW"></app-paneles>
-            
-                  <app-potencia *ngSwitchCase="'potencia'"
-                                [instalacionPotencia]="item.instalacionPotencia"></app-potencia>
-            
-                  <app-superficie *ngSwitchCase="'superficie'"></app-superficie>
-            
-                  <app-cobertura *ngSwitchCase="'cobertura'" [TIR]="item.TIR"></app-cobertura>
-            
-                  <app-energia *ngSwitchCase="'energia'"></app-energia>
-            
-                  <app-emisiones *ngSwitchCase="'emisiones'"
-                                 [carbonOffsetFactorTnPerMWh]="item.carbonOffsetFactorTnPerMWh"></app-emisiones>
-            
-                  <app-costo *ngSwitchCase="'costo'" [costoInstalacion]="item.costoInstalacion"></app-costo>
-            
-                  <app-tarifa-intercambio *ngSwitchCase="'tarifa-intercambio'"></app-tarifa-intercambio>
-                </ng-container>
-              </div>-->
-
-
-
-
-    
-          <!--  </div>--> <!--termina infor-mostrar-->
-
-
             <!--informacion que necesita el componente para renderizar GRAFICOS-->
          <app-graficos
             [periodoVeinteanalEmisionesGEIEvitadas]="
@@ -118,26 +79,21 @@
               getGeneracionFotovoltaica()
             "
           ></app-graficos>     
-
-            <!--termina grafico-->
-          </div><!--termina content-scroll-->
-        </div><!--termina informacion-->
-        
-  
+     
         <!--botones-->
         <div class="button-container">
           <div class="boton">
             <button id="boton-volver" (click)="goBack()">
               <span class="material-icons">chevron_left</span> Volver
             </button>
-
-            <br />
+            <br/>
             <button id="boton-siguiente" (click)="mostrarAdvertencia()">
               Nuevo cálculo
               <span class="material-icons">chevron_right</span>
             </button>
           </div>
         </div>
+      </div><!--termina informacion--> 
 
         <!-- Modal de advertencia -->
         <div class="modal" [ngClass]="{ mostrar: mostrarModal }">

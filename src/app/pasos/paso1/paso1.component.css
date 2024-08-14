@@ -10,52 +10,73 @@
   --bordes: #a9b8ad;
 }
 .content-paso-uno {
-  /* General */
-  /*los estilos de .content estan en style.css*/
   .info-container {
     background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 10px;
-    gap: 10px;
+    flex: 1; 
+    overflow: hidden; 
   }
   /*-----------------------------------------------------------*/
   .toolbar-pasos {
     width: 100%;
     margin-top: 0px;
   }
-
   /********************************************************************/
   .informacion {
     width: 100%;
-    height: 86%;
-    max-height: 86%;
+    height: 100%;
+    max-height: 100%;
     margin-top: 0%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 25px;
+    gap: 10px;
+    overflow-y: auto; 
+    overflow-x:hidden; 
   }
 
+/***********************************************************************/
+ /* Estilos para personalizar la barra de desplazamiento vertical */
+ .informacion::-webkit-scrollbar {
+  width: 8px; 
+}
+
+.informacion::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.informacion::-webkit-scrollbar-thumb {
+  background: #b8b6b6; 
+  border-radius: 4px; 
+}
+
+.informacion::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+/***************************************************************************/
   .advertencia #recomendacion {
     text-align: left;
     color: var(--font-light);
-   /* font-size: 14px;*/
-    font-size: 1vw;
+    font-size: 14px;
     font-family: 'Sodo Sans', sans-serif;
     font-weight: 400;
     margin: 0px;
   }
 
   .info-inicio {
-    height: 50%;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     border: 2px solid var(--light-background);
     border-radius: 8px;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+    padding-top: 15px;
     text-align: left;
     gap: 10px;
   }
@@ -73,7 +94,7 @@
 
   .info-inicio h2 {
     text-transform: uppercase;
-    font-size: 1.2vw;
+    font-size: 17px;
     font-weight: bold;
     color: var(--dark-green);
     margin-bottom: 0px;
@@ -98,7 +119,7 @@
     border-radius: 5px;
     border: 2px solid #ccc;
     box-sizing: border-box;
-    font-size: 1vw;
+    font-size: 14px;
     font-family: 'Sodo Sans', sans-serif;
     background-color: var(--gris);
     color: var(--font-light);
@@ -115,8 +136,8 @@
 
   .pac-item,
   .pac-item:hover {
-    background-color: #ffffff !important; /* Asegurar el fondo blanco en los elementos del historial */
-    color: #3c763d !important; /* Color de texto de los elementos del historial */
+    background-color: #ffffff !important; 
+    color: #3c763d !important; 
   }
 
   /*boton del input*/
@@ -133,17 +154,15 @@
   }
 
   #buscar .material-icons {
-    margin-left: 8px; /* Espacio entre el texto y el ícono */
-    color: white; /* Asegura que el ícono sea blanco */
-    font-size: 18px; /* Ajusta el tamaño del ícono */
+    margin-left: 8px; 
+    color: white; 
+    font-size: 18px; 
   }
 
   #buscar:hover {
     background-color: var(--medium-green);
   }
-
-  /*----------------------------------------------------------------------------------------------------------*/
-
+  /*-----------------------------------*/
   .botones {
     width: 100%;
     display: flex;
@@ -154,7 +173,7 @@
     background-color: white;
     color: var(--dark-green);
     font-weight: 300;
-    border: 2px solid var(--dark-green); /* Borde de 2px con el color especificado */
+    border: 2px solid var(--dark-green); 
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
@@ -163,26 +182,26 @@
   }
 
   #borrar .material-icons {
-    margin-left: 8px; /* Espacio entre el texto y el ícono */
+    margin-left: 8px;
     color: var(
       --dark-green
-    ); /* Asegura que el ícono tenga el mismo color que el texto */
-    font-size: 18px; /* Ajusta el tamaño del ícono */
+    ); 
+    font-size: 18px; 
   }
 
   #borrar:hover {
     border-color: var(
       --medium-green
-    ); /* Cambio de color del borde al pasar el cursor */
+    ); 
     color: var(
       --medium-green
-    ); /* Cambio de color de la letra al pasar el cursor */
+    );
   }
 
   #borrar:hover .material-icons {
     color: var(
       --medium-green
-    ); /* Cambio de color del ícono al pasar el cursor */
+    ); 
   }
 
   #marcar {
@@ -199,9 +218,9 @@
   }
 
   #marcar .material-icons {
-    margin-left: 8px; /* Espacio entre el texto y el ícono */
-    color: white; /* Asegura que el ícono sea blanco */
-    font-size: 16px; /* Ajusta el tamaño del ícono */
+    margin-left: 8px; 
+    color: white; 
+    font-size: 16px; 
   }
 
   #marcar:hover {
@@ -209,17 +228,48 @@
   }
 
   #marcar:hover .material-icons {
-    color: white; /* Asegura que el ícono se mantenga blanco al pasar el cursor */
+    color: white; 
   }
 
   /*------------------------------------------------*/
   :is(button[disabled]) {
-    background-color: #d3d3d3; /* Color gris */
-    color: #a9a9a9; /* Texto gris */
-    cursor: not-allowed; /* Cursor no permitido */
-    opacity: 0.6; /* Opacidad reducida */
+    background-color: #d3d3d3; 
+    color: #a9a9a9; 
+    cursor: not-allowed; 
+    opacity: 0.6; 
   }
   .custom-snackbar {
     --mdc-snackbar-container-color: #3c81bb !important;
   }
 }
+
+/********************************************************/
+/* Estilos para resoluciones mayores a 1366px */
+@media only screen and (min-width: 1400px) {
+  .informacion{
+    gap: 25px;
+  }
+  
+  .advertencia #recomendacion{
+    font-size: 17px;
+  }
+  
+  .info-inicio {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 25px !important;
+    padding-top: 25px !important;
+    text-align: left;
+    gap: 20px;
+  }
+
+  .info-inicio h2 {
+    font-size: 21px !important;
+  }
+  
+  #pac-input {
+    font-size: 16px !important;
+  }
+
+}
+

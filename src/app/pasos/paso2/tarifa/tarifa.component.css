@@ -17,66 +17,17 @@
 
 select {
   width: 100%;
-  height: 40px; /* Ajusta esta altura según tus necesidades */
-  border: 2px solid var(--light-background); /* Cambia el grosor y color del borde si lo deseas */
-  border-radius: 8px; /* Opcional: añade bordes redondeados */
-  padding: 5px; /* Ajusta el relleno según tus necesidades */
-  font-size: 1vw;
+  height: 40px;
+  border: 2px solid var(--light-background);
+  border-radius: 8px; 
+  padding: 5px; 
+  font-size: 14px;
+  font-family: 'Sodo Sans', sans-serif;
   color: var(--font-light);
-  transition: border-color 0.3s ease; /* Añade una transición para un efecto suave */
+  transition: border-color 0.3s ease; 
 }
 
 select:focus {
   border-color: var(--medium-green);
 }
 
-
-
-/*.tarifa-container {
-    width: 228px;  
-    height: 80px; 
-    padding: 10px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    border: 2px solid var(--light-background);
-  }
-
-  .texto-container {
-    display: flex;
-    flex-direction: column;
-    text-align: right;
-  }
-  
-  .titulo {
-    font-size: 19px; 
-    color: var(--dark-green); 
-    margin-bottom:15px; 
-  }
-  
-  .mat-form-field {
-    width: 100%; 
-    height: auto; 
-    margin: 0;
-  }
-  
-  .mat-select {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .mat-select-trigger {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    font-size: 9px; 
-   
-    
-  }
-  
-  .mat-option {
-    font-size: 12px; 
-    line-height: 1.2;
-    color:#417B6F ;
-  }*/
-  

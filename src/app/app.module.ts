@@ -31,6 +31,8 @@ import { Paso0Component } from './pasos/paso0/paso0.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -88,6 +90,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     TarifaIntercambioComponent,
     TotalComponent,
     AhorrosComponent,
+    
   ],
   
   imports: [
@@ -107,6 +110,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     HttpClientModule,
     NgChartsModule,
     MatSliderModule,
+    MatSlideToggleModule,
     GoogleMapsModule,
     NgxSpinnerModule.forRoot()
     

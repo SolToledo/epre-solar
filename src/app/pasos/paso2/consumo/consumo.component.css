@@ -5,44 +5,44 @@
   padding: 5px;
   border-radius: 8px;
   border: 2px solid var(--light-background);
-
-  height: 21vh;
-  max-height: 21vh;
+  height: 16vh;
   overflow-y: scroll;
   overflow-x: hidden; 
 }
 
+@media only screen and (min-width: 1399px) {
+  .consumo-container{
+    height: auto;
+  }
+}
+
  /* Estilos para personalizar la barra de desplazamiento vertical */
- .consumo-container::-webkit-scrollbar {
-  width: 8px; /* Ancho de la barra de desplazamiento vertical */
+.consumo-container::-webkit-scrollbar {
+  width: 8px; 
 }
 
 .consumo-container::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Color de fondo del track */
+  background: #f1f1f1;
 }
 
 .consumo-container::-webkit-scrollbar-thumb {
-  background: #b8b6b6; /* Color de la barra de desplazamiento */
-  border-radius: 4px; /* Redondear los bordes de la barra */
+  background: #b8b6b6; 
+  border-radius: 4px; 
 }
 
 .consumo-container::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Color de la barra de desplazamiento al pasar el cursor */
+  background: #555; 
 }
-
-
-
 
 .meses-container {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas */
-  gap: 3px;
+  grid-template-columns: 1fr 1fr; 
+  gap: 1.1vh;
 }
 
 .mes {
  background-color: var(--gris);
   border: 2px solid #e2eee1;
-  /* border: 2px solid #c1d2c0; *//* Color por defecto */
   padding:2px;
   border-radius: 4px;
   display: flex;
@@ -51,7 +51,7 @@
 }
 
 .mes.completado {
-  border-color: var(--medium-green); /* Color cuando está completado */
+  border-color: var(--medium-green); 
   background-color: var(--light-background);
 }
 
@@ -101,11 +101,6 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
-}
-
-/* Ocultar los controles de número en Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
 }
 
 /* Asegurarse de que la apariencia de los inputs de número sea consistente */

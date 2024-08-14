@@ -88,19 +88,20 @@ h5 {
 
 #sub-titulo {
   color: #424242;
-  font-size: 1vw;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight:600;
   text-align: left;
   font-family: "Sodo Sans", sans-serif;
-  margin: 0px;
+  margin-bottom: 2px;
   height: 5%;
 }
+
+
 /*************************************************/
 /*span*/
 #span-general {
   color: var(--medium-green);
- /* font-size: 14px;*/
- font-size: 1vw;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -200,8 +201,6 @@ button[disabled] {
 .resultados-paso3 {
 
  .component-container-borde {
-   /* width: 225px;
-    height: 120px;*/
     width: 100%;
     height:120px;
     border-radius: 8px;
@@ -211,8 +210,6 @@ button[disabled] {
 
  .component-container {
     background-color: var(--light-background);
-  /*  width: 225px;
-    height: 120px;*/
     width: 100%;
     height:120px;
     border-radius: 8px;
@@ -554,3 +551,19 @@ button[disabled] {
   }
 }
 
+
+/****************************************************************************/
+/* Estilos para resoluciones mayores a 1366px */
+@media only screen and (min-width: 1400px) {
+  #sub-titulo {
+    font-size: 18px; 
+  }
+
+  .advertencia #recomendacion{
+    font-size: 17px;
+  }
+
+  #span-general {
+    font-size: 17px; 
+  }
+}

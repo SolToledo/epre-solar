@@ -11,15 +11,11 @@
   --bordes: #a9b8ad;
 }
 
-
 /* resultado.component.css */
 .resultado-container {
-  width: 228px;  /* Ancho total */
-  height: 80px; /* Alto total */
- /* background-color:#DFF0D8;
-  border: 2px solid #c1d2c0;*/
+  width: 228px;  
+  height: 80px; 
   background-color: var(--light-background);
-/*  border: 2px solid var(--medium-green);*/
   border-radius: 8px;
   padding: 10px;
   display: flex;

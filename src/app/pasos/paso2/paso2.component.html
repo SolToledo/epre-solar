@@ -7,42 +7,67 @@
   </div>
 
   <div class="info-container">
-    <div class="informacion">
-      <div class="content-title">
-        <p id="sub-titulo">Seleccione el tipo de tarifa contratada.</p>
-        <p id="texto">
-          Si necesita ayuda para encontrar esta información
-          <span id="span-general">haga click aquí.</span>
-        </p>
-      </div>
-      <div class="info-cargar">
-        <app-tarifa (isCategorySelected)="onCategorySelected($event)"></app-tarifa>
-      </div>
-    </div>
 
     <div class="informacion">
-      <div class="content-title">
-        <p id="sub-titulo">
-          Ingrese el consumo energético de los últimos 12 meses.
-        </p>
-        <p id="texto">
-          Si necesita ayuda para encontrar esta información
+
+      <div class="info-inicio">
+        <div class="titulo-container">
+          <div class="icono-inicio">
+            <img
+              src="assets/icon-tarifa.png"
+              id="marca"
+              alt="Icono de tarifa"
+            />
+          </div>
+          <div class="titulo-inicio">
+            <h2>TARIFA CONTRATADA</h2>
+          </div>
+        </div>
+
+        <div class="info-cargar">
+          <app-tarifa (isCategorySelected)="onCategorySelected($event)"></app-tarifa>
+        </div>
+
+        <div class="advertencia">
+          <p id="recomendacion">
+            Si necesita ayuda para encontrar esta información
           <span id="span-general">haga click aquí.</span>
-        </p>
+          </p>
+        </div>
       </div>
 
-      <div class="info-cargar">
-        <app-consumo
-          (allFieldsCompleted)="onAllFieldsCompleted($event)"
-        ></app-consumo>
-      </div>
+      <div class="info-inicio">
+        <div class="titulo-container-slider">
+          <div class="icono-titulo">
+            <div class="icono-inicio">
+              <img
+                src="assets/icon-modificar.png"
+                id="marca"
+                alt="Icono de dibujar"
+              />
+            </div>
+            <div class="titulo-inicio">
+              <h2>CONSUMO ENERGÉTICO</h2> 
+            </div>
+          </div><!--icono-titulo-->
+          
+          <div class="slide">
+            <mat-slide-toggle><p>Carga manual</p></mat-slide-toggle>
+          </div>
+        </div><!--titulo-container-->
 
-      <div class="total">
-        <app-total></app-total>
-      </div>
-    </div>
+        <div class="info-cargar-consumo">
+          <app-consumo
+            (allFieldsCompleted)="onAllFieldsCompleted($event)"
+          ></app-consumo>
+        </div><!--info-cargar-->
+  
+        <div class="total">
+          <app-total></app-total>
+        </div>
+        
+      </div><!--info-inicio-->
 
-    <!--botones-->
     <div class="button-container">
       <div class="boton">
         <button id="boton-volver" (click)="goBack()">
@@ -59,7 +84,39 @@
           Realizar Cálculo <span class="material-icons">chevron_right</span>
         </button>
       </div>
-    </div>
-  </div>
-</div>
-<!--content-->
+    </div><!--button-container-->
+
+  </div><!--informacion-->
+
+  </div><!--info-container-->
+
+</div><!--content-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
