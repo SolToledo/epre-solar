@@ -11,41 +11,52 @@
   --bordes: #a9b8ad;
 }
 
-/* General */
-/*los estilos de .content estan en style.css*/
-.info-container {
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  justify-content: space-between;
-  padding: 10px;
-}
-
-/********************************************************************/
-.informacion{
-  width: 100%;
-  height: 82%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-
-.content-scroll {
-    width: 100%;
-   /* height: 60vh;
-    max-height: 60vh;*/
-    height: 60vh;
-    overflow-y: scroll; 
-    overflow-x: hidden; 
+  .info-container {
+    background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 10px;
+    padding: 10px;
+    flex: 1; /* Usa el espacio disponible en content */
+    overflow: hidden; /* Previene el desbordamiento de los elementos hijos */
   }
-
+  
+  /*-------------------------------------------------------------*/
+  .toolbar-pasos {
+    width: 100%;
+    margin-top: 0%;
+  }
+  
+  .informacion {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+   margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    overflow-y: auto; /* Agrega un scroll vertical si el contenido se desborda */
+    overflow-x:hidden; 
+  }
+  /***********************************************************************/
+   /* Estilos para personalizar la barra de desplazamiento vertical */
+   .informacion::-webkit-scrollbar {
+    width: 8px; /* Ancho de la barra de desplazamiento vertical */
+  }
+  
+  .informacion::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color de fondo del track */
+  }
+  
+  .informacion::-webkit-scrollbar-thumb {
+    background: #b8b6b6; /* Color de la barra de desplazamiento */
+    border-radius: 4px; /* Redondear los bordes de la barra */
+  }
+  
+  .informacion::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color de la barra de desplazamiento al pasar el cursor */
+  }
+  
 /*cards*/
 :root {
   --gris: #edebe9;
@@ -55,7 +66,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
- 
 }
 
 .item {
@@ -77,16 +87,6 @@
   min-width:300px;
   min-height: 120px;
 }
-
-/* Estilos para resoluciones mayores a 1366px */
-@media only screen and (min-width: 1367px) {
-  .content-scroll{
-    height: 70vh;
-  }
-}
-
-
-
   /*------------------------------------------------*/
   /* Estilos para personalizar la barra de desplazamiento vertical */
   .content-scroll::-webkit-scrollbar {
@@ -106,7 +106,6 @@
     background: #555; 
   }
   
-}
 /*----------------------------------------------------------------------------------------------------------*/  
 /* Estilos para los botones secundarios  EDITAR/DESCARGAR/ENVIAR*/
 .action-buttons{
@@ -180,8 +179,8 @@
 }
 
 #boton-editar:hover {
-  border-right: 2px solid var(--dark-green); /* Borde de 2px a la derecha */
-  border-bottom: 2px solid var(--dark-green); /* Borde de 2px abajo */
+  border-right: 2px solid var(--dark-green); 
+  border-bottom: 2px solid var(--dark-green); 
   background-color: var(--medium-green);
   color: white; 
 }
@@ -189,8 +188,6 @@
 #boton-editar:hover .material-icons {
   color: white; 
 }
-
-
 /*------------------------------------------------------------------*/
 /* Estilos para el modal */
 .modal {
@@ -228,4 +225,10 @@
 /********************************************/
 
 /**********************************************************/
+/* Estilos para resoluciones mayores a 1366px */
+@media only screen and (min-width: 1367px) {
+  .content-scroll{
+    height: 70vh;
+  }
+}
 

@@ -11,30 +11,55 @@
 }
 
 .content-paso-cero {
-  /* General */
-  /* los estilos de .content estan en style.css */
   .info-container {
     background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 8px 10px;
-    gap: 10px;
+    padding: 10px;
+    flex: 1; 
+    overflow: hidden; 
   }
-  .content-informacion {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 10px;
-    height: 86%;
-  }
-  .informacion {
-    width: auto;
+  
+  /*-------------------------------------------------------------*/
+  .toolbar-pasos {
+    width: 100%;
     margin-top: 0%;
   }
+  
+  .informacion {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin-top: 0%;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    overflow-y: auto;
+    overflow-x:hidden; 
+  }
+
+/***********************************************************************/
+ /* Estilos para personalizar la barra de desplazamiento vertical */
+ .informacion::-webkit-scrollbar {
+  width: 8px; 
+}
+
+.informacion::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+.informacion::-webkit-scrollbar-thumb {
+  background: #b8b6b6;
+  border-radius: 4px; 
+}
+
+.informacion::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
 
   .texto-container {
-    height: 30%;
+    height: auto;
     display: flex;
     border-radius: 8px;
     padding: 7px;
@@ -61,13 +86,13 @@
     color: var(--font-light);
     font-weight: 400;
     margin: 2px;
-    font-size: 1vw;
+    font-size: 13px;
     font-family: 'Sodo Sans', sans-serif;
   }
 
   .info-inicio h2 {
     text-transform: uppercase;
-    font-size: 1.2vw;
+    font-size: 17px;
     font-weight: bold;
     margin-bottom: 0px;
     margin-right: 0px;
@@ -124,8 +149,6 @@
  
 }
 /***********************************************************************************/
-
-
 .driver-active .driver-overlay,
 .driver-active * {
   pointer-events: none;
@@ -328,3 +351,19 @@
 .driver-popover-arrow-none {
   display: none;
 }
+
+
+/**************************************************/
+@media only screen and (min-width: 1400px) {
+  .info-inicio p {
+    font-size: 17px!important;
+  }
+
+  .info-inicio h2 {
+    font-size: 19px;
+  }
+}
+
+
+
+
