@@ -8,7 +8,6 @@ import { SharedService } from 'src/app/services/shared.service';
 import { ResultadosFrontDTO } from '../../interfaces/resultados-front-dto';
 import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 import { MapService } from 'src/app/services/map.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import jsPDF from 'jspdf';
 import { CalculatePredefinedCoordService } from 'src/app/services/calculate-predefined-coord.service';
 @Component({
