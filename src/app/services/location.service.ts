@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GeocodingService } from './geocoding.service';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,7 @@ export class LocationService {
       irradiacionAnual: 2068.55,
       cantidadDePaneles: 10,
       potenciaInstalada: 4,
-      radio: 971.91,
+      radio: 2000,
     },
     {
       lat: -31.829,
@@ -308,7 +309,8 @@ export class LocationService {
 
   constructor(
     private geocodingService: GeocodingService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private sharedService: SharedService
   ) {}
 
   async validateLocation(
@@ -322,7 +324,8 @@ export class LocationService {
         map,
         marker
       );
-  
+      console.log(geocodeResult);
+      
       if (geocodeResult) {
         const lat = geocodeResult.lat;
         const lng = geocodeResult.lng;
@@ -349,6 +352,7 @@ export class LocationService {
   
           return predefinedLatLng;
         } else if (this.isWithinSanJuan(lat, lng)) {
+          console.log("dentro de san juan y no toma cercanias ...")
           const selectedLatLng = new google.maps.LatLng(lat, lng);
           marker.position = selectedLatLng;
           map.setZoom(22);
@@ -394,10 +398,9 @@ export class LocationService {
     const centroid = this.calculateCentroid(path);
     const lat = centroid.lat;
     const lng = centroid.lng;
-    if (lat >= -31.878 && lat <= -30.175 && lng >= -69.192 && lng <= -66.879) {
+    if (this.isWithinSanJuan(lat, lng)) {
       const nearbyLocation = this.findNearbyLocation(lat, lng);
       if (nearbyLocation) {
-        console.log(nearbyLocation);
 
         this.requestSavingsCalculation(nearbyLocation);
         map.setZoom(22);
@@ -406,14 +409,14 @@ export class LocationService {
           'El área seleccionada está dentro de ubicaciones predeterminadas con datos obtenidos de la base de datos PVGIS-ERA5.',
           '',
           {
-            duration: 4000,
+            duration: 6000,
             panelClass: ['custom-snackbar'],
           }
         );
         return nearbyLocation;
       } else {
         map.setZoom(22);
-        map.setCenter({ lat, lng });
+        /* map.setCenter({ lat, lng }); */
         
         return { lat, lng };
       }
@@ -433,7 +436,7 @@ export class LocationService {
     }
   }
 
-  private calculateCentroid(path: google.maps.LatLng[]): {
+  public calculateCentroid(path: google.maps.LatLng[]): {
     lat: number;
     lng: number;
   } {
@@ -451,7 +454,7 @@ export class LocationService {
     };
   }
 
-  private findNearbyLocation(lat: number, lng: number) {
+  public findNearbyLocation(lat: number, lng: number) {
     return this.predefinedLocations.find((location) => {
       // Calcula la distancia en kilómetros entre las coordenadas dadas y la ubicación predefinida
       const distance = this.calculateDistance(
@@ -465,25 +468,6 @@ export class LocationService {
       const radioInKm = location.radio / 1000;
       return distance <= radioInKm;
     });
-  }
-  private findNearestPredefinedLocation(
-    location: google.maps.LatLng
-  ): any | null {
-    const distanceThreshold = 1; // 1 km de radio de búsqueda
-
-    for (const predefined of this.predefinedLocations) {
-      const distance = this.calculateDistance(
-        location.lat(),
-        location.lng(),
-        predefined.lat,
-        predefined.lng
-      );
-
-      if (distance <= distanceThreshold) {
-        return predefined;
-      }
-    }
-    return null;
   }
   // Método auxiliar para calcular la distancia entre dos puntos en la superficie de la Tierra
   private calculateDistance(
@@ -512,5 +496,7 @@ export class LocationService {
 
   private requestSavingsCalculation(location: any) {
     console.log('con las coordenadas de samuel :', location);
+    this.sharedService.setPredefinedCoordinates(true);
+    this.sharedService.setNearbyLocation(location);
   }
 }

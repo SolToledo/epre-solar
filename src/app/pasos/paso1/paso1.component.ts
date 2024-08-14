@@ -241,6 +241,11 @@ export class Paso1Component implements OnInit {
   private async initializeAutocomplete() {
     const input = document.getElementById('pac-input') as HTMLInputElement;
     const searchBox = new google.maps.places.SearchBox(input);
+    
+    // Restricciones geográficas (ejemplo: limitar a Argentina)
+    new google.maps.places.Autocomplete(input, {
+      componentRestrictions: { country: 'ar' },
+    });
 
     this.map.addListener('bounds_changed', () => {
       searchBox.setBounds(this.map.getBounds() as google.maps.LatLngBounds);
@@ -250,10 +255,6 @@ export class Paso1Component implements OnInit {
       const places = searchBox.getPlaces();
 
       if (places && places.length > 0) {
-        if (places.length == 0) {
-          return;
-        }
-
         const place = places[0];
         if (place.geometry && place.geometry.location) {
           if (this.marker) {

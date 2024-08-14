@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, Subject } from 'rxjs';
 import { LocationService } from './location.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,11 @@ export class MapService {
   private panelWidthMeters = 1.045;
   private panelHeightMeters = 1.879;
 
-  constructor(private locationService: LocationService, private snackBar: MatSnackBar) {}
+  constructor(
+    private locationService: LocationService,
+    private snackBar: MatSnackBar,
+    private sharedService: SharedService
+  ) {}
 
   async initializeMap(mapElement: HTMLElement) {
     const { Map } = (await google.maps.importLibrary(
@@ -114,10 +119,10 @@ export class MapService {
     const zoom = this.map.getZoom() ?? 1;
     const scale = Math.pow(2, zoom);
     const projection = this.map.getProjection();
-    
+
     if (projection) {
       const worldCoordinateCenter = projection.fromLatLngToPoint(location);
-      
+
       if (worldCoordinateCenter) {
         const pixelOffset = offsetX / scale;
         const newCenter = projection.fromPointToLatLng(
@@ -126,7 +131,7 @@ export class MapService {
             worldCoordinateCenter.y
           )
         );
-        
+
         if (newCenter) {
           this.map.panTo(newCenter);
         } else {
@@ -184,24 +189,35 @@ export class MapService {
           this.polygons.push(newPolygon);
 
           const path = newPolygon.getPath();
-          
-          const isLocationValid = await this.locationService.validatePolygonLocation(newPolygon, this.map);
 
-          if(isLocationValid) {
+          const isLocationValid =
+            await this.locationService.validatePolygonLocation(
+              newPolygon,
+              this.map
+            );
+
+          if (isLocationValid) {
             const area = google.maps.geometry.spherical.computeArea(path);
             this.areaSubject.next(area);
             this.overlayCompleteSubject.next(true);
-              // Listener para el evento set_at en el polígono
+            // Listener para el evento set_at en el polígono
             google.maps.event.addListener(path, 'set_at', () => {
               newPolygon.setMap(this.map); // Muestra el polígono
               this.clearPanels();
+              this.maxPanelsPerAreaSubject.next(0);
               this.drawPanels(newPolygon);
               const area = google.maps.geometry.spherical.computeArea(path);
               this.areaSubject.next(area);
             });
             this.drawPanels(newPolygon);
-            this.recenterMapToVisibleArea();
-          }else{
+            // Obtener el centro del polígono para recentrar el mapa
+            const bounds = new google.maps.LatLngBounds();
+            path.forEach((latLng) => bounds.extend(latLng));
+            const polygonCenter = bounds.getCenter();
+
+            // Llamar al método recenterMapAfterLocationSet con el centro del polígono
+            this.recenterMapAfterLocationSet(polygonCenter);
+          } else {
             this.snackBar.open(
               'La ubicación ingresada no se puede procesar.',
               '',
@@ -300,6 +316,7 @@ export class MapService {
     }
 
     this.panels = panels;
+    
     this.clipPanelsToPolygon(polygon, panels, isReDraw);
   }
 
@@ -335,6 +352,7 @@ export class MapService {
     if (!isReDraw) {
       this.maxPanelsPerAreaSubject.next(clippedPanelsCount);
     }
+    this.sharedService.setPanelsCountSelected(this.panels.length);
   }
 
   reDrawPanels(panelesCantidad: number) {

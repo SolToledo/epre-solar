@@ -34,7 +34,7 @@ export class GeocodingService {
     });
   }
 
-  initializeAutocomplete(
+  /* initializeAutocomplete(
     inputElement: HTMLInputElement,
     map: google.maps.Map,
     marker: google.maps.marker.AdvancedMarkerElement
@@ -56,5 +56,5 @@ export class GeocodingService {
         }
       }
     });
-  }
+  } */
 }
