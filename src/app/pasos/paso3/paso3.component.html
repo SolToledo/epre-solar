@@ -1,10 +1,5 @@
 <div class="spinner-container" *ngIf="isLoading">
-  <ngx-spinner
-    bdColor="transparent"
-    size="large"
-    color="#fff"
-    type="ball-spin-clockwise"
-  >
+  <ngx-spinner bdColor="transparent" size="large" color="#fff" type="ball-spin-clockwise">
   </ngx-spinner>
 </div>
 <span class="resultados" *ngIf="!isLoading">
@@ -34,86 +29,91 @@
         </div>
 
         <div class="informacion">
-          
-              <div class="container">
-                <div class="item"> <app-ahorros></app-ahorros> </div>
-                <div class="item"> <app-plazo></app-plazo></div>
-                <div class="item"> <app-plazo></app-plazo> </div>
-               <!-- <div class="item"><app-paneles></app-paneles></div>-->
-                <div class="item"><app-potencia></app-potencia></div>
-                <div class="item"><app-superficie></app-superficie></div>
-                <div class="item"><app-cobertura></app-cobertura></div>
-                <div class="item"><app-energia></app-energia></div>
-                <div class="item"><app-emisiones></app-emisiones></div>
-                <div class="item"><app-costo></app-costo></div>
-                <div class="item"><app-tarifa-intercambio></app-tarifa-intercambio></div>      
-              </div>
-               
-              <div class="container-graficos">
-                <div class="item-grafico">
-                  <app-graficos></app-graficos>
-                </div>
-                <div class="item-grafico">
-                  <app-graficos></app-graficos>
-                </div>
-                <div class="item-grafico">
-                  <app-graficos></app-graficos>
-                </div>
-                <div class="item-grafico">
-                  <app-graficos></app-graficos>
-                </div>
-              </div>
-            
-            <!--informacion que necesita el componente para renderizar GRAFICOS-->
-         <app-graficos
-            [periodoVeinteanalEmisionesGEIEvitadas]="
-              getEmisionesGEIEvitadas()
-            "
-            [periodoVeinteanalFlujoEnergia]="
-              getFlujoEnergia()
-            "
-            [periodoVeinteanalFlujoIngresosMonetarios]="
-              getFlujoIngresosMonetarios()
-            "
-            [periodoVeinteanalGeneracionFotovoltaica]="
-              getGeneracionFotovoltaica()
-            "
-          ></app-graficos>     
-     
-        <!--botones-->
-        <div class="button-container">
-          <div class="boton">
-            <button id="boton-volver" (click)="goBack()">
-              <span class="material-icons">chevron_left</span> Volver
-            </button>
-            <br/>
-            <button id="boton-siguiente" (click)="mostrarAdvertencia()">
-              Nuevo cálculo
-              <span class="material-icons">chevron_right</span>
-            </button>
-          </div>
-        </div>
-      </div><!--termina informacion--> 
-
-        <!-- Modal de advertencia -->
-        <div class="modal" [ngClass]="{ mostrar: mostrarModal }">
-          <div class="modal-contenido">
-            <p>
-              ¿Estás seguro de que deseas salir? Cualquier información no
-              guardada se perderá.
-            </p>
-            <div class="botones-modal">
-              <button id="boton-volver" (click)="cancelarSalir()">
-                Cancelar
-              </button>
-              <button id="boton-siguiente" (click)="confirmarSalir()">
-                Aceptar
-              </button>
+          <div class="container">
+            <div class="item"><app-ahorros></app-ahorros></div>
+            <div class="item"><app-plazo [plazoRecuperoInversion]="plazoRecuperoInversion"></app-plazo></div>
+            <div class="item">
+              <app-paneles [dimensionPanel]="dimensionPanel" [panelCapacityW]="panelCapacityW"></app-paneles>
+            </div>
+            <div class="item">
+              <app-potencia [instalacionPotencia]="instalacionPotencia"></app-potencia>
+            </div>
+            <div class="item"><app-superficie></app-superficie></div>
+            <div class="item"><app-cobertura></app-cobertura></div>
+            <div class="item"><app-energia></app-energia></div>
+            <div class="item">
+              <app-emisiones [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"></app-emisiones>
+            </div>
+            <div class="item"><app-costo></app-costo></div>
+            <div class="item">
+              <app-tarifa-intercambio></app-tarifa-intercambio>
             </div>
           </div>
+
+          <div class="container-graficos">
+            <div class="item-grafico">
+              <app-graficos></app-graficos>
+            </div>
+            <div class="item-grafico">
+              <app-graficos></app-graficos>
+            </div>
+            <div class="item-grafico">
+              <app-graficos></app-graficos>
+            </div>
+            <div class="item-grafico">
+              <app-graficos></app-graficos>
+            </div>
+          </div>
+
+          <!--informacion que necesita el componente para renderizar GRAFICOS-->
+          <app-graficos [periodoVeinteanalEmisionesGEIEvitadas]="
+                getEmisionesGEIEvitadas()
+              " [periodoVeinteanalFlujoEnergia]="getFlujoEnergia()" [periodoVeinteanalFlujoIngresosMonetarios]="
+                getFlujoIngresosMonetarios()
+              " [periodoVeinteanalGeneracionFotovoltaica]="
+                getGeneracionFotovoltaica()
+              "></app-graficos>
+
+          <!--termina grafico-->
+        </div><!--informacion-->
+       
+      </div>
+      
+
+      <!--botones-->
+      <div class="button-container">
+        <div class="boton">
+          <button id="boton-volver" (click)="goBack()">
+            <span class="material-icons">chevron_left</span> Volver
+          </button>
+          <br />
+          <button id="boton-siguiente" (click)="mostrarAdvertencia()">
+            Nuevo cálculo
+            <span class="material-icons">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    </div><!--termina informacion-->
+
+    <!-- Modal de advertencia -->
+    <div class="modal" [ngClass]="{ mostrar: mostrarModal }">
+      <div class="modal-contenido">
+        <p>
+          ¿Estás seguro de que deseas salir? Cualquier información no
+          guardada se perderá.
+        </p>
+        <div class="botones-modal">
+          <button id="boton-volver" (click)="cancelarSalir()">
+            Cancelar
+          </button>
+          <button id="boton-siguiente" (click)="confirmarSalir()">
+            Aceptar
+          </button>
         </div>
       </div>
     </div>
-    <!--content-->
   </div>
+
+  <!--content-->
+
 </span>
