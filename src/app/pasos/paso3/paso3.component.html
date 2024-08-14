@@ -27,13 +27,13 @@
         <div class="container">
           <div class="item"><app-ahorros></app-ahorros></div>
           <div class="item">
-            <app-plazo [plazoRecuperoInversion]="plazoRecuperoInversion"></app-plazo>
+            <app-plazo></app-plazo>
           </div>
           <div class="item">
             <app-paneles [dimensionPanel]="dimensionPanel" [panelCapacityW]="panelCapacityW"></app-paneles>
           </div>
           <div class="item">
-            <app-potencia [instalacionPotencia]="instalacionPotencia"></app-potencia>
+            <app-potencia></app-potencia>
           </div>
           <div class="item"><app-superficie></app-superficie></div>
           <div class="item"><app-cobertura></app-cobertura></div>
@@ -65,7 +65,7 @@
           <button id="boton-volver" (click)="goBack()">
             <span class="material-icons">chevron_left</span> Volver
           </button>
-          <br />
+          <br/>
           <button id="boton-siguiente" (click)="mostrarAdvertencia()">
             Nuevo cálculo
             <span class="material-icons">chevron_right</span>
