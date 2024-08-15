@@ -35,6 +35,7 @@
     gap: 10px;
     overflow-y: auto; 
     overflow-x:hidden; 
+    padding: 5px;
   }
 
 /***********************************************************************/
@@ -238,10 +239,20 @@
     cursor: not-allowed; 
     opacity: 0.6; 
   }
-  .custom-snackbar {
-    --mdc-snackbar-container-color: #3c81bb !important;
-  }
 }
+
+
+/*********************************************************/
+/*efecto de las tarjetas al pasar el mouse*/
+.info-inicio {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-inicio:hover {
+  transform: scale(1.01); 
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); 
+}
+
 
 /********************************************************/
 /* Estilos para resoluciones mayores a 1366px */
