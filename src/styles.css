@@ -53,39 +53,19 @@ h5 {
 /*VARIABLES*/
 :root {
   --mdc-snackbar-container-color: #cba258;
-  --mdc-snackbar-color: #e4370c;
+  --mdc-snackbar-color: black;
 }
 
-.custom-snackbar {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 16px !important;
-}
-/*****************************************************************/
-
-.custom-snackbar {
-  --mdc-snackbar-container-color: #cba258 ; /* Color de fondo */
-  --mdc-snackbar-color: #e4370c ; /* Color del texto */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 16px !important; /* Tamaño de la letra */
-}
-
-
-/*************************************************************************/
 /*SNACKBAR*/
 .mat-mdc-snack-bar-container {
-  --mdc-snackbar-container-color: rgb(228, 151, 64)!important;
-  --mdc-snackbar-supporting-text-color: white!important;
-  --mat-snack-bar-button-color: #ff4081;
+  --mdc-snackbar-container-color: white!important;
+  --mdc-snackbar-supporting-text-color:black!important;
+  --mat-snack-bar-button-color: black!important;
 }
 .mat-snack-bar-container.custom-snackbar {
   font-weight: bold !important;
 }
 /************************************************************************/
-
 /* General */
 .content {
   background-color: white;
@@ -130,7 +110,7 @@ h5 {
 /*span*/
 #span-general {
   color: var(--medium-green);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
