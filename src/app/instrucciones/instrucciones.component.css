@@ -1,0 +1,152 @@
+/* Estilos generales */
+body {
+    font-family: 'sodo sans', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+/**********************************/
+/*COLORES*/
+:root {
+    --dark-green: #1e3932;
+    --medium-green: #006241;
+    --light-green: #00754a;
+    --light-background: #d4e9e2;
+    --golden: #cba258;
+    --gris: #edebe9;
+    --font-dark: #000000de;
+    --font-light: #424242;
+    --bordes: #a9b8ad;
+  }
+/************************************/
+
+/* Título principal */
+.tutorial-title {
+    font-size: 1.8em;
+    color: var(--dark-green);
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Subtítulos */
+.tutorial-subtitle {
+    font-size: 1.5em;
+    color:var(--dark-green);
+    border-bottom: 2px solid var(--medium-green);
+    padding-bottom: 5px;
+    margin-top: 30px;
+}
+
+/* Sección de subtítulos de nivel 3 */
+.tutorial-section {
+    font-size: 1.2em;
+    color: var(--font-light);
+    margin-top: 20px;
+    text-decoration: underline;
+}
+
+/* Texto general */
+.tutorial-text {
+    font-size: 1em;
+    color:var(--font-light);
+    margin-bottom: 15px;
+    line-height: 1.8;
+}
+
+/* Enlaces */
+.tutorial-link {
+    color: var(--font-light);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.tutorial-link:hover {
+    text-decoration: underline;
+}
+
+/* Listas */
+.tutorial-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 20px;
+}
+
+.tutorial-list-item {
+    background-color: var(--light-background);
+    margin-bottom: 10px;
+    padding: 15px;
+    border-left: 4px solid var(--medium-green);
+    border-radius: 8px;
+}
+
+.tutorial-list-item strong {
+    color: var(--dark-green);
+    font-weight: bold;
+}
+
+/********************************/
+/*scroll*/
+/* Aplica el estilo al contenedor del contenido del modal */
+.mat-dialog-content {
+    max-height: 90%; /* Ajusta esta altura según lo que necesites */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #007BFF #e9f5ff;
+}
+
+/* Estilo para navegadores basados en WebKit (Chrome, Safari) */
+.mat-dialog-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.mat-dialog-content::-webkit-scrollbar-thumb {
+    background-color: #007BFF;
+    border-radius: 10px;
+}
+
+.mat-dialog-content::-webkit-scrollbar-track {
+    background-color: #e9f5ff;
+}
+
+/* Estilo para Firefox */
+.mat-dialog-content {
+    scrollbar-width: thin;
+    scrollbar-color: #007BFF #e9f5ff;
+}
+
+
+
+
+
+
+
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .tutorial-title {
+        font-size: 1.8em;
+    }
+    
+    .tutorial-subtitle {
+        font-size: 1.3em;
+    }
+    
+    .tutorial-section {
+        font-size: 1.1em;
+    }
+    
+    .tutorial-text {
+        font-size: 0.95em;
+    }
+    
+    .tutorial-list-item {
+        padding: 10px;
+    }
+}

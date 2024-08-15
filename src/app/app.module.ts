@@ -32,6 +32,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatDialogModule } from '@angular/material/dialog';  
 
 
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -56,6 +57,9 @@ import { EnvironmentService } from './services/environment.service';
 import { firstValueFrom } from 'rxjs';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
+import { InstruccionesComponent } from './instrucciones/instrucciones.component';
+
+
 
 export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
   return (): Promise<void> => firstValueFrom(environmentService.loadGoogleMapsApiKey());
@@ -90,6 +94,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     TarifaIntercambioComponent,
     TotalComponent,
     AhorrosComponent,
+    InstruccionesComponent
     
   ],
   
@@ -112,6 +117,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     MatSliderModule,
     MatSlideToggleModule,
     GoogleMapsModule,
+    MatDialogModule,
     NgxSpinnerModule.forRoot()
     
   ],

@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
+import { InstruccionesComponent } from 'src/app/instrucciones/instrucciones.component';
 import { SharedService } from 'src/app/services/shared.service';
+import { MatDialog } from '@angular/material/dialog'; 
+
+
 @Component({
   selector: 'app-paso0',
   templateUrl: './paso0.component.html',
@@ -12,7 +16,7 @@ export class Paso0Component implements OnInit {
   showModal: boolean = false;
   isTermsAccepted: boolean = false;
 
-  constructor(private router: Router, private snackBar: MatSnackBar, private sharedService: SharedService) {}
+  constructor(private router: Router, private snackBar: MatSnackBar, private sharedService: SharedService,public dialog: MatDialog) {}
 
   ngOnInit(): void {
     const driverObj = driver({
@@ -129,9 +133,20 @@ export class Paso0Component implements OnInit {
         }
       );
     }
+
   }
 
   hideTooltip(event: MouseEvent) {
     this.snackBar.dismiss();
   }
+
+
+  openHelpModal(): void {
+    this.dialog.open(InstruccionesComponent, {
+      width: '500px',
+      height:'600px',
+    });
+  }
+
+
 }

@@ -9,6 +9,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TarifaComponent } from './tarifa/tarifa.component';
 import { MapService } from 'src/app/services/map.service';
+import { InstruccionesComponent } from 'src/app/instrucciones/instrucciones.component';
+import { MatDialog } from '@angular/material/dialog'; 
 
 @Component({
   selector: 'app-paso2',
@@ -28,7 +30,8 @@ export class Paso2Component implements OnInit {
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
-    private mapService: MapService
+    private mapService: MapService,
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -71,4 +74,14 @@ export class Paso2Component implements OnInit {
     clearTimeout(this.tooltipTimeout);
     this.snackBar.dismiss();
   }
+
+  openHelpModal(): void {
+    this.dialog.open(InstruccionesComponent, {
+      width: '500px',
+      height:'600px',
+    });
+  }
+
+
+
 }
