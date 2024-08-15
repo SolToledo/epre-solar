@@ -24,6 +24,7 @@ export class MapService {
 
   private panelWidthMeters = 1.045;
   private panelHeightMeters = 1.879;
+  polygonAux!: google.maps.Polygon;
 
   constructor(
     private locationService: LocationService,
@@ -187,6 +188,10 @@ export class MapService {
 
           const newPolygon = event.overlay as google.maps.Polygon;
           this.polygons.push(newPolygon);
+          if (!this.validateArea(newPolygon)) {
+            this.clearDrawing();
+            return;
+          }
 
           const path = newPolygon.getPath();
 
@@ -199,17 +204,22 @@ export class MapService {
           if (isLocationValid) {
             const area = google.maps.geometry.spherical.computeArea(path);
             this.areaSubject.next(area);
-            this.overlayCompleteSubject.next(true);
+
             // Listener para el evento set_at en el polígono
             google.maps.event.addListener(path, 'set_at', () => {
+              if (!this.validateArea(newPolygon)) {
+                return;
+              }
               newPolygon.setMap(this.map); // Muestra el polígono
-              this.clearPanels();
-              this.maxPanelsPerAreaSubject.next(0);
-              this.drawPanels(newPolygon);
-              const area = google.maps.geometry.spherical.computeArea(path);
-              this.areaSubject.next(area);
+              this.polygons[0] = newPolygon;
+              this.drawPanels(this.polygons[0]);
+              this.overlayCompleteSubject.next(true);
+              this.disableDrawingMode();
             });
+
             this.drawPanels(newPolygon);
+            this.overlayCompleteSubject.next(true);
+            this.disableDrawingMode();
             // Obtener el centro del polígono para recentrar el mapa
             const bounds = new google.maps.LatLngBounds();
             path.forEach((latLng) => bounds.extend(latLng));
@@ -232,6 +242,34 @@ export class MapService {
     );
   }
 
+  private validateArea(polygon: google.maps.Polygon): boolean {
+    const area = this.getPolygonArea(polygon);
+    const minArea = 7; // Área mínima para cuatro paneles
+    const maxArea = 100; // 100 metros cuadrados
+
+    if (area < minArea) {
+      this.snackBar.open(
+        'La selección es demasiado pequeña. El área seleccionada debe ser suficiente para al menos 4 paneles.',
+        'Cerrar',
+        { duration: 5000 }
+      );
+      this.overlayCompleteSubject.next(false);
+      return false;
+    }
+
+    if (area > maxArea) {
+      this.snackBar.open(
+        'La selección es demasiado grande. Por favor, seleccione un área menor a 100 metros cuadrados.',
+        'Cerrar',
+        { duration: 5000 }
+      );
+      this.overlayCompleteSubject.next(false);
+      return false;
+    }
+
+    return true;
+  }
+
   setDrawingMode(mode: google.maps.drawing.OverlayType | null) {
     if (!this.drawingManager) {
       this.initializeDrawingManager();
@@ -248,17 +286,18 @@ export class MapService {
   private drawPanels(
     polygon: google.maps.Polygon,
     maxPanels: number = Infinity,
-    reDraw: boolean = false
+    isReDraw: boolean = false
   ) {
+    const margin: number = 0.1;
     this.clearPanels();
-    const isReDraw = reDraw;
+
     const bounds = new google.maps.LatLngBounds();
     polygon.getPath().forEach((latLng) => {
       bounds.extend(latLng);
     });
 
-    const panelWidthMeters = 1.045; // Ancho en metros
-    const panelHeightMeters = 1.879; // Alto en metros
+    const panelWidthMeters = 1.045;
+    const panelHeightMeters = 1.879;
 
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getSouthWest();
@@ -273,89 +312,76 @@ export class MapService {
     const boundsWidth = Math.abs(northEast.lng() - southWest.lng());
     const boundsHeight = Math.abs(northEast.lat() - southWest.lat());
 
-    const numPanelsX = Math.floor(boundsWidth / panelWidthDegrees);
-    const numPanelsY = Math.floor(boundsHeight / panelHeightDegrees);
+    // Aplicar margen interno
+    const adjustedBoundsWidth = boundsWidth * (1 - margin);
+    const adjustedBoundsHeight = boundsHeight * (1 - margin);
+
+    const numPanelsX = Math.floor(adjustedBoundsWidth / panelWidthDegrees);
+    const numPanelsY = Math.floor(adjustedBoundsHeight / panelHeightDegrees);
 
     const offsetX = (boundsWidth - numPanelsX * panelWidthDegrees) / 2;
     const offsetY = (boundsHeight - numPanelsY * panelHeightDegrees) / 2;
 
-    const panels: google.maps.Rectangle[] = [];
-    let totalPanels = 0;
+    // 9% reducción de área
+    const areaReducida = this.getPolygonArea(polygon) * 0.9;
+    this.areaSubject.next(areaReducida);
+    const maxPanelsEfectivos = Math.floor(areaReducida / this.panelArea);
 
-    for (let i = 0; i < numPanelsX && totalPanels < maxPanels; i++) {
-      for (let j = 0; j < numPanelsY && totalPanels < maxPanels; j++) {
-        const panelBounds = new google.maps.LatLngBounds(
-          {
-            lat: southWest.lat() + offsetY + j * panelHeightDegrees,
-            lng: southWest.lng() + offsetX + i * panelWidthDegrees,
-          },
-          {
-            lat: southWest.lat() + offsetY + (j + 1) * panelHeightDegrees,
-            lng: southWest.lng() + offsetX + (i + 1) * panelWidthDegrees,
-          }
+    let totalPanels = 0;
+    const max = isReDraw ? maxPanels : maxPanelsEfectivos;
+
+    for (let i = 0; i < numPanelsX && totalPanels < max; i++) {
+      for (let j = 0; j < numPanelsY && totalPanels < max; j++) {
+        const southWestCorner = new google.maps.LatLng(
+          southWest.lat() + offsetY + j * panelHeightDegrees,
+          southWest.lng() + offsetX + i * panelWidthDegrees
+        );
+        const northEastCorner = new google.maps.LatLng(
+          southWest.lat() + offsetY + (j + 1) * panelHeightDegrees,
+          southWest.lng() + offsetX + (i + 1) * panelWidthDegrees
         );
 
-        // Asegurarse de que el rectángulo esté dentro de los límites del polígono
-        if (
-          bounds.contains(panelBounds.getNorthEast()) &&
-          bounds.contains(panelBounds.getSouthWest())
-        ) {
+        // Verificar si las 4 esquinas del panel están dentro del polígono
+        const corners = [
+          southWestCorner,
+          new google.maps.LatLng(southWestCorner.lat(), northEastCorner.lng()),
+          northEastCorner,
+          new google.maps.LatLng(northEastCorner.lat(), southWestCorner.lng()),
+        ];
+
+        const allCornersInside = corners.every((corner) =>
+          google.maps.geometry.poly.containsLocation(corner, polygon)
+        );
+
+        if (allCornersInside) {
           const panelRectangle = new google.maps.Rectangle({
-            bounds: panelBounds,
+            bounds: new google.maps.LatLngBounds(
+              southWestCorner,
+              northEastCorner
+            ),
             fillColor: '#000000',
             fillOpacity: 0.7,
             strokeColor: '#FFFFFF',
             strokeWeight: 0.5,
             map: this.map,
-            zIndex: 1,
           });
-          panels.push(panelRectangle);
+
+          this.panels.push(panelRectangle);
           totalPanels++;
         }
       }
     }
 
-    this.panels = panels;
-    
-    this.clipPanelsToPolygon(polygon, panels, isReDraw);
-  }
-
-  clipPanelsToPolygon(
-    polygon: google.maps.Polygon,
-    panels: google.maps.Rectangle[],
-    isReDraw: boolean
-  ) {
-    panels.forEach((panel) => {
-      const panelBounds = panel.getBounds();
-      const northEast = panelBounds!.getNorthEast();
-      const southWest = panelBounds!.getSouthWest();
-
-      const vertices = [
-        northEast,
-        new google.maps.LatLng(northEast.lat(), southWest.lng()),
-        southWest,
-        new google.maps.LatLng(southWest.lat(), northEast.lng()),
-      ];
-
-      const inside = vertices.every((vertex) =>
-        google.maps.geometry.poly.containsLocation(vertex, polygon)
-      );
-
-      if (!inside) {
-        panel.setMap(null);
-      }
-    });
-    const clippedPanelsCount = panels.filter(
-      (panel) => panel.getMap() !== null
-    ).length;
-
     if (!isReDraw) {
-      this.maxPanelsPerAreaSubject.next(clippedPanelsCount);
+      this.maxPanelsPerAreaSubject.next(totalPanels);
     }
-    this.sharedService.setPanelsCountSelected(this.panels.length);
   }
 
   reDrawPanels(panelesCantidad: number) {
+    if (!this.validateArea(this.getPolygons()[0])) {
+      this.clearDrawing();
+      return;
+    }
     this.drawPanels(this.getPolygons()[0], panelesCantidad, true);
   }
 
@@ -375,21 +401,15 @@ export class MapService {
     return null;
   }
 
-  getPolygonArea(): number {
+  getPolygonArea(polygon?: google.maps.Polygon): number {
     if (this.polygons.length > 0) {
-      const path = this.polygons[0].getPath();
+      const path = polygon?.getPath() ?? this.getPolygons()[0].getPath();
       const area = google.maps.geometry.spherical.computeArea(path);
-      this.areaSubject.next(area);
+
       return area;
     }
     this.areaSubject.next(0);
     return 0;
-  }
-
-  getMaxPanelsPerArea(): number {
-    const maxPanels = Math.floor(this.getPolygonArea() / this.panelArea);
-    this.maxPanelsPerAreaSubject.next(maxPanels);
-    return maxPanels;
   }
 
   get panelArea(): number {
