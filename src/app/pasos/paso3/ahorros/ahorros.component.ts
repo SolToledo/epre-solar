@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AhorrosComponent {
 
+    ahorrosUsd: number = 0;
 }

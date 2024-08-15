@@ -30,18 +30,20 @@ export class SolarApiService {
   ) {}
 
   async calculate(): Promise<any> {
+    
     try {
       const polygonCoordinates = this.mapService.getPolygonCoordinates();
       const polygonArea = this.mapService.getPolygonArea();
       const categoriaSeleccionada = this.sharedService.getTarifaContratada();
 
       this.consumoService.totalConsumo$.subscribe({
-        next: value => this.annualConsumption = value,
+        next: (value) => (this.annualConsumption = value),
       });
-      
-      this.panelsSupportedSubscription = this.mapService.maxPanelsPerArea$.subscribe({
-        next: value => this.panelsSupported = value
-      })
+
+      this.panelsSupportedSubscription =
+        this.mapService.maxPanelsPerArea$.subscribe({
+          next: (value) => (this.panelsSupported = value),
+        });
       // Verifica los datos y muestra mensajes específicos
       const missingFields = [];
       if (!this.annualConsumption) missingFields.push('Consumo anual');
@@ -55,14 +57,14 @@ export class SolarApiService {
           `Faltan los siguientes datos: ${missingFields.join(', ')}`,
           'Cerrar',
           {
-            duration: 5000,
+            duration: 2000,
           }
         );
-        
+
         setTimeout(() => {
-      //   this.router.navigate(['/pasos/1']);
-        }, 5000);
-        return; 
+         /* this.router.navigate(['/pasos/1']);*/
+        }, 2000);
+        return;
       }
 
       const datosCalculo = {

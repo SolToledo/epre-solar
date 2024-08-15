@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class CoberturaComponent {
   @Input()
-  TIR: number = 0;
+  proporcionAutoconsumo: number = 80;
 }

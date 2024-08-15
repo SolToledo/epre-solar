@@ -20,6 +20,7 @@ export class Paso2Component implements OnInit {
   allFieldsFilled: boolean = false;
   tarifaContratada: string = '';
   isCategorySelected: boolean = false;
+  private tooltipTimeout: any;
 
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
   @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent;
@@ -52,19 +53,22 @@ export class Paso2Component implements OnInit {
   }
 
   showTooltip() {
-    if (!this.allFieldsFilled || !this.isCategorySelected) {
-      this.snackBar.open(
-        'Debe ingresar todos los meses para poder continuar.',
-        '',
-        {
-          duration: 2000,
-          panelClass: ['custom-snackbar'],
-        }
-      );
-    }
+    this.tooltipTimeout = setTimeout(() => {
+      if (!this.allFieldsFilled || !this.isCategorySelected) {
+        this.snackBar.open(
+          'Debe ingresar todos los meses para poder continuar.',
+          '',
+          {
+            duration: 3000,
+            panelClass: ['custom-snackbar'],
+          }
+        );
+      }
+    }, 700); 
   }
 
   hideTooltip() {
+    clearTimeout(this.tooltipTimeout);
     this.snackBar.dismiss();
   }
 }

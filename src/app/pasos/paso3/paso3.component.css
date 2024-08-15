@@ -223,25 +223,7 @@
 }
 
 /********************************************/
-/* Estilo para el contenedor del spinner */
-.spinner-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(51, 51, 51, 0.8); /* Fondo semi-transparente */
-  z-index: 9999; /* Asegurarse de que esté al frente de otros componentes */
-}
 
-/* Estilo opcional para el propio spinner */
-.spinner {
-  color: #fff; /* Color del spinner */
-  z-index: 10000; /* Asegurarse de que esté al frente del fondo semi-transparente */
-}
 /**********************************************************/
 /* Estilos para resoluciones mayores a 1366px */
 @media only screen and (min-width: 1367px) {

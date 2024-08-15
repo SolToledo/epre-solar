@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
+import { SharedService } from 'src/app/services/shared.service';
 @Component({
   selector: 'app-paso0',
   templateUrl: './paso0.component.html',
@@ -11,11 +12,11 @@ export class Paso0Component implements OnInit {
   showModal: boolean = false;
   isTermsAccepted: boolean = false;
 
-  constructor(private router: Router, private snackBar: MatSnackBar) {}
+  constructor(private router: Router, private snackBar: MatSnackBar, private sharedService: SharedService) {}
 
   ngOnInit(): void {
     const driverObj = driver({
-      showProgress: true,
+      showProgress: false,
       steps: [
         {
           element: '#titulo',
@@ -98,12 +99,13 @@ export class Paso0Component implements OnInit {
         '<span class="material-icons">notifications</span> Debe aceptar los términos y condiciones para continuar.',
         '',
         {
-          duration: 3000,
+          duration: 10000,
           panelClass: ['custom-snackbar'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
+          horizontalPosition: 'center', 
+          verticalPosition: 'top', 
         }
       );
+      
     }
   }
 

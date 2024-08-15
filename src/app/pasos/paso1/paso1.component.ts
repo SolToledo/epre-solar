@@ -71,7 +71,7 @@ export class Paso1Component implements OnInit {
 
   showTutorial() {
     const driverObj = driver({
-      showProgress: true,
+      showProgress:false,
       steps: [
         {
           element: '#sub-titulo',
@@ -149,7 +149,7 @@ export class Paso1Component implements OnInit {
         'Debe seleccionar una zona de instalación para continuar.',
         '',
         {
-          duration: 3000,
+          duration: 5000,
           panelClass: ['custom-snackbar'],
         }
       );
@@ -189,7 +189,7 @@ export class Paso1Component implements OnInit {
         'Debe seleccionar una zona de instalación para continuar.',
         '',
         {
-          duration: 2000,
+          duration: 5000,
           panelClass: ['custom-snackbar'],
         }
       );
@@ -209,7 +209,7 @@ export class Paso1Component implements OnInit {
         `El área seleccionada es demasiado pequeña. Debe ser mayor a ${minimumAreaThreshold} m².`,
         '',
         {
-          duration: 2000,
+          duration: 5000,
           panelClass: ['custom-snackbar'],
         }
       );
@@ -222,7 +222,7 @@ export class Paso1Component implements OnInit {
         `El área seleccionada es demasiado grande. Debe ser menor a ${maximunAreaThreshold} m².`,
         '',
         {
-          duration: 2000,
+          duration: 5000,
           panelClass: ['custom-snackbar'],
         }
       );
@@ -241,6 +241,11 @@ export class Paso1Component implements OnInit {
   private async initializeAutocomplete() {
     const input = document.getElementById('pac-input') as HTMLInputElement;
     const searchBox = new google.maps.places.SearchBox(input);
+    
+    // Restricciones geográficas (ejemplo: limitar a Argentina)
+    new google.maps.places.Autocomplete(input, {
+      componentRestrictions: { country: 'ar' },
+    });
 
     this.map.addListener('bounds_changed', () => {
       searchBox.setBounds(this.map.getBounds() as google.maps.LatLngBounds);
@@ -250,10 +255,6 @@ export class Paso1Component implements OnInit {
       const places = searchBox.getPlaces();
 
       if (places && places.length > 0) {
-        if (places.length == 0) {
-          return;
-        }
-
         const place = places[0];
         if (place.geometry && place.geometry.location) {
           if (this.marker) {

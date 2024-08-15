@@ -8,8 +8,8 @@ import { SharedService } from 'src/app/services/shared.service';
 import { ResultadosFrontDTO } from '../../interfaces/resultados-front-dto';
 import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 import { MapService } from 'src/app/services/map.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import jsPDF from 'jspdf';
+import { CalculatePredefinedCoordService } from 'src/app/services/calculate-predefined-coord.service';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -20,7 +20,6 @@ export class Paso3Component implements OnInit {
   currentStep: number = 3;
   mostrarModal: boolean = false;
   private resultadosFront!: ResultadosFrontDTO;
-  plazoRecuperoInversion: number = 0;
   panelesCantidad: number = 0;
   dimensionPanel: DimensionPanel = { height: 0, width: 0 };
   panelCapacityW: number = 0;
@@ -28,8 +27,15 @@ export class Paso3Component implements OnInit {
   map: any;
   maxPanelsCount!: number;
   private polygons!: any[];
-  isLoading: boolean = false;
+  isLoading!: boolean;
   instalacionPotencia: number = 0;
+  isPredefinedCoordinates = this.sharedService.predefinedCoordinates$.subscribe(
+    {
+      next: (value) => value,
+    }
+  );
+  yearlyEnergyAcKwh: number = 0;
+  proporcionAutoconsumo: number = 0;
 
   constructor(
     private router: Router,
@@ -38,42 +44,56 @@ export class Paso3Component implements OnInit {
     private solarService: SolarApiService,
     private sharedService: SharedService,
     private mapService: MapService,
-    private spinner: NgxSpinnerService
-  ) {}
+    private calculateService: CalculatePredefinedCoordService
+  ) {
+    this.sharedService.isLoading$.subscribe({
+      next: (value) => (this.isLoading = value),
+    });
+  }
   ngOnInit(): void {
-    // this.spinner.show();
+    this.sharedService.setIsLoading(true);
+
     setTimeout(() => {
       this.mapService.recenterMapToVisibleArea();
-    }, 300); 
+    }, 300);
 
-    this.solarService
-      .calculate()
-      .then((resultados) => (this.resultadosFront = resultados))
-      .then(() => {
-        this.plazoRecuperoInversion = 
-          this.resultadosFront.resultadosFinancieros.indicadoresFinancieros.payBackSimpleYears * 12;
-        console.log(this.plazoRecuperoInversion);
-        
-        this.panelesCantidad =
-          this.resultadosFront.solarData.panels.maxPanelsPerSuperface;
-        this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
-        this.panelCapacityW =
-          this.resultadosFront.solarData.panels.panelCapacityW;
-        this.carbonOffsetFactorTnPerMWh = parseFloat(
-          (
-            this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000
-          ).toFixed(3)
-        );
-        
-        this.instalacionPotencia = this.resultadosFront.solarData.panels.maxPanelsPerSuperface * this.resultadosFront.solarData.panels.panelCapacityW;
-      })
-      .catch(error =>  console.error('Error en calculate:', error))
-      .finally(() => {
-        // this.spinner.hide();
-        this.isLoading = false;
-        console.log(this.resultadosFront);
-        
-      });
+    if (!this.sharedService.getNearbyLocation()) {
+      this.solarService
+        .calculate()
+        .then((resultados) => (this.resultadosFront = resultados))
+        .then(() => this.initialLoadFields())
+        .catch((error) => console.error('Error en calculate:', error))
+        .finally(() => {
+          this.sharedService.setIsLoading(false);
+          console.log(this.resultadosFront);
+        });
+    } else {
+      /* this.calculateService
+        .calculateWithPredefinedCoord()
+        .then((resultados: ResultadosFrontDTO) => (this.resultadosFront = resultados))
+        .then(() => this.initialLoadFields())
+        .catch()
+        .finally(); */
+    }
+  }
+  private initialLoadFields(): void {
+    this.panelesCantidad =
+      this.resultadosFront.solarData.panels.maxPanelsPerSuperface;
+    this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
+    this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
+    this.carbonOffsetFactorTnPerMWh = parseFloat(
+      (
+        this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000
+      ).toFixed(3)
+    );
+    this.proporcionAutoconsumo = 85;
+    this.yearlyEnergyAcKwh = parseFloat(
+      this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(2)
+    );
+    this.sharedService.setPlazoInversion(
+      this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
+        .payBackSimpleYears * 12
+    );
   }
 
   print(): void {
@@ -122,7 +142,7 @@ export class Paso3Component implements OnInit {
     this.mapService.clearPanels();
     this.mapService.clearPolygons();
     this.router.navigate(['/pasos/1']).then(() => {
-      this.sharedService.setTutorialShown(true);
+      this.sharedService.setTutorialShown(false);
     });
   }
 

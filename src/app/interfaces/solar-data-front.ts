@@ -11,5 +11,5 @@ export interface SolarDataFront {
         maxPanelsPerSuperface: number
     },
     tarifaCategory: string,
-    yearlyEnergyDcKwh: number
+    yearlyEnergyAcKwh: number
 }

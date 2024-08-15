@@ -30,7 +30,10 @@
             <app-plazo></app-plazo>
           </div>
           <div class="item">
-            <app-paneles [dimensionPanel]="dimensionPanel" [panelCapacityW]="panelCapacityW"></app-paneles>
+            <app-paneles
+              [dimensionPanel]="dimensionPanel"
+              [panelCapacityW]="panelCapacityW"
+            ></app-paneles>
           </div>
           <div class="item">
             <app-potencia></app-potencia>
@@ -39,10 +42,14 @@
           <div class="item"><app-cobertura></app-cobertura></div>
           <div class="item"><app-energia></app-energia></div>
           <div class="item">
-            <app-emisiones [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"></app-emisiones>
+            <app-emisiones
+              [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"
+            ></app-emisiones>
           </div>
           <div class="item"><app-costo></app-costo></div>
-          <div class="item"><app-tarifa-intercambio></app-tarifa-intercambio></div>
+          <div class="item">
+            <app-tarifa-intercambio></app-tarifa-intercambio>
+          </div>
         </div>
 
         <div class="container-graficos">
@@ -52,34 +59,40 @@
           <div class="item-grafico"><app-graficos></app-graficos></div>
         </div>
 
-        <app-graficos [periodoVeinteanalEmisionesGEIEvitadas]="getEmisionesGEIEvitadas()"
+        <app-graficos
+          [periodoVeinteanalEmisionesGEIEvitadas]="getEmisionesGEIEvitadas()"
           [periodoVeinteanalFlujoEnergia]="getFlujoEnergia()"
-          [periodoVeinteanalFlujoIngresosMonetarios]="getFlujoIngresosMonetarios()"
-          [periodoVeinteanalGeneracionFotovoltaica]="getGeneracionFotovoltaica()">
+          [periodoVeinteanalFlujoIngresosMonetarios]="
+            getFlujoIngresosMonetarios()
+          "
+          [periodoVeinteanalGeneracionFotovoltaica]="
+            getGeneracionFotovoltaica()
+          "
+        >
         </app-graficos>
-      
 
-
-      <div class="button-container">
-        <div class="boton">
-          <button id="boton-volver" (click)="goBack()">
-            <span class="material-icons">chevron_left</span> Volver
-          </button>
-          <br/>
-          <button id="boton-siguiente" (click)="mostrarAdvertencia()">
-            Nuevo cálculo
-            <span class="material-icons">chevron_right</span>
-          </button>
+        <div class="button-container">
+          <div class="boton">
+            <button id="boton-volver" (click)="goBack()">
+              <span class="material-icons">chevron_left</span> Volver
+            </button>
+            <br />
+            <button id="boton-siguiente" (click)="mostrarAdvertencia()">
+              Nuevo cálculo
+              <span class="material-icons">chevron_right</span>
+            </button>
+          </div>
         </div>
       </div>
-    </div><!--aca-->
+      <!--aca-->
     </div>
   </div>
 
   <div class="modal" [ngClass]="{ mostrar: mostrarModal }">
     <div class="modal-contenido">
       <p>
-        ¿Estás seguro de que deseas salir? Cualquier información no guardada se perderá.
+        ¿Estás seguro de que deseas salir? Cualquier información no guardada se
+        perderá.
       </p>
       <div class="botones-modal">
         <button id="boton-volver" (click)="cancelarSalir()">Cancelar</button>

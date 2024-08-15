@@ -8,5 +8,5 @@ import { Component, Input } from '@angular/core';
 export class CostoComponent {
 
   @Input()
-  costoInstalacion: number = 0;
+  costoInstalacion: number = 3500;
 }
