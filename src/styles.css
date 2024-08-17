@@ -53,7 +53,7 @@ h5 {
 /*VARIABLES*/
 :root {
   --mdc-snackbar-container-color: #cba258;
-  --mdc-snackbar-color: #e4370c;
+  --mdc-snackbar-color: black;
 }
 
 /*************************************************************************/
@@ -61,14 +61,13 @@ h5 {
 .mat-mdc-snack-bar-container {
   --mdc-snackbar-container-color: var(--light-background)!important;
   --mdc-snackbar-supporting-text-color: var(--font-light)!important;
-  --mat-snack-bar-button-color: #ff4081;
+  --mat-snack-bar-button-color: black!important;
 }
 
 .mat-snack-bar-container.custom-snackbar {
   font-weight: bold !important;
 }
 /************************************************************************/
-
 /* General */
 .content {
   background-color: white;
@@ -113,7 +112,7 @@ h5 {
 /*span*/
 #span-general {
   color: var(--medium-green);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;

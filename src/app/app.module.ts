@@ -44,7 +44,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { PlazoComponent } from './pasos/paso3/plazo/plazo.component';
 import { PotenciaComponent } from './pasos/paso3/potencia/potencia.component';
 import { SuperficieComponent } from './pasos/paso3/superficie/superficie.component';
-import { CoberturaComponent } from './pasos/paso3/cobertura/cobertura.component';
 import { EmisionesComponent } from './pasos/paso3/emisiones/emisiones.component';
 import { CostoComponent } from './pasos/paso3/costo/costo.component';
 import { TarifaIntercambioComponent } from './pasos/paso3/tarifa-intercambio/tarifa-intercambio.component';
@@ -88,7 +87,6 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     PlazoComponent,
     PotenciaComponent,
     SuperficieComponent,
-    CoberturaComponent,
     EmisionesComponent,
     CostoComponent,
     TarifaIntercambioComponent,

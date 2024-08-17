@@ -154,7 +154,6 @@ export class Paso0Component implements OnInit, AfterViewInit {
   openHelpModal(): void {
     this.dialog.open(InstruccionesComponent, {
       width: '500px',
-      height: '600px',
     });
   }
 }

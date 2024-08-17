@@ -1,11 +1,12 @@
 /* Estilos generales */
 body {
     font-family: 'sodo sans', sans-serif;
-    background-color: #f4f4f4;
+    background-color: white;
     color: #333;
     margin: 0;
     padding: 20px;
     line-height: 1.6;
+    border-radius: 8px;
 }
 /**********************************/
 /*COLORES*/
@@ -21,6 +22,26 @@ body {
     --bordes: #a9b8ad;
   }
 /************************************/
+.modal-content {
+    position: relative;
+    padding-top: 30px; /* Añade un padding para asegurar que el contenido no se solape con la "X" */
+    border-radius: 8px; /* Opcional: para darle bordes redondeados al modal */
+}
+
+.close-button {
+    position: absolute;
+    top:1px; /* Ajusta este valor para mover la "X" más arriba o más abajo */
+    right: 1px; /* Ajusta este valor para mover la "X" más a la derecha o más a la izquierda */
+    background-color: transparent;
+    border: none;
+    font-size: 2em;
+    color: var(--dark-green);
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: var(--medium-green);
+}
 
 /* Título principal */
 .tutorial-title {
@@ -30,6 +51,13 @@ body {
     margin-bottom: 20px;
     font-weight: bold;
 }
+
+.instrucciones-content {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 5px 0;
+    padding: 5px;
+  }
 
 /* Subtítulos */
 .tutorial-subtitle {
@@ -88,40 +116,24 @@ body {
 }
 
 /********************************/
-/*scroll*/
-/* Aplica el estilo al contenedor del contenido del modal */
-.mat-dialog-content {
-    max-height: 90%; /* Ajusta esta altura según lo que necesites */
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #007BFF #e9f5ff;
-}
-
-/* Estilo para navegadores basados en WebKit (Chrome, Safari) */
-.mat-dialog-content::-webkit-scrollbar {
+/* Estilos personalizados para el scroll */
+.content-scroll::-webkit-scrollbar {
     width: 8px;
-}
-
-.mat-dialog-content::-webkit-scrollbar-thumb {
-    background-color: #007BFF;
-    border-radius: 10px;
-}
-
-.mat-dialog-content::-webkit-scrollbar-track {
-    background-color: #e9f5ff;
-}
-
-/* Estilo para Firefox */
-.mat-dialog-content {
-    scrollbar-width: thin;
-    scrollbar-color: #007BFF #e9f5ff;
-}
-
-
-
-
-
-
+  }
+  
+  .content-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .content-scroll::-webkit-scrollbar-thumb {
+    background: #b8b6b6;
+    border-radius: 4px;
+  }
+  
+  .content-scroll::-webkit-scrollbar-thumb:hover {
+    /*background: #555;*/
+    background: var(--dark-green);
+  }
 
 
 /* Estilos responsivos */

@@ -31,7 +31,7 @@
     width: 100%;
     height: 100%;
     max-height: 100%;
-   margin-top: 10px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 11px;
@@ -40,24 +40,7 @@
     padding:5px;
   }
   /***********************************************************************/
-   /* Estilos para personalizar la barra de desplazamiento vertical */
-   .informacion::-webkit-scrollbar {
-    width: 8px; /* Ancho de la barra de desplazamiento vertical */
-  }
-  
-  .informacion::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Color de fondo del track */
-  }
-  
-  .informacion::-webkit-scrollbar-thumb {
-    background: #b8b6b6; /* Color de la barra de desplazamiento */
-    border-radius: 4px; /* Redondear los bordes de la barra */
-  }
-  
-  .informacion::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Color de la barra de desplazamiento al pasar el cursor */
-  }
-  
+
 /*cards*/
 :root {
   --gris: #edebe9;
@@ -87,6 +70,7 @@
 .item-grafico{
   min-width:300px;
   min-height: 120px;
+  border-radius: 8px;
 }
   /*------------------------------------------------*/
   /* Estilos para personalizar la barra de desplazamiento vertical */
