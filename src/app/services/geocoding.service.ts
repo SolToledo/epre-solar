@@ -33,28 +33,4 @@ export class GeocodingService {
       });
     });
   }
-
-  /* initializeAutocomplete(
-    inputElement: HTMLInputElement,
-    map: google.maps.Map,
-    marker: google.maps.marker.AdvancedMarkerElement
-  ) {
-    const searchBox = new google.maps.places.SearchBox(inputElement);
-
-    map.addListener('bounds_changed', () => {
-      searchBox.setBounds(map.getBounds() as google.maps.LatLngBounds);
-    });
-
-    searchBox.addListener('places_changed', () => {
-      const places = searchBox.getPlaces();
-      if (places && places.length > 0) {
-        const place = places[0];
-        if (place.geometry && place.geometry.location) {
-          const location = place.geometry.location;
-          map.setCenter(location);
-          marker.position = location.toJSON();
-        }
-      }
-    });
-  } */
 }

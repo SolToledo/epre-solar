@@ -12,7 +12,8 @@ export class MapService {
   private map!: google.maps.Map;
   private drawingManager!: google.maps.drawing.DrawingManager;
   private center: google.maps.LatLngLiteral = { lat: -31.5364, lng: -68.50639 };
-  private zoom = 22;
+  private zoomInicial = 14;
+  zoom: number = this.zoomInicial;
   private mapSubject = new Subject<google.maps.Map>();
   private polygons: google.maps.Polygon[] = [];
   private panels: google.maps.Rectangle[] = [];
@@ -40,7 +41,7 @@ export class MapService {
 
     this.map = new Map(mapElement, {
       center: this.center,
-      zoom: this.zoom,
+      zoom: this.zoomInicial,
       disableDefaultUI: false,
       zoomControl: false,
       mapTypeId: google.maps.MapTypeId.SATELLITE,
@@ -177,7 +178,7 @@ export class MapService {
       },
     });
     this.drawingManager.setMap(this.map);
-
+    this.map.setZoom(22);
     // Listener para overlaycomplete
     google.maps.event.addListener(
       this.drawingManager,
@@ -189,13 +190,14 @@ export class MapService {
 
           const newPolygon = event.overlay as google.maps.Polygon;
           this.polygons.push(newPolygon);
+
+          // Validar el área inicial
           if (!this.validateArea(newPolygon)) {
             this.clearDrawing();
             return;
           }
 
           const path = newPolygon.getPath();
-
           const isLocationValid = this.locationService.validatePolygonLocation(
             newPolygon,
             this.map
@@ -204,19 +206,37 @@ export class MapService {
           if (isLocationValid) {
             const area = google.maps.geometry.spherical.computeArea(path);
             this.areaSubject.next(area);
-
-            // Listener para el evento set_at en el polígono
-            google.maps.event.addListener(path, 'set_at', () => {
-              if (!this.validateArea(newPolygon)) {
+            
+            // Listener para el evento set_at en el polígono (cuando se edita)
+            const updatePolygonAfterEdit = () => {
+              const newPolygonEdit = event.overlay as google.maps.Polygon;
+              const updatedArea =
+                google.maps.geometry.spherical.computeArea(path);
+              if (this.validateArea(newPolygonEdit)) {
+                newPolygonEdit.setMap(this.map); // Asegura que el polígono editado se muestre
+                this.polygons[0] = newPolygonEdit;
+                this.drawPanels(newPolygonEdit);
+                this.overlayCompleteSubject.next(true);
+                this.disableDrawingMode();
                 return;
+              }else{
+                console.log("no es valido");
+                
               }
-              newPolygon.setMap(this.map); // Muestra el polígono
-              this.polygons[0] = newPolygon;
-              this.drawPanels(this.polygons[0]);
-              this.overlayCompleteSubject.next(true);
-              this.disableDrawingMode();
-            });
+            };
 
+            google.maps.event.addListener(
+              path,
+              'set_at',
+              updatePolygonAfterEdit
+            );
+            google.maps.event.addListener(
+              path,
+              'insert_at',
+              updatePolygonAfterEdit
+            );
+
+            // Dibuja los paneles 
             this.drawPanels(newPolygon);
             this.overlayCompleteSubject.next(true);
             this.disableDrawingMode();
@@ -225,8 +245,8 @@ export class MapService {
             path.forEach((latLng) => bounds.extend(latLng));
             const polygonCenter = bounds.getCenter();
 
-            // Llamar al método recenterMapAfterLocationSet con el centro del polígono
-            this.recenterMapAfterLocationSet(polygonCenter);
+            this.map.panTo(polygonCenter);
+            return;
           } else {
             this.snackBar.open(
               'La ubicación seleccionada se encuentra fuera de la Provincia de San Juan, no se puede procesar.',
@@ -251,7 +271,7 @@ export class MapService {
 
   private validateArea(polygon: google.maps.Polygon): boolean {
     const area = this.getPolygonArea(polygon);
-    const minArea = 7; // Área mínima para cuatro paneles
+    const minArea = 14.7; // Área mínima para cuatro paneles
     const maxArea = 500; // 500 metros cuadrados
 
     if (area < minArea) {
@@ -265,6 +285,7 @@ export class MapService {
         }
       );
       this.overlayCompleteSubject.next(false);
+      this.clearPanels();
       return false;
     }
 
@@ -311,9 +332,6 @@ export class MapService {
       bounds.extend(latLng);
     });
 
-    const panelWidthMeters = 1.045;
-    const panelHeightMeters = 1.879;
-
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getSouthWest();
 
@@ -322,8 +340,8 @@ export class MapService {
     const radiansLat = centerLat * (Math.PI / 180);
 
     const panelWidthDegrees =
-      panelWidthMeters / (111320 * Math.cos(radiansLat));
-    const panelHeightDegrees = panelHeightMeters / 110574;
+      this.panelWidthMeters / (111320 * Math.cos(radiansLat));
+    const panelHeightDegrees = this.panelHeightMeters / 110574;
     const boundsWidth = Math.abs(northEast.lng() - southWest.lng());
     const boundsHeight = Math.abs(northEast.lat() - southWest.lat());
 

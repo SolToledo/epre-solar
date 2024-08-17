@@ -354,7 +354,7 @@ export class LocationService {
           
           const selectedLatLng = new google.maps.LatLng(lat, lng);
           marker.position = selectedLatLng;
-          // map.setZoom(10);
+          map.setZoom(22);
           // map.setCenter(selectedLatLng);
           return selectedLatLng;
         } else {
@@ -412,13 +412,14 @@ export class LocationService {
           {
             duration: 6000,
             panelClass: ['custom-snackbar'],
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
           }
         );
         return nearbyLocation;
       } else {
         map.setZoom(22);
-        map.setCenter({ lat, lng });
-        
+        map.panTo({ lat, lng });
         return { lat, lng };
       }
     } else {

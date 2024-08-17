@@ -16,7 +16,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
   @ViewChild(MatSlider) slider!: MatSlider;
   private maxPanelsPerAreaSubscription!: Subscription;
   maxPanelsArea$: number = 0;
-  panelesCantidad: number = 0;
+  panelesCantidad: number = 4;
   private plazoInversionSubscription!: Subscription;
   plazoRecuperoInversion!: number;
   plazoRecuperoInversionValorInicial: number;
@@ -28,6 +28,8 @@ export class PanelesComponent implements OnInit, OnDestroy {
     this.maxPanelsPerAreaSubscription = this.mapService.maxPanelsPerArea$.subscribe({
       next: value => {
         this.maxPanelsArea$ = value
+        this.panelesCantidad = Math.max(4, Math.min(this.panelesCantidad, this.maxPanelsArea$));
+        this.sharedService.setPanelsCountSelected(this.panelesCantidad);
       }
     })
     this.panelesCantidad = this.maxPanelsArea$;
@@ -66,9 +68,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
   }
 
   onSliderChange() {
-    if (this.panelesCantidad > this.maxPanelsArea$) {
-      this.panelesCantidad = this.maxPanelsArea$; 
-    }
+    this.panelesCantidad = Math.max(4, Math.min(this.panelesCantidad, this.maxPanelsArea$));
     
     this.mapService.reDrawPanels(this.panelesCantidad);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);

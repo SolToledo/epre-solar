@@ -115,9 +115,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
 
   goToPaso1() {
     if (this.isTermsAccepted) {
-      this.router.navigate(['pasos/1']).then(()=>{
-        this.sharedService.setTutorialShown(false)
-      });
+      this.router.navigate(['pasos/1']);
     } else {
       this.showTooltip();
     }

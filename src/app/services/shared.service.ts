@@ -51,6 +51,10 @@ export class SharedService {
     this.isLoadingSubject.next(value);
   }
   setPanelsCountSelected(value: number): void {
+    if(value < 4){
+      this.panelsCountSelectedSubject.next(4);
+      return
+    }
     this.panelsCountSelectedSubject.next(value);
   }
 
