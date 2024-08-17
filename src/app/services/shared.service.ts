@@ -66,7 +66,7 @@ export class SharedService {
   }
 
   expandStep3(): void {
-    this.expandStep3Subject.next(true);
+    this.expandStep3Subject.next(false);
   }
 
   getPanelsSelected() {

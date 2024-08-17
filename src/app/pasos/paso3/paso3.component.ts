@@ -38,7 +38,7 @@ export class Paso3Component implements OnInit {
   );
   yearlyEnergyAcKwh: number = 0;
   proporcionAutoconsumo: number = 0;
-  
+
   constructor(
     private router: Router,
     private readonly gmailService: GmailService,
@@ -68,9 +68,7 @@ export class Paso3Component implements OnInit {
         .catch((error) => console.error('Error en calculate:', error))
         .finally(() => {
           this.sharedService.setIsLoading(false);
-          /* this.sharedService.expandStep3(); */
           
-          console.log(this.resultadosFront);
         });
     } else {
       this.snackBar.open(
@@ -107,6 +105,7 @@ export class Paso3Component implements OnInit {
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
         .payBackSimpleYears * 12
     );
+
   }
 
   print(): void {

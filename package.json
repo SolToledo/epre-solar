@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "start:all": "concurrently \"npm run start\" \"npm run backend\"",
+    "backend": "cd ../../solar-app-backend && npm run start:dev"
   },
   "private": true,
   "dependencies": {
@@ -49,6 +51,7 @@
     "@angular/cli": "^16.2.14",
     "@angular/compiler-cli": "^16.2.0",
     "@types/jasmine": "~4.3.0",
+    "concurrently": "^8.2.2",
     "css-loader": "^7.1.2",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",

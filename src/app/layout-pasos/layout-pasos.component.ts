@@ -5,7 +5,12 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { MapService } from '../services/map.service';
@@ -24,7 +29,7 @@ import { Paso3Component } from '../pasos/paso3/paso3.component';
     ]),
   ],
 })
-export class LayoutPasosComponent {
+export class LayoutPasosComponent implements OnInit, AfterViewInit {
   currentStep: number = 0;
   isPaso3: boolean = false;
   isCollapsed = false;
@@ -33,8 +38,22 @@ export class LayoutPasosComponent {
   constructor(
     private router: Router,
     private mapService: MapService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private cdr: ChangeDetectorRef
   ) {
+    this.sharedService.isLoading$.subscribe({
+      next: (value) => {
+        if (this.isLoading && !value) {
+          this.expandComponent();
+        }
+        this.isLoading = value;
+      },
+    });
+  }
+
+  ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -44,33 +63,28 @@ export class LayoutPasosComponent {
         this.isPaso3 = this.currentStep === 3;
 
         // Restablece isCollapsed cuando se navega a un nuevo paso
+
         this.isCollapsed = false;
         if (this.isPaso3) {
-          this.toggleCollapse();
+          this.isCollapsed = true;
         }
-        this.sharedService.isLoading$.subscribe({
-          next: (value) => {
-            this.isLoading = value
-          },
-        });
-        this.sharedService.expandStep3$.subscribe({
-          next: (expand) => {
-            if (expand) {
-              this.isCollapsed = false;
-              this.toggleCollapse();
-            }
-          },
-        });
+        this.cdr.detectChanges();
       });
   }
 
   toggleCollapse() {
     // Permitir colapsar y expandir cualquier paso
     this.isCollapsed = !this.isCollapsed;
+    this.cdr.detectChanges();
     if (this.mapService.getPolygons().length > 0) {
       setTimeout(() => {
         this.mapService.recenterMapToVisibleArea();
       }, 300);
     }
+  }
+
+  expandComponent() {
+    this.isCollapsed = false;
+    this.cdr.detectChanges();
   }
 }
