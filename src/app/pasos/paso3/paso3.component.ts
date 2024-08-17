@@ -10,6 +10,8 @@ import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 import { MapService } from 'src/app/services/map.service';
 import jsPDF from 'jspdf';
 import { CalculatePredefinedCoordService } from 'src/app/services/calculate-predefined-coord.service';
+import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
+import { ConsumoService } from 'src/app/services/consumo.service';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -36,7 +38,7 @@ export class Paso3Component implements OnInit {
   );
   yearlyEnergyAcKwh: number = 0;
   proporcionAutoconsumo: number = 0;
-
+  
   constructor(
     private router: Router,
     private readonly gmailService: GmailService,
@@ -44,20 +46,21 @@ export class Paso3Component implements OnInit {
     private solarService: SolarApiService,
     private sharedService: SharedService,
     private mapService: MapService,
-    private calculateService: CalculatePredefinedCoordService
+    private calculateService: CalculatePredefinedCoordService,
+    private consumoTarifaService: ConsumoTarifaService,
+    private consumoService: ConsumoService
   ) {
     this.sharedService.isLoading$.subscribe({
       next: (value) => (this.isLoading = value),
     });
   }
   ngOnInit(): void {
-    this.sharedService.setIsLoading(true);
-
     setTimeout(() => {
       this.mapService.recenterMapToVisibleArea();
     }, 300);
 
     if (!this.sharedService.getNearbyLocation()) {
+      this.sharedService.setIsLoading(true);
       this.solarService
         .calculate()
         .then((resultados) => (this.resultadosFront = resultados))
@@ -65,9 +68,19 @@ export class Paso3Component implements OnInit {
         .catch((error) => console.error('Error en calculate:', error))
         .finally(() => {
           this.sharedService.setIsLoading(false);
+          /* this.sharedService.expandStep3(); */
+          
           console.log(this.resultadosFront);
         });
     } else {
+      this.snackBar.open(
+        'Resultados calculados en base a uno de los 33 puntos.',
+        '',
+        {
+          duration: 5000,
+          panelClass: ['custom-snackbar'],
+        }
+      );
       /* this.calculateService
         .calculateWithPredefinedCoord()
         .then((resultados: ResultadosFrontDTO) => (this.resultadosFront = resultados))
@@ -141,8 +154,13 @@ export class Paso3Component implements OnInit {
     this.sharedService.setTarifaContratada('');
     this.mapService.clearPanels();
     this.mapService.clearPolygons();
+    this.mapService.disableDrawingMode();
+    this.mapService.hideDrawingControl();
+    this.mapService.clearDrawing();
+    this.consumoTarifaService.updateConsumosMensuales([]);
+    this.consumoService.setTotalConsumo(0);
     this.router.navigate(['/pasos/1']).then(() => {
-      this.sharedService.setTutorialShown(false);
+      this.sharedService.setTutorialShown(true);
     });
   }
 

@@ -1,25 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
 import { InstruccionesComponent } from 'src/app/instrucciones/instrucciones.component';
+import { MatDialog } from '@angular/material/dialog';
 import { SharedService } from 'src/app/services/shared.service';
-import { MatDialog } from '@angular/material/dialog'; 
-
 
 @Component({
   selector: 'app-paso0',
   templateUrl: './paso0.component.html',
   styleUrls: ['./paso0.component.css'],
 })
-export class Paso0Component implements OnInit {
+export class Paso0Component implements OnInit, AfterViewInit {
   showModal: boolean = false;
   isTermsAccepted: boolean = false;
+  driverObj: any;
+  tutorialShown: boolean = false;
 
-  constructor(private router: Router, private snackBar: MatSnackBar, private sharedService: SharedService,public dialog: MatDialog) {}
-
-  ngOnInit(): void {
-    const driverObj = driver({
+  constructor(
+    private router: Router,
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog,
+    private sharedService: SharedService
+  ) {
+    this.driverObj = driver({
       showProgress: false,
       steps: [
         {
@@ -30,9 +34,9 @@ export class Paso0Component implements OnInit {
               'Esta aplicación permite calcular los ahorros económicos y en emisiones, de la instalación de generación distribuida solar en hogares, comercios o industrias',
             side: 'left',
             align: 'start',
-            nextBtnText: 'Siguiente', 
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
         {
@@ -43,9 +47,9 @@ export class Paso0Component implements OnInit {
               'Debe indicarse el lugar donde se planea instalar los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
             side: 'left',
             align: 'start',
-            nextBtnText: 'Siguiente', 
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
         {
@@ -56,9 +60,9 @@ export class Paso0Component implements OnInit {
               'Deben seleccionarse la categoría del suministro eléctrico donde se quiere instalar equipamiento de Generación Distribuida, y consumos de electricidad registrados en los 12 últimos meses.',
             side: 'left',
             align: 'start',
-            nextBtnText: 'Siguiente', 
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
         {
@@ -69,9 +73,9 @@ export class Paso0Component implements OnInit {
               'En caso de no contar la misma, se considerarán los valores promedios de consumo para la categoría tarifaria del suministro.',
             side: 'left',
             align: 'start',
-            nextBtnText: 'Siguiente', 
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
         {
@@ -82,13 +86,27 @@ export class Paso0Component implements OnInit {
               'La aplicación proporciona una estimación económica de la inversión necesaria por la instalación de paneles fotovoltaicos y los ahorros obtenidos, incluyendo el plazo previsto de recupero de la inversión.',
             side: 'left',
             align: 'start',
-            prevBtnText: 'Anterior', 
-            doneBtnText: 'Terminar'
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
           },
         },
       ],
     });
-    driverObj.drive();
+  }
+
+  ngOnInit(): void {
+    this.sharedService.tutorialShown$.subscribe((shown) => {
+      this.tutorialShown = shown;
+    });
+
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.tutorialShown) {
+      setTimeout(() => {
+        this.driverObj.drive();
+      }, 50);
+    }
   }
 
   goBack() {
@@ -97,19 +115,11 @@ export class Paso0Component implements OnInit {
 
   goToPaso1() {
     if (this.isTermsAccepted) {
-      this.router.navigate(['pasos/1']);
+      this.router.navigate(['pasos/1']).then(()=>{
+        this.sharedService.setTutorialShown(false)
+      });
     } else {
-      this.snackBar.open(
-        '<span class="material-icons">notifications</span> Debe aceptar los términos y condiciones para continuar.',
-        '',
-        {
-          duration: 10000,
-          panelClass: ['custom-snackbar'],
-          horizontalPosition: 'center', 
-          verticalPosition: 'top', 
-        }
-      );
-      
+      this.showTooltip();
     }
   }
 
@@ -122,31 +132,29 @@ export class Paso0Component implements OnInit {
     this.isTermsAccepted = event;
   }
 
-  showTooltip(event: MouseEvent) {
+  showTooltip() {
     if (!this.isTermsAccepted) {
       this.snackBar.open(
         'Debe aceptar los términos y condiciones para continuar.',
         '',
         {
-          duration: 3000,
+          duration: 5000,
           panelClass: ['custom-snackbar'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
         }
       );
     }
-
   }
 
   hideTooltip(event: MouseEvent) {
     this.snackBar.dismiss();
   }
 
-
   openHelpModal(): void {
     this.dialog.open(InstruccionesComponent, {
       width: '500px',
-      height:'600px',
+      height: '600px',
     });
   }
-
-
 }

@@ -53,23 +53,18 @@
         </div>
 
         <div class="container-graficos">
-          <div class="item-grafico"><app-graficos></app-graficos></div>
-          <div class="item-grafico"><app-graficos></app-graficos></div>
-          <div class="item-grafico"><app-graficos></app-graficos></div>
-          <div class="item-grafico"><app-graficos></app-graficos></div>
+          <div class="item-grafico"><app-graficos
+            [periodoVeinteanalEmisionesGEIEvitadas]="getEmisionesGEIEvitadas()"
+            [periodoVeinteanalFlujoEnergia]="getFlujoEnergia()"
+            [periodoVeinteanalFlujoIngresosMonetarios]="
+              getFlujoIngresosMonetarios()
+            "
+            [periodoVeinteanalGeneracionFotovoltaica]="
+              getGeneracionFotovoltaica()
+            "
+          >
+          </app-graficos></div>
         </div>
-
-        <app-graficos
-          [periodoVeinteanalEmisionesGEIEvitadas]="getEmisionesGEIEvitadas()"
-          [periodoVeinteanalFlujoEnergia]="getFlujoEnergia()"
-          [periodoVeinteanalFlujoIngresosMonetarios]="
-            getFlujoIngresosMonetarios()
-          "
-          [periodoVeinteanalGeneracionFotovoltaica]="
-            getGeneracionFotovoltaica()
-          "
-        >
-        </app-graficos>
 
         <div class="button-container">
           <div class="boton">

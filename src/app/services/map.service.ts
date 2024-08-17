@@ -3,6 +3,7 @@ import { BehaviorSubject, combineLatest, map, Observable, Subject } from 'rxjs';
 import { LocationService } from './location.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedService } from './shared.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +42,7 @@ export class MapService {
       center: this.center,
       zoom: this.zoom,
       disableDefaultUI: false,
-      zoomControl: true,
+      zoomControl: false,
       mapTypeId: google.maps.MapTypeId.SATELLITE,
       mapTypeControl: false,
       zoomControlOptions: {
@@ -49,7 +50,7 @@ export class MapService {
       },
       fullscreenControl: false,
       streetViewControl: false,
-      rotateControl: true,
+      rotateControl: false,
       gestureHandling: 'cooperative',
       mapId: 'DEMO_MAP_ID',
     });
@@ -181,7 +182,7 @@ export class MapService {
     google.maps.event.addListener(
       this.drawingManager,
       'overlaycomplete',
-      async (event: any) => {
+      (event: any) => {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
           this.clearPolygons();
           this.clearPanels();
@@ -195,11 +196,10 @@ export class MapService {
 
           const path = newPolygon.getPath();
 
-          const isLocationValid =
-            await this.locationService.validatePolygonLocation(
-              newPolygon,
-              this.map
-            );
+          const isLocationValid = this.locationService.validatePolygonLocation(
+            newPolygon,
+            this.map
+          );
 
           if (isLocationValid) {
             const area = google.maps.geometry.spherical.computeArea(path);
@@ -229,13 +229,20 @@ export class MapService {
             this.recenterMapAfterLocationSet(polygonCenter);
           } else {
             this.snackBar.open(
-              'La ubicación ingresada no se puede procesar.',
+              'La ubicación seleccionada se encuentra fuera de la Provincia de San Juan, no se puede procesar.',
               '',
               {
                 duration: 3000,
                 panelClass: ['custom-snackbar'],
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
               }
             );
+            this.map.panTo(this.center);
+            this.map.setZoom(13);
+            this.clearDrawing();
+            this.areaSubject.next(0);
+            this.overlayCompleteSubject.next(false);
           }
         }
       }
@@ -245,13 +252,17 @@ export class MapService {
   private validateArea(polygon: google.maps.Polygon): boolean {
     const area = this.getPolygonArea(polygon);
     const minArea = 7; // Área mínima para cuatro paneles
-    const maxArea = 100; // 100 metros cuadrados
+    const maxArea = 500; // 500 metros cuadrados
 
     if (area < minArea) {
       this.snackBar.open(
         'La selección es demasiado pequeña. El área seleccionada debe ser suficiente para al menos 4 paneles.',
         'Cerrar',
-        { duration: 5000 }
+        {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        }
       );
       this.overlayCompleteSubject.next(false);
       return false;
@@ -259,14 +270,18 @@ export class MapService {
 
     if (area > maxArea) {
       this.snackBar.open(
-        'La selección es demasiado grande. Por favor, seleccione un área menor a 100 metros cuadrados.',
+        `La selección es demasiado grande. Por favor, reduzca la seleccion a un área menor a ${maxArea} m².`,
         'Cerrar',
-        { duration: 5000 }
+        {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        }
       );
       this.overlayCompleteSubject.next(false);
+      this.setDrawingMode(null);
       return false;
     }
-
     return true;
   }
 
@@ -374,6 +389,9 @@ export class MapService {
 
     if (!isReDraw) {
       this.maxPanelsPerAreaSubject.next(totalPanels);
+      if (this.sharedService.getPanelsSelected() > totalPanels) {
+        this.sharedService.setPanelsCountSelected(totalPanels);
+      }
     }
   }
 
@@ -404,7 +422,7 @@ export class MapService {
   getPolygonArea(polygon?: google.maps.Polygon): number {
     if (this.polygons.length > 0) {
       const path = polygon?.getPath() ?? this.getPolygons()[0].getPath();
-      const area = google.maps.geometry.spherical.computeArea(path);
+      const area = google.maps.geometry.spherical.computeArea(path!);
 
       return area;
     }

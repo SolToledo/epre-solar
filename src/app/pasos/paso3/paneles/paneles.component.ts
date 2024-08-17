@@ -26,7 +26,9 @@ export class PanelesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.maxPanelsPerAreaSubscription = this.mapService.maxPanelsPerArea$.subscribe({
-      next: value => this.maxPanelsArea$ = value
+      next: value => {
+        this.maxPanelsArea$ = value
+      }
     })
     this.panelesCantidad = this.maxPanelsArea$;
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
@@ -67,9 +69,11 @@ export class PanelesComponent implements OnInit, OnDestroy {
     if (this.panelesCantidad > this.maxPanelsArea$) {
       this.panelesCantidad = this.maxPanelsArea$; 
     }
-    this.sharedService.setPanelsCountSelected(this.panelesCantidad);
+    
     this.mapService.reDrawPanels(this.panelesCantidad);
+    this.sharedService.setPanelsCountSelected(this.panelesCantidad);
     this.updatePlazoInversion(this.panelesCantidad, this.maxPanelsArea$, this.plazoRecuperoInversionValorInicial);
+    
   }
 
   formatLabel(value: number): string {

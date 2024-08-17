@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class SolarApiService {
   private readonly apiUrl: string = 'http://localhost:3000';
+  // private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
   private _resultados!: ResultadosFrontDTO;
   annualConsumption: number = 0;
   private panelsSupportedSubscription!: Subscription;
@@ -57,13 +58,13 @@ export class SolarApiService {
           `Faltan los siguientes datos: ${missingFields.join(', ')}`,
           'Cerrar',
           {
-            duration: 2000,
+            duration: 5000,
           }
         );
 
         setTimeout(() => {
-         /* this.router.navigate(['/pasos/1']);*/
-        }, 2000);
+         this.router.navigate(['/pasos/1']);
+        }, 5000);
         return;
       }
 

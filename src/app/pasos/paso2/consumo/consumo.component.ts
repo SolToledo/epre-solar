@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MesesConsumo } from 'src/app/interfaces/mesesConsumo';
 import { ResultadoCalculo } from 'src/app/interfaces/resultado-calculo';
@@ -15,6 +15,8 @@ import { SolarApiService } from 'src/app/services/solar-api.service';
 export class ConsumoComponent implements OnInit {
   @Output() allFieldsCompleted = new EventEmitter<boolean>();
   allCompleted: boolean = false;
+  @Input() isDisabled: boolean = true;
+  @Input() isEditable: boolean = false;
 
   meses: MesesConsumo[] = [
     { numero: 1, consumo: null, completado: false },
@@ -33,8 +35,12 @@ export class ConsumoComponent implements OnInit {
   resultado: ResultadoCalculo | null = null;
   totalConsumo: number = 0;
   subscription: Subscription;
-  
-  constructor(private consumoService: ConsumoService, private solarApiService: SolarApiService, consumoTarifaService: ConsumoTarifaService, private sharedService: SharedService) {
+
+  constructor(
+    private consumoService: ConsumoService,
+    consumoTarifaService: ConsumoTarifaService,
+    private sharedService: SharedService
+  ) {
     this.subscription = consumoTarifaService.consumosMensuales$.subscribe(
       (consumos: number[]) => {
         this.updateConsumosMensuales(consumos);
@@ -44,7 +50,6 @@ export class ConsumoComponent implements OnInit {
 
   ngOnInit(): void {
     this.resetMesesConsumo();
-    this.focusFirstInput();
   }
 
   ngOnDestroy(): void {
@@ -75,7 +80,7 @@ export class ConsumoComponent implements OnInit {
   }
 
   esMesCompletado(mes: MesesConsumo): boolean {
-    return mes.consumo !== null; 
+    return mes.consumo !== null;
   }
 
   calcularTotalConsumo(): void {
@@ -85,30 +90,31 @@ export class ConsumoComponent implements OnInit {
     );
     this.consumoService.setTotalConsumo(totalConsumo);
     this.checkAllFieldsCompleted();
-    if(this.allCompleted) {
+    if (this.allCompleted) {
       this.consumoService.setTotalConsumo(totalConsumo);
     }
   }
 
   checkAllFieldsCompleted(): void {
-    this.allCompleted = this.meses.every(mes => mes.consumo !== null);
+    this.allCompleted = this.meses.every((mes) => mes.consumo !== null);
     this.allFieldsCompleted.emit(this.allCompleted);
-    if(this.allCompleted){
-      localStorage.setItem("meses", JSON.stringify(this.meses))
-    }
   }
-  
+
   onConsumoChange(): void {
-    this.meses.forEach(mes => {
-      if (mes.consumo&&mes.consumo < 0) {
-        mes.consumo = null; 
+    this.meses.forEach((mes) => {
+      if (mes.consumo && mes.consumo < 0) {
+        mes.consumo = null;
       }
     });
     this.calcularTotalConsumo();
   }
 
   preventInvalidInput(event: KeyboardEvent): void {
-    if (!/[0-9]/.test(event.key) && event.key !== 'Backspace' && event.key !== 'Tab') {
+    if (
+      !/[0-9]/.test(event.key) &&
+      event.key !== 'Backspace' &&
+      event.key !== 'Tab'
+    ) {
       event.preventDefault();
     }
   }
@@ -122,12 +128,22 @@ export class ConsumoComponent implements OnInit {
   }
 
   resetMesesConsumo(): void {
-    this.meses.forEach(mes => {
+    this.meses.forEach((mes) => {
       mes.consumo = null;
       mes.completado = false;
     });
     this.allCompleted = false;
     this.allFieldsCompleted.emit(this.allCompleted);
     this.sharedService.setTarifaContratada('');
+    this.calcularTotalConsumo();
+  }
+
+  clearPresetValues(): void {
+    this.meses.forEach((mes) => {
+      mes.consumo = null;
+      mes.completado = false;
+    });
+    this.allCompleted = false;
+    this.allFieldsCompleted.emit(this.allCompleted);
   }
 }

@@ -5,6 +5,8 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class SharedService {
+  
+  
   private tarifaContratada: string = '';
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
@@ -18,7 +20,9 @@ export class SharedService {
   private plazoInversionSubject = new BehaviorSubject<number>(0);
   plazoInversion$ = this.plazoInversionSubject.asObservable();
   private isUpdating = false;
-
+  private expandStep3Subject = new BehaviorSubject<boolean>(false);
+  expandStep3$ = this.expandStep3Subject.asObservable();
+  
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
   }
@@ -59,5 +63,13 @@ export class SharedService {
 
   getPlazoInversionValue(): number {
     return this.plazoInversionSubject.getValue();
+  }
+
+  expandStep3(): void {
+    this.expandStep3Subject.next(true);
+  }
+
+  getPanelsSelected() {
+    return this.panelsCountSelectedSubject.getValue();
   }
 }

@@ -324,7 +324,6 @@ export class LocationService {
         map,
         marker
       );
-      console.log(geocodeResult);
       
       if (geocodeResult) {
         const lat = geocodeResult.lat;
@@ -346,22 +345,22 @@ export class LocationService {
             predefinedLocation.lng
           );
           marker.position = predefinedLatLng;
-          map.setZoom(22);
-          map.setCenter(predefinedLatLng);
+          // map.setZoom(22);
+          // map.setCenter(predefinedLatLng);
           this.requestSavingsCalculation(predefinedLocation);
   
           return predefinedLatLng;
         } else if (this.isWithinSanJuan(lat, lng)) {
-          console.log("dentro de san juan y no toma cercanias ...")
+          
           const selectedLatLng = new google.maps.LatLng(lat, lng);
           marker.position = selectedLatLng;
-          map.setZoom(22);
-          map.setCenter(selectedLatLng);
+          // map.setZoom(10);
+          // map.setCenter(selectedLatLng);
           return selectedLatLng;
         } else {
           // Esta rama se ejecuta si la ubicación no está dentro de San Juan
           const defaultLocation = new google.maps.LatLng(-31.5364, -68.50639);
-          map.setZoom(13);
+          map.setZoom(14);
           map.setCenter(defaultLocation);
           this.snackBar.open(
             'El área seleccionada está fuera de la Provincia de San Juan.',
@@ -369,6 +368,8 @@ export class LocationService {
             {
               duration: 4000,
               panelClass: ['custom-snackbar'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
             }
           );
           return defaultLocation;
@@ -388,7 +389,7 @@ export class LocationService {
     return lat >= -31.878 && lat <= -30.175 && lng >= -69.192 && lng <= -66.879;
   }
   
-  async validatePolygonLocation(
+  validatePolygonLocation(
     polygon: google.maps.Polygon,
     map: google.maps.Map
   ) {
@@ -416,23 +417,22 @@ export class LocationService {
         return nearbyLocation;
       } else {
         map.setZoom(22);
-        /* map.setCenter({ lat, lng }); */
+        map.setCenter({ lat, lng });
         
         return { lat, lng };
       }
     } else {
-      const defaultLocation = { lat: -31.5364, lng: -68.50639 };
-      map.setZoom(13);
-      map.setCenter(defaultLocation);
       this.snackBar.open(
         'El área seleccionada está fuera de la Provincia de San Juan.',
         '',
         {
-          duration: 2000,
+          duration: 4000,
           panelClass: ['custom-snackbar'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
         }
       );
-      return defaultLocation;
+      return false; 
     }
   }
 

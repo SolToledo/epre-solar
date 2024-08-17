@@ -147,7 +147,7 @@ export class GraficosComponent implements OnInit {
         console.error('Failed to get 2D context');
       }
     } else {
-      console.error('Canvas element not found');
+      /* console.error('Canvas element not found'); */
     }
   }
 
@@ -204,7 +204,7 @@ export class GraficosComponent implements OnInit {
         console.error('Failed to get 2D context');
       }
     } else {
-      console.error('Canvas element not found');
+      /* console.error('Canvas element not found'); */
     }
   }
 }

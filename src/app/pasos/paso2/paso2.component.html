@@ -7,9 +7,7 @@
   </div>
 
   <div class="info-container">
-
     <div class="informacion">
-
       <div class="info-inicio">
         <div class="titulo-container">
           <div class="icono-inicio">
@@ -25,13 +23,17 @@
         </div>
 
         <div class="info-cargar">
-          <app-tarifa (isCategorySelected)="onCategorySelected($event)"></app-tarifa>
+          <app-tarifa
+            (isCategorySelected)="onCategorySelected($event)"
+          ></app-tarifa>
         </div>
 
         <div class="advertencia">
           <p id="recomendacion">
             Si necesita ayuda para encontrar esta información
-          <span id="span-general" (click)="openHelpModal()">haga click aquí.</span>
+            <span id="span-general" (click)="openHelpModal()"
+              >haga click aquí.</span
+            >
           </p>
         </div>
       </div>
@@ -47,76 +49,55 @@
               />
             </div>
             <div class="titulo-inicio">
-              <h2>CONSUMO ENERGÉTICO</h2> 
+              <h2>CONSUMO ENERGÉTICO</h2>
             </div>
-          </div><!--icono-titulo-->
-          
-          <div class="slide">
-            <mat-slide-toggle><p>Carga manual</p></mat-slide-toggle>
           </div>
-        </div><!--titulo-container-->
+          <!--icono-titulo-->
+
+          <div class="slide">
+            <mat-slide-toggle #manualToggle
+              ><p>Carga manual</p></mat-slide-toggle
+            >
+          </div>
+        </div>
+        <!--titulo-container-->
 
         <div class="info-cargar-consumo">
           <app-consumo
             (allFieldsCompleted)="onAllFieldsCompleted($event)"
+            [isDisabled]="isFieldsDisabled"
+            [isEditable]="isEditable"
           ></app-consumo>
-        </div><!--info-cargar-->
-  
+        </div>
+        <!--info-cargar-->
+
         <div class="total">
           <app-total></app-total>
         </div>
-        
-      </div><!--info-inicio-->
-
-    <div class="button-container">
-      <div class="boton">
-        <button id="boton-volver" (click)="goBack()">
-          <span class="material-icons">chevron_left</span> Volver
-        </button>
-        <br />
-        <button
-          id="boton-siguiente"
-          #botonSiguiente
-          (click)="goToPaso3()"
-          [disabled]="!isCategorySelected || !allFieldsFilled"
-          (mouseenter)="showTooltip()"
-        >
-          Realizar Cálculo <span class="material-icons">chevron_right</span>
-        </button>
       </div>
-    </div><!--button-container-->
+      <!--info-inicio-->
 
-  </div><!--informacion-->
-
-  </div><!--info-container-->
-
-</div><!--content-->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      <div class="button-container">
+        <div class="boton">
+          <button id="boton-volver" (click)="goBack()">
+            <span class="material-icons">chevron_left</span> Volver
+          </button>
+          <br />
+          <button
+            id="boton-siguiente"
+            #botonSiguiente
+            (click)="goToPaso3()"
+            [disabled]="!isCategorySelected || !allFieldsFilled"
+            (mouseenter)="showTooltip()"
+          >
+            Realizar Cálculo <span class="material-icons">chevron_right</span>
+          </button>
+        </div>
+      </div>
+      <!--button-container-->
+    </div>
+    <!--informacion-->
+  </div>
+  <!--info-container-->
+</div>
+<!--content-->
