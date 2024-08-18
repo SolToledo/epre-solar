@@ -16,12 +16,12 @@
         <mat-icon>{{ isCollapsed ? 'chevron_left' : 'chevron_right' }}</mat-icon>
       </div>
       <div [@menuCollapsed]="isCollapsed ? 'expand' : 'collapsed'">
-        <ng-container *ngIf="currentStep > 0; else informacion">
+        <ng-container>
           <router-outlet></router-outlet>
         </ng-container>
-        <ng-template #informacion>
+        <!-- <ng-template #informacion>
           <app-paso0></app-paso0>
-        </ng-template>
+        </ng-template> -->
       </div>
     </div>
   </div>

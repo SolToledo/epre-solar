@@ -9,7 +9,6 @@ import { ResultadosFrontDTO } from '../../interfaces/resultados-front-dto';
 import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 import { MapService } from 'src/app/services/map.service';
 import jsPDF from 'jspdf';
-import { CalculatePredefinedCoordService } from 'src/app/services/calculate-predefined-coord.service';
 import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { ConsumoService } from 'src/app/services/consumo.service';
 @Component({
@@ -46,7 +45,6 @@ export class Paso3Component implements OnInit {
     private solarService: SolarApiService,
     private sharedService: SharedService,
     private mapService: MapService,
-    private calculateService: CalculatePredefinedCoordService,
     private consumoTarifaService: ConsumoTarifaService,
     private consumoService: ConsumoService
   ) {
@@ -155,9 +153,8 @@ export class Paso3Component implements OnInit {
     this.mapService.clearDrawing();
     this.consumoTarifaService.updateConsumosMensuales([]);
     this.consumoService.setTotalConsumo(0);
-    this.router.navigate(['/pasos/1']).then(() => {
-      this.sharedService.setTutorialShown(true);
-    });
+    this.sharedService.setTutorialShown(true);
+    this.router.navigate(['/pasos/1']);
   }
 
   goBack() {

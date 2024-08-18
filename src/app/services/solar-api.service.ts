@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, Subscriber, Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { ResultadoService } from './resultado.service';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { ConsumoService } from './consumo.service';
@@ -64,7 +64,7 @@ export class SolarApiService {
 
         setTimeout(() => {
          this.router.navigate(['/pasos/1']);
-        }, 5000);
+        }, 2000);
         return;
       }
 
@@ -76,9 +76,16 @@ export class SolarApiService {
         panelsSupported: this.panelsSupported,
       };
 
+      /* const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        })
+      }; */
+
       const response = await lastValueFrom(
         this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
       );
+
       this._resultados = this.resultadoService.generarResultados(response);
       return this.getResultados;
     } catch (error) {

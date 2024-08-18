@@ -9,20 +9,22 @@ import { Paso0Component } from './pasos/paso0/paso0.component';
 
 const routes: Routes = [
   { path: '', component: WelcomeComponent },
-  { 
-    path: 'pasos', component: LayoutPasosComponent, 
+  {
+    path: 'pasos', component: LayoutPasosComponent,
     children: [
       { path: '0', component: Paso0Component },
       { path: '1', component: Paso1Component },
       { path: '2', component: Paso2Component },
       { path: '3', component: Paso3Component },
       { path: '', redirectTo: '0', pathMatch: 'full' }
-    ]
-  }
+    ],
+    
+  },
+  { path: '**', component: WelcomeComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

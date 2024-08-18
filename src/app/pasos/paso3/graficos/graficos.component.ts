@@ -101,7 +101,6 @@ export class GraficosComponent implements OnInit {
     borderColor: string
   ): void {
     const canvas = document.getElementById(elementId) as HTMLCanvasElement;
-    console.log({canvas})
     if (canvas) {
       const ctx = canvas.getContext('2d');
       if (ctx) {

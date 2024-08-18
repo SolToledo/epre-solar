@@ -25,7 +25,7 @@ export class Paso1Component implements OnInit {
     private snackBar: MatSnackBar,
     private sharedService: SharedService,
     private mapService: MapService,
-    private locationService: LocationService
+    private locationService: LocationService,
   ) {}
 
   ngOnInit(): void {
@@ -47,11 +47,13 @@ export class Paso1Component implements OnInit {
       'marker'
     )) as google.maps.MarkerLibrary;
     this.map = this.mapService.getMap();
+    
     if (!this.map) {
+      this.router.navigate(['/']);
       console.error('El mapa no está inicializado.');
       return;
     }
-
+    this.map.setZoom(22);
     this.marker = new AdvancedMarkerElement({
       map: this.map,
     });
@@ -184,7 +186,7 @@ export class Paso1Component implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/pasos/0']);
+    this.router.navigate(['/pasos/0'])
   }
 
   goToPaso2() {

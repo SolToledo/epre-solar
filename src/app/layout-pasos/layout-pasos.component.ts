@@ -26,7 +26,7 @@ import { SharedService } from '../services/shared.service';
       state('collapsed', style({ width: '100%' })),
       transition('expand <=> collapsed', animate('200ms')),
     ]),
-  ],
+  ], 
 })
 export class LayoutPasosComponent implements OnInit, AfterViewInit {
   currentStep: number = 0;
@@ -51,7 +51,9 @@ export class LayoutPasosComponent implements OnInit, AfterViewInit {
     this.sharedService.setTutorialShown(false);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cdr.detectChanges();
+  }
 
   ngAfterViewInit(): void {
     this.router.events
@@ -61,8 +63,6 @@ export class LayoutPasosComponent implements OnInit, AfterViewInit {
         const lastSegment = url.split('/').pop();
         this.currentStep = Number.parseInt(lastSegment ?? '0', 10);
         this.isPaso3 = this.currentStep === 3;
-
-        // Restablece isCollapsed cuando se navega a un nuevo paso
 
         this.isCollapsed = false;
         if (this.isPaso3) {

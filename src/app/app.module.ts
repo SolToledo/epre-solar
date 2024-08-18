@@ -4,8 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms'; // Importa FormsModule
 import { LazyLoadImageModule } from 'ng-lazyload-image'; // Importa el módulo
 
-
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -34,7 +32,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialogModule } from '@angular/material/dialog';  
 
-
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -51,14 +48,11 @@ import { TotalComponent } from './pasos/paso2/total/total.component';
 import { NgChartsModule } from 'ng2-charts';
 import { MatSliderModule } from '@angular/material/slider';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { AppConfigModule } from './app-config.module';
 import { EnvironmentService } from './services/environment.service';
 import { firstValueFrom } from 'rxjs';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
 import { InstruccionesComponent } from './instrucciones/instrucciones.component';
-
-
 
 export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
   return (): Promise<void> => firstValueFrom(environmentService.loadGoogleMapsApiKey());
@@ -116,8 +110,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     MatSlideToggleModule,
     GoogleMapsModule,
     MatDialogModule,
-    NgxSpinnerModule.forRoot()
-    
+    NgxSpinnerModule.forRoot(),
   ],
   providers: [
     EnvironmentService,

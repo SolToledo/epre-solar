@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { LocationService } from './location.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedService } from './shared.service';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -178,7 +177,7 @@ export class MapService {
       },
     });
     this.drawingManager.setMap(this.map);
-    this.map.setZoom(22);
+
     // Listener para overlaycomplete
     google.maps.event.addListener(
       this.drawingManager,
@@ -206,7 +205,7 @@ export class MapService {
           if (isLocationValid) {
             const area = google.maps.geometry.spherical.computeArea(path);
             this.areaSubject.next(area);
-            
+
             // Listener para el evento set_at en el polígono (cuando se edita)
             const updatePolygonAfterEdit = () => {
               const newPolygonEdit = event.overlay as google.maps.Polygon;
@@ -219,9 +218,8 @@ export class MapService {
                 this.overlayCompleteSubject.next(true);
                 this.disableDrawingMode();
                 return;
-              }else{
-                console.log("no es valido");
-                
+              } else {
+                console.log('no es valido');
               }
             };
 
@@ -236,7 +234,7 @@ export class MapService {
               updatePolygonAfterEdit
             );
 
-            // Dibuja los paneles 
+            // Dibuja los paneles
             this.drawPanels(newPolygon);
             this.overlayCompleteSubject.next(true);
             this.disableDrawingMode();
