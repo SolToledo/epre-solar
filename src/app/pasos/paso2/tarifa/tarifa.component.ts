@@ -72,7 +72,9 @@ export class TarifaComponent implements OnInit {
     this.tarifaContratada = this.sharedService.getTarifaContratada();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+   
+  }
 
   isOptionSelected(): boolean {
     return this.tarifaContratada !== '';
@@ -88,6 +90,5 @@ export class TarifaComponent implements OnInit {
     this.consumosMensuales = this.consumoTarifaService.getConsumoMensual(
       this.tarifaContratada
     );
-    /* this.consumoTarifaService.updateConsumosMensuales(this.consumosMensuales); */
   }
 }

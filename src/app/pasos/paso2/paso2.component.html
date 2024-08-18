@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <div class="info-cargar">
+        <div class="info-cargar" #categoriaSelect>
           <app-tarifa
             (isCategorySelected)="onCategorySelected($event)"
           ></app-tarifa>
@@ -62,7 +62,7 @@
         </div>
         <!--titulo-container-->
 
-        <div class="info-cargar-consumo">
+        <div class="info-cargar-consumo" #consumoContainer>
           <app-consumo
             (allFieldsCompleted)="onAllFieldsCompleted($event)"
             [isDisabled]="isFieldsDisabled"

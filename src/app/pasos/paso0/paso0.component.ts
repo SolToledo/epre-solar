@@ -14,7 +14,7 @@ import { SharedService } from 'src/app/services/shared.service';
 export class Paso0Component implements OnInit, AfterViewInit {
   showModal: boolean = false;
   isTermsAccepted: boolean = false;
-  driverObj: any;
+  driverObjInit: any;
   tutorialShown: boolean = false;
 
   constructor(
@@ -23,7 +23,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
     public dialog: MatDialog,
     private sharedService: SharedService
   ) {
-    this.driverObj = driver({
+    this.driverObjInit = driver({
       showProgress: false,
       steps: [
         {
@@ -92,6 +92,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
         },
       ],
     });
+    
   }
 
   ngOnInit(): void {
@@ -104,7 +105,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (!this.tutorialShown) {
       setTimeout(() => {
-        this.driverObj.drive();
+        this.driverObjInit.drive();
       }, 50);
     }
   }

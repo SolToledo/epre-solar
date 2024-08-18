@@ -13,7 +13,8 @@ import { InstruccionesComponent } from 'src/app/instrucciones/instrucciones.comp
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ConsumoComponent } from './consumo/consumo.component';
-
+import { driver } from 'driver.js';
+import { SharedService } from 'src/app/services/shared.service';
 @Component({
   selector: 'app-paso2',
   templateUrl: './paso2.component.html',
@@ -27,38 +28,123 @@ export class Paso2Component implements OnInit {
   private tooltipTimeout: any;
   isFieldsDisabled: boolean = true;
   isEditable: boolean = false;
-  
+  driverObj: any;
+  tutorialShown: boolean = false;
+
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
   @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent;
   @ViewChild('manualToggle') manualToggle!: MatSlideToggle;
   @ViewChild(ConsumoComponent) consumoComponent!: ConsumoComponent;
+  @ViewChild('consumoContainer') consumoContainer!: ElementRef;
+  @ViewChild('categoriaSelect') categoriaSelect!: ElementRef;
+
+  driverObjInit: any;
+  driverObjConsumo: any;
 
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
     private mapService: MapService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private sharedService: SharedService
   ) {}
 
   ngOnInit(): void {
     this.mapService.hideDrawingControl();
+    this.sharedService.tutorialShown$.subscribe((shown) => {
+      this.tutorialShown = shown;
+    });
   }
 
   ngAfterViewInit(): void {
+    this.driverObjInit = driver({
+      showProgress: false,
+      steps: [
+        {
+          element: '#titulo', // ID del elemento
+          popover: {
+            title: 'Bienvenido',
+            description:
+              'Esta es la sección de Consumo. Aquí puedes configurar tu consumo energético.',
+            side: 'left',
+            align: 'start',
+            nextBtnText: 'Siguiente',
+            doneBtnText: 'Terminar',
+          },
+        },
+        {
+          element: this.categoriaSelect.nativeElement,
+          popover: {
+            title: 'Aquí seleccione su tarifa contratada',
+            description: 'Al seleccionar su tarifa, se establecerán consumos mensuales predeterminados.',
+            side: 'left',
+            align: 'start',
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
+          },
+        },
+        {
+          element: this.consumoContainer.nativeElement,
+          popover: {
+            title: 'Cuadro de consumos mensuales',
+            description: 'Estos valores se encuentran predefinidos. Podrá modificarlos habilitando el ingreso manual.',
+            side: 'left',
+            align: 'start',
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
+          },
+        },
+        {
+          element: this.manualToggle._elementRef.nativeElement,
+          popover: {
+            title: 'Carga Manual',
+            description:
+              'Puedes activar esta opción para ingresar manualmente tu consumo mensual.',
+            side: 'left',
+            align: 'start',
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
+          },
+        },
+        {
+          element: this.botonSiguiente.nativeElement,
+          popover: {
+            title: 'Siguiente Paso',
+            description:
+              'Cuando hayas completado todos los campos, presiona este botón para continuar.',
+            side: 'left',
+            align: 'start',
+            nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
+            doneBtnText: 'Terminar',
+          },
+        },
+      ],
+    });
+    
     // Escuchar cambios en el toggle de carga manual
     this.manualToggle.change.subscribe((event) => {
       this.onManualToggleChange(event.checked);
     });
+
+    if (!this.tutorialShown) {
+      setTimeout(() => {
+        this.driverObjInit.drive();
+        this.sharedService.setTutorialShown(true); 
+      }, 50);
+    }
   }
 
   onManualToggleChange(isManual: boolean): void {
     this.isEditable = isManual;
-    if(this.isEditable){
+    if (this.isEditable) {
       this.consumoComponent.resetMesesConsumo();
-      
     }
     this.isFieldsDisabled = !isManual;
-    if(!isManual) {
+    if (!isManual) {
       this.tarifaComponent.onTarifaChange();
     }
   }
@@ -76,9 +162,11 @@ export class Paso2Component implements OnInit {
   onAllFieldsCompleted(event: boolean): void {
     this.allFieldsFilled = event;
   }
+
   onCategorySelected(event: boolean): void {
     this.isCategorySelected = event;
     this.isFieldsDisabled = !event;
+    
   }
 
   showTooltip() {
@@ -107,5 +195,4 @@ export class Paso2Component implements OnInit {
       width: '500px',
     });
   }
-
 }

@@ -151,9 +151,6 @@ export class Paso3Component implements OnInit {
     this.mostrarModal = false;
     localStorage.clear();
     this.sharedService.setTarifaContratada('');
-    this.mapService.clearPanels();
-    this.mapService.clearPolygons();
-    this.mapService.disableDrawingMode();
     this.mapService.hideDrawingControl();
     this.mapService.clearDrawing();
     this.consumoTarifaService.updateConsumosMensuales([]);

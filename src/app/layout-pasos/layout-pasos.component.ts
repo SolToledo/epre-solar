@@ -15,7 +15,6 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { MapService } from '../services/map.service';
 import { SharedService } from '../services/shared.service';
-import { Paso3Component } from '../pasos/paso3/paso3.component';
 
 @Component({
   selector: 'app-layout-pasos',
@@ -49,6 +48,7 @@ export class LayoutPasosComponent implements OnInit, AfterViewInit {
         this.isLoading = value;
       },
     });
+    this.sharedService.setTutorialShown(false);
   }
 
   ngOnInit(): void {}

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { driver } from 'driver.js';
 import { Subscription } from 'rxjs';
 import { MesesConsumo } from 'src/app/interfaces/mesesConsumo';
 import { ResultadoCalculo } from 'src/app/interfaces/resultado-calculo';
@@ -17,6 +18,7 @@ export class ConsumoComponent implements OnInit {
   allCompleted: boolean = false;
   @Input() isDisabled: boolean = true;
   @Input() isEditable: boolean = false;
+  @ViewChild('consumoContainer') consumoContainer!: ElementRef;
 
   meses: MesesConsumo[] = [
     { numero: 1, consumo: null, completado: false },
@@ -35,6 +37,8 @@ export class ConsumoComponent implements OnInit {
   resultado: ResultadoCalculo | null = null;
   totalConsumo: number = 0;
   subscription: Subscription;
+  driverObj: any;
+  tutorialShown: any;
 
   constructor(
     private consumoService: ConsumoService,
@@ -52,6 +56,9 @@ export class ConsumoComponent implements OnInit {
     this.resetMesesConsumo();
   }
 
+  ngAfterViewInit(): void {
+   
+  }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -145,5 +152,11 @@ export class ConsumoComponent implements OnInit {
     });
     this.allCompleted = false;
     this.allFieldsCompleted.emit(this.allCompleted);
+  }
+
+  startTutorial() {
+    setTimeout(() => {
+      this.driverObj.drive();
+    }, 50);
   }
 }
