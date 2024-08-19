@@ -87,6 +87,7 @@ export class SolarApiService {
       );
 
       this._resultados = this.resultadoService.generarResultados(response);
+      console.log(this._resultados);
       return this.getResultados;
     } catch (error) {
       console.error('Error en el cálculo:', error);
