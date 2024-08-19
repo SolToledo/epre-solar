@@ -53,6 +53,7 @@ import { firstValueFrom } from 'rxjs';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
 import { InstruccionesComponent } from './instrucciones/instrucciones.component';
+import { CustomNumberPipe } from './pipes/custom-number.pipe';
 
 export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
   return (): Promise<void> => firstValueFrom(environmentService.loadGoogleMapsApiKey());
@@ -86,8 +87,8 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     TarifaIntercambioComponent,
     TotalComponent,
     AhorrosComponent,
-    InstruccionesComponent
-    
+    InstruccionesComponent,
+    CustomNumberPipe 
   ],
   
   imports: [
