@@ -72,6 +72,28 @@
   min-height: 120px;
   border-radius: 8px;
 }
+
+.hipotesis-container{
+  background-color: rgb(240, 237, 237);
+  padding: 10px;
+  border: 1px solid gray;
+}
+#titulo-hipotesis{
+  color: var(--font-light);
+  font-weight: bold;
+}
+#texto-hipotesis{
+  color: var(--font-light);
+}
+#subtitulo-hipotesis{
+  color: var(--font-light);
+  font-weight: 300;
+}
+
+#hipotesis{
+  color: var(--font-light);
+}
+
   /*------------------------------------------------*/
   /* Estilos para personalizar la barra de desplazamiento vertical */
   .content-scroll::-webkit-scrollbar {
