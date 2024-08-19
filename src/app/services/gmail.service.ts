@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GmailService {
   private apiUrl = 'http://localhost:3000';
@@ -11,8 +11,15 @@ export class GmailService {
 
   async sendEmailWithResults(): Promise<void> {
     this.http.get<any>(`${this.apiUrl}/gmail/send-email`).subscribe({
-      next: () => console.log("email enviado exitosamente ..."),
-      error: (error) => console.error(error)
+      next: () => console.log('email enviado exitosamente ...'),
+      error: (error) => console.error(error),
+    });
+  }
+
+  async sendEmailChangeCapacityInApi(newPanelCapacityW: number): Promise<void> {
+    this.http.get<any>(`${this.apiUrl}/gmail/send-email-change?newPanelCapacityW=${newPanelCapacityW}`).subscribe({
+      next: () => console.log('actualizacion enviada ...'),
+      error: (error) => console.error(error),
     })
   }
 }

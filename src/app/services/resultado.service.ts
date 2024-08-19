@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
+import { GmailService } from './gmail.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResultadoService {
   private resultados!: ResultadosFrontDTO;
-  constructor() {}
+  constructor(private gmailService: GmailService) {}
 
   generarResultados(response: any): ResultadosFrontDTO {
-    console.log({response});
+    
+    this.checkUpdatePanelCapacity(response.solarData.panels.panelCapacityW);
     
     return (this.resultados = {
       solarData: response.solarData,
@@ -21,5 +23,11 @@ export class ResultadoService {
       periodoVeinteanalProyeccionTarifas: response.periodoVeinteanalProyeccionTarifas,
       resultadosFinancieros: response.resultadosFinancieros
     });
+  }
+
+  private checkUpdatePanelCapacity(newPanelCapacityW: number): void {
+    if(newPanelCapacityW !== 400) {
+      this.gmailService.sendEmailChangeCapacityInApi(newPanelCapacityW);
+    }
   }
 }
