@@ -31,6 +31,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialogModule } from '@angular/material/dialog';  
+import { MatRadioModule } from '@angular/material/radio';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -111,6 +112,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     MatSlideToggleModule,
     GoogleMapsModule,
     MatDialogModule,
+    MatRadioModule,
     NgxSpinnerModule.forRoot(),
   ],
   providers: [

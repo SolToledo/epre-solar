@@ -24,17 +24,25 @@
       </div>
 
       <div class="informacion">
+        <div class="container-ingreso-datos">
+          <app-paneles
+          [dimensionPanel]="dimensionPanel"
+          [panelCapacityW]="panelCapacityW"
+        ></app-paneles>
+
+        </div><!--container-ingreso-datos-->
+
         <div class="container">
           <div class="item"><app-ahorros></app-ahorros></div>
           <div class="item">
             <app-plazo></app-plazo>
           </div>
-          <div class="item">
+        <!--  <div class="item">
             <app-paneles
               [dimensionPanel]="dimensionPanel"
               [panelCapacityW]="panelCapacityW"
             ></app-paneles>
-          </div>
+          </div>-->
           <div class="item">
             <app-potencia></app-potencia>
           </div>
@@ -49,7 +57,7 @@
           <div class="item">
             <app-tarifa-intercambio></app-tarifa-intercambio>
           </div>
-        </div>
+        </div><!--container-->
 
         <div class="container-graficos">
           <div class="item-grafico"><app-graficos
@@ -66,14 +74,14 @@
           </app-graficos></div>
         </div><!--container-graficos-->
 
-        <!-- <div class="hipotesis-container">
+        <div class="container-hipotesis">
           <h3 id="titulo-hipotesis">Hipótesis adoptadas</h3>
           <p id="texto-hipotesis">Los resultados de la evaluación a partir de la aplicación “Mapa Solar E.P.R.E.”, deben considerarse aproximados y no representan opinión ni dictamen técnico del E.P.R.E. 
             Se reproducen a modo de referencia para el desarrollo de estudios técnicos fundamentados y particularizados en cada suministro, habiéndose adoptado las siguientes hipótesis: 
           </p>
           <p id="subtitulo-hipotesis">Principales hipótesis</p>
           <p id="hipotesis">⦁	Tarifas vigentes a la fecha de la realización del presente cálculo. </p>
-        </div> -->
+        </div><!--hipotesis-container-->
 
         <div class="button-container">
           <div class="boton">

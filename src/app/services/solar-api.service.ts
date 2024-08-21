@@ -28,10 +28,10 @@ export class SolarApiService {
     private sharedService: SharedService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   async calculate(): Promise<any> {
-    
+
     try {
       const polygonCoordinates = this.mapService.getPolygonCoordinates();
       const polygonArea = this.mapService.getPolygonArea();
@@ -63,7 +63,7 @@ export class SolarApiService {
         );
 
         setTimeout(() => {
-         this.router.navigate(['/pasos/1']);
+          this.router.navigate(['/pasos/1']);
         }, 2000);
         return;
       }
