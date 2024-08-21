@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import html2canvas from 'html2canvas';
 import { GmailService } from 'src/app/services/gmail.service';
@@ -37,6 +37,7 @@ export class Paso3Component implements OnInit {
   );
   yearlyEnergyAcKwh: number = 0;
   proporcionAutoconsumo: number = 0;
+  consumoTotalAnual: number = 0;
 
   constructor(
     private router: Router,
@@ -63,9 +64,10 @@ export class Paso3Component implements OnInit {
         .calculate()
         .then((resultados) => (this.resultadosFront = resultados))
         .then(() => this.initialLoadFields())
+        .then(()=> this.sharedService.setIsLoading(false))
         .catch((error) => console.error('Error en calculate:', error))
         .finally(() => {
-          this.sharedService.setIsLoading(false);
+          
           
         });
     } else {
@@ -85,6 +87,7 @@ export class Paso3Component implements OnInit {
         .finally(); */
     }
   }
+
   private initialLoadFields(): void {
     this.panelesCantidad =
       this.resultadosFront.solarData.panels.maxPanelsPerSuperface;
@@ -97,13 +100,18 @@ export class Paso3Component implements OnInit {
     );
     this.proporcionAutoconsumo = 85;
     this.yearlyEnergyAcKwh = parseFloat(
-      this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(2)
+      this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
     );
     this.sharedService.setPlazoInversion(
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
         .payBackSimpleYears * 12
     );
 
+    this.consumoService.totalConsumo$.subscribe({
+      next: value => this.consumoTotalAnual = value
+    });
+    
+    
   }
 
   print(): void {
