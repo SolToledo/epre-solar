@@ -22,7 +22,9 @@ export class SharedService {
   private isUpdating = false;
   private expandStep3Subject = new BehaviorSubject<boolean>(false);
   expandStep3$ = this.expandStep3Subject.asObservable();
-  
+  private panelCapacityWSubject = new BehaviorSubject<number>(0);
+  panelCapacityW$ = this.panelCapacityWSubject.asObservable();
+
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
   }
@@ -75,5 +77,9 @@ export class SharedService {
 
   getPanelsSelected() {
     return this.panelsCountSelectedSubject.getValue();
+  }
+
+  setPanelCapacityW(value: number) {
+    this.panelCapacityWSubject.next(value);
   }
 }

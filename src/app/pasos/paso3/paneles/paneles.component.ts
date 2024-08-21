@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatSlider } from '@angular/material/slider';
 import { Subscription } from 'rxjs';
 import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
@@ -21,11 +22,19 @@ export class PanelesComponent implements OnInit, OnDestroy {
   private plazoInversionSubscription!: Subscription;
   plazoRecuperoInversion!: number;
   plazoRecuperoInversionValorInicial: number;
+  potenciaPanelesControl = new FormControl('');
+  
   constructor(private mapService: MapService, private sharedService: SharedService) {
     this.plazoRecuperoInversionValorInicial = this.sharedService.getPlazoInversionValue();
   }
 
   ngOnInit(): void {
+    if (this.panelCapacityW === 400 || this.panelCapacityW === 600) {
+      this.potenciaPanelesControl.setValue(this.panelCapacityW.toString());
+    } else {
+      console.warn('Valor inesperado de panelCapacityW:', this.panelCapacityW);
+    }
+
     this.maxPanelsPerAreaSubscription = this.mapService.maxPanelsPerArea$.subscribe({
       next: value => {
         this.maxPanelsArea$ = value
@@ -42,6 +51,15 @@ export class PanelesComponent implements OnInit, OnDestroy {
         if (this.plazoRecuperoInversion && this.maxPanelsArea$) {
           this.updatePlazoInversion(this.panelesCantidad, this.maxPanelsArea$, this.plazoRecuperoInversionValorInicial);
         }
+      }
+    });
+
+     this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
+      const panelCapacity = parseInt(value, 10);
+      if (panelCapacity === 400 || panelCapacity === 600) {
+        this.sharedService.setPanelCapacityW(panelCapacity);
+      } else {
+        console.warn('Valor inesperado en potenciaPanelesControl:', value);
       }
     });
   }

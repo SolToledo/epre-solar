@@ -1,7 +1,7 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms'; // Importa FormsModule
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Importa FormsModule
 import { LazyLoadImageModule } from 'ng-lazyload-image'; // Importa el módulo
 
 import { AppRoutingModule } from './app-routing.module';
@@ -114,6 +114,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     MatDialogModule,
     MatRadioModule,
     NgxSpinnerModule.forRoot(),
+    ReactiveFormsModule,
   ],
   providers: [
     EnvironmentService,
