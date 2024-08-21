@@ -5,6 +5,7 @@ import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 
+
 @Component({
   selector: 'app-paneles',
   templateUrl: './paneles.component.html',

@@ -31,6 +31,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialogModule } from '@angular/material/dialog';  
+import { MatRadioModule } from '@angular/material/radio';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -53,6 +54,7 @@ import { firstValueFrom } from 'rxjs';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
 import { InstruccionesComponent } from './instrucciones/instrucciones.component';
+import { PanelPotenciaComponent } from './pasos/paso3/panel-potencia/panel-potencia.component';
 
 export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
   return (): Promise<void> => firstValueFrom(environmentService.loadGoogleMapsApiKey());
@@ -86,7 +88,8 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     TarifaIntercambioComponent,
     TotalComponent,
     AhorrosComponent,
-    InstruccionesComponent
+    InstruccionesComponent,
+    PanelPotenciaComponent 
     
   ],
   
@@ -110,6 +113,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
     MatSlideToggleModule,
     GoogleMapsModule,
     MatDialogModule,
+    MatRadioModule,
     NgxSpinnerModule.forRoot(),
   ],
   providers: [

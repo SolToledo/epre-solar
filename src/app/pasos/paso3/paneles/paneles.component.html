@@ -1,4 +1,155 @@
-<div class="resultados-paso3">
+
+<div class="info-inicio">
+
+  <div class="titulo-container">
+    <div class="icono-inicio">
+      <img
+       src="assets/icon-panel.png"
+        id="marca"
+        alt="Icono de tarifa"
+      />
+    </div>
+    <div class="titulo-inicio">
+      <h2>PANELES A INSTALAR</h2>
+    </div>
+  </div>
+
+  <div class="info-component-panel">
+
+    <div class="cantidad-paneles">
+      <h3>Cantidad paneles</h3>
+      <div class="cantidad-paneles-contenido">
+        <div class="slider">
+          <mat-slider
+          class="custom-slider"
+          min="4"
+          [max]="maxPanelsArea$"
+          step="1"
+          (change)="onSliderChange()"
+          discrete
+          [displayWith]="formatLabel">
+          <input matSliderThumb [(ngModel)]="panelesCantidad" #slider>
+          </mat-slider>               
+        </div>
+        <div class="unidad-component-simple-panel">
+          <p class="resultado-panel">{{ maxPanelsArea$ }}</p>
+        </div>
+      </div><!--cantidad-paneles-contenido-->
+      <div class="texto-inferior-panel">
+        <div class="titulo-detalle">
+          <p>Detalle del panel: {{ dimensionPanel.height * 100 }} x  {{ dimensionPanel.width * 100 }}cm - {{ panelCapacityW }}W</p>
+        </div>
+     </div>
+
+
+    </div><!--cantidad-paneles-->
+
+    <div class="potencia-paneles">
+      <h3 id="titulo-potencia">Potencia paneles</h3>
+      <div class="potencia-paneles-contenido">
+          <mat-radio-button value="1">400</mat-radio-button>
+          <mat-radio-button value="2">600</mat-radio-button>
+      </div>
+    </div>
+
+  </div><!--info-component-panel-->
+
+  
+ 
+
+</div><!--info-inicio-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="resultados-paso3">
+  <div class="component-container-borde">
+      <div class="titulo-general">
+          <p>Paneles a instalar</p>
+      </div>
+
+      <div class="informacion-general">
+
+        <div class="paneles-container">
+          <div class="ajustar-contenido-panel">
+              <div class="info-component-panel">      
+                  <div class="icono-panel">
+                      <img src="assets/icon-panel.png" class="tamaño-icon-panel" alt="Icono de panel">
+                  </div>
+                  <div class="resultado-centro-panel">
+                     <mat-slider
+                       class="custom-slider"
+                       min="4"
+                       [max]="maxPanelsArea$"
+                       step="1"
+                       (change)="onSliderChange()"
+                       discrete
+                       [displayWith]="formatLabel">
+                       <input matSliderThumb [(ngModel)]="panelesCantidad" #slider>
+                     </mat-slider>
+                  </div>
+                  <div class="unidad-component-simple-panel">
+                      <p class="resultado-panel">{{ maxPanelsArea$ }}</p>
+                  </div>
+              </div>
+          </div>
+
+          <div class="dimension-paneles-container">
+            tamaño de los paneles
+          </div>
+        </div>
+        
+          <hr>
+        <div class="texto-inferior-panel">
+            <div class="titulo-detalle">
+              <p>Detalle del panel:</p>
+            </div>
+            <div class="dimensiones-panel">
+              <p>{{ dimensionPanel.height * 100 }} x  {{ dimensionPanel.width * 100 }}cm - {{ panelCapacityW }}W</p>
+            </div> 
+        </div>
+
+      </div>
+
+  </div>
+</div>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="resultados-paso3">
   <div class="component-container-borde">
       <div class="titulo-general">
           <p>Paneles a instalar</p>
@@ -37,4 +188,4 @@
          </div>
       </div>
   </div>
-</div>
+</div> -->
