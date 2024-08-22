@@ -24,6 +24,8 @@ export class SharedService {
   expandStep3$ = this.expandStep3Subject.asObservable();
   private panelCapacityWSubject = new BehaviorSubject<number>(0);
   panelCapacityW$ = this.panelCapacityWSubject.asObservable();
+  private yearlyEnergyAcKwhSubject = new BehaviorSubject<number>(0);
+  yearlyEnergyAcKwh$ = this.yearlyEnergyAcKwhSubject.asObservable();
 
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
@@ -85,5 +87,13 @@ export class SharedService {
 
   getPanelCapacityW(): number {
     return this.panelCapacityWSubject.getValue();
+  }
+
+  setYearlyEnergyAcKwh(value: number): void {
+    this.yearlyEnergyAcKwhSubject.next(value);
+  }
+  
+  getYearlyEnergyAcKwh(): number {
+    return this.yearlyEnergyAcKwhSubject.getValue();
   }
 }

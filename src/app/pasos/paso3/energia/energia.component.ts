@@ -27,6 +27,8 @@ export class EnergiaComponent implements OnInit, AfterViewInit {
     this.panelCapacityW = this.sharedService.getPanelCapacityW(); 
     this.panelsCountSelected = this.sharedService.getPanelsSelected(); 
     this.initialPanelsCount = this.panelsCountSelected;
+    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
+    this.cdr.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -64,7 +66,7 @@ export class EnergiaComponent implements OnInit, AfterViewInit {
       (this.initialYearlyEnergyAcKwh * 
       (this.panelsCountSelected / this.initialPanelsCount) * 
       (this.panelCapacityW / 400)).toFixed(0);
-    
+    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
     this.cdr.detectChanges();
   }
   
