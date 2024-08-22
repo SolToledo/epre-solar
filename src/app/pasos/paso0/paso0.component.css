@@ -56,8 +56,10 @@
 }
 
 .informacion::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  /*background: #555; */
+  background-color: var(--dark-green);
 }
+
 
   .texto-container {
     height: auto;

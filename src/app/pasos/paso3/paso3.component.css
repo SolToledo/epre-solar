@@ -96,21 +96,22 @@
 
   /*------------------------------------------------*/
   /* Estilos para personalizar la barra de desplazamiento vertical */
-  .content-scroll::-webkit-scrollbar {
+  .informacion::-webkit-scrollbar {
     width: 8px; 
   }
 
-  .content-scroll::-webkit-scrollbar-track {
+  .informacion::-webkit-scrollbar-track {
     background: #f1f1f1;
   }
   
-  .content-scroll::-webkit-scrollbar-thumb {
+  .informacion::-webkit-scrollbar-thumb {
     background: #b8b6b6;
     border-radius: 4px; 
   }
   
-  .content-scroll::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+  .informacion::-webkit-scrollbar-thumb:hover {
+    /*background: #555; */
+    background-color: var(--dark-green);
   }
   
 /*----------------------------------------------------------------------------------------------------------*/  

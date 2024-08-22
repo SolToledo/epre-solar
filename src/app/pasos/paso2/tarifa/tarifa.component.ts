@@ -16,6 +16,7 @@ import { SharedService } from 'src/app/services/shared.service';
   styleUrls: ['./tarifa.component.css'],
 })
 export class TarifaComponent implements OnInit {
+  
   tarifaContratada: string = '';
   consumosMensuales: number[] = [];
   @Output() isCategorySelected = new EventEmitter<boolean>(false);

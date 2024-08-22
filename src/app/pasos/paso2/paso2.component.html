@@ -17,9 +17,12 @@
               alt="Icono de tarifa"
             />
           </div>
-          <div class="titulo-inicio">
+          <div class="titulo-inicio-advertencia">
             <h2>TARIFA CONTRATADA</h2>
-          </div>
+            <div class="advertencia">
+                <span id="span-general" (click)="openHelpModal()">Ayuda</span>
+            </div>
+          </div><!--titulo-inicio-->
         </div>
 
         <div class="info-cargar" #categoriaSelect>
@@ -28,14 +31,14 @@
           ></app-tarifa>
         </div>
 
-        <div class="advertencia">
+       <!-- <div class="advertencia">
           <p id="recomendacion">
             Si necesita ayuda para encontrar esta información
             <span id="span-general" (click)="openHelpModal()"
               >haga click aquí.</span
             >
           </p>
-        </div>
+        </div>-->
       </div>
 
       <div class="info-inicio">
