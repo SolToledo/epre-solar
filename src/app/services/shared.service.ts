@@ -82,4 +82,8 @@ export class SharedService {
   setPanelCapacityW(value: number) {
     this.panelCapacityWSubject.next(value);
   }
+
+  getPanelCapacityW(): number {
+    return this.panelCapacityWSubject.getValue();
+  }
 }

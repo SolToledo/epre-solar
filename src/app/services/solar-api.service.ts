@@ -63,7 +63,7 @@ export class SolarApiService {
         );
 
         setTimeout(() => {
-          this.router.navigate(['/pasos/1']);
+          this.router.navigate(['/pasos/1']).then(()=> this.sharedService.setIsLoading(false));
         }, 2000);
         return;
       }
