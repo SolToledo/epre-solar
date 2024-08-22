@@ -15,6 +15,16 @@
   gap: 3px;
 }
 
+/*efecto de las tarjetas al pasar el mouse*/
+.info-inicio {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-inicio:hover {
+  transform: scale(1.01); 
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); 
+}
+
 .titulo-container {
   display: flex;
   flex-direction: row;
@@ -126,8 +136,6 @@ h3{
 .texto-inferior-panel {
   width: 100%;
   height: 17%;
-  text-align:left;
-  margin-top: 3px;
   color: var(--dark-green);
 }
 
@@ -138,24 +146,66 @@ h3{
 .titulo-detalle {
   width:100%;
   color: var(--dark-green);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 300;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+span{
+  color: var(--medium-green);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#dimension-panel{
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--medium-green);
+}
+/*pantallas grandes*/
+@media  (min-width: 1500px) {
+  h3{
+    font-size: 16px;
+  }
+
+  .titulo-detalle {
+    font-size: 14px;
+  }
+
 }
 
 
+/*pantallas peque;as*/
+@media (min-width: 760px) and (max-width: 1300px) {
+  .titulo-detalle {
+    display: flex;
+    flex-direction: column;
+    justify-content:left;
+  }
 
-
-
+}
 
 
 
 @media (min-width: 760px) and (max-width: 950px) {
   h3{
     font-size: 11px;
-    font-weight: 500;
-    color: var(--dark-green);
   }
   .potencia-paneles-contenido{
     flex-direction: column;
   }
+
+
+  .texto-inferior-panel {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .titulo-detalle {
+    font-size: 10px;
+  }
+
 }
+
