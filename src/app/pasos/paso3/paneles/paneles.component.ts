@@ -29,7 +29,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.panelCapacityW === 400 || this.panelCapacityW === 600) {
+    if (this.panelCapacityW === 400 || this.panelCapacityW === 500) {
       this.potenciaPanelesControl.setValue(this.panelCapacityW.toString());
     } else {
       console.warn('Valor inesperado de panelCapacityW:', this.panelCapacityW);
@@ -56,7 +56,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
 
      this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
       const panelCapacity = parseInt(value, 10);
-      if (panelCapacity === 400 || panelCapacity === 600) {
+      if (panelCapacity === 400 || panelCapacity === 500) {
         this.sharedService.setPanelCapacityW(panelCapacity);
       } else {
         console.warn('Valor inesperado en potenciaPanelesControl:', value);
