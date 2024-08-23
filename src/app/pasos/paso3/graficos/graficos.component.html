@@ -1,162 +1,94 @@
-
-  <div class="container-graficos">
-
-    <div class="item-grafico">
-      <div class="grafico-container-borde">
-        <div class="head">
-          <div class="icono">
-            <img src="assets/icon-CO2.png" class="tamaño-icon" alt="Icono de Emisiones CO2" />
-          </div>
-          <div class="titulo">
-            <p>Emisiones CO2 evitadas</p>
-          </div>
-          <div class="resultado-container">
-            <div class="resultado">
-              <p class="resultado-numero">20</p>
-            </div>
-            <div class="unidad">
-              <p class="unidad-texto">tCO2/MWh</p>
-            </div>
-          </div>
+<div class="container-graficos">
+  <!-- Emisiones CO2 evitadas -->
+  <div class="item-grafico">
+    <div class="grafico-container-borde">
+      <div class="head">
+        <div class="icono">
+          <img src="assets/icon-CO2.png" class="tamaño-icon" alt="Icono de Emisiones CO2" />
         </div>
-      
-        <div class="informacion-general">
-          <div class="grafico-component">
-            <canvas id="emisionesChart"></canvas>
-          </div>
-      
-          <hr />
-          <div class="footer">
-            <p>Según los paneles seleccionados</p>
-          </div>
+        <div class="titulo">
+          <p>Emisiones CO2 evitadas</p>
         </div>
-      </div><!--grafico-container-borde-->
-    </div><!--item-grafico-->
-
-    <div class="item-grafico">
-      <div class="grafico-container-borde">
-        <div class="head">
-          <div class="icono">
-            <img src="assets/icon-sol.png" class="tamaño-icon" alt="energia-sol" />
+        <div class="resultado-container">
+          <div class="resultado">
+            <p class="resultado-numero">20</p>
           </div>
-          <div class="titulo">
-            <p>Valor esperado de energía y generación solar</p>
-          </div>
-          <div class="resultado-container">
-            <div class="resultado">
-              <p class="resultado-numero">--</p>
-            </div>
-            <div class="unidad">
-              <p class="unidad-texto">kWh/año</p>
-            </div>
-          </div>
-        </div>
-      
-        <div class="informacion-general">
-          <div class="grafico-component">
-            <canvas id="solarEnergyPieChart"></canvas>
-          </div>
-      
-          <hr />
-          <div class="footer">
-            <p>Según los paneles seleccionados</p>
-          </div>
-        </div>
-      </div><!--grafico-container-borde-->
-    </div><!--item-grafico-->
-
-    <div class="item-grafico">
-      <div class="grafico-container-borde">
-        <div class="head">
-          <div class="icono">
-            <img src="assets/icon-CO2.png" class="tamaño-icon" alt="Icono de Emisiones CO2" />
-          </div>
-          <div class="titulo">
-            <p>Emisiones CO2 evitadas</p>
-          </div>
-          <div class="resultado-container">
-            <div class="resultado">
-              <p class="resultado-numero">20</p>
-            </div>
-            <div class="unidad">
-              <p class="unidad-texto">tCO2/MWh</p>
-            </div>
-          </div>
-        </div>
-      
-        <div class="informacion-general">
-          <div class="grafico-component">
-            <canvas id="ingresosChart"></canvas>
-          </div>
-      
-          <hr />
-          <div class="footer">
-            <p>Según los paneles seleccionados</p>
-          </div>
-        </div>
-      </div><!--grafico-container-borde-->
-    </div><!--item-grafico-->
-
-<!--
-    <div class="item-grafico">
-      <div class="grafico-container-borde">
-        <div class="head">
-          <div class="icono">
-            <img src="assets/dinero-tiempo.png" class="tamaño-icon" alt="dinero/tiempo" />
-          </div>
-          <div class="titulo">
-            <p>Recupero de la inversión</p>
-          </div>
-          <div class="resultado-container">
-            <div class="resultado">
-              <p class="resultado-numero">60</p>
-            </div>
-            <div class="unidad">
-              <p class="unidad-texto">meses</p>
-            </div>
-          </div>
-        </div>
-      
-        <div class="informacion-general">
-          <div class="grafico-component">
-            <canvas id="solarEnergyPieChart"></canvas>
-          </div>
-      
-          <hr />
-          <div class="footer">
-            <p>Según los paneles seleccionados</p>
+          <div class="unidad">
+            <p class="unidad-texto">tCO2/MWh</p>
           </div>
         </div>
       </div>
-    </div> --><!--item-grafico-->
-
-  <!--  <div class="item-grafico">
-      <div class="grafico-container-borde">
-        <div class="head">
-          <div class="icono">
-            <img src="assets/icon-pot-intal.png" class="tamaño-icon" alt="generacion" />
-          </div>
-          <div class="titulo">
-            <p>Generación anual</p>
-          </div>
-          <div class="resultado-container">
-      
-          </div>
+      <div class="informacion-general">
+        <div class="grafico-component">
+          <canvas #emisionesChart></canvas>
         </div>
-      
-        <div class="informacion-general">
-          <div class="grafico-component">
-            <canvas id="solarEnergyPieChart"></canvas>
-          </div>
-      
-          <hr />
-          <div class="footer">
-            <p>Según los paneles seleccionados</p>
-          </div>
+        <hr />
+        <div class="footer">
+          <p>Según los paneles seleccionados</p>
         </div>
       </div>
-    </div> --><!--item-grafico-->
+    </div>
   </div>
 
+  <!-- Valor esperado de energía y generación solar -->
+  <div class="item-grafico">
+    <div class="grafico-container-borde">
+      <div class="head">
+        <div class="icono">
+          <img src="assets/icon-sol.png" class="tamaño-icon" alt="energia-sol" />
+        </div>
+        <div class="titulo">
+          <p>Valor esperado de energía y generación solar</p>
+        </div>
+        <div class="resultado-container">
+          <div class="resultado">
+            <p class="resultado-numero">--</p>
+          </div>
+          <div class="unidad">
+            <p class="unidad-texto">kWh/año</p>
+          </div>
+        </div>
+      </div>
+      <div class="informacion-general">
+        <div class="grafico-component">
+          <canvas #solarEnergyPieChart></canvas>
+        </div>
+        <hr />
+        <div class="footer">
+          <p>Según los paneles seleccionados</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-
+  <!-- Ingresos Monetarios -->
+  <div class="item-grafico">
+    <div class="grafico-container-borde">
+      <div class="head">
+        <div class="icono">
+          <img src="assets/icon-CO2.png" class="tamaño-icon" alt="Icono de Emisiones CO2" />
+        </div>
+        <div class="titulo">
+          <p>Emisiones CO2 evitadas</p>
+        </div>
+        <div class="resultado-container">
+          <div class="resultado">
+            <p class="resultado-numero">20</p>
+          </div>
+          <div class="unidad">
+            <p class="unidad-texto">tCO2/MWh</p>
+          </div>
+        </div>
+      </div>
+      <div class="informacion-general">
+        <div class="grafico-component">
+          <canvas #ingresosChart></canvas>
+        </div>
+        <hr />
+        <div class="footer">
+          <p>Según los paneles seleccionados</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
