@@ -445,98 +445,6 @@ button[disabled] {
     margin-bottom: 0%;
   }
   /******************************************************************/
- 
-
-  /********************************************************************************/
-  /*.ajustar-contenido-panel {
-    width: 100%;
-    height: 75%;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .info-component-panel {
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    gap: 3px;
-  }
-  .icono-panel {
-    width: 15%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .tamaño-icon-panel {
-    width: 31px;
-    height: 31px;
-  }
-  .resultado-centro-panel {
-   width: 65%;
-    height: 100%;
-    display: flex;
-    justify-content: right;
-    align-items: center;
-    margin: 0%;
-    display: flex;
-  }
- 
-  .unidad-component-simple-panel {
-    width: 30%;
-    margin-bottom: 0%;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-  }
-
-  .resultado-panel {
-    font-size: 23px;
-    color: var(--medium-green);
-    font-weight: 600;
-    margin: 0%;
-    margin: 0%;
-    padding: 0%;
-  }
-
- 
-  .texto-inferior-panel {
-    width: 100%;
-    height: 25%;
-    font-size: 10px;
-    line-height: 1.2;
-    text-align: right;
-    margin-top: 2px;
-    color: var(--dark-green);
-    display: flex;
-    flex-direction: row;
-  }
-
-  .texto-inferior-panel p {
-    margin-top: 3px;
-    margin-bottom: 0%;
-    width: auto;
-  }
-
-  .titulo-detalle {
-    width:50%;
-    color: var(--dark-green);
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-  }
-
-  .dimensiones-panel {
-    width: 50%;
-    color: var(--dark-green);
-    font-weight: bold;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-  }*/
-
   /*componente COBERTURA*/
   .resultado-centro-cobertura {
     width: 70%;
@@ -819,9 +727,8 @@ button[disabled] {
   --mat-option-selected-state-label-text-color: var(--medium-green)!important;
 }
 
-
-
 /****************************************************************************/
+
 /* Estilos para resoluciones mayores a 1366px */
 @media only screen and (min-width: 1400px) {
   #sub-titulo {

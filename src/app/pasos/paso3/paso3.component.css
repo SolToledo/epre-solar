@@ -61,18 +61,6 @@
   border-radius: 8px;
 }
 
-.container-graficos{
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 10px;
-}
-
-.item-grafico{
-  min-width:300px;
-  min-height: 120px;
-  border-radius: 8px;
-}
-
 .container-hipotesis{
   background-color: rgb(240, 237, 237);
   padding: 10px;
@@ -96,21 +84,22 @@
 
   /*------------------------------------------------*/
   /* Estilos para personalizar la barra de desplazamiento vertical */
-  .content-scroll::-webkit-scrollbar {
+  .informacion::-webkit-scrollbar {
     width: 8px; 
   }
 
-  .content-scroll::-webkit-scrollbar-track {
+  .informacion::-webkit-scrollbar-track {
     background: #f1f1f1;
   }
   
-  .content-scroll::-webkit-scrollbar-thumb {
+  .informacion::-webkit-scrollbar-thumb {
     background: #b8b6b6;
     border-radius: 4px; 
   }
   
-  .content-scroll::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+  .informacion::-webkit-scrollbar-thumb:hover {
+    /*background: #555; */
+    background-color: var(--dark-green);
   }
   
 /*----------------------------------------------------------------------------------------------------------*/  
@@ -231,11 +220,11 @@
 
 /********************************************/
 /*efecto de las tarjetas al pasar el mouse*/
-.item, .item-grafico {
+.item {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.item:hover, .item-grafico:hover {
+.item:hover {
   transform: scale(1.01); 
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); 
 }

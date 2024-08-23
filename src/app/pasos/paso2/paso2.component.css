@@ -55,7 +55,7 @@
 }
 
 .informacion::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: var(--dark-green); 
 }
 /***********************************************************************************/
 .advertencia #recomendacion {
@@ -105,6 +105,16 @@
   width: 30px;
   height: 30px;
 }
+
+.titulo-inicio-advertencia{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+
+
 
 .info-inicio h2 {
   text-transform: uppercase;
