@@ -56,6 +56,7 @@
   width: 12%;
   display: flex;
   justify-content:flex-start;
+  background-color: rgb(155, 155, 221);
 }
 
 .tamaño-icon{
@@ -66,15 +67,24 @@
 .titulo{
   color:var(--dark-green);
   width: 60%;
+  background-color: coral;
+  text-align: center;
+}
+
+.titulo p{
+  font-size: 16px;
   color: var(--dark-green);
+  line-height: 1.1;
 }
 
 .resultado-container{
-  width: 28%;
+ /* width: 28%;*/
+ width: auto;
   display: flex;
   gap: 5px;
   display: flex;
   justify-content: end;
+  background-color: chartreuse;
 }
 
 .resultado{
@@ -145,7 +155,18 @@ hr {
 }
 
 
+/*****************************************************/
+ /* Estilos para pantallas menores a 1300px */
+@media (max-width: 1200px) {
+  .titulo p{
+    font-size: 14px;
+  }
 
+  .resultado{
+    font-size: 20px;
+  }
+  
+}
 
 
   
