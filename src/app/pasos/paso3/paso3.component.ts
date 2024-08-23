@@ -105,6 +105,7 @@ export class Paso3Component implements OnInit {
     this.yearlyEnergyAcKwh = parseFloat(
       this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
     );
+    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
     this.sharedService.setPlazoInversion(
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
         .payBackSimpleYears * 12
