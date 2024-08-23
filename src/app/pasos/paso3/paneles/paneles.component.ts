@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSlider } from '@angular/material/slider';
 import { Subscription } from 'rxjs';
@@ -24,8 +24,9 @@ export class PanelesComponent implements OnInit, OnDestroy {
   plazoRecuperoInversionValorInicial: number;
   potenciaPanelesControl = new FormControl('');
   
-  constructor(private mapService: MapService, private sharedService: SharedService) {
+  constructor(private mapService: MapService, private sharedService: SharedService, private cdr: ChangeDetectorRef) {
     this.plazoRecuperoInversionValorInicial = this.sharedService.getPlazoInversionValue();
+    this.panelesCantidad = this.maxPanelsArea$;
   }
 
   ngOnInit(): void {
@@ -34,6 +35,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
     } else {
       console.warn('Valor inesperado de panelCapacityW:', this.panelCapacityW);
     }
+    
 
     this.maxPanelsPerAreaSubscription = this.mapService.maxPanelsPerArea$.subscribe({
       next: value => {
@@ -42,35 +44,32 @@ export class PanelesComponent implements OnInit, OnDestroy {
         this.sharedService.setPanelsCountSelected(this.panelesCantidad);
       }
     })
-    this.panelesCantidad = this.maxPanelsArea$;
+
+    
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
 
-    this.plazoInversionSubscription = this.sharedService.plazoInversion$.subscribe({
-      next: plazo => {
+     // Suscríbete al observable del plazo de recuperación de la inversión
+     this.plazoInversionSubscription = this.sharedService.plazoInversion$.subscribe({
+      next: (plazo) => {
         this.plazoRecuperoInversion = plazo;
-        if (this.plazoRecuperoInversion && this.maxPanelsArea$) {
-          this.updatePlazoInversion(this.panelesCantidad, this.maxPanelsArea$, this.plazoRecuperoInversionValorInicial);
-        }
-      }
+      },
     });
 
      this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
       const panelCapacity = parseInt(value, 10);
       if (panelCapacity === 400 || panelCapacity === 500) {
         this.sharedService.setPanelCapacityW(panelCapacity);
+        this.panelCapacityW = panelCapacity; 
+        this.updatePlazoInversion();
       } else {
         console.warn('Valor inesperado en potenciaPanelesControl:', value);
       }
     });
+    this.panelesCantidad = this.maxPanelsArea$;
   }
 
-  updatePlazoInversion(panelesActuales: number, panelesIniciales: number, plazoInicial: number): void {
-    if (panelesActuales > 0 && panelesIniciales > 0 && plazoInicial > 0) {
-      const nuevoPlazo = (panelesIniciales / panelesActuales) * plazoInicial;
-      this.sharedService.setPlazoInversion(nuevoPlazo);
-    }else {
-      console.error('Valores incorrectos para calcular el nuevo plazo');
-    }
+  updatePlazoInversion(): void {
+    
   }
 
   ngAfterViewInit(): void {
@@ -91,7 +90,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
     
     this.mapService.reDrawPanels(this.panelesCantidad);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
-    this.updatePlazoInversion(this.panelesCantidad, this.maxPanelsArea$, this.plazoRecuperoInversionValorInicial);
+    this.updatePlazoInversion();
     
   }
 

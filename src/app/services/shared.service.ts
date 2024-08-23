@@ -11,7 +11,7 @@ export class SharedService {
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
   private predefinedCoordinatesSubject = new BehaviorSubject<boolean>(false);
-  predefinedCoordinates$ = this.tutorialShownSubject.asObservable();
+  predefinedCoordinates$ = this.predefinedCoordinatesSubject.asObservable();
   nearbyLocation: any;
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   isLoading$ = this.isLoadingSubject.asObservable();
@@ -63,10 +63,7 @@ export class SharedService {
   }
 
   setPlazoInversion(plazo: number): void {
-    if (this.isUpdating) return;
-    this.isUpdating = true;
     this.plazoInversionSubject.next(plazo);
-    this.isUpdating = false;
   }
 
   getPlazoInversionValue(): number {
