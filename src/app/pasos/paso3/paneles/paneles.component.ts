@@ -60,16 +60,12 @@ export class PanelesComponent implements OnInit, OnDestroy {
       if (panelCapacity === 400 || panelCapacity === 500) {
         this.sharedService.setPanelCapacityW(panelCapacity);
         this.panelCapacityW = panelCapacity; 
-        this.updatePlazoInversion();
+        
       } else {
         console.warn('Valor inesperado en potenciaPanelesControl:', value);
       }
     });
     this.panelesCantidad = this.maxPanelsArea$;
-  }
-
-  updatePlazoInversion(): void {
-    
   }
 
   ngAfterViewInit(): void {
@@ -90,8 +86,6 @@ export class PanelesComponent implements OnInit, OnDestroy {
     
     this.mapService.reDrawPanels(this.panelesCantidad);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
-    this.updatePlazoInversion();
-    
   }
 
   formatLabel(value: number): string {

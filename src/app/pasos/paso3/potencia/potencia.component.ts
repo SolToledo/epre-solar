@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 
@@ -14,12 +14,10 @@ export class PotenciaComponent {
   private panelCapacitySubscription!: Subscription;
 
   panelsCountSelected: number = 0;
-  panelCapacityW: number = 400;
+  panelCapacityW: number = 0;
 
-  constructor(private sharedService: SharedService) {
-    this.sharedService.panelsCountSelected$.subscribe({
-      next: (value) => (this.instalacionPotencia = value * 400),
-    });
+  constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef) {
+    this.panelCapacityW = this.sharedService.getPanelCapacityW();
   }
 
   ngOnInit(): void {
@@ -29,6 +27,11 @@ export class PotenciaComponent {
         this.updateInstalacionPotencia();
       }
     });
+    
+    /* this.sharedService.panelsCountSelected$.subscribe({
+      next: (value) => (this.instalacionPotencia = value * this.panelCapacityW),
+    });
+ */
 
     this.panelCapacitySubscription = this.sharedService.panelCapacityW$.subscribe({
       next: value => {
@@ -49,5 +52,6 @@ export class PotenciaComponent {
 
   private updateInstalacionPotencia(): void {
     this.instalacionPotencia = this.panelsCountSelected * this.panelCapacityW;
+    this.cdr.detectChanges(); 
   }
 }

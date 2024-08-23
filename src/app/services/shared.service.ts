@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SharedService {
   
-  
   private tarifaContratada: string = '';
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();

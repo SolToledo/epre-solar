@@ -58,7 +58,7 @@ export class SolarApiService {
           `Faltan los siguientes datos: ${missingFields.join(', ')}`,
           'Cerrar',
           {
-            duration: 5000,
+            duration: 2000,
           }
         );
 
@@ -75,12 +75,6 @@ export class SolarApiService {
         polygonArea,
         panelsSupported: this.panelsSupported,
       };
-
-      /* const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-        })
-      }; */
 
       const response = await lastValueFrom(
         this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
