@@ -59,7 +59,8 @@ h5 {
 /*************************************************************************/
 /*SNACKBAR*/
 .mat-mdc-snack-bar-container {
-  --mdc-snackbar-container-color: var(--light-background)!important;
+ /* --mdc-snackbar-container-color: var(--light-background)!important;*/
+  --mdc-snackbar-container-color: white!important;
   --mdc-snackbar-supporting-text-color: var(--font-light)!important;
   --mat-snack-bar-button-color: black!important;
 }
@@ -67,6 +68,17 @@ h5 {
 .mat-snack-bar-container.custom-snackbar {
   font-weight: bold !important;
 }
+
+.custom-snackbar {
+  border: 2px solid var(--medium-green)!important; /* Borde verde */
+  border-radius: 8px !important; /* Opcional: redondeo de esquinas */
+  box-shadow: 
+    /*0 4px 8px rgba(0, 98, 65, 0.5) !important, /* Sombra verde más cercana */
+     0 6px 20px rgba(0, 98, 65, 0.3) !important; /* Sombra verde más difusa */
+}
+
+
+
 /************************************************************************/
 /* General */
 .content {

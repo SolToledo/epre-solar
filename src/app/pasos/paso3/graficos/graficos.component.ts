@@ -52,7 +52,7 @@ export class GraficosComponent implements OnInit {
         data: this.periodoVeinteanalFlujoEnergia.map(
           (item) => item.autoconsumida
         ),
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        backgroundColor:'red' /*'rgba(54, 162, 235, 0.2)'*/  ,
         borderColor: 'rgba(54, 162, 235, 1)',
       },
       {
