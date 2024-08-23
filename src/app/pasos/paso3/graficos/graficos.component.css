@@ -56,7 +56,6 @@
   width: 12%;
   display: flex;
   justify-content:flex-start;
-  background-color: rgb(155, 155, 221);
 }
 
 .tamaño-icon{
@@ -67,7 +66,6 @@
 .titulo{
   color:var(--dark-green);
   width: 60%;
-  background-color: coral;
   text-align: center;
 }
 
@@ -78,13 +76,11 @@
 }
 
 .resultado-container{
- /* width: 28%;*/
- width: auto;
+  width: auto;
   display: flex;
   gap: 5px;
   display: flex;
   justify-content: end;
-  background-color: chartreuse;
 }
 
 .resultado{
