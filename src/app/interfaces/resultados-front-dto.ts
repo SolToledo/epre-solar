@@ -11,6 +11,7 @@ export interface ResultadosFrontDTO {
   periodoVeinteanalGeneracionFotovoltaica: GeneracionFotovoltaicaFront[];
   periodoVeinteanalFlujoEnergia: FlujoEnergiaFront[];
   periodoVeinteanalFlujoIngresosMonetarios: FlujoIngresosMonetariosFront[];
+  ahorroUsdPromedio: number;
   periodoVeinteanalEmisionesGEIEvitadas: EmisionesGeiEvitadasFront[];
   periodoVeinteanalProyeccionTarifas: ProyeccionTarifasFront[];
   resultadosFinancieros: {

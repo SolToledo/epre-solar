@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SharedService {
   
+  
   private tarifaContratada: string = '';
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
@@ -25,7 +26,8 @@ export class SharedService {
   panelCapacityW$ = this.panelCapacityWSubject.asObservable();
   private yearlyEnergyAcKwhSubject = new BehaviorSubject<number>(0);
   yearlyEnergyAcKwh$ = this.yearlyEnergyAcKwhSubject.asObservable();
-
+  private ahorroAnualUsdPromedioSubject = new BehaviorSubject<number>(0);
+  ahorroAnualUsdPromedio$ = this.ahorroAnualUsdPromedioSubject.asObservable();
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
   }
@@ -91,5 +93,13 @@ export class SharedService {
   
   getYearlyEnergyAcKwh(): number {
     return this.yearlyEnergyAcKwhSubject.getValue();
+  }
+
+  setAhorroAnualUsdPromedio(ahorroPromedio: number) {
+    this.ahorroAnualUsdPromedioSubject.next(ahorroPromedio);
+  }
+
+  getAhorroAnualUsdPromedio() {
+    return this.ahorroAnualUsdPromedioSubject.getValue();
   }
 }

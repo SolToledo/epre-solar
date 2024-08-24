@@ -58,14 +58,14 @@ export class SolarApiService {
           `Faltan los siguientes datos: ${missingFields.join(', ')}`,
           'Cerrar',
           {
-            duration: 5000,
+            duration: 2000,
             panelClass: ['error-snackbar'], // Aplica la nueva clase CSS
           }
         );
 
         setTimeout(() => {
           this.router.navigate(['/pasos/1']).then(()=> this.sharedService.setIsLoading(false));
-        }, 5000);
+        }, 2000);
         return;
       }
 
@@ -80,9 +80,9 @@ export class SolarApiService {
       const response = await lastValueFrom(
         this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
       );
-      // console.log(response);
+      console.log(response);
       this._resultados = this.resultadoService.generarResultados(response);
-      // console.log(this._resultados);
+      console.log(this._resultados);
       return this.getResultados;
     } catch (error) {
       console.error('Error en el cálculo:', error);
