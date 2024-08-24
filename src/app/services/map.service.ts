@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { LocationService } from './location.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedService } from './shared.service';
+import { Paso1Component } from '../pasos/paso1/paso1.component';
 
 @Injectable({
   providedIn: 'root',

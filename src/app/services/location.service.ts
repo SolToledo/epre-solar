@@ -319,6 +319,7 @@ export class LocationService {
     marker: google.maps.marker.AdvancedMarkerElement
   ): Promise<google.maps.LatLng | null> {
     try {
+      
       const geocodeResult = await this.geocodingService.geocodeAddress(
         placeName,
         map,
@@ -359,20 +360,17 @@ export class LocationService {
           return selectedLatLng;
         } else {
           // Esta rama se ejecuta si la ubicación no está dentro de San Juan
-          const defaultLocation = new google.maps.LatLng(-31.5364, -68.50639);
-          map.setZoom(14);
-          map.setCenter(defaultLocation);
+          map.setZoom(14); 
           this.snackBar.open(
             'El área seleccionada está fuera de la Provincia de San Juan.',
             '',
             {
               duration: 4000,
-              panelClass: ['custom-snackbar'],
               horizontalPosition: 'center',
               verticalPosition: 'top',
             }
           );
-          return defaultLocation;
+          return null;
         }
       } else {
         throw new Error('No se pudo geocodificar la dirección.');

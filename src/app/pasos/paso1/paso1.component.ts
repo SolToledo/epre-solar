@@ -17,7 +17,7 @@ export class Paso1Component implements OnInit {
   tutorialShown: boolean = false;
   areaMarked: boolean = false;
   @ViewChild('pacInput', { static: false }) pacInput!: ElementRef;
-  private marker: google.maps.marker.AdvancedMarkerElement | undefined;
+  private marker!: google.maps.marker.AdvancedMarkerElement | null;
   private map!: google.maps.Map;
 
   constructor(
@@ -25,7 +25,7 @@ export class Paso1Component implements OnInit {
     private snackBar: MatSnackBar,
     private sharedService: SharedService,
     private mapService: MapService,
-    private locationService: LocationService,
+    private locationService: LocationService
   ) {}
 
   ngOnInit(): void {
@@ -47,13 +47,13 @@ export class Paso1Component implements OnInit {
       'marker'
     )) as google.maps.MarkerLibrary;
     this.map = this.mapService.getMap();
-    
+
     if (!this.map) {
       this.router.navigate(['/']);
       console.error('El mapa no está inicializado.');
       return;
     }
-    this.map.setZoom(22);
+    this.map.setZoom(14);
     this.marker = new AdvancedMarkerElement({
       map: this.map,
     });
@@ -75,7 +75,7 @@ export class Paso1Component implements OnInit {
 
   showTutorial() {
     const driverObj = driver({
-      showProgress:false,
+      showProgress: false,
       steps: [
         {
           element: '#sub-titulo',
@@ -144,12 +144,11 @@ export class Paso1Component implements OnInit {
       ],
     });
     driverObj.drive();
-    
   }
 
   showTooltip() {
-    if(!this.areaMarked) {
-      this.snackBar.open(
+    if (!this.areaMarked) {
+      const snackbarRef = this.snackBar.open(
         'Debe seleccionar una zona de instalación para continuar.',
         '',
         {
@@ -163,11 +162,18 @@ export class Paso1Component implements OnInit {
   }
 
   async buscarUbicacion(value: string) {
+    const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+      'marker'
+    )) as google.maps.MarkerLibrary;
+    this.map = this.mapService.getMap();
     if (!this.marker) {
-      console.error('El marcador no está inicializado.');
-      return;
+      this.marker = new AdvancedMarkerElement({
+        map: this.map,
+      });
     }
     try {
+      console.log(value);
+      
       const location = await this.locationService.validateLocation(
         value,
         this.map,
@@ -175,9 +181,27 @@ export class Paso1Component implements OnInit {
       );
 
       if (location) {
-        this.marker.position = location;
+        // Si la ubicación es válida, actualiza o crea el marcador
+        if (!this.marker) {
+          // Si no existe un marcador, crea uno
+          this.marker = new google.maps.marker.AdvancedMarkerElement({
+            position: location,
+            map: this.map,
+          });
+        } else {
+          // Si ya existe un marcador, actualiza su posición
+          this.marker.position = location;
+          this.marker.map = this.map; // Asegura que el marcador esté en el mapa
+        }
+
         this.areaMarked = true;
+        this.map.panTo(location);
       } else {
+        if (this.marker) {
+          this.marker.map = null; // Elimina el marcador del mapa
+        }
+
+        this.areaMarked = false;
         console.error('La ubicación no es válida.');
       }
     } catch (error) {
@@ -186,7 +210,7 @@ export class Paso1Component implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/pasos/0'])
+    this.router.navigate(['/pasos/0']);
   }
 
   goToPaso2() {
@@ -199,15 +223,15 @@ export class Paso1Component implements OnInit {
     // Si todo está bien, avanzar al siguiente paso
     polygons[0].setEditable(false);
     this.mapService.setDrawingMode(null);
-    
+
     this.router.navigate(['/pasos/2']);
   }
 
   private async initializeAutocomplete() {
     const input = document.getElementById('pac-input') as HTMLInputElement;
     const searchBox = new google.maps.places.SearchBox(input);
-    
-    // Restricciones geográficas (ejemplo: limitar a Argentina)
+
+    // Restricciones geográficas
     new google.maps.places.Autocomplete(input, {
       componentRestrictions: { country: 'ar' },
     });
@@ -222,23 +246,38 @@ export class Paso1Component implements OnInit {
       if (places && places.length > 0) {
         const place = places[0];
         if (place.geometry && place.geometry.location) {
-          if (this.marker) {
-            const location = await this.locationService.validateLocation(
-              place.name || 'default',
-              this.map,
-              this.marker
-            );
-            if (location) {
-              this.map.setCenter(location);
-              this.mapService.recenterMapAfterLocationSet(location);
-            } else {
-              console.warn('No se pudo establecer la ubicación en el mapa.');
+          const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+            'marker'
+          )) as google.maps.MarkerLibrary;
+          this.map = this.mapService.getMap();
+          if (!this.marker) {
+            this.marker = new AdvancedMarkerElement({
+              map: this.map,
+            });
+          }
+
+          const location = await this.locationService.validateLocation(
+            place.formatted_address || 'default',
+            this.map,
+            this.marker
+          );
+          if (location) {
+            this.map.setCenter(location);
+            // this.mapService.recenterMapAfterLocationSet(location);
+          } else {
+            if (this.marker) {
+              this.marker.map = null; // Elimina el marcador del mapa
+              this.marker = null; // Limpia la referencia al marcador
             }
-            input.value = '';
+
+            this.areaMarked = false;
+            console.error('La ubicación no es válida.');
           }
         }
       }
+      input.value = '';
     });
+    input.value = '';
   }
 
   enableDrawingMode() {
@@ -248,6 +287,4 @@ export class Paso1Component implements OnInit {
   clearDrawing() {
     this.mapService.clearDrawing();
   }
-
-  
 }

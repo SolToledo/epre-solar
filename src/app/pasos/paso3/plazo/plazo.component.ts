@@ -66,14 +66,15 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updatePlazoRecuperoInversion(newYearlyEnergyAcKwh: number): void {
     if (newYearlyEnergyAcKwh > 0) {
+      // Ajuste para reflejar la relación inversa
       this.plazoRecuperoInversion = 
-        (this.plazoRecuperoInversionInicial * newYearlyEnergyAcKwh ) /
-        this.yearlyEnergyAcKwhInitial;
+        (this.plazoRecuperoInversionInicial * this.yearlyEnergyAcKwhInitial) /
+        newYearlyEnergyAcKwh;
+      
       this.sharedService.setPlazoInversion(this.plazoRecuperoInversion);
     } else {
-      
       this.plazoRecuperoInversion = this.plazoRecuperoInversionInicial;
     }
-    this.cdr.detectChanges(); 
+    this.cdr.detectChanges(); 
   }
 }
