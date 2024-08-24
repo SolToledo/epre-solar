@@ -139,6 +139,8 @@ export class Paso0Component implements OnInit, AfterViewInit {
         {
           duration: 5000,
           panelClass: ['custom-snackbar'],
+          /*horizontalPosition: 'center',
+          verticalPosition: 'top',*/
           horizontalPosition: 'center',
           verticalPosition: 'top',
         }
