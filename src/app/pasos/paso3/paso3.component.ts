@@ -95,7 +95,7 @@ export class Paso3Component implements OnInit {
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
 
     this.sharedService.setPanelCapacityW(this.panelCapacityW);
-    
+    this.sharedService.setPanelsCountSelected(this.panelesCantidad);
     this.carbonOffsetFactorTnPerMWh = parseFloat(
       (
         this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000

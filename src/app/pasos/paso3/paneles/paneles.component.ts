@@ -26,7 +26,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
   
   constructor(private mapService: MapService, private sharedService: SharedService, private cdr: ChangeDetectorRef) {
     this.plazoRecuperoInversionValorInicial = this.sharedService.getPlazoInversionValue();
-    this.panelesCantidad = this.maxPanelsArea$;
+    this.panelesCantidad = this.sharedService.getPanelsSelected();
   }
 
   ngOnInit(): void {
