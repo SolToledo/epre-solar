@@ -53,7 +53,7 @@ export class Paso1Component implements OnInit {
       console.error('El mapa no está inicializado.');
       return;
     }
-    this.map.setZoom(14);
+    this.map.setZoom(23);
     this.marker = new AdvancedMarkerElement({
       map: this.map,
     });

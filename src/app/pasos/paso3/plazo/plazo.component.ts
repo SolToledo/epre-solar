@@ -17,8 +17,11 @@ import { SharedService } from 'src/app/services/shared.service';
 export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
   private plazoInversionSubscription!: Subscription;
   private yearlyEnergyAcKwhSubscription!: Subscription;
+  private panelsCountSelectedSubscription!: Subscription;
   plazoRecuperoInversion: number = 0;
-  plazoRecuperoInversionInicial!: number;
+  plazoRecuperoInversionInicial: number = 0;
+  panelsCountSelected: number = 0;
+
   @Input() yearlyEnergyAcKwhInitial: number = 0;
 
   constructor(
@@ -30,7 +33,7 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sharedService.getPlazoInversionValue();
     this.plazoRecuperoInversion = this.plazoRecuperoInversionInicial;
     this.yearlyEnergyAcKwhInitial = this.sharedService.getYearlyEnergyAcKwh();
-    console.log(this.plazoRecuperoInversion, this.plazoRecuperoInversionInicial, this.yearlyEnergyAcKwhInitial);
+    
     
   }
 
@@ -48,6 +51,9 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.updatePlazoRecuperoInversion(newYearlyEnergyAcKwh);
       }
     });
+
+    this.panelsCountSelected =  this.sharedService.getPanelsSelected();
+    console.log(this.plazoRecuperoInversion, this.plazoRecuperoInversionInicial, this.yearlyEnergyAcKwhInitial, this.panelsCountSelected);
     this.cdr.detectChanges();
   }
 

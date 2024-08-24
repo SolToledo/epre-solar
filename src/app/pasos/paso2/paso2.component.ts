@@ -24,7 +24,6 @@ export class Paso2Component implements OnInit {
   allFieldsFilled: boolean = false;
   tarifaContratada: string = '';
   isCategorySelected: boolean = false;
-  private tooltipTimeout: any;
   isFieldsDisabled: boolean = true;
   isEditable: boolean = false;
   driverObj: any;
@@ -169,7 +168,7 @@ export class Paso2Component implements OnInit {
   }
 
   showTooltip() {
-    this.tooltipTimeout = setTimeout(() => {
+    setTimeout(() => {
       if (!this.allFieldsFilled || !this.isCategorySelected) {
         this.snackBar.open(
           'Debe ingresar todos los meses para poder continuar.',
