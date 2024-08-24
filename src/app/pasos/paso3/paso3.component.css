@@ -55,7 +55,8 @@
 .item {
   background-color: var(--gris);
   min-width: 210px;
-  min-height: 120px;
+ /* min-height: 120px;*/
+  min-height:80px ;
   display: flex;
   flex-direction: column;
   border-radius: 8px;
