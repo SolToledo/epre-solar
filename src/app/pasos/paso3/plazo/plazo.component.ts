@@ -53,7 +53,6 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.panelsCountSelected =  this.sharedService.getPanelsSelected();
-    console.log(this.plazoRecuperoInversion, this.plazoRecuperoInversionInicial, this.yearlyEnergyAcKwhInitial, this.panelsCountSelected);
     this.cdr.detectChanges();
   }
 

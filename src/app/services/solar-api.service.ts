@@ -79,9 +79,9 @@ export class SolarApiService {
       const response = await lastValueFrom(
         this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
       );
-
+      // console.log(response);
       this._resultados = this.resultadoService.generarResultados(response);
-      console.log(this._resultados);
+      // console.log(this._resultados);
       return this.getResultados;
     } catch (error) {
       console.error('Error en el cálculo:', error);
