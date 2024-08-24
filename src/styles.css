@@ -59,7 +59,6 @@ h5 {
 /*************************************************************************/
 /*SNACKBAR*/
 .mat-mdc-snack-bar-container {
- /* --mdc-snackbar-container-color: var(--light-background)!important;*/
   --mdc-snackbar-container-color: white!important;
   --mdc-snackbar-supporting-text-color: var(--font-light)!important;
   --mat-snack-bar-button-color: black!important;
@@ -70,16 +69,24 @@ h5 {
 }
 
 .custom-snackbar {
-  border: 2px solid var(--medium-green)!important; /* Borde verde */
-  border-radius: 8px !important; /* Opcional: redondeo de esquinas */
-  box-shadow: 
-    /*0 4px 8px rgba(0, 98, 65, 0.5) !important, /* Sombra verde más cercana */
-     0 6px 20px rgba(0, 98, 65, 0.3) !important; /* Sombra verde más difusa */
+  border: 2px solid var(--medium-green)!important; 
+  border-radius: 8px !important; 
+  box-shadow:0 6px 20px rgba(0, 98, 65, 0.3) !important; 
 }
 
-
+.custom-snackbar {
+  margin-top:110px !important; /* Ajusta el margen según sea necesario */
+}
 
 /************************************************************************/
+/*ESTE SNACKBAR ES DE ERROR DE PASO3*/
+.error-snackbar {
+  border: 1px solid #d32f2f; 
+  border-radius: 4px; 
+  box-shadow: 0px 0px 10px rgba(211, 47, 47, 0.5); 
+}
+/***********************************************************************/
+
 /* General */
 .content {
   background-color: white;
@@ -213,7 +220,8 @@ button[disabled] {
 
  .component-container-borde {
     width: 100%;
-    height:120px;
+   /* height:120px;*/
+   height: 100px;
     border-radius: 8px;
     position: relative;
     background-color: white;
@@ -222,7 +230,8 @@ button[disabled] {
  .component-container {
     background-color: var(--light-background);
     width: 100%;
-    height:120px;
+   /* height:120px;*/
+    height: 100px;
     border-radius: 8px;
   }
 
@@ -231,7 +240,8 @@ button[disabled] {
     border-radius: 8px 8px 0 0;
     color: var(--dark-green);
     width: 100%;
-    height: 25%;
+    /*height: 25%;*/
+    height: 35px;/*****************/
     font-size: 1.1em;
     display: flex;
     justify-content: center;
@@ -251,7 +261,8 @@ button[disabled] {
     border-radius: 8px 8px 0 0;
     color: var(--dark-green);
     width: 100%;
-    height: 25%;
+    /*height: 25%;*/
+    height: 35px;/*****************/
     font-size: 1em;
     display: flex;
     justify-content: center;
@@ -268,7 +279,8 @@ button[disabled] {
 
   .informacion-general {
     width: 100%;
-    height: 75%;
+    /*height: 75%;*/
+    height: 65px;/**********************/
     box-sizing: border-box;
     padding-left: 10px;
     padding-right: 10px;
@@ -283,7 +295,8 @@ button[disabled] {
   /**********************************************************/
   .ajustar-contenido {
     width: 100%;
-    height: 75%;
+   /* height: 75%;*/
+    height: 100%;/***************************/
     display: flex;
     justify-content: center;
     align-items: center;

@@ -58,13 +58,14 @@ export class SolarApiService {
           `Faltan los siguientes datos: ${missingFields.join(', ')}`,
           'Cerrar',
           {
-            duration: 2000,
+            duration: 5000,
+            panelClass: ['error-snackbar'], // Aplica la nueva clase CSS
           }
         );
 
         setTimeout(() => {
           this.router.navigate(['/pasos/1']).then(()=> this.sharedService.setIsLoading(false));
-        }, 2000);
+        }, 5000);
         return;
       }
 
