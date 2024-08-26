@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
@@ -16,7 +16,8 @@ export class Paso0Component implements OnInit, AfterViewInit {
   isTermsAccepted: boolean = false;
   driverObjInit: any;
   tutorialShown: boolean = false;
-
+ 
+  
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
@@ -35,7 +36,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
-           /* prevBtnText: 'Anterior',*/
+          prevBtnText: 'Anterior',
             doneBtnText: 'Terminar',
           },
         },
@@ -108,6 +109,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
         this.driverObjInit.drive();
       }, 50);
     }
+   
   }
 
   goBack() {
@@ -124,6 +126,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
 
   showTerms() {
     this.showModal = true;
+    
   }
 
   handleAccepted(event: boolean) {

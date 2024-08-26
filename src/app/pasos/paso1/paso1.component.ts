@@ -87,7 +87,7 @@ export class Paso1Component implements OnInit {
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
-         
+            prevBtnText: 'Anterior',
             doneBtnText: 'Terminar',
           },
         },

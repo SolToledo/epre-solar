@@ -67,6 +67,7 @@ export class Paso2Component implements OnInit {
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
+            prevBtnText: 'Anterior',
             doneBtnText: 'Terminar',
           },
         },
