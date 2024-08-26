@@ -73,7 +73,8 @@ export class Paso1Component implements OnInit {
     this.mapService.initializeDrawingManager();
   }
 
-  showTutorial() {
+
+ showTutorial() {
     const driverObj = driver({
       showProgress: false,
       steps: [
@@ -86,7 +87,7 @@ export class Paso1Component implements OnInit {
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
-            prevBtnText: 'Anterior',
+         
             doneBtnText: 'Terminar',
           },
         },
@@ -144,7 +145,10 @@ export class Paso1Component implements OnInit {
       ],
     });
     driverObj.drive();
+
   }
+
+   
 
   showTooltip() {
     if (!this.areaMarked) {

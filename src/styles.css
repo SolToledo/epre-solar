@@ -78,6 +78,7 @@ h5 {
   margin-top:110px !important; /* Ajusta el margen según sea necesario */
 }
 
+
 /************************************************************************/
 /*ESTE SNACKBAR ES DE ERROR DE PASO3*/
 .error-snackbar {
@@ -709,48 +710,19 @@ button[disabled] {
 }
 
 
-/**************************************************************************/
-/*Radio button de paso 3*/
-.mdc-form-field>label {
-  margin-left: 0 !important;
-  margin-right: 0px!important;
-  padding-left: 0px!important;
-  padding-right: 0 !important;
-  order: 0;
-  margin-top:0px !important;
+/*********************************************************************************/
+/* Ocultar los controles de número en navegadores basados en WebKit */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
 
-.mat-mdc-radio-button .mdc-form-field {
-  font-family: var(--mdc-typography-body2-font-family, var(--mdc-typography-font-family, Sodo Sans, sans-serif))!important;
-  font-size: var(--mdc-typography-body2-font-size, 13px)!important;
-  font-weight: var(--mdc-typography-body2-font-weight, 600)!important;
-}
-.mat-mdc-radio-button .mdc-form-field {
-  color: var(--mdc-theme-text-primary-on-background, var(--medium-green))!important;
+input[type=number] {
+  appearance: none;
 }
 
-.mat-mdc-radio-button.mat-accent {
-  --mdc-radio-disabled-selected-icon-color: #000;
-  --mdc-radio-disabled-unselected-icon-color: #000;
-  --mdc-radio-unselected-hover-icon-color: #212121;
-  --mdc-radio-unselected-icon-color: rgba(0, 0, 0, 0.54);
-  --mdc-radio-unselected-pressed-icon-color: rgba(0, 0, 0, 0.54);
-  --mdc-radio-selected-focus-icon-color: var(--medium-green)!important;
-  --mdc-radio-selected-hover-icon-color:var(--medium-green)!important;
-  --mdc-radio-selected-icon-color:var(--medium-green)!important;
-  --mdc-radio-selected-pressed-icon-color: var(--medium-green)!important;
-  --mat-radio-ripple-color: #000;
-  --mat-radio-checked-ripple-color:var(--medium-green)!important;
-  --mat-radio-disabled-label-color: rgba(0, 0, 0, 0.38);
-}
 
-.mat-accent {
-  --mat-option-selected-state-label-text-color:var(--medium-green)!important;
-}
-
-.mat-accent {
-  --mat-option-selected-state-label-text-color: var(--medium-green)!important;
-}
 
 
 /*****************************************************************************/
