@@ -78,6 +78,7 @@ h5 {
   margin-top:110px !important; /* Ajusta el margen según sea necesario */
 }
 
+
 /************************************************************************/
 /*ESTE SNACKBAR ES DE ERROR DE PASO3*/
 .error-snackbar {
@@ -751,6 +752,22 @@ button[disabled] {
 .mat-accent {
   --mat-option-selected-state-label-text-color: var(--medium-green)!important;
 }
+
+
+/*********************************************************************************/
+/* Ocultar los controles de número en navegadores basados en WebKit */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+/* Asegurarse de que la apariencia de los inputs de número sea consistente */
+input[type=number] {
+  appearance: none;
+}
+
+
 
 
 /*****************************************************************************/

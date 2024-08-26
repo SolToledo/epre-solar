@@ -256,5 +256,13 @@ export class Paso3Component implements OnInit {
     this.polygons = this.mapService.getPolygons();
     this.polygons[0].setEditable(true);
     this.mapService.setDrawingMode(null);
+
+     // Mostrar el snackbar
+      this.snackBar.open('Ya puedes editar la superficie', '', {
+      duration: 5000,
+      panelClass: ['custom-snackbar'],
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
   }
 }

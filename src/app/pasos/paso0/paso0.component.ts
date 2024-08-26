@@ -35,7 +35,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
-            prevBtnText: 'Anterior',
+           /* prevBtnText: 'Anterior',*/
             doneBtnText: 'Terminar',
           },
         },
