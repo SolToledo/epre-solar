@@ -231,6 +231,68 @@
 }
 
 /**********************************************************/
+/* Modal de correo electronico */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 350px; 
+}
+
+.modal-container h2 {
+ color: var(--dark-green);
+}
+
+.modal-container p {
+  color: var(--font-light);
+ }
+
+
+.input-container {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+#email {
+  width: 100%; 
+  padding: 10px;
+  border: 2px solid gray; 
+  border-radius: 4px; 
+  font-size: 16px; 
+  outline: none; 
+  box-sizing: border-box; 
+}
+
+#email:focus {
+  border-color: var(--medium-green); 
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+
+/**********************************************************/
 /* Estilos para resoluciones mayores a 1366px */
 @media only screen and (min-width: 1367px) {
   .content-scroll{

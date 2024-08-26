@@ -752,8 +752,8 @@ button[disabled] {
   --mat-option-selected-state-label-text-color: var(--medium-green)!important;
 }
 
-/****************************************************************************/
 
+/*****************************************************************************/
 /* Estilos para resoluciones mayores a 1366px */
 @media only screen and (min-width: 1400px) {
   #sub-titulo {
@@ -770,4 +770,4 @@ button[disabled] {
 }
 
 
-/***********************************************************/
+
