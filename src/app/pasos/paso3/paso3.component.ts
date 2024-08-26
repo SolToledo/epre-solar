@@ -18,6 +18,20 @@ import { NearbyLocationService } from 'src/app/services/nearby-location.service'
   styleUrls: ['./paso3.component.css'],
 })
 export class Paso3Component implements OnInit {
+  isModalOpen = false;
+  email: string = '';
+
+  openModal(): void {
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+  }
+
+
+
+
   items: any[] = [];
   currentStep: number = 3;
   mostrarModal: boolean = false;
@@ -143,14 +157,34 @@ export class Paso3Component implements OnInit {
     });
   }
 
+
+ 
+
   sendEmail(): void {
+    if (this.email) {
+      // Lógica para enviar el correo utilizando el email ingresado
+      this.gmailService.sendEmailWithResults().then(() => {
+    this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
+          duration: 5000,
+          panelClass: ['custom-snackbar'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+    });
+    this.closeModal();
+  });
+    }
+  }
+
+
+
+  /*sendEmail(): void {
     this.gmailService.sendEmailWithResults().then(() => {
       this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
         duration: 3000,
         panelClass: ['custom-snackbar'],
       });
     });
-  }
+  }*/
 
   mostrarAdvertencia(): void {
     this.mostrarModal = true;
