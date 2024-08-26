@@ -29,9 +29,6 @@ export class Paso3Component implements OnInit {
     this.isModalOpen = false;
   }
 
-
-
-
   items: any[] = [];
   currentStep: number = 3;
   mostrarModal: boolean = false;
@@ -98,19 +95,18 @@ export class Paso3Component implements OnInit {
           this.resultadosFront = resultado;
         })
         .then(() => this.initialLoadFields())
-        .catch((error)=>console.log("error ", error));
+        .catch((error) => console.log('error ', error));
       this.sharedService.setIsLoading(false);
     }
   }
 
   private initialLoadFields(): void {
     console.log(this.resultadosFront);
-    
-    this.panelesCantidad =
-      this.resultadosFront.solarData.panels.panelsCountApi;
+
+    this.panelesCantidad = this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
-    
+
     this.yearlyEnergyAcKwh = parseFloat(
       this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
     );
@@ -122,9 +118,9 @@ export class Paso3Component implements OnInit {
         this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000
       ).toFixed(3)
     );
-    
+
     this.proporcionAutoconsumo = 85;
-    
+
     this.sharedService.setPlazoInversion(
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
         .payBackSimpleYears * 12
@@ -157,34 +153,20 @@ export class Paso3Component implements OnInit {
     });
   }
 
-
- 
-
   sendEmail(): void {
     if (this.email) {
       // Lógica para enviar el correo utilizando el email ingresado
       this.gmailService.sendEmailWithResults().then(() => {
-    this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
+        this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
           duration: 5000,
           panelClass: ['custom-snackbar'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
-    });
-    this.closeModal();
-  });
+        });
+        this.closeModal();
+      });
     }
   }
-
-
-
-  /*sendEmail(): void {
-    this.gmailService.sendEmailWithResults().then(() => {
-      this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
-        duration: 3000,
-        panelClass: ['custom-snackbar'],
-      });
-    });
-  }*/
 
   mostrarAdvertencia(): void {
     this.mostrarModal = true;
