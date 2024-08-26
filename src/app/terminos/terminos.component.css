@@ -21,6 +21,7 @@
 
 h2 {
   margin-top: 0;
+  font-family: 'Times New Roman', Times, serif; /* Tipo de letra */
 }
 
 .close-button {
@@ -47,6 +48,15 @@ h2 {
 .check {
   margin-top: 20px;
 }
+
+.check input[type="checkbox"]:disabled + label {
+  color: #888; /* Color para el texto del checkbox cuando está deshabilitado */
+}
+
+
+
+
+
 
 .button-group {
   display: flex;
@@ -146,4 +156,11 @@ h2 {
 }
 #texto-contacto{
   font-family: "Sodo Sans", sans-serif;
+}
+
+
+
+
+.content-scroll {
+  border: 1px solid red; /* Temporarily add a border to visualize the scroll container */
 }

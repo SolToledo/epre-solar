@@ -2,7 +2,7 @@
   <div class="modal-content">
     <span class="close-button" (click)="closeModal()">×</span>
     <h2>Términos y Condiciones</h2>
-    <div class="terms-content  content-scroll">
+    <div class="terms-content  content-scroll" #termsContent>
       <!-- Contenido de los términos y condiciones -->
       <p>La aplicación de la web “Mapa Solar E.P.R.E.”, como parte del sitio web del E.P.R.E. San Juan, proporciona estimaciones aproximadas sobre el costo y el retorno de inversión de la implementación de energía solar, haciendo uso de datos de la Solar API de Google, del Banco Interamericano de Desarrollo (BID) y otras variables relevantes.</p>
 
@@ -49,8 +49,12 @@
       <p id="contactos">Lunes a Viernes de 7:30 a 14:00 hs</p>
       
     </div>
-    <div class="check">
+    <!--<div class="check">
       <input type="checkbox" id="acceptTerms" [(ngModel)]="isTermsAccepted" (change)="toggleAcceptButton($event)" />
+      <label for="acceptTerms">Acepto los términos y condiciones</label>
+    </div>-->
+    <div class="check">
+      <input type="checkbox" id="acceptTerms" [(ngModel)]="isTermsAccepted" (change)="toggleAcceptButton($event)" [disabled]="!isCheckboxEnabled" />
       <label for="acceptTerms">Acepto los términos y condiciones</label>
     </div>
     
