@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GeocodingService } from './geocoding.service';
 import { SharedService } from './shared.service';
+import { NearbyLocationService } from './nearby-location.service';
+import { NearbyLocation } from '../interfaces/nearby-location';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LocationService {
-  private predefinedLocations = [
+  private predefinedLocations: NearbyLocation[] = [
     {
       lat: -31.658,
       lng: -68.277,
@@ -310,7 +312,8 @@ export class LocationService {
   constructor(
     private geocodingService: GeocodingService,
     private snackBar: MatSnackBar,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private nearbyService: NearbyLocationService
   ) {}
 
   async validateLocation(
@@ -319,48 +322,47 @@ export class LocationService {
     marker: google.maps.marker.AdvancedMarkerElement
   ): Promise<google.maps.LatLng | null> {
     try {
-      
       const geocodeResult = await this.geocodingService.geocodeAddress(
         placeName,
         map,
         marker
       );
-      
+
       if (geocodeResult) {
         const lat = geocodeResult.lat;
         const lng = geocodeResult.lng;
         const predefinedLocation = this.findNearbyLocation(lat, lng);
-  
+
         if (predefinedLocation) {
           this.snackBar.open(
-            `Ubicación cerca de una ubicación predefinida: ${lat} - ${lng}. Usando datos predefinidos.`,
+            `Ubicación cerca de una ubicación predefinida: ${lat} - ${lng}. 
+             Se utilizarán datos predefinidos.`,
             '',
             {
-              duration: 3000,
+              duration: 5000,
               panelClass: ['custom-snackbar'],
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
             }
           );
-  
+
           const predefinedLatLng = new google.maps.LatLng(
             predefinedLocation.lat,
             predefinedLocation.lng
           );
           marker.position = predefinedLatLng;
-          // map.setZoom(22);
-          // map.setCenter(predefinedLatLng);
-          this.requestSavingsCalculation(predefinedLocation);
-  
+          this.sharedService.setNearbyLocation(predefinedLocation);
+          /* this.requestSavingsCalculation(predefinedLocation); */
+
           return predefinedLatLng;
         } else if (this.isWithinSanJuan(lat, lng)) {
-          
           const selectedLatLng = new google.maps.LatLng(lat, lng);
           marker.position = selectedLatLng;
           map.setZoom(22);
-          // map.setCenter(selectedLatLng);
           return selectedLatLng;
         } else {
           // Esta rama se ejecuta si la ubicación no está dentro de San Juan
-          map.setZoom(14); 
+          map.setZoom(14);
           this.snackBar.open(
             'El área seleccionada está fuera de la Provincia de San Juan.',
             '',
@@ -380,17 +382,13 @@ export class LocationService {
       return null;
     }
   }
-  
 
   private isWithinSanJuan(lat: number, lng: number): boolean {
     // Verifica si la ubicación está dentro de las coordenadas de la provincia de San Juan
     return lat >= -31.878 && lat <= -30.175 && lng >= -69.192 && lng <= -66.879;
   }
-  
-  validatePolygonLocation(
-    polygon: google.maps.Polygon,
-    map: google.maps.Map
-  ) {
+
+  validatePolygonLocation(polygon: google.maps.Polygon, map: google.maps.Map) {
     const path = polygon.getPath().getArray();
 
     // 1. Calcular el centroide del polígono
@@ -400,8 +398,8 @@ export class LocationService {
     if (this.isWithinSanJuan(lat, lng)) {
       const nearbyLocation = this.findNearbyLocation(lat, lng);
       if (nearbyLocation) {
-
-        this.requestSavingsCalculation(nearbyLocation);
+        this.sharedService.setNearbyLocation(nearbyLocation);
+        // this.requestSavingsCalculation(nearbyLocation);
         map.setZoom(22);
         map.panTo(new google.maps.LatLng(lat, lng));
         this.snackBar.open(
@@ -411,7 +409,7 @@ export class LocationService {
             duration: 6000,
             panelClass: ['custom-snackbar'],
             horizontalPosition: 'center',
-            verticalPosition: 'bottom'
+            verticalPosition: 'bottom',
           }
         );
         return nearbyLocation;
@@ -431,7 +429,7 @@ export class LocationService {
           verticalPosition: 'top',
         }
       );
-      return false; 
+      return false;
     }
   }
 
@@ -493,9 +491,16 @@ export class LocationService {
     return (degrees * Math.PI) / 180;
   }
 
-  private requestSavingsCalculation(location: any) {
+  private requestSavingsCalculation(location: NearbyLocation): void {
     console.log('con las coordenadas de samuel :', location);
     this.sharedService.setPredefinedCoordinates(true);
     this.sharedService.setNearbyLocation(location);
+    this.nearbyService
+      .calculate(location)
+      .then((response) => {
+        console.log(response);
+        this.sharedService.setResultadosFrontNearby(response);
+      })
+      .catch((error) => console.error(error));
   }
 }

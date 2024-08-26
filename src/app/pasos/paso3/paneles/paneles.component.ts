@@ -1,11 +1,17 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSlider } from '@angular/material/slider';
 import { Subscription } from 'rxjs';
 import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
-
 
 @Component({
   selector: 'app-paneles',
@@ -23,44 +29,48 @@ export class PanelesComponent implements OnInit, OnDestroy {
   plazoRecuperoInversion!: number;
   plazoRecuperoInversionValorInicial: number;
   potenciaPanelesControl = new FormControl('');
-  
-  constructor(private mapService: MapService, private sharedService: SharedService, private cdr: ChangeDetectorRef) {
-    this.plazoRecuperoInversionValorInicial = this.sharedService.getPlazoInversionValue();
+
+  constructor(
+    private mapService: MapService,
+    private sharedService: SharedService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.plazoRecuperoInversionValorInicial =
+      this.sharedService.getPlazoInversionValue();
     this.panelesCantidad = this.sharedService.getPanelsSelected();
   }
 
   ngOnInit(): void {
-    if (this.panelCapacityW === 400 || this.panelCapacityW === 500) {
-      this.potenciaPanelesControl.setValue(this.panelCapacityW.toString());
-    } else {
-      console.warn('Valor inesperado de panelCapacityW:', this.panelCapacityW);
-    }
     
+    this.potenciaPanelesControl.setValue(this.panelCapacityW.toString() ?? 400);
 
-    this.maxPanelsPerAreaSubscription = this.mapService.maxPanelsPerArea$.subscribe({
-      next: value => {
-        this.maxPanelsArea$ = value
-        this.panelesCantidad = Math.max(4, Math.min(this.panelesCantidad, this.maxPanelsArea$));
-        this.sharedService.setPanelsCountSelected(this.panelesCantidad);
-      }
-    })
+    this.maxPanelsPerAreaSubscription =
+      this.sharedService.maxPanelsPerSuperface$.subscribe({
+        next: (value) => {
+          this.maxPanelsArea$ = value;
+          this.panelesCantidad = Math.max(
+            4,
+            Math.min(this.panelesCantidad, this.maxPanelsArea$)
+          );
+          this.sharedService.setPanelsCountSelected(this.panelesCantidad);
+        },
+      });
 
-    
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
 
-     // Suscríbete al observable del plazo de recuperación de la inversión
-     this.plazoInversionSubscription = this.sharedService.plazoInversion$.subscribe({
-      next: (plazo) => {
-        this.plazoRecuperoInversion = plazo;
-      },
-    });
+    // Suscríbete al observable del plazo de recuperación de la inversión
+    this.plazoInversionSubscription =
+      this.sharedService.plazoInversion$.subscribe({
+        next: (plazo) => {
+          this.plazoRecuperoInversion = plazo;
+        },
+      });
 
-     this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
+    this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
       const panelCapacity = parseInt(value, 10);
       if (panelCapacity === 400 || panelCapacity === 500) {
         this.sharedService.setPanelCapacityW(panelCapacity);
-        this.panelCapacityW = panelCapacity; 
-        
+        this.panelCapacityW = panelCapacity;
       } else {
         console.warn('Valor inesperado en potenciaPanelesControl:', value);
       }
@@ -82,8 +92,11 @@ export class PanelesComponent implements OnInit, OnDestroy {
   }
 
   onSliderChange() {
-    this.panelesCantidad = Math.max(4, Math.min(this.panelesCantidad, this.maxPanelsArea$));
-    
+    this.panelesCantidad = Math.max(
+      4,
+      Math.min(this.panelesCantidad, this.maxPanelsArea$)
+    );
+
     this.mapService.reDrawPanels(this.panelesCantidad);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
   }

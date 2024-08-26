@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { ResultadoService } from './resultado.service';
@@ -8,6 +8,7 @@ import { MapService } from './map.service';
 import { SharedService } from './shared.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SolarDataFront } from '../interfaces/solar-data-front';
 
 @Injectable({
   providedIn: 'root',
@@ -19,32 +20,41 @@ export class SolarApiService {
   annualConsumption: number = 0;
   private panelsSupportedSubscription!: Subscription;
   panelsSupported: number = 0;
+  private mapService!: MapService;
 
   constructor(
     private http: HttpClient,
+    private injector: Injector,
     private readonly resultadoService: ResultadoService,
     private consumoService: ConsumoService,
-    private mapService: MapService,
+    /* private mapService: MapService, */
     private sharedService: SharedService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
+
+  private getMapService(): MapService {
+    if (!this.mapService) {
+      this.mapService = this.injector.get(MapService);
+    }
+    return this.mapService;
+  }
 
   async calculate(): Promise<any> {
-
+    const mapService = this.getMapService();
     try {
-      const polygonCoordinates = this.mapService.getPolygonCoordinates();
-      const polygonArea = this.mapService.getPolygonArea();
+      const polygonCoordinates = mapService.getPolygonCoordinates();
+      const polygonArea = mapService.getPolygonArea();
       const categoriaSeleccionada = this.sharedService.getTarifaContratada();
 
       this.consumoService.totalConsumo$.subscribe({
         next: (value) => (this.annualConsumption = value),
       });
 
-      this.panelsSupportedSubscription =
-        this.mapService.maxPanelsPerArea$.subscribe({
-          next: (value) => (this.panelsSupported = value),
-        });
+      this.sharedService.maxPanelsPerSuperface$.subscribe({
+        next: value => this.panelsSupported = value
+      })
+      
       // Verifica los datos y muestra mensajes específicos
       const missingFields = [];
       if (!this.annualConsumption) missingFields.push('Consumo anual');
@@ -64,7 +74,9 @@ export class SolarApiService {
         );
 
         setTimeout(() => {
-          this.router.navigate(['/pasos/1']).then(()=> this.sharedService.setIsLoading(false));
+          this.router
+            .navigate(['/pasos/1'])
+            .then(() => this.sharedService.setIsLoading(false));
         }, 2000);
         return;
       }
@@ -80,7 +92,7 @@ export class SolarApiService {
       const response = await lastValueFrom(
         this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
       );
-      console.log(response);
+
       this._resultados = this.resultadoService.generarResultados(response);
       console.log(this._resultados);
       return this.getResultados;
@@ -91,5 +103,24 @@ export class SolarApiService {
 
   get getResultados(): ResultadosFrontDTO {
     return this._resultados;
+  }
+
+  async calculateWithNearby(
+    solarData: SolarDataFront
+  ): Promise<ResultadosFrontDTO> {
+    
+    try {
+      const response = await lastValueFrom(
+        this.http.post<any>(`${this.apiUrl}/solar/calculate-nearby`, solarData)
+      );
+      console.log("Response devuelta ", response);
+      
+      this._resultados = this.resultadoService.generarResultados(response);
+     /*  console.log('NEARBY RESULTADOS FRONT ', this._resultados); */
+      return this.getResultados;
+    } catch (error) {
+      console.error('Error en el cálculo con nearby:', error);
+      throw error;
+    }
   }
 }

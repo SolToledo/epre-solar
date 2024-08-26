@@ -263,7 +263,6 @@ export class Paso1Component implements OnInit {
           );
           if (location) {
             this.map.setCenter(location);
-            // this.mapService.recenterMapAfterLocationSet(location);
           } else {
             if (this.marker) {
               this.marker.map = null; // Elimina el marcador del mapa

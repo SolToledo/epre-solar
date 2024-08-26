@@ -13,4 +13,8 @@ export class ConsumoService {
   setTotalConsumo(total: number): void {
     this.totalConsumoSubject.next(total);
   }
+
+  getTotalConsumo(): number {
+    return this.totalConsumoSubject.getValue();
+  }
 }

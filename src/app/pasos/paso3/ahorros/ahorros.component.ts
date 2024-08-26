@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
@@ -25,45 +25,45 @@ export class AhorrosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sharedService.ahorroAnualUsdPromedio$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (ahorroValue) => {
-          if (this.ahorrosUsdInitial === 0) {
-            this.ahorrosUsdInitial = ahorroValue;
-            this.ahorrosUsd = ahorroValue;
-          } else {
-            this.ahorrosUsd = ahorroValue;
-          }
-          this.updateAhorro();  // Actualizamos el ahorro cada vez que cambia el valor inicial
-          this.cdr.detectChanges();
-        },
-      });
+    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .subscribe({
+      next: (ahorroValue) => {
+        if (this.ahorrosUsdInitial === 0) {
+          this.ahorrosUsdInitial = ahorroValue;
+          this.ahorrosUsd = ahorroValue;
+        } else {
+          this.ahorrosUsd = ahorroValue;
+        }
+        this.updateAhorro();
+        this.cdr.detectChanges();
+      },
+    });
 
-    this.sharedService.panelsCountSelected$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (newPanelsCountSelected) => {
-          if (this.panelsCountInitial === 0) {
-            this.panelsCountInitial = newPanelsCountSelected;
-          }
-          this.panelsCountSelected = newPanelsCountSelected;
-          this.updateAhorro();  // Actualizamos el ahorro cada vez que cambia la cantidad de paneles
-          this.cdr.detectChanges();
-        },
-      });
+  this.sharedService.panelsCountSelected$
+    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .subscribe({
+      next: (newPanelsCountSelected) => {
+        if (this.panelsCountInitial === 0) {
+          this.panelsCountInitial = newPanelsCountSelected;
+        }
+        this.panelsCountSelected = newPanelsCountSelected;
+        this.updateAhorro();
+        this.cdr.detectChanges();
+      },
+    });
 
-    this.sharedService.panelCapacityW$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (newPanelCapacity) => {
-          if (this.panelCapacityWInitial === 0) {
-            this.panelCapacityWInitial = newPanelCapacity;
-          }
-          this.panelCapacityW = newPanelCapacity;
-          this.updateAhorro();  
-          this.cdr.detectChanges();
-        },
-      });
+  this.sharedService.panelCapacityW$
+    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .subscribe({
+      next: (newPanelCapacity) => {
+        if (this.panelCapacityWInitial === 0) {
+          this.panelCapacityWInitial = newPanelCapacity;
+        }
+        this.panelCapacityW = newPanelCapacity;
+        this.updateAhorro();
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   ngOnDestroy(): void {
@@ -76,10 +76,14 @@ export class AhorrosComponent implements OnInit, OnDestroy {
       const newAhorroValue =
         (this.panelsCountSelected * this.panelCapacityW * this.ahorrosUsdInitial) /
         (this.panelsCountInitial * this.panelCapacityWInitial);
-
-      this.sharedService.setAhorroAnualUsdPromedio(
-        parseInt(newAhorroValue.toFixed(0))
-      );
+  
+      // Convertimos el valor calculado a un número entero
+      const roundedAhorroValue = parseInt(newAhorroValue.toFixed(0));
+  
+      // Solo actualizamos si el nuevo valor es diferente del actual
+      if (roundedAhorroValue !== this.sharedService.getAhorroAnualUsdPromedio()) {
+        this.sharedService.setAhorroAnualUsdPromedio(roundedAhorroValue);
+      }
     }
   }
 }

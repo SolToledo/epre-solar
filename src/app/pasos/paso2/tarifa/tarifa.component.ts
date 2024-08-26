@@ -19,6 +19,9 @@ export class TarifaComponent implements OnInit {
   
   tarifaContratada: string = '';
   consumosMensuales: number[] = [];
+  potenciaMaxAsignada: number = 0;
+  inputPotenciaContratada: number | null = null;
+
   @Output() isCategorySelected = new EventEmitter<boolean>(false);
   @ViewChild('tarifaSelect') tarifaSelect!: ElementRef;
 
@@ -71,6 +74,11 @@ export class TarifaComponent implements OnInit {
 
   ngOnInit(): void {
     this.tarifaContratada = this.sharedService.getTarifaContratada();
+    this.sharedService.potenciaMaxAsignada$.subscribe({
+      next: (potencia) => {
+        this.potenciaMaxAsignada = potencia;
+      },
+    });
   }
 
   ngAfterViewInit(): void {
@@ -85,6 +93,16 @@ export class TarifaComponent implements OnInit {
     this.sharedService.setTarifaContratada(this.tarifaContratada);
     this.isCategorySelected.emit(this.isOptionSelected());
     this.updateConsumosMensuales();
+
+    const tarifaSeleccionada = this.tarifas.find(
+      (tarifa) => tarifa.value === this.tarifaContratada
+    );
+
+    if (tarifaSeleccionada) {
+      this.potenciaMaxAsignada = tarifaSeleccionada.potenciaMaxAsignada;
+      this.sharedService.setPotenciaMaxAsignada(tarifaSeleccionada.potenciaMaxAsignada);
+      this.inputPotenciaContratada = this.potenciaMaxAsignada;
+    }
   }
 
   updateConsumosMensuales(): void {
@@ -92,4 +110,15 @@ export class TarifaComponent implements OnInit {
       this.tarifaContratada
     );
   }
+
+  isPotenciaMaxDisabled(): boolean {
+    return this.potenciaMaxAsignada === 10 || this.potenciaMaxAsignada === 20;
+  }
+
+  onPotenciaInputChange(): void {
+    if (this.potenciaMaxAsignada < 0) {
+      this.potenciaMaxAsignada = 0;
+    }
+  }
+  
 }

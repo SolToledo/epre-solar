@@ -11,6 +11,7 @@ import { MapService } from 'src/app/services/map.service';
 import jsPDF from 'jspdf';
 import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { ConsumoService } from 'src/app/services/consumo.service';
+import { NearbyLocationService } from 'src/app/services/nearby-location.service';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -30,11 +31,11 @@ export class Paso3Component implements OnInit {
   private polygons!: any[];
   isLoading!: boolean;
   instalacionPotencia: number = 0;
-  isPredefinedCoordinates = this.sharedService.predefinedCoordinates$.subscribe(
+  /* isPredefinedCoordinates = this.sharedService.predefinedCoordinates$.subscribe(
     {
       next: (value) => value,
     }
-  );
+  ); */
   yearlyEnergyAcKwh: number = 0;
   proporcionAutoconsumo: number = 0;
   consumoTotalAnual: number = 0;
@@ -47,29 +48,26 @@ export class Paso3Component implements OnInit {
     private sharedService: SharedService,
     private mapService: MapService,
     private consumoTarifaService: ConsumoTarifaService,
-    private consumoService: ConsumoService
+    private consumoService: ConsumoService,
+    private nearbyService: NearbyLocationService
   ) {
     this.sharedService.isLoading$.subscribe({
       next: (value) => (this.isLoading = value),
     });
   }
   ngOnInit(): void {
+    this.sharedService.setIsLoading(true);
     setTimeout(() => {
       this.mapService.recenterMapToVisibleArea();
     }, 300);
 
     if (!this.sharedService.getNearbyLocation()) {
-      this.sharedService.setIsLoading(true);
       this.solarService
         .calculate()
         .then((resultados) => (this.resultadosFront = resultados))
         .then(() => this.initialLoadFields())
-        .then(()=> this.sharedService.setIsLoading(false))
-        .catch((error) => console.error('Error en calculate:', error))
-        .finally(() => {
-          
-          
-        });
+        .then(() => this.sharedService.setIsLoading(false))
+        .catch((error) => console.error('Error en calculate:', error));
     } else {
       this.snackBar.open(
         'Resultados calculados en base a uno de los 33 puntos.',
@@ -79,21 +77,30 @@ export class Paso3Component implements OnInit {
           panelClass: ['custom-snackbar'],
         }
       );
-      /* this.calculateService
-        .calculateWithPredefinedCoord()
-        .then((resultados: ResultadosFrontDTO) => (this.resultadosFront = resultados))
+
+      this.nearbyService
+        .calculate(this.sharedService.getNearbyLocation())
+        .then((resultado) => {
+          this.resultadosFront = resultado;
+        })
         .then(() => this.initialLoadFields())
-        .catch()
-        .finally(); */
+        .catch((error)=>console.log("error ", error));
+      this.sharedService.setIsLoading(false);
     }
   }
 
   private initialLoadFields(): void {
+    console.log(this.resultadosFront);
+    
     this.panelesCantidad =
-      this.resultadosFront.solarData.panels.maxPanelsPerSuperface;
+      this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
-
+    
+    this.yearlyEnergyAcKwh = parseFloat(
+      this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
+    );
+    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
     this.sharedService.setPanelCapacityW(this.panelCapacityW);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
     this.carbonOffsetFactorTnPerMWh = parseFloat(
@@ -101,22 +108,17 @@ export class Paso3Component implements OnInit {
         this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000
       ).toFixed(3)
     );
+    
     this.proporcionAutoconsumo = 85;
-    this.yearlyEnergyAcKwh = parseFloat(
-      this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
-    );
-    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
+    
     this.sharedService.setPlazoInversion(
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
         .payBackSimpleYears * 12
     );
 
     this.consumoService.totalConsumo$.subscribe({
-      next: value => this.consumoTotalAnual = value
+      next: (value) => (this.consumoTotalAnual = value),
     });
-    
-    
-    
   }
 
   print(): void {

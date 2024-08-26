@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
-  
-  
+ 
   private tarifaContratada: string = '';
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
@@ -28,6 +28,15 @@ export class SharedService {
   yearlyEnergyAcKwh$ = this.yearlyEnergyAcKwhSubject.asObservable();
   private ahorroAnualUsdPromedioSubject = new BehaviorSubject<number>(0);
   ahorroAnualUsdPromedio$ = this.ahorroAnualUsdPromedioSubject.asObservable();
+  private potenciaMaxAsignadaSubject = new BehaviorSubject<number>(0);
+  potenciaMaxAsignada$ = this.potenciaMaxAsignadaSubject.asObservable();
+  private potenciaInstalacionSubject = new BehaviorSubject<number>(0);
+  potenciaInstalacion$ = this.potenciaInstalacionSubject.asObservable();
+  private resultadosFrontSubject = new BehaviorSubject<Partial<ResultadosFrontDTO>>({});
+  resultadosFront$ = this. resultadosFrontSubject.asObservable();
+  private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
+  maxPanelsPerSuperface$ = this.maxPanelsPerSuperfaceSubject.asObservable();
+
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
   }
@@ -63,6 +72,10 @@ export class SharedService {
     this.panelsCountSelectedSubject.next(value);
   }
 
+  getPanelsSelected() {
+    return this.panelsCountSelectedSubject.getValue();
+  }
+
   setPlazoInversion(plazo: number): void {
     this.plazoInversionSubject.next(plazo);
   }
@@ -73,10 +86,6 @@ export class SharedService {
 
   expandStep3(): void {
     this.expandStep3Subject.next(false);
-  }
-
-  getPanelsSelected() {
-    return this.panelsCountSelectedSubject.getValue();
   }
 
   setPanelCapacityW(value: number) {
@@ -102,4 +111,39 @@ export class SharedService {
   getAhorroAnualUsdPromedio() {
     return this.ahorroAnualUsdPromedioSubject.getValue();
   }
+
+  setPotenciaMaxAsignada(potenciaMaxAsignada: number) {
+    this.potenciaMaxAsignadaSubject.next(potenciaMaxAsignada);
+  }
+  
+  getPotenciaMaxAsignadaValue(): number {
+    return this.potenciaMaxAsignadaSubject.getValue();
+  }
+
+  setPotenciaInstalacion(instalacionPotencia: number) {
+    this.potenciaInstalacionSubject.next(instalacionPotencia);
+  }
+
+  getPotenciaInstalacion() {
+    return this.potenciaInstalacionSubject.getValue();
+  }
+
+  setResultadosFrontNearby(resultadosFrontNearby: ResultadosFrontDTO) {
+    this.resultadosFrontSubject.next(resultadosFrontNearby);
+  }
+
+  getResultadosFrontNearby() {
+    return this.resultadosFrontSubject.getValue();
+  }
+
+  setMaxPanelsPerSuperface(maxPanels: number) {
+    return this.maxPanelsPerSuperfaceSubject.next(maxPanels);
+  }
+
+  getMaxPanelsPerSuperface() {
+    return this.maxPanelsPerSuperfaceSubject.getValue();
+  }
+  
+  
+  
 }

@@ -12,9 +12,11 @@ export class PotenciaComponent {
 
   private panelsCountSelectedSubscription!: Subscription;
   private panelCapacitySubscription!: Subscription;
+  potenciaMaxCategoriaSubscription!: Subscription;
 
   panelsCountSelected: number = 0;
   panelCapacityW: number = 0;
+  potenciaMaxCategoriaSelect: number = 0;
 
   constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef) {
     this.panelCapacityW = this.sharedService.getPanelCapacityW();
@@ -28,17 +30,18 @@ export class PotenciaComponent {
       }
     });
     
-    /* this.sharedService.panelsCountSelected$.subscribe({
-      next: (value) => (this.instalacionPotencia = value * this.panelCapacityW),
-    });
- */
-
     this.panelCapacitySubscription = this.sharedService.panelCapacityW$.subscribe({
       next: value => {
         this.panelCapacityW = value;
         this.updateInstalacionPotencia();
       }
     });
+
+    this.potenciaMaxCategoriaSubscription = this.sharedService.potenciaMaxAsignada$.subscribe({
+      next: (potenciaMax)=> {
+        this.potenciaMaxCategoriaSelect = potenciaMax * 1000
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -48,10 +51,18 @@ export class PotenciaComponent {
     if (this.panelCapacitySubscription) {
       this.panelCapacitySubscription.unsubscribe();
     }
+
+    if (this.potenciaMaxCategoriaSubscription) {
+      this.potenciaMaxCategoriaSubscription.unsubscribe();
+    }
   }
 
   private updateInstalacionPotencia(): void {
     this.instalacionPotencia = this.panelsCountSelected * this.panelCapacityW;
+    if(this.instalacionPotencia > this.potenciaMaxCategoriaSelect) {
+      this.instalacionPotencia = this.potenciaMaxCategoriaSelect;
+    }
+    this.sharedService.setPotenciaInstalacion(this.instalacionPotencia);
     this.cdr.detectChanges(); 
   }
 }

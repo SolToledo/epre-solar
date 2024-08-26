@@ -405,7 +405,7 @@ export class MapService {
     }
 
     if (!isReDraw) {
-      this.maxPanelsPerAreaSubject.next(totalPanels);
+      this.sharedService.setMaxPanelsPerSuperface(totalPanels);
       if (this.sharedService.getPanelsSelected() > totalPanels) {
         this.sharedService.setPanelsCountSelected(totalPanels);
       }

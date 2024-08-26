@@ -11,7 +11,7 @@ export class ResultadoService {
   constructor(private gmailService: GmailService, private sharedService: SharedService) {}
 
   generarResultados(response: any): ResultadosFrontDTO {
-    
+    console.log("response para generar resultados", response);
     this.checkUpdatePanelCapacity(response.solarData.panels.panelCapacityW);
     
     return (this.resultados = {
@@ -26,6 +26,7 @@ export class ResultadoService {
       resultadosFinancieros: response.resultadosFinancieros
     });
   }
+  
   ahorrosUsdCalcularPromediosVeinteanales(periodoVeinteanalFlujoIngresosMonetarios: any[]) {
     const sumaAhorros = periodoVeinteanalFlujoIngresosMonetarios.reduce((acumulador, anio) => {
       return acumulador + anio.ahorroEnElectricidadTotalUsd;
