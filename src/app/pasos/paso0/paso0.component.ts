@@ -45,7 +45,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
           popover: {
             title: 'Ubicación',
             description:
-              'Debe indicarse el lugar donde se planea instalar los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
+              'Debe indicarse el lugar donde instalaría los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -71,7 +71,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
           popover: {
             title: 'Consumo de electricidad y categoría tarifaria',
             description:
-              'En caso de no contar la misma, se considerarán los valores promedios de consumo para la categoría tarifaria del suministro.',
+              'En caso de no contar con la misma, se considerarán los valores promedios de consumo para la categoría tarifaria del suministro.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',

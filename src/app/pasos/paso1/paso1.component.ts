@@ -83,7 +83,7 @@ export class Paso1Component implements OnInit {
           popover: {
             title: 'Información importante',
             description:
-              'Lugar donde se instalarían los paneles fotovoltaicos.Seleccionar el lugar donde estará ubicada la instalación.',
+              'Lugar donde se instalarían los paneles fotovoltaicos.Seleccione el lugar donde estaría ubicada la instalación.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',

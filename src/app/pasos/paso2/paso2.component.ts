@@ -63,7 +63,7 @@ export class Paso2Component implements OnInit {
           popover: {
             title: 'Bienvenido',
             description:
-              'Esta es la sección de Consumo. Aquí puedes configurar tu consumo energético.',
+              'Esta es la sección de Consumo. Aquí puede configurar su consumo energético.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -100,7 +100,7 @@ export class Paso2Component implements OnInit {
           popover: {
             title: 'Carga Manual',
             description:
-              'Puedes activar esta opción para ingresar manualmente tu consumo mensual.',
+              'Puede activar esta opción para ingresar manualmente su consumo mensual.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -113,7 +113,7 @@ export class Paso2Component implements OnInit {
           popover: {
             title: 'Siguiente Paso',
             description:
-              'Cuando hayas completado todos los campos, presiona este botón para continuar.',
+              'Cuando haya completado todos los campos, presione este botón para continuar.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
