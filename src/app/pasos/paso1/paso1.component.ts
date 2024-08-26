@@ -83,7 +83,7 @@ export class Paso1Component implements OnInit {
           popover: {
             title: 'Información importante',
             description:
-              'Lugar donde se instalarían los paneles fotovoltaicos.Seleccione el lugar donde estaría ubicada la instalación.',
+              'Lugar donde se instalaría los paneles fotovoltaicos.Seleccione el lugar donde estaría ubicada la instalación.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -96,7 +96,7 @@ export class Paso1Component implements OnInit {
           popover: {
             title: 'Ubicación',
             description:
-              'Debe indicarse el lugar donde se planea instalar los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
+              'Debe indicar el lugar donde instalaría los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -109,7 +109,7 @@ export class Paso1Component implements OnInit {
           popover: {
             title: 'Selección manual de la ubicación',
             description:
-              'Presione para activar el selector de ubicación en el mapa. Puede marcar y ajustar los vértices del lugar donde se instalarían los paneles fotovoltaicos.',
+              'Presione para activar el selector de ubicación en el mapa. Puede marcar y ajustar los vértices del lugar donde se instalaría los paneles fotovoltaicos.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',

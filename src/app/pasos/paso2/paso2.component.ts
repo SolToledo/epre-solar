@@ -61,7 +61,7 @@ export class Paso2Component implements OnInit {
         {
           element: '#titulo', // ID del elemento
           popover: {
-            title: 'Bienvenido',
+            title: 'Consumo',
             description:
               'Esta es la sección de Consumo. Aquí puede configurar su consumo energético.',
             side: 'left',
@@ -87,7 +87,7 @@ export class Paso2Component implements OnInit {
           element: this.consumoContainer.nativeElement,
           popover: {
             title: 'Cuadro de consumos mensuales',
-            description: 'Estos valores se encuentran predefinidos. Podrá modificarlos habilitando el ingreso manual.',
+            description: 'Estos valores se encuentran predefinidos. Podrá modificarlos habilitando la carga manual.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
