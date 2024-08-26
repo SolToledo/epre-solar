@@ -12,6 +12,7 @@ import jsPDF from 'jspdf';
 import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { ConsumoService } from 'src/app/services/consumo.service';
 import { NearbyLocationService } from 'src/app/services/nearby-location.service';
+import { Paso2Component } from '../paso2/paso2.component';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -45,6 +46,7 @@ export class Paso3Component implements OnInit {
   yearlyEnergyAcKwh: number = 0;
   proporcionAutoconsumo: number = 0;
   consumoTotalAnual: number = 0;
+  paso2!: Paso2Component;
 
   constructor(
     private router: Router,
@@ -184,6 +186,8 @@ export class Paso3Component implements OnInit {
   }
 
   goBack() {
+    this.mapService.hideDrawingControl();
+    this.sharedService.setTutorialShown(true);
     this.router.navigate(['pasos/2']);
   }
 

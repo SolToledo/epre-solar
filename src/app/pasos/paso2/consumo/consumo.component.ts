@@ -53,7 +53,7 @@ export class ConsumoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.resetMesesConsumo();
+    /* this.resetMesesConsumo(); */
   }
 
   ngAfterViewInit(): void {
@@ -141,7 +141,7 @@ export class ConsumoComponent implements OnInit {
     });
     this.allCompleted = false;
     this.allFieldsCompleted.emit(this.allCompleted);
-    this.sharedService.setTarifaContratada('');
+    
     this.calcularTotalConsumo();
   }
 
