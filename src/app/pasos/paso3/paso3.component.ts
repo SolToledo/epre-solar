@@ -42,11 +42,6 @@ export class Paso3Component implements OnInit {
   private polygons!: any[];
   isLoading!: boolean;
   instalacionPotencia: number = 0;
-  /* isPredefinedCoordinates = this.sharedService.predefinedCoordinates$.subscribe(
-    {
-      next: (value) => value,
-    }
-  ); */
   yearlyEnergyAcKwh: number = 0;
   proporcionAutoconsumo: number = 0;
   consumoTotalAnual: number = 0;
@@ -156,7 +151,7 @@ export class Paso3Component implements OnInit {
   sendEmail(): void {
     if (this.email) {
       // Lógica para enviar el correo utilizando el email ingresado
-      this.gmailService.sendEmailWithResults().then(() => {
+      this.gmailService.sendEmailWithResults(this.email).then(() => {
         this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
           duration: 5000,
           panelClass: ['custom-snackbar'],
