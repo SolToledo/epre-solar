@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
@@ -16,7 +16,8 @@ export class Paso0Component implements OnInit, AfterViewInit {
   isTermsAccepted: boolean = false;
   driverObjInit: any;
   tutorialShown: boolean = false;
-
+ 
+  
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
@@ -35,7 +36,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
-           /* prevBtnText: 'Anterior',*/
+          prevBtnText: 'Anterior',
             doneBtnText: 'Terminar',
           },
         },
@@ -44,7 +45,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
           popover: {
             title: 'Ubicación',
             description:
-              'Debe indicarse el lugar donde se planea instalar los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
+              'Debe indicarse el lugar donde instalaría los paneles fotovoltaicos. Puede buscar la dirección del lugar, o seleccionar en el mapa.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -70,7 +71,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
           popover: {
             title: 'Consumo de electricidad y categoría tarifaria',
             description:
-              'En caso de no contar la misma, se considerarán los valores promedios de consumo para la categoría tarifaria del suministro.',
+              'En caso de no contar con la misma, se considerarán los valores promedios de consumo para la categoría tarifaria del suministro.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -108,6 +109,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
         this.driverObjInit.drive();
       }, 50);
     }
+   
   }
 
   goBack() {
@@ -124,6 +126,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
 
   showTerms() {
     this.showModal = true;
+    
   }
 
   handleAccepted(event: boolean) {

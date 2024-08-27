@@ -158,9 +158,7 @@ h2 {
   font-family: "Sodo Sans", sans-serif;
 }
 
-
-
-
-.content-scroll {
-  border: 1px solid red; /* Temporarily add a border to visualize the scroll container */
+.check p{
+  font-size: 13px;
+  text-decoration: underline;
 }
