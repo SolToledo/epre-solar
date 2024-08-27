@@ -7,12 +7,19 @@
   </select>
 </div>
 <br>
-<div class="potencia-contratada" *ngIf="tarifaContratada">
+<!--<div class="potencia-contratada" *ngIf="tarifaContratada">
   <div class="potencia-content">
     <input type="number" [(ngModel)]="potenciaMaxAsignada" placeholder="Potencia contratada"  [disabled]="isPotenciaMaxDisabled()" [max]="potenciaMaxAsignada" (input)="onPotenciaInputChange()">
     <p>*Potencia contratada (Máxima asignada: {{ potenciaMaxAsignada }} kW)</p>
   </div>  
+</div> -->
+
+<div class="potencia-contratada" *ngIf="tarifaContratada">
+  <div class="potencia-content">
+
+    <p>Potencia contratada (Máxima asignada: {{ potenciaMaxAsignada }} MW)</p>
+    <input type="number" [(ngModel)]="potenciaMaxAsignada" placeholder="Potencia contratada"  [disabled]="isPotenciaMaxDisabled()" [max]="potenciaMaxAsignada" (input)="onPotenciaInputChange()">
+    
+  </div>  
 </div>
-
-
 

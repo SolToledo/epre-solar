@@ -35,21 +35,34 @@ select:focus {
   width: 100%;
 }
 
-.potencia-content p{
-  margin: 0;
-  font-size: 12px;
-  color: var(--medium-green);
+.potencia-content{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+ align-items: center;
 }
 
-input{
-  width: auto;
-  height: 25px;
+.potencia-content p{
+  margin: 0;
+  font-size: 14px;
+  color: var(--font-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+input {
+  width: 50px;
+  height: 35px;
   border: 2px solid var(--light-background);
   border-radius: 8px; 
-  padding: 5px; 
-  font-size: 14px;
+  padding: 0; /* Elimina el padding interno para asegurar que el texto esté completamente centrado */
+  font-size: 16px;
   font-family: 'Sodo Sans', sans-serif;
-  color:black;
+  color: black;
+  text-align: center; /* Centra horizontalmente el texto */
+  line-height: 25px; /* Asegura que el texto esté centrado verticalmente */
   transition: border-color 0.3s ease; 
 }
 
