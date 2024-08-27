@@ -1,188 +1,286 @@
-import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Chart, ChartDataset, ChartOptions, ChartType } from 'chart.js';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { Chart } from 'chart.js';
 import 'chartjs-plugin-datalabels';
-
+import annotationPlugin from 'chartjs-plugin-annotation';
+import { Subscription } from 'rxjs';
+import { EmisionesGeiEvitadasFront } from 'src/app/interfaces/emisiones-gei-evitadas-front';
+import { FlujoEnergiaFront } from 'src/app/interfaces/flujo-energia-front';
+import { FlujoIngresosMonetariosFront } from 'src/app/interfaces/flujo-ingresos-monetarios-front';
+import { GeneracionFotovoltaicaFront } from 'src/app/interfaces/generacion-fotovoltaica-front';
+import { SharedService } from 'src/app/services/shared.service';
+Chart.register(annotationPlugin);
 @Component({
   selector: 'app-graficos',
   templateUrl: './graficos.component.html',
   styleUrls: ['./graficos.component.css'],
 })
-export class GraficosComponent implements OnInit, AfterViewInit {
-  @Input() periodoVeinteanalEmisionesGEIEvitadas!: any[];
-  @Input() periodoVeinteanalFlujoEnergia!: any[];
-  @Input() periodoVeinteanalFlujoIngresosMonetarios!: any[];
-  @Input() periodoVeinteanalGeneracionFotovoltaica!: any[];
+export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() periodoVeinteanalEmisionesGEIEvitadas!: EmisionesGeiEvitadasFront[];
+  @Input() periodoVeinteanalFlujoEnergia!: FlujoEnergiaFront[];
+  @Input()
+  periodoVeinteanalFlujoIngresosMonetarios!: FlujoIngresosMonetariosFront[];
+  @Input()
+  periodoVeinteanalGeneracionFotovoltaica!: GeneracionFotovoltaicaFront[];
   @Input() consumoTotalAnual!: number;
 
-  @ViewChild('emisionesChart') emisionesChartRef!: ElementRef<HTMLCanvasElement>;
-  // @ViewChild('energiaChart') energiaChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('ingresosChart') ingresosChartRef!: ElementRef<HTMLCanvasElement>;
-  // @ViewChild('fotovoltaicaChart') fotovoltaicaChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('solarEnergyPieChart') solarEnergyPieChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('emisionesChart')
+  emisionesChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('ahorrosChart') ahorrosChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('solarEnergyPieChart')
+  solarEnergyPieChartRef!: ElementRef<HTMLCanvasElement>;
 
-  public barChartOptions: ChartOptions = {
-    responsive: true,
-  };
-  public barChartLabels: string[] = [];
+  private emisionesChart!: Chart;
+  private ahorrosChart!: Chart;
+  private subscription!: Subscription;
+  private recuperoInversionMeses!: number;
+  remainingMonths!: number;
+  recuperoYear!: number;
+  carbonOffSet!: number;
+
+  constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.initializeChartLabels();
-   
+    this.subscription = new Subscription();
+
+    this.subscription.add(
+      this.sharedService.carbonOffSet$.subscribe((nuevoValor) => {
+        this.carbonOffSet = nuevoValor;
+        this.recalcularEmisiones(nuevoValor);
+        this.updateEmisionesChart();
+      })
+    );
+
+    this.subscription.add(
+      this.sharedService.plazoInversion$.subscribe((meses) => {
+        this.recuperoInversionMeses = meses;
+        this.updateAhorrosChart();
+      })
+    );
   }
 
   ngAfterViewInit(): void {
-    this.loadCharts();
+    this.createEmisionesChart();
+    this.createAhorrosChart();
   }
 
-  initializeChartLabels(): void {
-    this.barChartLabels = this.periodoVeinteanalEmisionesGEIEvitadas.map(
-      (_, index) => `Año ${index + 1}`
-    );
+  ngOnDestroy(): void {
+    if (this.emisionesChart) {
+      this.emisionesChart.destroy();
+    }
+
+    if (this.ahorrosChart) {
+      this.ahorrosChart.destroy();
+    }
+
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
-  loadCharts(): void {
-    this.createChart(
-      this.emisionesChartRef.nativeElement,
-      'line',
-      [{
-        label: 'Emisiones GEI Evitadas',
-        data: this.periodoVeinteanalEmisionesGEIEvitadas.map(item => item.emisionesTonCO2),
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-      }]
-    );
-  
-    this.createChart(
-      this.ingresosChartRef.nativeElement,
-      'line',
-      [
-        {
-          label: 'Ahorro Eléctrico Usd',
-          data: this.periodoVeinteanalFlujoIngresosMonetarios.map(item => item.ahorroEnElectricidadTotalUsd),
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-        },
-        {
-          label: 'Ingreso usd por Inyección',
-          data: this.periodoVeinteanalFlujoIngresosMonetarios.map(item => item.ingresoPorInyeccionElectricaUsd),
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-        }
-      ]
-    );
-  
-    this.createPieChart();
-  }
-  
-  createChart(
-    canvas: HTMLCanvasElement,
-    type: ChartType,
-    datasets: ChartDataset[]
-  ): void {
-    const ctx = canvas.getContext('2d');
+  private createEmisionesChart(): void {
+    const ctx = this.emisionesChartRef.nativeElement.getContext('2d');
     if (ctx) {
-      new Chart(ctx, {
-        type: type,
+      this.emisionesChart = new Chart(ctx, {
+        type: 'line',
         data: {
-          labels: this.barChartLabels,
-          datasets: datasets.map(dataset => ({
-            ...dataset,
-            fill: true,
-          })),
+          labels: this.periodoVeinteanalEmisionesGEIEvitadas.map(
+            (item) => item.year
+          ),
+          datasets: [
+            {
+              label: 'Emisiones GEI Evitadas (toneladas de CO2)',
+              data: this.periodoVeinteanalEmisionesGEIEvitadas.map(
+                (item) => item.emisionesTonCO2
+              ),
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 2,
+              fill: true,
+            },
+          ],
         },
         options: {
           responsive: true,
           scales: {
             x: {
-              display: true,
               title: {
-                display: true,
-                text: 'Años',
+                display: false,
+                text: 'Año',
               },
             },
             y: {
-              display: true,
               title: {
-                display: true,
-                text: 'Valor',
+                display: false,
+                text: 'Emisiones Evitadas (Ton CO2)',
               },
+              beginAtZero: false,
             },
           },
-        },
-      });
-    } else {
-      console.error('Failed to get 2D context');
-    }
-  }
-  
-
-  createPieChart(): void {
-    if (!this.solarEnergyPieChartRef || !this.solarEnergyPieChartRef.nativeElement) {
-      console.error('Canvas reference is not available');
-      return;
-    }
-  
-    const totalGenerado = this.periodoVeinteanalGeneracionFotovoltaica.reduce(
-      (acc, item) => acc + item.generacionFotovoltaicaKWh,
-      0
-    );
-  
-    const consumoRestante = totalGenerado - this.consumoTotalAnual;
-  
-    const data = {
-      labels: ['Energía Solar Generada', 'Consumo Total'],
-      datasets: [
-        {
-          data: [totalGenerado, consumoRestante],
-          backgroundColor: [
-            'rgba(255, 205, 86, 0.7)',
-            'rgba(201, 203, 207, 0.7)',
-          ],
-          hoverBackgroundColor: [
-            'rgba(255, 205, 86, 1)',
-            'rgba(201, 203, 207, 1)',
-          ],
-          borderColor: ['#ffffff', '#ffffff'],
-          borderWidth: 1,
-        },
-      ],
-    };
-  
-    const ctx = this.solarEnergyPieChartRef.nativeElement.getContext('2d');
-    if (ctx) {
-      new Chart(ctx, {
-        type: 'pie',
-        data: data,
-        options: {
-          responsive: true,
-          animation: {
-            animateScale: true,
-            animateRotate: true,
-            duration: 1500,
-          },
-          interaction: {
-            mode: 'index',
-            intersect: true,
-          },
-          maintainAspectRatio: true,
-          aspectRatio: 2,
-          cutout: '10%',
           plugins: {
             legend: {
-              display: true,
-              position: 'bottom',
-              labels: {
-                font: {
-                  size: 14,
-                },
-                color: '#333',
-              },
+              display: false,
+              position: 'top',
+            },
+            datalabels: {
+              display: false, // Desactiva las etiquetas de datos si no las necesitas
             },
           },
         },
       });
     } else {
-      console.error('Failed to get 2D context');
+      console.error('El contexto 2D no está disponible.');
+    }
+  }
+
+  private recalcularEmisiones(nuevoValor: number): void {
+    if (
+      this.periodoVeinteanalEmisionesGEIEvitadas &&
+      this.periodoVeinteanalEmisionesGEIEvitadas.length > 0
+    ) {
+      const valorInicial =
+        this.periodoVeinteanalEmisionesGEIEvitadas[0].emisionesTonCO2;
+      const factor = nuevoValor / valorInicial;
+
+      this.periodoVeinteanalEmisionesGEIEvitadas =
+        this.periodoVeinteanalEmisionesGEIEvitadas.map((item, index) => {
+          return {
+            ...item,
+            emisionesTonCO2: item.emisionesTonCO2 * factor,
+          };
+        });
+    }
+  }
+
+  private updateEmisionesChart(): void {
+    if (this.emisionesChart) {
+      this.emisionesChart.data.datasets[0].data =
+        this.periodoVeinteanalEmisionesGEIEvitadas.map(
+          (item) => item.emisionesTonCO2
+        );
+      this.emisionesChart.update();
+    }
+  }
+
+  private createAhorrosChart(): void {
+    const ctx = this.ahorrosChartRef.nativeElement.getContext('2d');
+    if (ctx) {
+      this.ahorrosChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: this.periodoVeinteanalFlujoIngresosMonetarios.map(
+            (item) => item.year
+          ),
+          datasets: [
+            {
+              label: 'Ahorro (USD)',
+              data: this.periodoVeinteanalFlujoIngresosMonetarios.map(
+                (item) => item.ahorroEnElectricidadTotalUsd
+              ),
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 2,
+              fill: true,
+            },
+            {
+              label: 'Inyección Eléctrica (USD)',
+              data: this.periodoVeinteanalFlujoIngresosMonetarios.map(
+                (item) => item.ingresoPorInyeccionElectricaUsd
+              ),
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 2,
+              fill: true,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              title: {
+                display: false,
+                text: 'Año',
+              },
+              min: 0, 
+              max: this.periodoVeinteanalFlujoIngresosMonetarios.length,
+            },
+
+            y: {
+              title: {
+                display: true,
+                text: 'USD',
+              },
+              beginAtZero: false,
+            },
+          },
+          plugins: {
+            legend: {
+              display: false,
+              position: 'top',
+            },
+            datalabels: {
+              display: false,
+            },
+            annotation: {
+              annotations: this.getAnnotations(),
+            },
+          },
+        },
+      });
+    } else {
+      console.error('El contexto 2D no está disponible.');
+    }
+  }
+
+  private getAnnotations() {
+    if (!this.recuperoInversionMeses) return [];
+
+    this.recuperoYear = Math.floor(this.recuperoInversionMeses / 12);
+    this.remainingMonths = Math.round(this.recuperoInversionMeses % 12);
+    this.cdr.detectChanges();
+    return [
+      {
+        id: 'recupero-inversion',
+        type: 'point' as const,
+        xScaleID: 'x' as const,
+        yScaleID: 'y' as const,
+        xValue: this.recuperoYear,
+        yValue: Math.max(
+          ...this.periodoVeinteanalFlujoIngresosMonetarios.map(
+            (item) => item.ahorroEnElectricidadTotalUsd
+          )
+        ),
+        backgroundColor: 'red',
+        radius: 5,
+        label: {
+          content: 'Recupero inversión',
+          enabled: true,
+          position: 'bottom' as any,
+          backgroundColor: 'rgba(255,0,0,0.7)',
+          color: 'black',
+          font: {
+            size: 12,
+          },
+        },
+      },
+    ];
+  }
+
+  private updateAhorrosChart(): void {
+    if (this.ahorrosChart) {
+      this.ahorrosChart.options.plugins!.annotation!.annotations =
+        this.getAnnotations();
+      this.ahorrosChart.update();
+      this.cdr.detectChanges();
     }
   }
 }

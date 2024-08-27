@@ -6,7 +6,7 @@ import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
   providedIn: 'root',
 })
 export class SharedService {
- 
+  
   private tarifaContratada: string = '';
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
@@ -36,6 +36,8 @@ export class SharedService {
   resultadosFront$ = this. resultadosFrontSubject.asObservable();
   private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
   maxPanelsPerSuperface$ = this.maxPanelsPerSuperfaceSubject.asObservable();
+  private carbonOffSetSubject = new BehaviorSubject<number>(0);
+  carbonOffSet$ = this.carbonOffSetSubject.asObservable();
 
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
@@ -145,6 +147,14 @@ export class SharedService {
 
   getMaxPanelsPerSuperface() {
     return this.maxPanelsPerSuperfaceSubject.getValue();
+  }
+
+  setCarbonOffSet(carbonOffSet: number) {
+    return this.carbonOffSetSubject.next(carbonOffSet);
+  }
+
+  getCarbonOffSet() {
+    return this.carbonOffSetSubject.getValue();
   }
   
   

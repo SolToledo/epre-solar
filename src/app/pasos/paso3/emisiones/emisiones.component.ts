@@ -37,6 +37,7 @@ export class EmisionesComponent implements OnInit, OnDestroy {
   calculateCarbonOffset(): void {
     const result = this.yearlyEnergyAcKwh * this.carbonOffsetFactorTnPerMWh / 1000;
     this.carbonOffset = parseFloat(result.toFixed(2));
+    this.sharedService.setCarbonOffSet(this.carbonOffset);
   }
 
   ngOnDestroy(): void {

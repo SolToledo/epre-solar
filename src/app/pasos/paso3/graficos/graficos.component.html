@@ -11,7 +11,7 @@
         </div>
         <div class="resultado-container">
           <div class="resultado">
-            <p class="resultado-numero">20</p>
+            <p class="resultado-numero">{{carbonOffSet}}</p>
           </div>
           <div class="unidad">
             <p class="unidad-texto">tCO2/MWh</p>
@@ -24,7 +24,7 @@
         </div>
         <hr />
         <div class="footer">
-          <p>Según los paneles seleccionados</p>
+          
         </div>
       </div>
     </div>
@@ -35,27 +35,27 @@
     <div class="grafico-container-borde">
       <div class="head">
         <div class="icono">
-          <img src="assets/icon-sol.png" class="tamaño-icon" alt="energia-sol" />
+          <img src="assets/icon-dinero.png" class="tamaño-icon" alt="ahorros" />
         </div>
         <div class="titulo">
-          <p>Valor esperado de energía y generación solar</p>
+          <p>Ahorros anuales y momento de recupero de la inversión</p>
         </div>
         <div class="resultado-container">
           <div class="resultado">
-            <p class="resultado-numero">--</p>
+            <p class="resultado-numero"></p>
           </div>
           <div class="unidad">
-            <p class="unidad-texto">kWh/año</p>
+            <p class="unidad-texto"></p>
           </div>
         </div>
       </div>
       <div class="informacion-general">
         <div class="grafico-component">
-          <canvas #solarEnergyPieChart></canvas>
+          <canvas #ahorrosChart></canvas>
         </div>
         <hr />
         <div class="footer">
-          <p>Según los paneles seleccionados</p>
+          <p>Recupero inversión ({{recuperoYear}} años, {{remainingMonths}} meses)</p>
         </div>
       </div>
     </div>
