@@ -187,6 +187,7 @@ export class Paso3Component implements OnInit {
 
   goBack() {
     this.mapService.hideDrawingControl();
+    
     this.sharedService.setTutorialShown(true);
     this.router.navigate(['pasos/2']);
   }

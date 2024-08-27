@@ -227,7 +227,7 @@ export class Paso1Component implements OnInit {
     // Si todo está bien, avanzar al siguiente paso
     polygons[0].setEditable(false);
     this.mapService.setDrawingMode(null);
-
+    this.sharedService.setTarifaContratada('');
     this.router.navigate(['/pasos/2']);
   }
 

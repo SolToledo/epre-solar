@@ -5,7 +5,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { TarifaComponent } from './tarifa/tarifa.component';
 import { MapService } from 'src/app/services/map.service';
 import { InstruccionesComponent } from 'src/app/instrucciones/instrucciones.component';
@@ -52,9 +52,20 @@ export class Paso2Component implements OnInit {
     this.sharedService.tutorialShown$.subscribe((shown) => {
       this.tutorialShown = shown;
     });
+
+    
   }
 
   ngAfterViewInit(): void {
+    const urlFromPaso1 = this.router.url === '/pasos/2' && this.router.getCurrentNavigation()?.previousNavigation?.finalUrl?.toString() === '/pasos/1';
+    const urlFromPaso3 = this.router.url === '/pasos/2' && this.router.getCurrentNavigation()?.previousNavigation?.finalUrl?.toString() === '/pasos/3'
+    if (urlFromPaso1) {
+      this.consumoComponent.resetMesesConsumo();
+    }else if(urlFromPaso3) {
+      this.allFieldsFilled = true;
+      this.isCategorySelected = true;
+    }
+
     this.driverObjInit = driver({
       showProgress: false,
       steps: [
