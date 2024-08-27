@@ -121,6 +121,9 @@ export class SharedService {
   }
 
   setPotenciaInstalacion(instalacionPotencia: number) {
+    if(instalacionPotencia > this.getPotenciaMaxAsignadaValue()){
+      
+    }
     this.potenciaInstalacionSubject.next(instalacionPotencia);
   }
 
