@@ -8,7 +8,7 @@ import {
   OnDestroy,
   ChangeDetectorRef,
 } from '@angular/core';
-import { Chart } from 'chart.js';
+import { Chart, ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
 import 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { Subscription } from 'rxjs';
@@ -35,18 +35,22 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('emisionesChart')
   emisionesChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('ahorrosChart') ahorrosChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('solarEnergyPieChart')
-  solarEnergyPieChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('energiaChart')
+  energiaChartRef!: ElementRef<HTMLCanvasElement>;
 
   private emisionesChart!: Chart;
   private ahorrosChart!: Chart;
+  private energiaChart!: Chart;
   private subscription!: Subscription;
   private recuperoInversionMeses!: number;
   remainingMonths!: number;
   recuperoYear!: number;
   carbonOffSet!: number;
 
-  constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private sharedService: SharedService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.subscription = new Subscription();
@@ -70,6 +74,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.createEmisionesChart();
     this.createAhorrosChart();
+    this.createEnergiaChart();
   }
 
   ngOnDestroy(): void {
@@ -79,6 +84,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.ahorrosChart) {
       this.ahorrosChart.destroy();
+    }
+
+    if (this.energiaChart) {
+      this.energiaChart.destroy();
     }
 
     if (this.subscription) {
@@ -210,7 +219,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
                 display: false,
                 text: 'Año',
               },
-              min: 0, 
+              min: 0,
               max: this.periodoVeinteanalFlujoIngresosMonetarios.length,
             },
 
@@ -281,6 +290,58 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getAnnotations();
       this.ahorrosChart.update();
       this.cdr.detectChanges();
+    }
+  }
+
+  private createEnergiaChart(): void {
+    const ctx = this.energiaChartRef.nativeElement.getContext('2d');
+    if (ctx) {
+      const totalGenerado = this.periodoVeinteanalGeneracionFotovoltaica.reduce(
+        (sum, item) => sum + item.generacionFotovoltaicaKWh,
+        0
+      );
+
+      const energiaFotovoltaicaPromedio =
+        totalGenerado / this.periodoVeinteanalGeneracionFotovoltaica.length;
+
+      const data = {
+        labels: [
+          'Consumo eléctrico anual',
+          'Promedio generación fotovoltaica anual',
+        ],
+        datasets: [
+          {
+            label: '',
+            data: [this.consumoTotalAnual, energiaFotovoltaicaPromedio],
+            backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)'],
+            hoverOffset: 4,
+          },
+        ],
+      };
+
+      const options: ChartOptions<'pie'> = {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          datalabels: {
+            color: '#fff',
+            formatter: (value: number) => {
+              return `${Math.round(value * 100)}%`;
+            },
+          },
+        },
+      };
+
+      const config: any = {
+        type: 'doughnut',
+        data: data,
+      };
+
+      this.energiaChart = new Chart(ctx, config);
+    } else {
+      console.error('El contexto 2D no está disponible.');
     }
   }
 }
