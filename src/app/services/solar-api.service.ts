@@ -27,7 +27,6 @@ export class SolarApiService {
     private injector: Injector,
     private readonly resultadoService: ResultadoService,
     private consumoService: ConsumoService,
-    /* private mapService: MapService, */
     private sharedService: SharedService,
     private router: Router,
     private snackBar: MatSnackBar

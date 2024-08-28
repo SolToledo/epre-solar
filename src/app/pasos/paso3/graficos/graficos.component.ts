@@ -46,6 +46,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   remainingMonths!: number;
   recuperoYear!: number;
   carbonOffSet!: number;
+  yearlyEnergy!: number;
+  porcentajeCubierto!: number | null;
 
   constructor(
     private sharedService: SharedService,
@@ -67,6 +69,13 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sharedService.plazoInversion$.subscribe((meses) => {
         this.recuperoInversionMeses = meses;
         this.updateAhorrosChart();
+      })
+    );
+
+    this.subscription.add(
+      this.sharedService.yearlyEnergyAcKwh$.subscribe((yearlyEnergy) => {
+        this.yearlyEnergy = yearlyEnergy;
+        this.updateEnergyChart();
       })
     );
   }
@@ -303,45 +312,128 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const energiaFotovoltaicaPromedio =
         totalGenerado / this.periodoVeinteanalGeneracionFotovoltaica.length;
-
+      if (this.consumoTotalAnual > 0) {
+        this.porcentajeCubierto =
+          ((this.yearlyEnergy || energiaFotovoltaicaPromedio) /
+            this.consumoTotalAnual) *
+          100;
+      } else {
+        this.porcentajeCubierto = null; // Manejar caso en que el consumo total sea 0
+      }
+      
       const data = {
-        labels: [
-          'Consumo eléctrico anual',
-          'Promedio generación fotovoltaica anual',
-        ],
+        labels: ['Consumo anual', 'Generación fotovoltaica anual'],
         datasets: [
           {
-            label: '',
             data: [this.consumoTotalAnual, energiaFotovoltaicaPromedio],
             backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)'],
+            borderColor: '#fff',
+            borderWidth: 2,
+            hoverBackgroundColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)'],
+            hoverBorderColor: ['#fff', '#fff'],
+            hoverBorderWidth: 3,
+            borderJoinStyle: '',
+            borderDash: [],
+            borderDashOffset: 0,
             hoverOffset: 4,
+            offset: [0, 5],
+            weight: 1,
+            rotation: 0,
+            circumference: 360,
+            spacing: 1,
           },
         ],
       };
 
       const options: ChartOptions<'pie'> = {
         responsive: true,
+        maintainAspectRatio: false, // Mantiene el aspecto del gráfico
+        aspectRatio: 1, // Relación de aspecto, 1 para un cuadrado
         plugins: {
           legend: {
             position: 'top',
+            align: 'start',
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
+            titleColor: '#fff', // Título blanco
+            bodyColor: '#fff', // Cuerpo blanco
+            displayColors: false,
+            position: 'nearest',
+            padding: { top: 10, right: 10, bottom: 10, left: 10 },
+            titleFont: { size: 14, weight: 'bold' },
+            titleAlign: 'left',
+            titleSpacing: 2,
+            titleMarginBottom: 6,
+            bodyFont: { size: 12 },
+            bodyAlign: 'left',
+            bodySpacing: 2,
+            footerFont: { size: 10 },
+            footerColor: '#fff',
+            footerAlign: 'right',
+            footerSpacing: 2,
+            footerMarginTop: 6,
+            caretPadding: 5,
+            caretSize: 5,
+            boxPadding: 4,
+            usePointStyle: true,
+            callbacks: {
+              label: function (context) {
+                return context.label + ': ' + context.formattedValue;
+              },
+            },
           },
           datalabels: {
             color: '#fff',
-            formatter: (value: number) => {
-              return `${Math.round(value * 100)}%`;
-            },
+            anchor: 'end', // Posiciona la etiqueta fuera del arco
+            align: 'start', // Alinea la etiqueta a la derecha del arco
           },
+        },
+        animation: {
+          animateRotate: true,
+          animateScale: true,
         },
       };
 
       const config: any = {
         type: 'doughnut',
         data: data,
+        options: options,
       };
 
       this.energiaChart = new Chart(ctx, config);
     } else {
       console.error('El contexto 2D no está disponible.');
+    }
+  }
+
+  private updateEnergyChart(): void {
+    if (this.energiaChart) {
+      const totalGenerado = this.periodoVeinteanalGeneracionFotovoltaica.reduce(
+        (sum, item) => sum + item.generacionFotovoltaicaKWh,
+        0
+      );
+
+      const energiaFotovoltaicaPromedio =
+        totalGenerado / this.periodoVeinteanalGeneracionFotovoltaica.length;
+      if (this.consumoTotalAnual > 0) {
+        this.porcentajeCubierto =
+          ((this.yearlyEnergy || energiaFotovoltaicaPromedio) /
+            this.consumoTotalAnual) *
+          100;
+      } else {
+        this.porcentajeCubierto = null; // Manejar caso en que el consumo total sea 0
+      }
+
+      // Actualiza los datos en el gráfico
+      this.energiaChart.data.datasets[0].data = [
+        this.consumoTotalAnual, // Este valor puede permanecer igual si no se ha cambiado
+        this.yearlyEnergy || energiaFotovoltaicaPromedio, // Se usa el nuevo valor de yearlyEnergy si está disponible
+      ];
+
+      // Llama a la función para actualizar el gráfico
+      this.energiaChart.update();
+      this.cdr.detectChanges(); // Si estás utilizando ChangeDetectionStrategy.OnPush, esto es necesario.
     }
   }
 }
