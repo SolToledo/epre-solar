@@ -367,9 +367,10 @@ export class LocationService {
             'El área seleccionada está fuera de la Provincia de San Juan.',
             '',
             {
-              duration: 4000,
-              horizontalPosition: 'center',
+              duration: 5000,
+              panelClass: ['custom-snackbar'],
               verticalPosition: 'top',
+              horizontalPosition: 'center',
             }
           );
           return null;
@@ -406,10 +407,10 @@ export class LocationService {
           'El área seleccionada está dentro de ubicaciones predeterminadas con datos obtenidos de la base de datos PVGIS-ERA5.',
           '',
           {
-            duration: 6000,
-            panelClass: ['custom-snackbar'],
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
+              duration: 5000,
+              panelClass: ['custom-snackbar'],
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
           }
         );
         return nearbyLocation;
@@ -423,10 +424,10 @@ export class LocationService {
         'El área seleccionada está fuera de la Provincia de San Juan.',
         '',
         {
-          duration: 4000,
+          duration: 5000,
           panelClass: ['custom-snackbar'],
-          horizontalPosition: 'center',
           verticalPosition: 'top',
+          horizontalPosition: 'center',
         }
       );
       return false;
@@ -492,13 +493,11 @@ export class LocationService {
   }
 
   private requestSavingsCalculation(location: NearbyLocation): void {
-    console.log('con las coordenadas de samuel :', location);
     this.sharedService.setPredefinedCoordinates(true);
     this.sharedService.setNearbyLocation(location);
     this.nearbyService
       .calculate(location)
       .then((response) => {
-        console.log(response);
         this.sharedService.setResultadosFrontNearby(response);
       })
       .catch((error) => console.error(error));

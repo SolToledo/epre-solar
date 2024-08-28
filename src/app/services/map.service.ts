@@ -251,7 +251,7 @@ export class MapService {
               'La ubicación seleccionada se encuentra fuera de la Provincia de San Juan, no se puede procesar.',
               '',
               {
-                duration: 3000,
+                duration: 5000,
                 panelClass: ['custom-snackbar'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
@@ -279,6 +279,7 @@ export class MapService {
         'Cerrar',
         {
           duration: 5000,
+          panelClass: ['custom-snackbar'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         }
@@ -294,6 +295,7 @@ export class MapService {
         'Cerrar',
         {
           duration: 5000,
+          panelClass: ['custom-snackbar'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         }

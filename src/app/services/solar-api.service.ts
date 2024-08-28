@@ -67,8 +67,10 @@ export class SolarApiService {
           `Faltan los siguientes datos: ${missingFields.join(', ')}`,
           'Cerrar',
           {
-            duration: 2000,
+            duration: 5000,
             panelClass: ['error-snackbar'], // Aplica la nueva clase CSS
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
           }
         );
 
