@@ -24,8 +24,10 @@ export class GeocodingService {
             'No se encontró la ubicación. Intente de nuevo.',
             '',
             {
-              duration: 3000,
+              duration: 5000,
               panelClass: ['custom-snackbar'],
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
             }
           );
           reject('No se encontró la ubicación');

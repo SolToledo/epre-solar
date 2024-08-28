@@ -22,6 +22,7 @@
 h2 {
   margin-top: 0;
   font-family: 'Times New Roman', Times, serif; /* Tipo de letra */
+  font-weight: bold;
 }
 
 .close-button {
