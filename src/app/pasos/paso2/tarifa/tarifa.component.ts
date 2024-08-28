@@ -156,7 +156,6 @@ export class TarifaComponent implements OnInit {
           this.sharedService.setPotenciaInstalacion(0);
           this.sharedService.setPotenciaMaxAsignada(0);
           this.sharedService.setTarifaContratada('');
-          
         });
       }
     });
@@ -169,7 +168,10 @@ export class TarifaComponent implements OnInit {
   }
 
   isPotenciaMaxDisabled(): boolean {
-    return this.potenciaMaxAsignada === 10 || this.potenciaMaxAsignada === 20;
+    const tarifasDeshabilitadas = ['T1-R', 'T1-G', 'T2-SMP'];
+    return tarifasDeshabilitadas.some((tarifa) =>
+      this.tarifaContratada.includes(tarifa)
+    );
   }
 
   onPotenciaInputChange(): void {

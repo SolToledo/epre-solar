@@ -68,6 +68,7 @@ export class SharedService {
   setIsLoading(value: boolean): void {
     this.isLoadingSubject.next(value);
   }
+
   setPanelsCountSelected(value: number): void {
     if(value < 4){
       this.panelsCountSelectedSubject.next(4);
@@ -126,7 +127,10 @@ export class SharedService {
 
   setPotenciaInstalacion(instalacionPotencia: number) {
     if(instalacionPotencia > this.getPotenciaMaxAsignadaValue()){
+      this.setIsStopCalculate(true);
       
+    } {
+      this.setIsStopCalculate(false);
     }
     this.potenciaInstalacionSubject.next(instalacionPotencia);
   }

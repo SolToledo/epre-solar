@@ -5,7 +5,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NavigationStart, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TarifaComponent } from './tarifa/tarifa.component';
 import { MapService } from 'src/app/services/map.service';
 import { InstruccionesComponent } from 'src/app/instrucciones/instrucciones.component';
