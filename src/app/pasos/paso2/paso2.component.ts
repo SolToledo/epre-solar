@@ -28,6 +28,7 @@ export class Paso2Component implements OnInit {
   isEditable: boolean = false;
   driverObj: any;
   tutorialShown: boolean = false;
+  isStopCalculate: boolean = true;
 
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
   @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent;
@@ -52,6 +53,12 @@ export class Paso2Component implements OnInit {
     this.sharedService.tutorialShown$.subscribe((shown) => {
       this.tutorialShown = shown;
     });
+
+    this.sharedService.isStopCalculate$.subscribe({
+      next: (newValue) => {
+        this.isStopCalculate = newValue;
+      }
+    })
 
     
   }

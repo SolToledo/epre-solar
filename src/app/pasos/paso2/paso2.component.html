@@ -81,7 +81,7 @@
             id="boton-siguiente"
             #botonSiguiente
             (click)="goToPaso3()"
-            [disabled]="!isCategorySelected || !allFieldsFilled"
+            [disabled]="!isCategorySelected || !allFieldsFilled || isStopCalculate"
             (mouseenter)="showTooltip()"
           >
             Realizar Cálculo <span class="material-icons">chevron_right</span>

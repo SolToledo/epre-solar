@@ -7,6 +7,7 @@ import {
   AfterViewInit,
   OnDestroy,
   ChangeDetectorRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Chart, ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
 import 'chartjs-plugin-datalabels';
@@ -22,6 +23,7 @@ Chart.register(annotationPlugin);
   selector: 'app-graficos',
   templateUrl: './graficos.component.html',
   styleUrls: ['./graficos.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() periodoVeinteanalEmisionesGEIEvitadas!: EmisionesGeiEvitadasFront[];
@@ -295,10 +297,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateAhorrosChart(): void {
     if (this.ahorrosChart) {
-      this.ahorrosChart.options.plugins!.annotation!.annotations =
-        this.getAnnotations();
-      this.ahorrosChart.update();
-      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.ahorrosChart.options.plugins!.annotation!.annotations = this.getAnnotations();
+        this.ahorrosChart.update();
+      }, 0);
     }
   }
 

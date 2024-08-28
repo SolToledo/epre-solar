@@ -6,9 +6,13 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Tarifa } from 'src/app/interfaces/tarifa';
 import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
+import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
+import { TarifaDialogComponent } from './tarifa-dialog/tarifa-dialog.component';
 
 @Component({
   selector: 'app-tarifa',
@@ -16,7 +20,6 @@ import { SharedService } from 'src/app/services/shared.service';
   styleUrls: ['./tarifa.component.css'],
 })
 export class TarifaComponent implements OnInit {
-  
   tarifaContratada: string = '';
   consumosMensuales: number[] = [];
   potenciaMaxAsignada: number = 0;
@@ -69,21 +72,23 @@ export class TarifaComponent implements OnInit {
 
   constructor(
     private sharedService: SharedService,
-    private consumoTarifaService: ConsumoTarifaService
+    private consumoTarifaService: ConsumoTarifaService,
+    private mapService: MapService,
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.tarifaContratada = this.sharedService.getTarifaContratada();
+    this.tarifaContratada = this.sharedService.getTarifaContratada() ?? '';
+
     this.sharedService.potenciaMaxAsignada$.subscribe({
-      next: (potencia) => {
-        this.potenciaMaxAsignada = potencia;
+      next: (newPotenciaMax) => {
+        this.potenciaMaxAsignada = newPotenciaMax;
       },
     });
   }
 
-  ngAfterViewInit(): void {
-   
-  }
+  ngAfterViewInit(): void {}
 
   isOptionSelected(): boolean {
     return this.tarifaContratada !== '';
@@ -100,9 +105,61 @@ export class TarifaComponent implements OnInit {
 
     if (tarifaSeleccionada) {
       this.potenciaMaxAsignada = tarifaSeleccionada.potenciaMaxAsignada;
-      this.sharedService.setPotenciaMaxAsignada(tarifaSeleccionada.potenciaMaxAsignada);
-      this.inputPotenciaContratada = this.potenciaMaxAsignada;
+      this.sharedService.setPotenciaMaxAsignada(
+        this.potenciaMaxAsignada * 1000
+      );
+
+      if (
+        this.sharedService.getPotenciaInstalacion() >
+        this.sharedService.getPotenciaMaxAsignadaValue()
+      ) {
+        this.openDialog();
+      } else {
+        this.inputPotenciaContratada = this.potenciaMaxAsignada * 1000;
+        this.sharedService.setIsStopCalculate(false);
+      }
     }
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(TarifaDialogComponent, {
+      width: '60%',
+      height: '',
+      minWidth: '',
+      maxWidth: '',
+      minHeight: '',
+      maxHeight: '',
+      position: { top: '', bottom: '', left: '', right: '' },
+      disableClose: true,
+      hasBackdrop: true,
+      backdropClass: '',
+      panelClass: [''],
+      autoFocus: true,
+      closeOnNavigation: false,
+      data: {
+        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacion()} Kw, superando la potencia máxima de ${
+          this.potenciaMaxAsignada
+        } Kw asignada para su tarifa contratada. Aceptar para editar la superficie o cancelar para elegir una nueva ubicación.`,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.mapService.setDrawingMode(null);
+        this.mapService.getPolygons()[0].setEditable(true);
+        this.sharedService.setIsStopCalculate(true);
+      } else {
+        this.sharedService.setTutorialShown(true);
+        this.router.navigate(['pasos/1']).then(() => {
+          this.mapService.clearDrawing();
+          this.sharedService.setMaxPanelsPerSuperface(0);
+          this.sharedService.setPotenciaInstalacion(0);
+          this.sharedService.setPotenciaMaxAsignada(0);
+          this.sharedService.setTarifaContratada('');
+          
+        });
+      }
+    });
   }
 
   updateConsumosMensuales(): void {
@@ -120,5 +177,4 @@ export class TarifaComponent implements OnInit {
       this.potenciaMaxAsignada = 0;
     }
   }
-  
 }

@@ -22,7 +22,7 @@ export class SharedService {
   private isUpdating = false;
   private expandStep3Subject = new BehaviorSubject<boolean>(false);
   expandStep3$ = this.expandStep3Subject.asObservable();
-  private panelCapacityWSubject = new BehaviorSubject<number>(0);
+  private panelCapacityWSubject = new BehaviorSubject<number>(400);
   panelCapacityW$ = this.panelCapacityWSubject.asObservable();
   private yearlyEnergyAcKwhSubject = new BehaviorSubject<number>(0);
   yearlyEnergyAcKwh$ = this.yearlyEnergyAcKwhSubject.asObservable();
@@ -38,6 +38,8 @@ export class SharedService {
   maxPanelsPerSuperface$ = this.maxPanelsPerSuperfaceSubject.asObservable();
   private carbonOffSetSubject = new BehaviorSubject<number>(0);
   carbonOffSet$ = this.carbonOffSetSubject.asObservable();
+  private isStopCalculateSubject = new BehaviorSubject<boolean>(false);
+  isStopCalculate$ = this.isStopCalculateSubject.asObservable();
 
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
@@ -142,7 +144,8 @@ export class SharedService {
   }
 
   setMaxPanelsPerSuperface(maxPanels: number) {
-    return this.maxPanelsPerSuperfaceSubject.next(maxPanels);
+    this.setPotenciaInstalacion(maxPanels * this.getPanelCapacityW())
+    this.maxPanelsPerSuperfaceSubject.next(maxPanels);
   }
 
   getMaxPanelsPerSuperface() {
@@ -150,11 +153,19 @@ export class SharedService {
   }
 
   setCarbonOffSet(carbonOffSet: number) {
-    return this.carbonOffSetSubject.next(carbonOffSet);
+    this.carbonOffSetSubject.next(carbonOffSet);
   }
 
   getCarbonOffSet() {
     return this.carbonOffSetSubject.getValue();
+  }
+
+  setIsStopCalculate(isStop: boolean) {
+    this.isStopCalculateSubject.next(isStop);
+  }
+
+  getIsStopCalculate() {
+    return this.isStopCalculateSubject.getValue();
   }
   
   
