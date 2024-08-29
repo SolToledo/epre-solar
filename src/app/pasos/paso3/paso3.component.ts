@@ -13,6 +13,7 @@ import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { ConsumoService } from 'src/app/services/consumo.service';
 import { NearbyLocationService } from 'src/app/services/nearby-location.service';
 import { Paso2Component } from '../paso2/paso2.component';
+import { PdfService } from 'src/app/services/pdf.service';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -57,7 +58,8 @@ export class Paso3Component implements OnInit {
     private mapService: MapService,
     private consumoTarifaService: ConsumoTarifaService,
     private consumoService: ConsumoService,
-    private nearbyService: NearbyLocationService
+    private nearbyService: NearbyLocationService,
+    private pdfService: PdfService
   ) {
     this.sharedService.isLoading$.subscribe({
       next: (value) => (this.isLoading = value),
@@ -128,31 +130,58 @@ export class Paso3Component implements OnInit {
     });
   }
 
-  print(): void {
-    window.print();
-  }
-
-  downloadPDF(): void {
+  /* downloadPDF(): void {
     const data = document.getElementById('contentToConvert') as HTMLElement;
+
+    // Usa html2canvas para capturar el contenido como una imagen
     html2canvas(data).then((canvas) => {
-      const imgWidth = 208;
-      const pageHeight = 295;
+      const imgWidth = 208; // Ancho de la imagen en mm
+      const pageHeight = 295; // Altura de la página A4 en mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const heightLeft = imgHeight;
+      let heightLeft = imgHeight;
 
       const contentDataURL = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const position = 0;
+      let position = 0;
 
-      pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
+      // Si el contenido sobrepasa una página, se dividirá en múltiples páginas
+      while (heightLeft > 0) {
+        pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        position -= 295; // Mueve la posición hacia la siguiente página
 
+        if (heightLeft > 0) {
+          pdf.addPage();
+        }
+      }
+
+      // Añade encabezado
+      pdf.setFontSize(14);
+      pdf.text('Resultados del Cálculo Solar', 105, 10, { align: 'center' });
+
+      // Añade pie de página con la numeración
+      const pageCount = pdf.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        pdf.setPage(i);
+        pdf.text(
+          `${i} de ${pageCount}`,
+          pdf.internal.pageSize.width - 20,
+          pdf.internal.pageSize.height - 10
+        );
+      }
+
+      // Guardar el PDF
       pdf.save('resultados.pdf');
     });
+  } */
+
+  downloadPDF(): void {
+    this.pdfService.downloadPDF(this.map);
   }
+
 
   sendEmail(): void {
     if (this.email) {
-      // Lógica para enviar el correo utilizando el email ingresado
       this.gmailService.sendEmailWithResults(this.email).then(() => {
         this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
           duration: 5000,
@@ -187,7 +216,7 @@ export class Paso3Component implements OnInit {
 
   goBack() {
     this.mapService.hideDrawingControl();
-    
+
     this.sharedService.setTutorialShown(true);
     this.router.navigate(['pasos/2']);
   }
@@ -257,8 +286,8 @@ export class Paso3Component implements OnInit {
     this.polygons[0].setEditable(true);
     this.mapService.setDrawingMode(null);
 
-     // Mostrar el snackbar
-      this.snackBar.open('Ya puedes editar la superficie', '', {
+    // Mostrar el snackbar
+    this.snackBar.open('Superficie editable', '', {
       duration: 5000,
       panelClass: ['custom-snackbar'],
       horizontalPosition: 'center',

@@ -9,10 +9,16 @@
 <br>
 <div class="potencia-contratada" *ngIf="tarifaContratada">
   <div class="potencia-content">
-
-    <p>Potencia contratada (Máxima asignada: {{ potenciaMaxAsignada / 1000 }} MW)</p>
-    <input type="number" [(ngModel)]="potenciaMaxAsignada" placeholder="Potencia contratada"  [disabled]="isPotenciaMaxDisabled()" [max]="potenciaMaxAsignada" (input)="onPotenciaInputChange()">
-    
+    <p [innerHTML]="getRangoPotenciaMensaje()"></p>
+    <input
+      type="number"
+      [(ngModel)]="potenciaMaxAsignada"
+      placeholder="Potencia contratada"
+      [disabled]="isPotenciaMaxDisabled()"
+      [min]="getPotenciaMinima()"
+      [max]="getPotenciaMaxima()"
+      (input)="onPotenciaInputChange()"
+    />
   </div>  
 </div>
 

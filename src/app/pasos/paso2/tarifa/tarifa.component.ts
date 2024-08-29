@@ -115,10 +115,16 @@ export class TarifaComponent implements OnInit {
       ) {
         this.openDialog();
       } else {
-        this.inputPotenciaContratada = this.potenciaMaxAsignada * 1000;
+        this.inputPotenciaContratada = this.potenciaMaxAsignada;
         this.sharedService.setIsStopCalculate(false);
       }
     }
+  }
+  getMaxPotenciaPermitida(): number {
+    if (['T3-BT', 'T3-MT13.2R', 'TRA-SD'].includes(this.tarifaContratada)) {
+      return 2000000; // 2000 kW
+    }
+    return this.sharedService.getPotenciaMaxAsignadaValue();
   }
 
   openDialog(): void {
@@ -177,6 +183,65 @@ export class TarifaComponent implements OnInit {
   onPotenciaInputChange(): void {
     if (this.potenciaMaxAsignada < 0) {
       this.potenciaMaxAsignada = 0;
+    }
+
+    if (this.tarifaContratada === 'T2-CMP') {
+      this.potenciaMaxAsignada = Math.max(
+        20,
+        Math.min(this.potenciaMaxAsignada, 50)
+      );
+    } else if (
+      ['T3-BT', 'T3-MT13.2R', 'TRA-SD'].includes(this.tarifaContratada)
+    ) {
+      if (this.potenciaMaxAsignada < 50 && this.tarifaContratada !== 'TRA-SD') {
+        this.potenciaMaxAsignada = 50;
+      } else if (
+        this.tarifaContratada === 'TRA-SD' &&
+        this.potenciaMaxAsignada < 10
+      ) {
+        this.potenciaMaxAsignada = 10;
+      }
+    }
+  }
+
+  getRangoPotenciaMensaje(): string {
+    switch (this.tarifaContratada) {
+      case 'T2-CMP':
+        return 'Ingrese un valor entre 20 kW y 50 kW';
+      case 'T3-BT':
+      case 'T3-MT13.2R':
+        return 'Ingrese un valor mayor a 50 kW <br>(Máximo permitido por ley: 2000 kW)';
+      case 'TRA-SD':
+        return 'Ingrese un valor mayor a 10 kW <br>(Máximo permitido por ley: 2000 kW)';
+      default:
+        return `Máxima asignada: ${this.potenciaMaxAsignada / 1000} MW`;
+    }
+  }
+  
+  getPotenciaMinima(): number {
+    switch (this.tarifaContratada) {
+      case 'T2-CMP':
+        return 20000; // 20 kW en watts
+      case 'T3-BT':
+      case 'T3-MT13.2R':
+        return 50000; // 50 kW en watts
+      case 'TRA-SD':
+        return 10000; // 10 kW en watts
+      default:
+        return 0;
+    }
+  }
+  
+  getPotenciaMaxima(): number | null {
+    switch (this.tarifaContratada) {
+      case 'T2-CMP':
+        return 50000; // 50 kW en watts
+      case 'T3-BT':
+      case 'T3-MT13.2R':
+      case 'TRA-SD':
+        return 2000000; // 2000 kW en watts (máximo permitido por ley)
+      default:
+        return null;
     }
   }
 }

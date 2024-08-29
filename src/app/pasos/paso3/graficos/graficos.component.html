@@ -72,7 +72,7 @@
       <div class="head">
         <div class="icono">
           <img
-            src="assets/icon-CO2.png"
+            src="assets/icon-pot-intal.png"
             class="tamaño-icon"
             alt="Icono de Emisiones CO2"
           />
@@ -93,9 +93,9 @@
         <hr />
         <div class="footer">
           <p *ngIf="porcentajeCubierto !== null">
-            Estás cubriendo aproximadamente el 
+            Está cubriendo aproximadamente el 
             {{ porcentajeCubierto | number: '1.0-2' }} % 
-            de tu consumo total anual con la energía generada.
+            de su consumo total anual con la energía generada.
           </p>
           <p *ngIf="porcentajeCubierto === null">
             No se pudo calcular el porcentaje de cobertura debido a un consumo total anual de 0.
