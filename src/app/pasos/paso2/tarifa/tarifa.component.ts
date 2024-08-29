@@ -123,7 +123,7 @@ export class TarifaComponent implements OnInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(TarifaDialogComponent, {
-      width: '60%',
+      width: '30%',
       height: '',
       minWidth: '',
       maxWidth: '',
