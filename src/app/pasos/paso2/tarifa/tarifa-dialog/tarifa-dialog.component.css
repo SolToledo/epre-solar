@@ -1,0 +1,22 @@
+/* Estilos para el modal */
+h2{
+    text-align: center;
+    color: var(--dark-green);
+}
+  
+.dialog-container {
+    background-color: white;
+    padding: 0px;
+    border-radius: 8px;
+    text-align: center;
+    color: var(--font-light);
+    text-align: left;
+  }
+
+  
+.botones-modal {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
