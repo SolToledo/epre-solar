@@ -154,6 +154,10 @@
 }
 
 /*...............................................*/
+.editar-component{
+  background-color: #cba258;
+  
+}
 #boton-editar {
   color: white;
   background-color: var(--dark-green);
@@ -185,6 +189,35 @@
 #boton-editar:hover .material-icons {
   color: white; 
 }
+
+/*texto entre los botones superiores*/
+.valor-mostrado{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-bottom:2px solid var(--light-background);
+  box-shadow:0 4px 10px -2px rgba(0, 98, 65, 0.3); 
+  width: 50%;
+}
+
+#valor{
+  font-size: 15px;
+  color: var(--font-light);
+  font-weight: 400;
+  margin: 0%;
+}
+
+/*texto inferior a los botones superiores*/
+.valor-mostrado-bis {
+  display: none;
+}
+
+
+
+
 /*------------------------------------------------------------------*/
 /* Estilos para el modal */
 .modal {
@@ -293,10 +326,53 @@
 
 
 /**********************************************************/
+
+/* Estilos para pantallas inferiores a 1300px */
+@media (max-width: 1200px) {
+  .valor-mostrado {
+    display: none;
+  }
+
+  .visible-container{
+    margin-top: 5px;
+    /*height: 40px;*/
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .valor-mostrado-bis {
+      display: block;
+  }
+  .valor-mostrado-bis{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-bottom:2px solid var(--light-background);
+    box-shadow:0 4px 10px -2px rgba(0, 98, 65, 0.3); 
+    padding-top: 8px;
+    height: 35px;
+  }
+  #valor-bis{
+    font-size: 15px;
+    color: var(--font-light);
+    font-weight: 400;
+    margin: 0%;
+  }
+  
+}
+
+
+
 /* Estilos para resoluciones mayores a 1366px */
 @media only screen and (min-width: 1367px) {
   .content-scroll{
     height: 70vh;
   }
+
 }
 

@@ -262,8 +262,7 @@ button[disabled] {
     border-radius: 8px 8px 0 0;
     color: var(--dark-green);
     width: 100%;
-    /*height: 25%;*/
-    height: 35px;/*****************/
+    height: 35px;
     font-size: 1em;
     display: flex;
     justify-content: center;
@@ -272,6 +271,7 @@ button[disabled] {
     padding-right: 10px;
     box-sizing: border-box;
     line-height: 0.9;
+    text-align: center;
   }
 
   .titulo-general-long p {
@@ -747,9 +747,6 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
   appearance: none;
 }
-
-
-
 
 /*****************************************************************************/
 /* Estilos para resoluciones mayores a 1366px */
