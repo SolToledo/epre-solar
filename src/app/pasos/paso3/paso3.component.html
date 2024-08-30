@@ -3,7 +3,7 @@
     <div class="titulo">
       <h2 id="titulo">resultados</h2>
     </div>
-    <div class="info-container">
+    <div class="info-container" id="info-container">
       <div class="action-buttons">
         <div class="editar-component">
           <button id="boton-editar" (click)="enabledDrawing()">
@@ -52,7 +52,7 @@
           </div>
         </div><!--container-->
 
-        <div class="container-graficos">
+        <div class="container-graficos" id="graficos">
           <div class="item-grafico"><app-graficos
             [periodoVeinteanalEmisionesGEIEvitadas]="getEmisionesGEIEvitadas()"
             [periodoVeinteanalFlujoEnergia]="getFlujoEnergia()"

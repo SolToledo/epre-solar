@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { MapService } from './map.service';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,7 @@ export class PdfService {
   longitud: any;
   superficie: any;
 
-  constructor(private mapService: MapService) {
+  constructor(private mapService: MapService, private sharedService: SharedService) {
     this.doc = new jsPDF('p', 'pt', 'a4');
     // Obtener las dimensiones de la página
     this.pageWidth = this.doc.internal.pageSize.width; // Ancho de la página en píxeles
@@ -24,7 +24,11 @@ export class PdfService {
     this.superficie = this.mapService.getPolygonArea();
   }
 
-  async downloadPDF(map: any): Promise<void> {
+  async downloadPDF(
+    resultadosScreenshot: string,
+    graficosScreenshot: string,
+    resultadosCalculados: any
+  ): Promise<void> {
     // Crear la portada
     this.addCoverPage(this.doc);
     // Crear el índice
@@ -36,31 +40,35 @@ export class PdfService {
     this.doc.addPage();
 
     // Crear la descripción de la zona
-    this.addZoneDescription(this.doc, map).then(() => {
-      this.doc.addPage();
-    });
-
-    // Crear los cálculos de ahorro energético
-    this.addEnergySavingsCalculations(this.doc);
+    this.resultados(this.doc, resultadosScreenshot);
     this.doc.addPage();
 
-    // Crear detalles de la instalación
-    this.addInstallationDetails(this.doc);
+    this.graficos(this.doc, graficosScreenshot);
     this.doc.addPage();
 
-    // Crear análisis financiero
-    this.addFinancialAnalysis(this.doc);
-    this.doc.addPage();
+    // // Crear los cálculos de ahorro energético
+    // this.addEnergySavingsCalculations(this.doc);
+    // this.doc.addPage();
 
-    // Crear conclusiones y recomendaciones
-    this.addConclusionsAndRecommendations(this.doc);
-    this.doc.addPage();
+    // // Crear detalles de la instalación
+    // this.addInstallationDetails(this.doc);
+    // this.doc.addPage();
 
-    // Crear anexos
-    this.addAppendices(this.doc);
+    // // Crear análisis financiero
+    // this.addFinancialAnalysis(this.doc);
+    // this.doc.addPage();
+
+    // // Crear conclusiones y recomendaciones
+    // this.addConclusionsAndRecommendations(this.doc);
+    // this.doc.addPage();
+
+    // // Crear anexos
+    // this.addAppendices(this.doc);
 
     // Guardar el PDF
+    
     this.doc.save('informe_ahorro_energetico.pdf');
+   
   }
 
   private addCoverPage(doc: jsPDF): void {
@@ -232,23 +240,21 @@ export class PdfService {
     setText(recomendacionesTexto, margin, textWidth, yPosition);
   }
 
-  private async addZoneDescription(doc: jsPDF, map: any): Promise<void> {
+  private resultados(doc: jsPDF, mapScreenshot: any): void {
     doc.setFontSize(18);
-    doc.text('Descripción de la Zona', 40, 60);
+    doc.text('Resultados', 40, 60);
+    const imgWidth = 500;
+    const imgHeight = (imgWidth * 100) / 100;
 
-    try {
-      
+    doc.addImage(mapScreenshot, 'PNG', 60, 100, imgWidth, imgHeight);
+  }
+  private graficos(doc: jsPDF, graficos: any): void {
+    doc.setFontSize(18);
+    doc.text('Graficos', 40, 60);
+    const imgWidth = 500;
+    const imgHeight = (imgWidth * 100) / 100;
 
-      const canvas = await html2canvas(map);
-      const imgData = canvas.toDataURL('image/png');
-      doc.addImage(imgData, 'PNG', 40, 100, 500, 300);
-
-      doc.setFontSize(14);
-      doc.text('Coordenadas:', 40, 420);
-      doc.text(`Latitud: ${this.latitud}`, 40, 440);
-      doc.text(`Latitud: ${this.longitud}`, 40, 460);
-      doc.text(`Superficie Total: ${this.superficie} m²`, 40, 480);
-    } catch (error) {}
+    doc.addImage(graficos, 'PNG', 40, 60, imgWidth, imgHeight);
   }
 
   private addEnergySavingsCalculations(doc: jsPDF): void {

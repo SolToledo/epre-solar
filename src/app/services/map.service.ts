@@ -12,7 +12,7 @@ export class MapService {
   private map!: google.maps.Map;
   private drawingManager!: google.maps.drawing.DrawingManager;
   private center: google.maps.LatLngLiteral = { lat: -31.5364, lng: -68.50639 };
-  private zoomInicial = 14;
+  private zoomInicial = 13;
   zoom: number = this.zoomInicial;
   private mapSubject = new Subject<google.maps.Map>();
   private polygons: google.maps.Polygon[] = [];
