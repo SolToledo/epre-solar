@@ -55,7 +55,6 @@
 .item {
   background-color: var(--gris);
   min-width: 200px;
- /* min-height: 120px;*/
   min-height:100px ;
   display: flex;
   flex-direction: column;
