@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Importa FormsModule
@@ -59,11 +59,13 @@ import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
 import { InstruccionesComponent } from './instrucciones/instrucciones.component';
 import { CustomNumberPipe } from './pipes/custom-number.pipe';
 import { TarifaDialogComponent } from './pasos/paso2/tarifa/tarifa-dialog/tarifa-dialog.component';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 
 export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
   return (): Promise<void> => firstValueFrom(environmentService.loadGoogleMapsApiKey());
 }
-
+registerLocaleData(localeEs, 'es'); 
 @NgModule({
   declarations: [
     AppComponent,
@@ -130,6 +132,7 @@ export function initializeApp(environmentService: EnvironmentService): () => Pro
       deps: [EnvironmentService],
       multi: true,
     },
+    { provide: LOCALE_ID, useValue: 'es' }
   ],
   bootstrap: [AppComponent] 
 })
