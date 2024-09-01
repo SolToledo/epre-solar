@@ -95,10 +95,6 @@ export class TarifaComponent implements OnInit {
   }
 
   onTarifaChange(): void {
-    this.sharedService.setTarifaContratada(this.tarifaContratada);
-    this.isCategorySelected.emit(this.isOptionSelected());
-    this.updateConsumosMensuales();
-
     const tarifaSeleccionada = this.tarifas.find(
       (tarifa) => tarifa.value === this.tarifaContratada
     );
@@ -108,6 +104,36 @@ export class TarifaComponent implements OnInit {
       this.sharedService.setPotenciaMaxAsignada(
         this.potenciaMaxAsignada * 1000
       );
+      if (
+        this.potenciaMaxAsignada < this.sharedService.getPotenciaInstalacion()
+      ) {
+        console.log(
+          'redibujar la cantidad de paneles acorde a la potencia maxima contratada'
+        );
+      } else {
+        this.sharedService.setIsStopCalculate(false);
+        this.inputPotenciaContratada = this.potenciaMaxAsignada;
+        this.sharedService.setTarifaContratada(this.tarifaContratada);
+        this.isCategorySelected.emit(this.isOptionSelected());
+        this.updateConsumosMensuales();
+      }
+    }
+
+    /* this.sharedService.setTarifaContratada(this.tarifaContratada);
+    this.isCategorySelected.emit(this.isOptionSelected());
+    this.updateConsumosMensuales();
+
+    const tarifaSeleccionada = this.tarifas.find(
+      (tarifa) => tarifa.value === this.tarifaContratada
+    );
+
+    if (tarifaSeleccionada) {
+      
+      this.potenciaMaxAsignada = tarifaSeleccionada.potenciaMaxAsignada;
+      this.sharedService.setPotenciaMaxAsignada(
+        this.potenciaMaxAsignada * 1000
+      );
+
 
       if (
         this.sharedService.getPotenciaInstalacion() >
@@ -118,8 +144,9 @@ export class TarifaComponent implements OnInit {
         this.inputPotenciaContratada = this.potenciaMaxAsignada;
         this.sharedService.setIsStopCalculate(false);
       }
-    }
+    } */
   }
+
   getMaxPotenciaPermitida(): number {
     if (['T3-BT', 'T3-MT13.2R', 'TRA-SD'].includes(this.tarifaContratada)) {
       return 2000000; // 2000 kW
@@ -129,7 +156,7 @@ export class TarifaComponent implements OnInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(TarifaDialogComponent, {
-     /* width: '30%',*/
+      /* width: '30%',*/
       width: '400px',
       height: '',
       minWidth: '400px',
@@ -184,6 +211,7 @@ export class TarifaComponent implements OnInit {
   onPotenciaInputChange(): void {
     if (this.potenciaMaxAsignada < 0) {
       this.potenciaMaxAsignada = 0;
+      return;
     }
 
     if (this.tarifaContratada === 'T2-CMP') {
@@ -215,10 +243,10 @@ export class TarifaComponent implements OnInit {
       case 'TRA-SD':
         return 'Ingrese un valor mayor a 10 kW <br>(Máximo permitido por ley: 2000 kW)';
       default:
-        return `Máxima asignada: ${this.potenciaMaxAsignada / 1000} MW`;
+        return `Máxima asignada: ${this.potenciaMaxAsignada} Wp`;
     }
   }
-  
+
   getPotenciaMinima(): number {
     switch (this.tarifaContratada) {
       case 'T2-CMP':
@@ -232,7 +260,7 @@ export class TarifaComponent implements OnInit {
         return 0;
     }
   }
-  
+
   getPotenciaMaxima(): number | null {
     switch (this.tarifaContratada) {
       case 'T2-CMP':

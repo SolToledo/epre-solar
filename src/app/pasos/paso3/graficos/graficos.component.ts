@@ -23,7 +23,7 @@ Chart.register(annotationPlugin);
   selector: 'app-graficos',
   templateUrl: './graficos.component.html',
   styleUrls: ['./graficos.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() periodoVeinteanalEmisionesGEIEvitadas!: EmisionesGeiEvitadasFront[];
@@ -125,6 +125,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
               borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 2,
               fill: true,
+              tension: 0.4,
             },
           ],
         },
@@ -142,7 +143,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
                 display: true,
                 text: 'Ton CO2',
               },
-              beginAtZero: false,
+              beginAtZero: true,
             },
           },
           plugins: {
@@ -169,11 +170,16 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       const valorInicial =
         this.periodoVeinteanalEmisionesGEIEvitadas[0].emisionesTonCO2;
       const factor = nuevoValor / valorInicial;
-      let acumulado = 0;
 
       this.periodoVeinteanalEmisionesGEIEvitadas =
         this.periodoVeinteanalEmisionesGEIEvitadas.map((item, index) => {
-          acumulado += item.emisionesTonCO2 * factor;
+          const emisionesAjustadas = item.emisionesTonCO2 * factor;
+          const acumulado =
+            index === 0
+              ? emisionesAjustadas
+              : emisionesAjustadas +
+                this.periodoVeinteanalEmisionesGEIEvitadas[index - 1]
+                  .emisionesTonCO2;
           return {
             ...item,
             emisionesTonCO2: acumulado,
@@ -191,10 +197,30 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.emisionesChart.update();
     }
   }
-
   private createAhorrosChart(): void {
     const ctx = this.ahorrosChartRef.nativeElement.getContext('2d');
     if (ctx) {
+      const afterInitPlugin = {
+        id: 'afterInitPlugin',
+        afterInit: (chart: {
+          scales: { [x: string]: any };
+          options: {
+            plugins: { annotation: { annotations: { yValue: number }[] } };
+          };
+          update: () => void;
+        }) => {
+          const yScale = chart.scales['y'];
+          if (yScale) {
+            const yValue = yScale.min / 2 || 100;
+            // Actualizar la anotación con el yValue correcto
+            chart.options.plugins.annotation.annotations[0].yValue = yValue;
+            chart.update();
+          }else{
+            chart.options.plugins.annotation.annotations[0].yValue = 200;
+          }
+        },
+      };
+
       this.ahorrosChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -207,19 +233,22 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
               data: this.periodoVeinteanalFlujoIngresosMonetarios.map(
                 (item) => item.ahorroEnElectricidadTotalUsd
               ),
+              borderColor: 'green', 
+              backgroundColor: 'yellow', 
               borderWidth: 2,
               fill: false,
               tension: 0.4,
+              borderDash: [], 
             },
             {
               label: 'Inyección Eléctrica',
               data: this.periodoVeinteanalFlujoIngresosMonetarios.map(
                 (item) => item.ingresoPorInyeccionElectricaUsd
               ),
+              borderColor: 'blue', 
               borderWidth: 2,
               fill: false,
               tension: 0.4,
-              
             },
           ],
         },
@@ -234,7 +263,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
               min: 0,
               max: this.periodoVeinteanalFlujoIngresosMonetarios.length,
             },
-
             y: {
               title: {
                 display: true,
@@ -250,18 +278,21 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
               align: 'start',
               labels: {
                 boxWidth: 16,
-              }
+              },
             },
             datalabels: {
               display: true,
-              backgroundColor: 'green'
-
+              backgroundColor: 'green',
             },
             annotation: {
               annotations: this.getAnnotations(),
             },
+            
+            
           },
+         
         },
+        // plugins: [afterInitPlugin], // Registramos el plugin personalizado aquí
       });
     } else {
       console.error('El contexto 2D no está disponible.');
@@ -269,14 +300,16 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private getAnnotations() {
+    const recuperoInversionYear = this.recuperoInversionMeses / 12;
+    const yValue = this.ahorrosChart?.scales['y']?.min / 2 || 0;
     return [
       {
         id: 'recupero-inversion',
         type: 'point' as const,
         xScaleID: 'x' as const,
         yScaleID: 'y' as const,
-        xValue: this.recuperoYear,
-        yValue: this.ahorrosChart?.scales['y']?.min / 2, 
+        xValue: recuperoInversionYear,
+        yValue: yValue,
         backgroundColor: 'green',
         radius: 5,
         label: {
@@ -298,10 +331,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateAhorrosChart(): void {
     if (this.ahorrosChart) {
       setTimeout(() => {
-        this.ahorrosChart.options.plugins!.annotation!.annotations = this.getAnnotations();
+        this.ahorrosChart.options.plugins!.annotation!.annotations =
+          this.getAnnotations();
         this.ahorrosChart.update();
-        this.ahorrosChart.render(); 
-      }, 0);
+        this.ahorrosChart.render();
+      }, 100);
     }
   }
 
@@ -323,7 +357,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.porcentajeCubierto = null; // Manejar caso en que el consumo total sea 0
       }
-      
+
       const data = {
         labels: ['Consumo anual', 'Generación fotovoltaica anual'],
         datasets: [
@@ -352,7 +386,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         responsive: true,
         maintainAspectRatio: false, // Mantiene el aspecto del gráfico
         aspectRatio: 1,
-        
+
         plugins: {
           legend: {
             display: true,
