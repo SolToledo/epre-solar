@@ -129,17 +129,18 @@ export class TarifaComponent implements OnInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(TarifaDialogComponent, {
-      width: '30%',
+     /* width: '30%',*/
+      width: '400px',
       height: '',
-      minWidth: '',
+      minWidth: '400px',
       maxWidth: '',
       minHeight: '',
       maxHeight: '',
       position: { top: '', bottom: '', left: '', right: '' },
       disableClose: true,
       hasBackdrop: true,
-      backdropClass: '',
-      panelClass: [''],
+      panelClass: 'responsive-dialog', // Clase personalizada
+      backdropClass: 'responsive-backdrop', // Clase personalizada
       autoFocus: true,
       closeOnNavigation: false,
       data: {

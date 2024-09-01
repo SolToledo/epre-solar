@@ -75,7 +75,7 @@ h5 {
 }
 
 .custom-snackbar {
-  margin-top:110px !important; /* Ajusta el margen según sea necesario */
+  margin-top:110px !important; 
 }
 
 
@@ -85,6 +85,11 @@ h5 {
   border: 1px solid #d32f2f; 
   border-radius: 4px; 
   box-shadow: 0px 0px 10px rgba(211, 47, 47, 0.5); 
+}
+
+
+.error-snackbar {
+  margin-top:110px !important; 
 }
 /***********************************************************************/
 
@@ -771,3 +776,13 @@ input[type=number] {
 
 
 
+/* estilos para que se cierre el modal*/
+@media (max-width: 760px) {
+  .responsive-dialog {
+    display: none !important; /* Oculta el diálogo */
+  }
+
+  .responsive-backdrop {
+    display: none !important; /* Oculta el fondo de pantalla */
+  }
+}

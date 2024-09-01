@@ -14,6 +14,8 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ConsumoComponent } from './consumo/consumo.component';
 import { driver } from 'driver.js';
 import { SharedService } from 'src/app/services/shared.service';
+
+
 @Component({
   selector: 'app-paso2',
   templateUrl: './paso2.component.html',
@@ -29,6 +31,7 @@ export class Paso2Component implements OnInit {
   driverObj: any;
   tutorialShown: boolean = false;
   isStopCalculate: boolean = true;
+  showInstructionsModal: boolean = false;  
 
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
   @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent;
@@ -185,6 +188,16 @@ export class Paso2Component implements OnInit {
     this.isFieldsDisabled = !event;
     
   }
+
+  showInstructions() {
+    this.showInstructionsModal = true;
+  }
+
+  handleInstructionsClosed() {
+    this.showInstructionsModal = false;
+  }
+
+
 
   showTooltip() {
     setTimeout(() => {
