@@ -1,13 +1,7 @@
-
 <div class="info-inicio">
-
   <div class="titulo-container">
     <div class="icono-inicio">
-      <img
-       src="assets/icon-panel.png"
-        id="marca"
-        alt="Icono de tarifa"
-      />
+      <img src="assets/icon-panel.png" id="marca" alt="Icono de tarifa" />
     </div>
     <div class="titulo-inicio">
       <h2>PANELES A INSTALAR</h2>
@@ -15,56 +9,60 @@
   </div>
 
   <div class="info-component-panel">
-
     <div class="cantidad-paneles">
       <h3>Cantidad paneles</h3>
       <div class="cantidad-paneles-contenido">
         <div class="slider">
           <mat-slider
-          class="custom-slider"
-          min="4"
-          [max]="maxPanelsArea$"
-          step="1"
-          (change)="onSliderChange()"
-          discrete
-          [displayWith]="formatLabel">
-          <input matSliderThumb [(ngModel)]="panelesCantidad" #slider>
-          </mat-slider>               
+            class="custom-slider"
+            min="4"
+            [max]="maxPanelsArea$"
+            step="1"
+            (change)="onSliderChange()"
+            discrete
+            [displayWith]="formatLabel"
+          >
+            <input matSliderThumb [(ngModel)]="panelesCantidad" #slider />
+          </mat-slider>
         </div>
         <div class="unidad-component-simple-panel">
           <p class="resultado-panel">{{ panelesCantidad }}</p>
         </div>
-      </div><!--cantidad-paneles-contenido-->
-    </div><!--cantidad-paneles-->
+      </div>
+      <!--cantidad-paneles-contenido-->
+    </div>
+    <!--cantidad-paneles-->
 
     <div class="potencia-paneles">
       <h3 id="titulo-potencia">Potencia paneles</h3>
       <div class="seleccion-potencia">
-        <select id="power-select">
-          <option value="400">400 W</option>
-          <option value="450" selected>450 W</option>
+        <select id="power-select" [formControl]="potenciaPanelesControl">
+          <option value="400" selected>400 W</option>
+          <option value="450">450 W</option>
           <option value="500">500 W</option>
           <option value="600">600 W</option>
           <option value="700">700 W</option>
         </select>
       </div>
-      <!--<div class="potencia-paneles-contenido">
-          <mat-radio-group [formControl]="potenciaPanelesControl">
-            <mat-radio-button value="400">400 w</mat-radio-button>
-            <mat-radio-button value="500">500 w</mat-radio-button>
-          </mat-radio-group>
-      </div>-->
     </div>
+  </div>
+  <!--info-component-panel-->
+  <hr />
 
-  </div><!--info-component-panel-->
-  <hr>
-
-    <div class="texto-inferior-panel">
-      <div class="titulo-detalle">
-        <p>Cantidad máxima de paneles según la superficie definida: <span>{{maxPanelsArea$}}</span></p>
-        <p>Detalle del panel: <span id="dimension-panel">{{ dimensionPanel.height * 100 }} x  {{ dimensionPanel.width * 100 }}cm - {{ panelCapacityW }}W</span> </p>
-      </div>
-   </div>
-  
-</div><!--info-inicio-->
-
+  <div class="texto-inferior-panel">
+    <div class="titulo-detalle">
+      <p>
+        Cantidad máxima de paneles según la superficie definida:
+        <span>{{ maxPanelsArea$ }}</span>
+      </p>
+      <p>
+        Detalle del panel:
+        <span id="dimension-panel"
+          >{{ dimensionPanel.height * 100 | number:'1.2-2'}} x
+          {{ dimensionPanel.width * 100 | number:'1.2-2'}}cm - {{ panelCapacityW }}W</span
+        >
+      </p>
+    </div>
+  </div>
+</div>
+<!--info-inicio-->

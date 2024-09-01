@@ -41,7 +41,6 @@ export class PanelesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    
     this.potenciaPanelesControl.setValue(this.panelCapacityW.toString() ?? 400);
 
     this.maxPanelsPerAreaSubscription =
@@ -68,12 +67,8 @@ export class PanelesComponent implements OnInit, OnDestroy {
 
     this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
       const panelCapacity = parseInt(value, 10);
-      if (panelCapacity === 400 || panelCapacity === 500) {
-        this.sharedService.setPanelCapacityW(panelCapacity);
-        this.panelCapacityW = panelCapacity;
-      } else {
-        console.warn('Valor inesperado en potenciaPanelesControl:', value);
-      }
+      this.sharedService.setPanelCapacityW(panelCapacity);
+      this.panelCapacityW = panelCapacity;
     });
     this.panelesCantidad = this.maxPanelsArea$;
   }

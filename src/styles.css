@@ -764,6 +764,11 @@ input[type=number] {
   }
 }
 
+.dolar-simbolo {
+  font-size: 0.9em; /* Ajusta el tamaño del símbolo */
+  margin-right: 8px; /* Ajusta el espacio entre el símbolo y el número */
+}
+
 
 
 /* styles.css o styles.scss */

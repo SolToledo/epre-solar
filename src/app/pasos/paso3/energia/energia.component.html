@@ -1,26 +1,26 @@
 <div class="resultados-paso3">
   <div class="component-container-borde">
-      <div class="titulo-general">
-          <p>Energía generada anual</p>
-      </div>
-      <div class="informacion-general">
-          <div class="ajustar-contenido">
-              <div class="info-component">      
-                  <div class="icono">
-                      <img src="assets/icon-sol.png"  class="tamaño-icon" alt="Icono de energia">
-                  </div>
-                  <div class="resultado-centro">
-                      <p class="resultado">{{yearlyEnergyAcKwh}}</p>
-                  </div>
-                  <div class="unidad-component-simple">
-                      <p class="unidad-simple-dism">kWh</p>
-                  </div>
-              </div>
+    <div class="titulo-general">
+      <p>Energía generada anual</p>
+    </div>
+    <div class="informacion-general">
+      <div class="ajustar-contenido">
+        <div class="info-component">
+          <div class="icono">
+            <img
+              src="assets/icon-sol.png"
+              class="tamaño-icon"
+              alt="Icono de energia"
+            />
           </div>
-        <!-- <hr>
-         <div class="texto-inferior-component">
-          <p>Según los paneles seleccionados</p>
-         </div> -->
+          <div class="resultado-centro">
+            <p class="resultado">{{ yearlyEnergyAcKwh | number : "1.0-0" }}</p>
+          </div>
+          <div class="unidad-component-simple">
+            <p class="unidad-simple-dism">kWh</p>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
 </div>
