@@ -130,55 +130,35 @@ export class Paso3Component implements OnInit {
     });
   }
 
-  /* downloadPDF(): void {
-    const data = document.getElementById('contentToConvert') as HTMLElement;
+  downloadPDF(): void {
+    html2canvas(document.querySelector('#info-container')!, {}).then(
+      (canvas) => {
+        const resultadosScreenshot = canvas.toDataURL('image/png');
+        html2canvas(document.querySelector('#graficos')!, {}).then(
+          (canvas2) => {
+            const graficos = canvas2.toDataURL('image/png');
+            // Recolectar los resultados calculados
+            const resultadosCalculados = {
+              panelesCantidad: this.panelesCantidad,
+              dimensionPanel: this.dimensionPanel,
+              panelCapacityW: this.panelCapacityW,
+              yearlyEnergyAcKwh: this.yearlyEnergyAcKwh,
+              carbonOffsetFactorTnPerMWh: this.carbonOffsetFactorTnPerMWh,
+              instalacionPotencia: this.instalacionPotencia,
+              // Puedes añadir más campos de resultados si es necesario
+            };
 
-    // Usa html2canvas para capturar el contenido como una imagen
-    html2canvas(data).then((canvas) => {
-      const imgWidth = 208; // Ancho de la imagen en mm
-      const pageHeight = 295; // Altura de la página A4 en mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-
-      const contentDataURL = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      let position = 0;
-
-      // Si el contenido sobrepasa una página, se dividirá en múltiples páginas
-      while (heightLeft > 0) {
-        pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-        position -= 295; // Mueve la posición hacia la siguiente página
-
-        if (heightLeft > 0) {
-          pdf.addPage();
-        }
-      }
-
-      // Añade encabezado
-      pdf.setFontSize(14);
-      pdf.text('Resultados del Cálculo Solar', 105, 10, { align: 'center' });
-
-      // Añade pie de página con la numeración
-      const pageCount = pdf.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        pdf.setPage(i);
-        pdf.text(
-          `${i} de ${pageCount}`,
-          pdf.internal.pageSize.width - 20,
-          pdf.internal.pageSize.height - 10
+            // Llamar al servicio para descargar el PDF
+            this.pdfService.downloadPDF(
+              resultadosScreenshot,
+              graficos,
+              resultadosCalculados
+            );
+          }
         );
       }
-
-      // Guardar el PDF
-      pdf.save('resultados.pdf');
-    });
-  } */
-
-  downloadPDF(): void {
-    this.pdfService.downloadPDF(this.map);
+    );
   }
-
 
   sendEmail(): void {
     if (this.email) {
