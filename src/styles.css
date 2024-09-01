@@ -766,3 +766,13 @@ input[type=number] {
 
 
 
+/* styles.css o styles.scss */
+@media (max-width: 760px) {
+  .responsive-dialog {
+    display: none !important; /* Oculta el diálogo */
+  }
+
+  .responsive-backdrop {
+    display: none !important; /* Oculta el fondo de pantalla */
+  }
+}
