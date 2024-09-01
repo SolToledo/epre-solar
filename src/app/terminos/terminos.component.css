@@ -54,11 +54,6 @@ h2 {
   color: #888; /* Color para el texto del checkbox cuando está deshabilitado */
 }
 
-
-
-
-
-
 .button-group {
   display: flex;
   justify-content: space-between;
@@ -68,7 +63,6 @@ h2 {
 #aceptar {
   background-color:var(--dark-green);
   color: #fff;
-  /*font-weight: 300;*/
   font-weight: bold;
   border: none;
   padding: 10px 20px;
@@ -129,7 +123,6 @@ h2 {
 }
 
 .content-scroll::-webkit-scrollbar-thumb:hover {
-  /*background: #555;*/
   background: var(--dark-green);
 }
 

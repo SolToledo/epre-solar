@@ -2,7 +2,6 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
-import { InstruccionesComponent } from 'src/app/instrucciones/instrucciones.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SharedService } from 'src/app/services/shared.service';
 
@@ -16,8 +15,8 @@ export class Paso0Component implements OnInit, AfterViewInit {
   isTermsAccepted: boolean = false;
   driverObjInit: any;
   tutorialShown: boolean = false;
+  showInstructionsModal: boolean = false;  
  
-  
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
@@ -126,12 +125,19 @@ export class Paso0Component implements OnInit, AfterViewInit {
 
   showTerms() {
     this.showModal = true;
-    
   }
 
   handleAccepted(event: boolean) {
     this.showModal = false;
     this.isTermsAccepted = event;
+  }
+
+  showInstructions() {
+    this.showInstructionsModal = true;
+  }
+
+  handleInstructionsClosed() {
+    this.showInstructionsModal = false;
   }
 
   showTooltip() {
@@ -153,9 +159,5 @@ export class Paso0Component implements OnInit, AfterViewInit {
     this.snackBar.dismiss();
   }
 
-  openHelpModal(): void {
-    this.dialog.open(InstruccionesComponent, {
-      width: '500px',
-    });
-  }
+ 
 }
