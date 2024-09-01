@@ -21,6 +21,7 @@ export class SolarApiService {
   private panelsSupportedSubscription!: Subscription;
   panelsSupported: number = 0;
   private mapService!: MapService;
+  potenciaMaxAsignada!: number;
 
   constructor(
     private http: HttpClient,
@@ -52,6 +53,10 @@ export class SolarApiService {
 
       this.sharedService.maxPanelsPerSuperface$.subscribe({
         next: value => this.panelsSupported = value
+      });
+
+      this.sharedService.potenciaMaxAsignada$.subscribe({
+        next: value => this.potenciaMaxAsignada = value
       })
       
       // Verifica los datos y muestra mensajes específicos
@@ -61,6 +66,7 @@ export class SolarApiService {
       if (!polygonArea) missingFields.push('Área del polígono');
       if (!categoriaSeleccionada) missingFields.push('Categoría seleccionada');
       if (!this.panelsSupported) missingFields.push('Paneles soportados');
+      if (!this.potenciaMaxAsignada) missingFields.push('Potencia máxima asignada');
 
       if (missingFields.length > 0) {
         this.snackBar.open(
@@ -68,7 +74,7 @@ export class SolarApiService {
           'Cerrar',
           {
             duration: 5000,
-            panelClass: ['error-snackbar'], // Aplica la nueva clase CSS
+            panelClass: ['error-snackbar'], 
             horizontalPosition: 'center',
             verticalPosition: 'top',
           }
@@ -88,6 +94,7 @@ export class SolarApiService {
         categoriaSeleccionada,
         polygonArea,
         panelsSupported: this.panelsSupported,
+        potenciaMaxAsignada: this.potenciaMaxAsignada
       };
 
       const response = await lastValueFrom(
