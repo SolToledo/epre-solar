@@ -771,7 +771,7 @@ input[type=number] {
 
 
 
-/* styles.css o styles.scss */
+/* estilos para que se cierre el modal*/
 @media (max-width: 760px) {
   .responsive-dialog {
     display: none !important; /* Oculta el diálogo */
