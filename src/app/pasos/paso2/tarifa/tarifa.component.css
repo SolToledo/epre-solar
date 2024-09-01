@@ -69,6 +69,7 @@ input {
 
 input:focus {
   border-color: var(--medium-green);
+  outline: none; 
 }
 
 /* Ocultar los controles de número en navegadores basados en WebKit */

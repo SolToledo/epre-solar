@@ -39,12 +39,21 @@
 
     <div class="potencia-paneles">
       <h3 id="titulo-potencia">Potencia paneles</h3>
-      <div class="potencia-paneles-contenido">
+      <div class="seleccion-potencia">
+        <select id="power-select">
+          <option value="400">400 W</option>
+          <option value="450" selected>450 W</option>
+          <option value="500">500 W</option>
+          <option value="600">600 W</option>
+          <option value="700">700 W</option>
+        </select>
+      </div>
+      <!--<div class="potencia-paneles-contenido">
           <mat-radio-group [formControl]="potenciaPanelesControl">
             <mat-radio-button value="400">400 w</mat-radio-button>
             <mat-radio-button value="500">500 w</mat-radio-button>
           </mat-radio-group>
-      </div>
+      </div>-->
     </div>
 
   </div><!--info-component-panel-->
