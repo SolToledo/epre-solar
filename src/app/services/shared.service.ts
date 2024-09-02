@@ -6,7 +6,7 @@ import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
   providedIn: 'root',
 })
 export class SharedService {
-  
+
   private tarifaContratada: string = '';
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
@@ -33,7 +33,7 @@ export class SharedService {
   private potenciaInstalacionSubject = new BehaviorSubject<number>(0);
   potenciaInstalacion$ = this.potenciaInstalacionSubject.asObservable();
   private resultadosFrontSubject = new BehaviorSubject<Partial<ResultadosFrontDTO>>({});
-  resultadosFront$ = this. resultadosFrontSubject.asObservable();
+  resultadosFront$ = this.resultadosFrontSubject.asObservable();
   private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
   maxPanelsPerSuperface$ = this.maxPanelsPerSuperfaceSubject.asObservable();
   private carbonOffSetSubject = new BehaviorSubject<number>(0);
@@ -72,7 +72,7 @@ export class SharedService {
   }
 
   setPanelsCountSelected(value: number): void {
-    if(value < 4){
+    if (value < 4) {
       this.panelsCountSelectedSubject.next(4);
       return
     }
@@ -106,7 +106,7 @@ export class SharedService {
   setYearlyEnergyAcKwh(value: number): void {
     this.yearlyEnergyAcKwhSubject.next(value);
   }
-  
+
   getYearlyEnergyAcKwh(): number {
     return this.yearlyEnergyAcKwhSubject.getValue();
   }
@@ -119,25 +119,25 @@ export class SharedService {
     return this.ahorroAnualUsdPromedioSubject.getValue();
   }
 
-  setPotenciaMaxAsignada(potenciaMaxAsignada: number) {
+  setPotenciaMaxAsignadaW(potenciaMaxAsignada: number) {
     this.potenciaMaxAsignadaSubject.next(potenciaMaxAsignada);
   }
-  
+
   getPotenciaMaxAsignadaValue(): number {
     return this.potenciaMaxAsignadaSubject.getValue();
   }
 
-  setPotenciaInstalacion(instalacionPotencia: number) {
-    if(instalacionPotencia > this.getPotenciaMaxAsignadaValue()){
+  setPotenciaInstalacionW(instalacionPotencia: number) {
+    if (instalacionPotencia > this.getPotenciaMaxAsignadaValue()) {
       this.setIsStopCalculate(true);
-      
+
     } {
       this.setIsStopCalculate(false);
     }
     this.potenciaInstalacionSubject.next(instalacionPotencia);
   }
 
-  getPotenciaInstalacion() {
+  getPotenciaInstalacionW() {
     return this.potenciaInstalacionSubject.getValue();
   }
 
@@ -150,7 +150,7 @@ export class SharedService {
   }
 
   setMaxPanelsPerSuperface(maxPanels: number) {
-    this.setPotenciaInstalacion(maxPanels * this.getPanelCapacityW())
+    this.setPotenciaInstalacionW(maxPanels * this.getPanelCapacityW())
     this.maxPanelsPerSuperfaceSubject.next(maxPanels);
   }
 
@@ -173,13 +173,13 @@ export class SharedService {
   getIsStopCalculate() {
     return this.isStopCalculateSubject.getValue();
   }
-  
-  setConsumosMensuales(consumos: any){
+
+  setConsumosMensuales(consumos: any) {
     this.consumosMensualesSubject.next(consumos);
   }
 
   getConsumosMensuales() {
     return this.consumosMensualesSubject.getValue();
   }
-  
+
 }

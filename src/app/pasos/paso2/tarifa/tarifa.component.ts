@@ -22,7 +22,7 @@ import { TarifaDialogComponent } from './tarifa-dialog/tarifa-dialog.component';
 export class TarifaComponent implements OnInit {
   tarifaContratada: string = '';
   consumosMensuales: number[] = [];
-  potenciaMaxAsignada: number = 0;
+  potenciaMaxAsignadakW: number = 0;
   inputPotenciaContratada: number | null = null;
 
   @Output() isCategorySelected = new EventEmitter<boolean>(false);
@@ -32,41 +32,46 @@ export class TarifaComponent implements OnInit {
     {
       value: 'T1-R',
       viewValue: 'Pequeña Demanda Residencial (T1-R1, T1-R2 o T1-R3)',
-      potenciaMaxAsignada: 10,
+      potenciaMaxAsignadakW: 10,
     },
     {
       value: 'T1-G',
       viewValue: 'Pequeña Demanda General (T1-G1, T1-G2 o T1-G3)',
-      potenciaMaxAsignada: 10,
+      potenciaMaxAsignadakW: 10,
     },
     {
       value: 'T2-SMP',
       viewValue: 'Mediana Demanda sin Medición de Potencia (T2-SMP)',
-      potenciaMaxAsignada: 20,
+      potenciaMaxAsignadakW: 20,
     },
     {
       value: 'T2-CMP',
       viewValue: 'Mediana Demanda con Medición de Potencia (T2-CMP)',
       potenciaMaxSugerida: 25,
-      potenciaMaxAsignada: 35,
+      potenciaMaxAsignadakW: 35,
+      potenciaMaxMinima: 20,
+      potenciaMaxMaxima: 50,
     },
     {
       value: 'T3-BT',
       viewValue: 'Grande Demanda en Baja Tensión (T3-BT)',
       potenciaMaxSugerida: 95,
-      potenciaMaxAsignada: 50,
+      potenciaMaxAsignadakW: 50,
+      potenciaMaxMinima: 50,
     },
     {
       value: 'T3-MT13.2R',
       viewValue: 'Grande Demanda en Media Tensión (T3-MT13,2 kV, T3-MT 33 kV)',
       potenciaMaxSugerida: 155,
-      potenciaMaxAsignada: 50,
+      potenciaMaxAsignadakW: 50,
+      potenciaMaxMinima: 50,
     },
     {
       value: 'TRA-SD',
       viewValue: 'Riego Agrícola (TRA-SD)',
       potenciaMaxSugerida: 55,
-      potenciaMaxAsignada: 35,
+      potenciaMaxAsignadakW: 35,
+      potenciaMaxMinima: 10,
     },
   ];
 
@@ -76,19 +81,19 @@ export class TarifaComponent implements OnInit {
     private mapService: MapService,
     private router: Router,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.tarifaContratada = this.sharedService.getTarifaContratada() ?? '';
 
     this.sharedService.potenciaMaxAsignada$.subscribe({
       next: (newPotenciaMax) => {
-        this.potenciaMaxAsignada = newPotenciaMax;
+        this.potenciaMaxAsignadakW = newPotenciaMax / 1000;
       },
     });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   isOptionSelected(): boolean {
     return this.tarifaContratada !== '';
@@ -101,16 +106,17 @@ export class TarifaComponent implements OnInit {
       (tarifa) => tarifa.value === this.tarifaContratada
     );
     if (tarifaSeleccionada) {
-      this.potenciaMaxAsignada = tarifaSeleccionada.potenciaMaxAsignada;
-      this.sharedService.setPotenciaMaxAsignada(
-        this.potenciaMaxAsignada * 1000
+      this.potenciaMaxAsignadakW = tarifaSeleccionada.potenciaMaxAsignadakW;
+      this.sharedService.setPotenciaMaxAsignadaW(
+        this.potenciaMaxAsignadakW * 1000
       );
       if (
-        this.potenciaMaxAsignada < this.sharedService.getPotenciaInstalacion()
+        this.potenciaMaxAsignadakW * 1000 < this.sharedService.getPotenciaInstalacionW()
       ) {
         console.log(
           'redibujar la cantidad de paneles acorde a la potencia maxima contratada'
         );
+
       } else {
         this.sharedService.setIsStopCalculate(false);
         this.updateConsumosMensuales();
@@ -120,7 +126,7 @@ export class TarifaComponent implements OnInit {
 
   getMaxPotenciaPermitida(): number {
     if (['T3-BT', 'T3-MT13.2R', 'TRA-SD'].includes(this.tarifaContratada)) {
-      return 2000000; // 2000 kW
+      return 2000; // 2000 kW
     }
     return this.sharedService.getPotenciaMaxAsignadaValue();
   }
@@ -142,9 +148,8 @@ export class TarifaComponent implements OnInit {
       autoFocus: true,
       closeOnNavigation: false,
       data: {
-        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacion()} Kw, superando la potencia máxima de ${
-          this.potenciaMaxAsignada
-        } Kw asignada para su tarifa contratada. Aceptar para editar la superficie o cancelar para elegir una nueva ubicación.`,
+        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} Kw, superando la potencia máxima de ${this.potenciaMaxAsignadakW
+          } Kw asignada para su tarifa contratada. Aceptar para editar la superficie o cancelar para elegir una nueva ubicación.`,
       },
     });
 
@@ -158,8 +163,8 @@ export class TarifaComponent implements OnInit {
         this.router.navigate(['pasos/1']).then(() => {
           this.mapService.clearDrawing();
           this.sharedService.setMaxPanelsPerSuperface(0);
-          this.sharedService.setPotenciaInstalacion(0);
-          this.sharedService.setPotenciaMaxAsignada(0);
+          this.sharedService.setPotenciaInstalacionW(0);
+          this.sharedService.setPotenciaMaxAsignadaW(0);
           this.sharedService.setTarifaContratada('');
         });
       }
@@ -180,26 +185,29 @@ export class TarifaComponent implements OnInit {
   }
 
   onPotenciaInputChange(): void {
-    if (this.potenciaMaxAsignada < 0) {
-      this.potenciaMaxAsignada = 0;
+    if (this.potenciaMaxAsignadakW < 0) {
+      this.potenciaMaxAsignadakW = 0;
       return;
     }
 
     if (this.tarifaContratada === 'T2-CMP') {
-      this.potenciaMaxAsignada = Math.max(
+      this.potenciaMaxAsignadakW = Math.max(
         20,
-        Math.min(this.potenciaMaxAsignada, 50)
+        Math.min(this.potenciaMaxAsignadakW, 50)
       );
     } else if (
       ['T3-BT', 'T3-MT13.2R', 'TRA-SD'].includes(this.tarifaContratada)
     ) {
-      if (this.potenciaMaxAsignada < 50 && this.tarifaContratada !== 'TRA-SD') {
-        this.potenciaMaxAsignada = 50;
+      if (
+        this.potenciaMaxAsignadakW < 50 &&
+        this.tarifaContratada !== 'TRA-SD'
+      ) {
+        this.potenciaMaxAsignadakW = 50;
       } else if (
         this.tarifaContratada === 'TRA-SD' &&
-        this.potenciaMaxAsignada < 10
+        this.potenciaMaxAsignadakW < 10
       ) {
-        this.potenciaMaxAsignada = 10;
+        this.potenciaMaxAsignadakW = 10;
       }
     }
   }
@@ -210,38 +218,42 @@ export class TarifaComponent implements OnInit {
         return 'Ingrese un valor entre 20 kW y 50 kW';
       case 'T3-BT':
       case 'T3-MT13.2R':
-        return 'Ingrese un valor mayor a 50 kW <br>(Máximo permitido por ley: 2000 kW)';
+        return 'Ingrese un valor mayor a 50 kW';
       case 'TRA-SD':
-        return 'Ingrese un valor mayor a 10 kW <br>(Máximo permitido por ley: 2000 kW)';
+        return 'Ingrese un valor mayor a 10 kW';
       default:
-        return `Máxima asignada: ${this.potenciaMaxAsignada} Wp`;
+        return `Máxima asignada: ${this.potenciaMaxAsignadakW} kW`;
     }
   }
 
-  getPotenciaMinima(): number {
+  getPotenciaMinimakW(): number {
     switch (this.tarifaContratada) {
       case 'T2-CMP':
-        return 20000; // 20 kW en watts
+        return 20; // 20 kW en watts
       case 'T3-BT':
       case 'T3-MT13.2R':
-        return 50000; // 50 kW en watts
+        return 50; // 50 kW en watts
       case 'TRA-SD':
-        return 10000; // 10 kW en watts
+        return 10; // 10 kW en watts
       default:
         return 0;
     }
   }
 
-  getPotenciaMaxima(): number | null {
+  getPotenciaMaximakW(): number | null {
     switch (this.tarifaContratada) {
       case 'T2-CMP':
-        return 50000; // 50 kW en watts
+        return 50; // 
       case 'T3-BT':
       case 'T3-MT13.2R':
       case 'TRA-SD':
-        return 2000000; // 2000 kW en watts (máximo permitido por ley)
+        return 2000; // 2000 kW en watts (máximo permitido por ley)
       default:
         return null;
     }
+  }
+
+  clearInput(): void {
+    this.potenciaMaxAsignadakW = 0;
   }
 }

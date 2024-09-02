@@ -29,7 +29,7 @@ export class PotenciaComponent {
         this.updateInstalacionPotencia();
       }
     });
-    
+
     this.panelCapacitySubscription = this.sharedService.panelCapacityW$.subscribe({
       next: value => {
         this.panelCapacityW = value;
@@ -38,7 +38,7 @@ export class PotenciaComponent {
     });
 
     this.potenciaMaxCategoriaSubscription = this.sharedService.potenciaMaxAsignada$.subscribe({
-      next: (potenciaMax)=> {
+      next: (potenciaMax) => {
         this.potenciaMaxCategoriaSelect = potenciaMax * 1000
       }
     })
@@ -59,10 +59,10 @@ export class PotenciaComponent {
 
   private updateInstalacionPotencia(): void {
     this.instalacionPotencia = this.panelsCountSelected * this.panelCapacityW;
-    if(this.instalacionPotencia > this.potenciaMaxCategoriaSelect) {
+    if (this.instalacionPotencia > this.potenciaMaxCategoriaSelect) {
       this.instalacionPotencia = this.potenciaMaxCategoriaSelect;
     }
-    this.sharedService.setPotenciaInstalacion(this.instalacionPotencia);
-    this.cdr.detectChanges(); 
+    this.sharedService.setPotenciaInstalacionW(this.instalacionPotencia);
+    this.cdr.detectChanges();
   }
 }

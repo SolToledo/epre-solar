@@ -10,15 +10,16 @@
 <div class="potencia-contratada" *ngIf="tarifaContratada">
   <div class="potencia-content">
     <p [innerHTML]="getRangoPotenciaMensaje()"></p>
-    <input
+    <input *ngIf="!isPotenciaMaxDisabled()"
       type="number"
-      [(ngModel)]="potenciaMaxAsignada"
+      [(ngModel)]="potenciaMaxAsignadakW"
       placeholder="Potencia contratada"
       [disabled]="isPotenciaMaxDisabled()"
-      [min]="getPotenciaMinima()"
-      [max]="getPotenciaMaxima()"
+      [min]="getPotenciaMinimakW()"
+      [max]="getPotenciaMaximakW()"
       (input)="onPotenciaInputChange()"
-    />
+      (focus)="clearInput()"
+    /><span *ngIf="!isPotenciaMaxDisabled()">Kw</span>
   </div>  
 </div>
 
