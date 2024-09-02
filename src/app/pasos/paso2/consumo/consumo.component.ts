@@ -42,10 +42,9 @@ export class ConsumoComponent implements OnInit {
 
   constructor(
     private consumoService: ConsumoService,
-    consumoTarifaService: ConsumoTarifaService,
     private sharedService: SharedService
   ) {
-    this.subscription = consumoTarifaService.consumosMensuales$.subscribe(
+    this.subscription = this.sharedService.consumosMensuales$.subscribe(
       (consumos: number[]) => {
         this.updateConsumosMensuales(consumos);
       }

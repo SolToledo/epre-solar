@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,10 @@ export class ConsumoTarifaService {
     'T3-MT13.2R': [7900, 10800, 11400, 9600, 11700, 11500, 11900, 13100, 15600, 16300, 16900, 16700],
     'TRA-SD': [4400, 5300, 5100, 4300, 4300, 3400, 3800, 5700, 8600, 9700, 10700, 11300]
   };
-  private consumosMensualesSubject = new BehaviorSubject<number[]>([]);
-  consumosMensuales$ = this.consumosMensualesSubject.asObservable();
+
+  constructor(private sharedService: SharedService){}
+
+  
 
   getConsumoMensual(tarifa: string): number[] {
     this.updateConsumosMensuales(this.consumoMensualPorTarifa[tarifa])
@@ -24,6 +27,6 @@ export class ConsumoTarifaService {
   }
 
   updateConsumosMensuales(consumos: number[]): void {
-    this.consumosMensualesSubject.next(consumos);
+    this.sharedService.setConsumosMensuales(consumos);
   }
 }
