@@ -403,6 +403,10 @@ button[disabled] {
     font-size: 12px; 
   }
 
+  .small-sub {
+    font-size: 12px; 
+  }
+
   /**************************************/
   /*para el componente INVERSION*/
   .resultado-centro-inversion {
