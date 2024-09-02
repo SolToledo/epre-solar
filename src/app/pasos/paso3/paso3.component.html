@@ -44,27 +44,35 @@
 
         <div class="container">
           <div class="item"><app-ahorros></app-ahorros></div>
+
+          <div class="item"><app-costo></app-costo></div>
+
           <div class="item">
             <app-plazo
               [yearlyEnergyAcKwhInitial]="yearlyEnergyAcKwh"
             ></app-plazo>
           </div>
+
           <div class="item">
             <app-potencia></app-potencia>
           </div>
-          <div class="item"><app-superficie></app-superficie></div>
+
           <div class="item">
             <app-energia [yearlyEnergyAcKwh]="yearlyEnergyAcKwh"></app-energia>
           </div>
+
+          <div class="item"><app-superficie></app-superficie></div>
+
+          <div class="item">
+            <app-tarifa-intercambio></app-tarifa-intercambio>
+          </div>
+
           <div class="item">
             <app-emisiones
               [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"
             ></app-emisiones>
           </div>
-          <div class="item"><app-costo></app-costo></div>
-          <div class="item">
-            <app-tarifa-intercambio></app-tarifa-intercambio>
-          </div>
+          
         </div>
         <!--container-->
 
