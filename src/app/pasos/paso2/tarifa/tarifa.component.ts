@@ -5,6 +5,8 @@ import {
   Output,
   ViewChild,
   ElementRef,
+  AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -13,13 +15,15 @@ import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { TarifaDialogComponent } from './tarifa-dialog/tarifa-dialog.component';
+import { FormControl } from '@angular/forms';
+import { MatSlider, MatSliderChange } from '@angular/material/slider';
 
 @Component({
   selector: 'app-tarifa',
   templateUrl: './tarifa.component.html',
   styleUrls: ['./tarifa.component.css'],
 })
-export class TarifaComponent implements OnInit {
+export class TarifaComponent implements OnInit, AfterViewInit {
   tarifaContratada: string = '';
   consumosMensuales: number[] = [];
   potenciaMaxAsignadakW: number = 0;
@@ -27,7 +31,7 @@ export class TarifaComponent implements OnInit {
 
   @Output() isCategorySelected = new EventEmitter<boolean>(false);
   @ViewChild('tarifaSelect') tarifaSelect!: ElementRef;
-
+  @ViewChild(MatSlider) slider!: MatSlider;
   tarifas: Tarifa[] = [
     {
       value: 'T1-R',
@@ -80,8 +84,9 @@ export class TarifaComponent implements OnInit {
     private consumoTarifaService: ConsumoTarifaService,
     private mapService: MapService,
     private router: Router,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.tarifaContratada = this.sharedService.getTarifaContratada() ?? '';
@@ -93,7 +98,9 @@ export class TarifaComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {
+    
+  }
 
   isOptionSelected(): boolean {
     return this.tarifaContratada !== '';
@@ -111,12 +118,12 @@ export class TarifaComponent implements OnInit {
         this.potenciaMaxAsignadakW * 1000
       );
       if (
-        this.potenciaMaxAsignadakW * 1000 < this.sharedService.getPotenciaInstalacionW()
+        this.potenciaMaxAsignadakW * 1000 <
+        this.sharedService.getPotenciaInstalacionW()
       ) {
         console.log(
           'redibujar la cantidad de paneles acorde a la potencia maxima contratada'
         );
-
       } else {
         this.sharedService.setIsStopCalculate(false);
         this.updateConsumosMensuales();
@@ -148,8 +155,9 @@ export class TarifaComponent implements OnInit {
       autoFocus: true,
       closeOnNavigation: false,
       data: {
-        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} Kw, superando la potencia máxima de ${this.potenciaMaxAsignadakW
-          } Kw asignada para su tarifa contratada. Aceptar para editar la superficie o cancelar para elegir una nueva ubicación.`,
+        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} Kw, superando la potencia máxima de ${
+          this.potenciaMaxAsignadakW
+        } Kw asignada para su tarifa contratada. Aceptar para editar la superficie o cancelar para elegir una nueva ubicación.`,
       },
     });
 
@@ -187,7 +195,7 @@ export class TarifaComponent implements OnInit {
   onPotenciaInputChange(): void {
     if (this.potenciaMaxAsignadakW < 0) {
       this.potenciaMaxAsignadakW = 0;
-      return;
+      // return;
     }
 
     if (this.tarifaContratada === 'T2-CMP') {
@@ -229,12 +237,12 @@ export class TarifaComponent implements OnInit {
   getPotenciaMinimakW(): number {
     switch (this.tarifaContratada) {
       case 'T2-CMP':
-        return 20; // 20 kW en watts
+        return 20;
       case 'T3-BT':
       case 'T3-MT13.2R':
-        return 50; // 50 kW en watts
+        return 50;
       case 'TRA-SD':
-        return 10; // 10 kW en watts
+        return 10;
       default:
         return 0;
     }
@@ -243,7 +251,7 @@ export class TarifaComponent implements OnInit {
   getPotenciaMaximakW(): number | null {
     switch (this.tarifaContratada) {
       case 'T2-CMP':
-        return 50; // 
+        return 50; //
       case 'T3-BT':
       case 'T3-MT13.2R':
       case 'TRA-SD':
@@ -253,7 +261,13 @@ export class TarifaComponent implements OnInit {
     }
   }
 
-  clearInput(): void {
-    this.potenciaMaxAsignadakW = 0;
+  onSliderChange(event: any): void {
+    // Asegúrate de que event.value sea un número
+    const value = event.value as number;
+    if (!isNaN(value)) {
+      this.potenciaMaxAsignadakW = Math.round(value);
+      this.onPotenciaInputChange(); // Para realizar cualquier acción asociada a la potencia cambiada.
+    }
+    console.log(this.potenciaMaxAsignadakW);
   }
 }
