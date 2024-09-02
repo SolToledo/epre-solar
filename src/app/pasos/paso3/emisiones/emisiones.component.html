@@ -1,9 +1,10 @@
 
 <div class="resultados-paso3">
   <div class="component-container-borde">
-      <div class="titulo-general-long">
-          <p>Emisiones CO2 evitadas</p>
-      </div>
+    <div class="titulo-general-long">
+        <p>Emisiones CO<sup class="small-sup">2</sup> evitadas</p>
+    </div>
+    
       <div class="informacion-general">
           <div class="ajustar-contenido">
               <div class="info-component">      
@@ -12,11 +13,17 @@
                   </div>       
                   <div class="resultado-centro">
                       <p class="resultado">{{carbonOffset | number:'1.2-2'}}</p>
-                  </div>           
+                  </div>    
+                  
                   <div class="unidad-component">
+                    <p class="unidad-comp">tCO<sup class="small-sup">2</sup>/</p>
+                    <p class="texto-lateral-comp">año</p>
+                  </div>
+
+                 <!-- <div class="unidad-component">
                       <p class="unidad-comp">tCO2/</p>
                       <P class="texto-lateral-comp">año</P>
-                  </div>
+                  </div>-->
               </div>
           </div>
         <!-- <hr>
