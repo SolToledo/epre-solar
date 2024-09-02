@@ -10,7 +10,7 @@
 
   <div class="info-component-panel">
     <div class="cantidad-paneles">
-      <h3>Cantidad paneles</h3>
+      <h3>Cantidad de paneles</h3>
       <div class="cantidad-paneles-contenido">
         <div class="slider">
           <mat-slider
@@ -34,7 +34,7 @@
     <!--cantidad-paneles-->
 
     <div class="potencia-paneles">
-      <h3 id="titulo-potencia">Potencia paneles</h3>
+      <h3 id="titulo-potencia">Potencia de paneles</h3>
       <div class="seleccion-potencia">
         <select id="power-select" [formControl]="potenciaPanelesControl">
           <option value="400" selected>400 W</option>
@@ -56,11 +56,10 @@
         <span>{{ maxPanelsArea$ }}</span>
       </p>
       <p>
-        Detalle del panel:
+        Dimensiones del panel: 
         <span id="dimension-panel"
           >{{ dimensionPanel.height * 100 | number:'1.2-2'}} x
-          {{ dimensionPanel.width * 100 | number:'1.2-2'}}cm - {{ panelCapacityW }}W</span
-        >
+          {{ dimensionPanel.width * 100 | number:'1.2-2'}}cm</span>
       </p>
     </div>
   </div>

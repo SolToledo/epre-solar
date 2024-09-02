@@ -203,7 +203,6 @@ span{
 
 }
 
-
 /*pantallas peque;as*/
 @media (min-width: 760px) and (max-width: 1300px) {
   .titulo-detalle {
@@ -214,16 +213,10 @@ span{
 
 }
 
-
-
-@media (min-width: 760px) and (max-width: 950px) {
+@media (min-width: 760px) and (max-width: 1000px) {
   h3{
-    font-size: 11px;
+    font-size: 10px;
   }
- /* .potencia-paneles-contenido{
-    flex-direction: column;
-  }*/
-
 
   .texto-inferior-panel {
     display: flex;
