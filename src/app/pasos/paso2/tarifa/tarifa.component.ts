@@ -95,10 +95,11 @@ export class TarifaComponent implements OnInit {
   }
 
   onTarifaChange(): void {
+    this.sharedService.setTarifaContratada(this.tarifaContratada);
+    this.isCategorySelected.emit(this.isOptionSelected());
     const tarifaSeleccionada = this.tarifas.find(
       (tarifa) => tarifa.value === this.tarifaContratada
     );
-
     if (tarifaSeleccionada) {
       this.potenciaMaxAsignada = tarifaSeleccionada.potenciaMaxAsignada;
       this.sharedService.setPotenciaMaxAsignada(
@@ -112,39 +113,9 @@ export class TarifaComponent implements OnInit {
         );
       } else {
         this.sharedService.setIsStopCalculate(false);
-        this.inputPotenciaContratada = this.potenciaMaxAsignada;
-        this.sharedService.setTarifaContratada(this.tarifaContratada);
-        this.isCategorySelected.emit(this.isOptionSelected());
         this.updateConsumosMensuales();
       }
     }
-
-    /* this.sharedService.setTarifaContratada(this.tarifaContratada);
-    this.isCategorySelected.emit(this.isOptionSelected());
-    this.updateConsumosMensuales();
-
-    const tarifaSeleccionada = this.tarifas.find(
-      (tarifa) => tarifa.value === this.tarifaContratada
-    );
-
-    if (tarifaSeleccionada) {
-      
-      this.potenciaMaxAsignada = tarifaSeleccionada.potenciaMaxAsignada;
-      this.sharedService.setPotenciaMaxAsignada(
-        this.potenciaMaxAsignada * 1000
-      );
-
-
-      if (
-        this.sharedService.getPotenciaInstalacion() >
-        this.sharedService.getPotenciaMaxAsignadaValue()
-      ) {
-        this.openDialog();
-      } else {
-        this.inputPotenciaContratada = this.potenciaMaxAsignada;
-        this.sharedService.setIsStopCalculate(false);
-      }
-    } */
   }
 
   getMaxPotenciaPermitida(): number {

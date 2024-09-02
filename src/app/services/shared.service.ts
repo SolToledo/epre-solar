@@ -40,6 +40,8 @@ export class SharedService {
   carbonOffSet$ = this.carbonOffSetSubject.asObservable();
   private isStopCalculateSubject = new BehaviorSubject<boolean>(false);
   isStopCalculate$ = this.isStopCalculateSubject.asObservable();
+  private consumosMensualesSubject = new BehaviorSubject<number[]>([]);
+  consumosMensuales$ = this.consumosMensualesSubject.asObservable();
 
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
@@ -172,6 +174,12 @@ export class SharedService {
     return this.isStopCalculateSubject.getValue();
   }
   
-  
+  setConsumosMensuales(consumos: any){
+    this.consumosMensualesSubject.next(consumos);
+  }
+
+  getConsumosMensuales() {
+    return this.consumosMensualesSubject.getValue();
+  }
   
 }
