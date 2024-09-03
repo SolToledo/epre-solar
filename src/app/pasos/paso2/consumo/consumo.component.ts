@@ -1,12 +1,9 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { driver } from 'driver.js';
 import { Subscription } from 'rxjs';
 import { MesesConsumo } from 'src/app/interfaces/mesesConsumo';
 import { ResultadoCalculo } from 'src/app/interfaces/resultado-calculo';
-import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { ConsumoService } from 'src/app/services/consumo.service';
 import { SharedService } from 'src/app/services/shared.service';
-import { SolarApiService } from 'src/app/services/solar-api.service';
 
 @Component({
   selector: 'app-consumo',
@@ -52,7 +49,7 @@ export class ConsumoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /* this.resetMesesConsumo(); */
+    this.resetMesesConsumo();
   }
 
   ngAfterViewInit(): void {

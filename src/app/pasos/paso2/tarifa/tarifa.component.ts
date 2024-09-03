@@ -6,7 +6,6 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -15,8 +14,6 @@ import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { TarifaDialogComponent } from './tarifa-dialog/tarifa-dialog.component';
-import { FormControl } from '@angular/forms';
-import { MatSlider, MatSliderChange } from '@angular/material/slider';
 
 @Component({
   selector: 'app-tarifa',
@@ -31,7 +28,6 @@ export class TarifaComponent implements OnInit, AfterViewInit {
 
   @Output() isCategorySelected = new EventEmitter<boolean>(false);
   @ViewChild('tarifaSelect') tarifaSelect!: ElementRef;
-  @ViewChild(MatSlider) slider!: MatSlider;
   tarifas: Tarifa[] = [
     {
       value: 'T1-R',
@@ -84,8 +80,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     private consumoTarifaService: ConsumoTarifaService,
     private mapService: MapService,
     private router: Router,
-    private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -98,25 +93,18 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    
-  }
+  ngAfterViewInit(): void {}
 
   isOptionSelected(): boolean {
     return this.tarifaContratada !== '';
   }
 
   onTarifaChange(): void {
-    this.sharedService.setTarifaContratada(this.tarifaContratada);
-    this.isCategorySelected.emit(this.isOptionSelected());
     const tarifaSeleccionada = this.tarifas.find(
       (tarifa) => tarifa.value === this.tarifaContratada
     );
     if (tarifaSeleccionada) {
       this.potenciaMaxAsignadakW = tarifaSeleccionada.potenciaMaxAsignadakW;
-      this.sharedService.setPotenciaMaxAsignadaW(
-        this.potenciaMaxAsignadakW * 1000
-      );
       if (
         this.potenciaMaxAsignadakW * 1000 <
         this.sharedService.getPotenciaInstalacionW()
@@ -124,7 +112,14 @@ export class TarifaComponent implements OnInit, AfterViewInit {
         console.log(
           'redibujar la cantidad de paneles acorde a la potencia maxima contratada'
         );
+        this.sharedService.setIsStopCalculate(true);
+        this.sharedService.setConsumosMensuales([]);
       } else {
+        this.sharedService.setTarifaContratada(this.tarifaContratada);
+        this.isCategorySelected.emit(this.isOptionSelected());
+        this.sharedService.setPotenciaMaxAsignadaW(
+          this.potenciaMaxAsignadakW * 1000
+        );
         this.sharedService.setIsStopCalculate(false);
         this.updateConsumosMensuales();
       }
@@ -262,12 +257,10 @@ export class TarifaComponent implements OnInit, AfterViewInit {
   }
 
   onSliderChange(event: any): void {
-    // Asegúrate de que event.value sea un número
     const value = event.value as number;
     if (!isNaN(value)) {
       this.potenciaMaxAsignadakW = Math.round(value);
-      this.onPotenciaInputChange(); // Para realizar cualquier acción asociada a la potencia cambiada.
+      this.onPotenciaInputChange();
     }
-    console.log(this.potenciaMaxAsignadakW);
   }
 }

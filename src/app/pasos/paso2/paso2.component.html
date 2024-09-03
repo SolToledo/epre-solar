@@ -49,7 +49,7 @@
           <!--icono-titulo-->
 
           <div class="slide">
-            <mat-slide-toggle #manualToggle
+            <mat-slide-toggle #manualToggle [disabled]="!allFieldsFilled && !isEditable"
               ><p>Carga manual</p></mat-slide-toggle
             >
           </div>

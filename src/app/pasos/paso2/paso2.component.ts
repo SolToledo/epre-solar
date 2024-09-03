@@ -225,4 +225,6 @@ export class Paso2Component implements OnInit {
       width: '500px',
     });
   }
+
+  
 }

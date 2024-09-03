@@ -96,3 +96,18 @@ input[type=number] {
     display: none !important;
   }
 }
+
+.unidad-component-simple-panel {
+  width:67px;
+  min-width: 67px;
+  height: 35px;
+  margin-bottom: 0%;
+  border: 2px solid var(--light-background);
+  border-radius: 8px;
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
