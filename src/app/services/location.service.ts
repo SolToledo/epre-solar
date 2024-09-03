@@ -334,7 +334,7 @@ export class LocationService {
         const predefinedLocation = this.findNearbyLocation(lat, lng);
 
         if (predefinedLocation) {
-          this.snackBar.open(
+          /* this.snackBar.open(
             `Ubicación cerca de una ubicación predefinida: ${lat} - ${lng}. 
              Se utilizarán datos predefinidos.`,
             '',
@@ -344,7 +344,7 @@ export class LocationService {
               verticalPosition: 'top',
               horizontalPosition: 'center',
             }
-          );
+          ); */
 
           const predefinedLatLng = new google.maps.LatLng(
             predefinedLocation.lat,
@@ -352,7 +352,6 @@ export class LocationService {
           );
           marker.position = predefinedLatLng;
           this.sharedService.setNearbyLocation(predefinedLocation);
-          /* this.requestSavingsCalculation(predefinedLocation); */
 
           return predefinedLatLng;
         } else if (this.isWithinSanJuan(lat, lng)) {
@@ -400,10 +399,9 @@ export class LocationService {
       const nearbyLocation = this.findNearbyLocation(lat, lng);
       if (nearbyLocation) {
         this.sharedService.setNearbyLocation(nearbyLocation);
-        // this.requestSavingsCalculation(nearbyLocation);
         map.setZoom(22);
         map.panTo(new google.maps.LatLng(lat, lng));
-        this.snackBar.open(
+        /* this.snackBar.open(
           'El área seleccionada está dentro de ubicaciones predeterminadas con datos obtenidos de la base de datos PVGIS-ERA5.',
           '',
           {
@@ -412,7 +410,7 @@ export class LocationService {
               verticalPosition: 'top',
               horizontalPosition: 'center',
           }
-        );
+        ); */
         return nearbyLocation;
       } else {
         map.setZoom(22);

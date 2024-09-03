@@ -100,7 +100,10 @@ export class Paso3Component implements OnInit {
   }
 
   private initialLoadFields(): void {
-    console.log(this.resultadosFront);
+    this.sharedService.setPlazoInversion(
+      this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
+        .payBackSimpleYears * 12
+    );
 
     this.panelesCantidad = this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
@@ -118,12 +121,9 @@ export class Paso3Component implements OnInit {
       ).toFixed(3)
     );
 
-    this.proporcionAutoconsumo = 85;
+    this.proporcionAutoconsumo = 85; // todo: traer dato de los parametros
 
-    this.sharedService.setPlazoInversion(
-      this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
-        .payBackSimpleYears * 12
-    );
+    
 
     this.consumoService.totalConsumo$.subscribe({
       next: (value) => (this.consumoTotalAnual = value),

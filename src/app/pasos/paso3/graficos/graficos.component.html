@@ -1,43 +1,39 @@
 <div class="container-graficos">
-
-    <!-- Energia consumida y generada -->
-    <div class="item-grafico">
-      <div class="grafico-container-borde">
-        <div class="head">
-          <div class="icono">
-            <img
-              src="assets/icon-pot-intal.png"
-              class="tamaño-icon"
-              alt="Icono de Emisiones CO2"
-            />
-          </div>
-          <div class="titulo">
-            <p>Energía consumida y generada</p>
-          </div>
-          <div class="resultado-container">
-            <div class="unidad">
-              <p class="unidad-texto"></p>
-            </div>
+  <!-- Energia consumida y generada -->
+  <div class="item-grafico">
+    <div class="grafico-container-borde">
+      <div class="head">
+        <div class="icono">
+          <img
+            src="assets/icon-pot-intal.png"
+            class="tamaño-icon"
+            alt="Icono de Emisiones CO2"
+          />
+        </div>
+        <div class="titulo">
+          <p>Energía consumida y generada</p>
+        </div>
+        <div class="resultado-container">
+          <div class="unidad">
+            <p class="unidad-texto"></p>
           </div>
         </div>
-        <div class="informacion-general">
-          <div class="grafico-component">
-            <canvas #energiaChart></canvas>
-          </div>
-         <!-- <hr/>
-          <div class="footer">
-            <p *ngIf="porcentajeCubierto !== null">
-              Está cubriendo aproximadamente el 
-              {{ porcentajeCubierto | number: '1.0-2' }} % 
-              de su consumo total anual con la energía generada.
-            </p>
-            <p *ngIf="porcentajeCubierto === null">
-              No se pudo calcular el porcentaje de cobertura debido a un consumo total anual de 0.
-            </p>
-          </div>-->
+      </div>
+      <div class="informacion-general">
+        <div class="grafico-component">
+          <canvas #energiaChart></canvas>
+        </div>
+        <hr />
+        <div class="footer">
+          <p>
+            Está cubriendo aproximadamente el
+            {{ porcentajeCubierto | number : "1.0-2" }} % de su consumo total
+            anual con la energía generada.
+          </p>
         </div>
       </div>
     </div>
+  </div>
 
   <!-- Ahorros anuales y punto de recupero de la inversión -->
   <div class="item-grafico">
@@ -62,7 +58,7 @@
         <div class="grafico-component">
           <canvas #ahorrosChart></canvas>
         </div>
-       <!-- <hr />
+        <!-- <hr />
         <div class="footer">
           <p>
             Recupero inversión ({{ recuperoInversionMeses }} meses)
@@ -72,38 +68,36 @@
     </div>
   </div>
 
-    <!-- Emisiones CO2 evitadas acumuladas -->
-    <div class="item-grafico">
-      <div class="grafico-container-borde">
-        <div class="head">
-          <div class="icono">
-            <img
-              src="assets/icon-CO2.png"
-              class="tamaño-icon"
-              alt="Icono de Emisiones CO2"
-            />
-          </div>
-          <div class="titulo">
-            <p>Emisiones CO<sub class="small-sup">2</sub> evitadas acumuladas</p>
+  <!-- Emisiones CO2 evitadas acumuladas -->
+  <div class="item-grafico">
+    <div class="grafico-container-borde">
+      <div class="head">
+        <div class="icono">
+          <img
+            src="assets/icon-CO2.png"
+            class="tamaño-icon"
+            alt="Icono de Emisiones CO2"
+          />
         </div>
-         <div class="resultado-container">
-            <div class="resultado">
-              <p class="resultado-numero"></p>
-            </div>
-            <div class="unidad">
-              <p class="unidad-texto"></p>
-            </div>
-          </div>
-  
+        <div class="titulo">
+          <p>Emisiones CO<sub class="small-sup">2</sub> evitadas acumuladas</p>
         </div>
-        <div class="informacion-general">
-          <div class="grafico-component">
-            <canvas #emisionesChart></canvas>
+        <div class="resultado-container">
+          <div class="resultado">
+            <p class="resultado-numero"></p>
           </div>
-        <!--  <hr />
-          <div class="footer"></div>-->
+          <div class="unidad">
+            <p class="unidad-texto"></p>
+          </div>
         </div>
       </div>
+      <div class="informacion-general">
+        <div class="grafico-component">
+          <canvas #emisionesChart></canvas>
+        </div>
+        <!--  <hr />
+          <div class="footer"></div>-->
+      </div>
     </div>
-
+  </div>
 </div>
