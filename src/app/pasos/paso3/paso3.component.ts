@@ -45,6 +45,7 @@ export class Paso3Component implements OnInit {
   isLoading!: boolean;
   instalacionPotencia: number = 0;
   yearlyEnergyAcKwh: number = 0;
+  yearlyEnergyInitial!: number;
   proporcionAutoconsumo: number = 0;
   consumoTotalAnual: number = 0;
   paso2!: Paso2Component;
@@ -100,19 +101,25 @@ export class Paso3Component implements OnInit {
   }
 
   private initialLoadFields(): void {
+    this.yearlyEnergyAcKwh = parseFloat(
+      this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
+    );
+    this.yearlyEnergyInitial = this.yearlyEnergyAcKwh;
+    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
     this.sharedService.setPlazoInversion(
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
         .payBackSimpleYears * 12
     );
-
+    console.log("plazo en paso 3 :", this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
+      .payBackSimpleYears * 12);
+    
+    
     this.panelesCantidad = this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
 
-    this.yearlyEnergyAcKwh = parseFloat(
-      this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
-    );
-    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
+    
+    
     this.sharedService.setPanelCapacityW(this.panelCapacityW);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
     this.carbonOffsetFactorTnPerMWh = parseFloat(

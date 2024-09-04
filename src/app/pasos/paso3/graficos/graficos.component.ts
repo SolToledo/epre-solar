@@ -47,13 +47,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   recuperoInversionMeses!: number;
   carbonOffSet!: number;
   yearlyEnergy!: number;
+  @Input() yearlyEnergyInitial!: number;
   porcentajeCubierto: number = 0;
-  yearlyEnergyPrevious!: number;
 
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    
+  }
 
   ngOnInit(): void {
     this.subscription = new Subscription();
@@ -61,34 +63,34 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription.add(
       this.sharedService.carbonOffSet$.subscribe((nuevoValor) => {
         this.carbonOffSet = nuevoValor;
-        this.recalcularEmisiones(nuevoValor);
-        this.updateEmisionesChart();
+        // this.recalcularEmisiones(nuevoValor);
+        // this.updateEmisionesChart();
       })
     );
-
-    
-
-    
+    this.yearlyEnergy = this.sharedService.getYearlyEnergyAcKwh();
+    this.recuperoInversionMeses = this.sharedService.getPlazoInversionValue();
   }
 
   ngAfterViewInit(): void {
-    this.createEnergiaChart();
-    this.updateEnergyChart();
+    // this.createEnergiaChart();
+    // this.updateEnergyChart();
     this.createAhorrosChart();
-    this.createEmisionesChart();
-    this.subscription.add(
-      this.sharedService.plazoInversion$.subscribe((meses) => {
-        this.recuperoInversionMeses = Math.round(meses);
-        this.updateAhorrosChart();
-      })
-    );
+    // this.createEmisionesChart();
     this.subscription.add(
       this.sharedService.yearlyEnergyAcKwh$.subscribe((yearlyEnergy) => {
         this.yearlyEnergy = yearlyEnergy;
-        this.updateAhorrosChart();
-        this.updateEnergyChart();
+        setTimeout(() => {
+          this.updateAhorrosChart();
+          // this.updateEnergyChart();
+        }, 100);
       })
     );
+    this.subscription.add(
+      this.sharedService.plazoInversion$.subscribe((meses) => {
+        this.recuperoInversionMeses = Math.round(meses);
+      })
+    );
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -202,11 +204,21 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private createAhorrosChart(): void {
-    this.yearlyEnergyPrevious = this.yearlyEnergy;
     const ctx = this.ahorrosChartRef.nativeElement.getContext('2d');
+    console.log('ctx :', ctx);
 
     if (ctx) {
       // Datos de entrada
+      console.log(
+        'ahorrosChartRef.nativeElement :',
+        this.ahorrosChartRef.nativeElement
+      );
+      console.log(
+        'periodoVeinteanalFlujoIngresosMonetarios :',
+        this.periodoVeinteanalFlujoIngresosMonetarios
+      );
+      console.log('yearlyEnergy :', this.yearlyEnergy);
+      console.log('yearlyEnergyInitial :', this.yearlyEnergyInitial);
 
       const labels = this.periodoVeinteanalFlujoIngresosMonetarios.map(
         (item) => `${item.year}`
@@ -221,6 +233,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       const recuperoInversionYear = Math.round(
         this.recuperoInversionMeses / 12
       );
+      console.log('labels :', labels);
+      console.log('ahorroData :', ahorroData);
+      console.log('ingresoData :', ingresoData);
+      console.log('recuperoInversionYear :', recuperoInversionYear);
+      console.log('recuperoInversionMeses :', this.recuperoInversionMeses);
 
       // Obtener el año actual de la primera etiqueta
       const startYear = parseInt(labels[0], 10);
@@ -230,7 +247,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       const recuperoInversionIndex = labels.indexOf(
         recuperoInversionActualYear.toString()
       );
-
+      console.log('startYear :', startYear);
+      console.log('recuperoInversionActualYear :', recuperoInversionActualYear);
+      console.log('recuperoInversionIndex :', recuperoInversionIndex);
       // Crear configuración del gráfico
       const data: ChartData<'line' | 'bubble'> = {
         labels: labels,
@@ -276,6 +295,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         ],
       };
+      console.log('data :', data);
 
       const options: ChartOptions<'line' | 'bubble'> = {
         responsive: true,
@@ -308,19 +328,22 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       };
-
+      console.log('options :', options);
       // Crear el gráfico
       this.ahorrosChart = new Chart(ctx, {
         type: 'bubble', // Tipo principal del gráfico
         data: data,
         options: options,
       });
+      console.log('this.ahorrosChart :', this.ahorrosChart);
     } else {
       console.error('El contexto 2D no está disponible.');
     }
   }
 
   private updateAhorrosChart(): void {
+    this.recalcularFlujoIngresos();
+
     if (
       this.ahorrosChart &&
       this.ahorrosChart.data &&
@@ -363,13 +386,14 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             ]
           : [];
       this.ahorrosChart.update();
+      this.ahorrosChart.render();
     } else {
       console.error('El gráfico de ahorros no se ha inicializado.');
     }
   }
 
   private recalcularFlujoIngresos(): void {
-    // Suponiendo que yearlyEnergy afecta a ambos valores de alguna forma.
+    
     this.periodoVeinteanalFlujoIngresosMonetarios.forEach((item) => {
       item.ahorroEnElectricidadTotalUsd = this.calcularAhorro(
         item.ahorroEnElectricidadTotalUsd
@@ -378,14 +402,26 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         item.ingresoPorInyeccionElectricaUsd
       );
     });
+    this.yearlyEnergyInitial = Number(this.yearlyEnergy);
+    console.log(typeof  Number(this.yearlyEnergy));
   }
 
-  private calcularAhorro(ahorro: number): number {
-    return (this.yearlyEnergy * ahorro) / this.yearlyEnergyPrevious;
+  private calcularAhorro(ahorroActual: number): number {
+    if (this.yearlyEnergyInitial === 0) {
+      console.warn('yearlyEnergyInitial es cero');
+      return ahorroActual;
+    }
+    console.log("(this.yearlyEnergy / this.yearlyEnergyInitial) * ahorroActual : ", this.yearlyEnergy, this.yearlyEnergyInitial, ahorroActual);
+    
+    return (Number(this.yearlyEnergy) / Number(this.yearlyEnergyInitial)) * ahorroActual;
   }
 
-  private calcularIngreso(ingreso: number): number {
-    return (this.yearlyEnergy * ingreso) / this.yearlyEnergyPrevious;
+  private calcularIngreso(ingresoActual: number): number {
+    if (this.yearlyEnergyInitial === 0) {
+      console.warn('yearlyEnergyInitial es cero');
+      return ingresoActual;
+    }
+    return (Number(this.yearlyEnergy) / Number(this.yearlyEnergyInitial)) * ingresoActual;
   }
 
   private createEnergiaChart(): void {
