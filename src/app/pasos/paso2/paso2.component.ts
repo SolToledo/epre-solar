@@ -15,7 +15,6 @@ import { ConsumoComponent } from './consumo/consumo.component';
 import { driver } from 'driver.js';
 import { SharedService } from 'src/app/services/shared.service';
 
-
 @Component({
   selector: 'app-paso2',
   templateUrl: './paso2.component.html',

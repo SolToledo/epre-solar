@@ -12,7 +12,7 @@
 </div>
 <br />
 <div class="potencia-contratada" *ngIf="tarifaContratada">
-  <div class="potencia-content" >
+  <div class="potencia-content">
     <p [innerHTML]="getRangoPotenciaMensaje()"></p>
     <mat-slider
       *ngIf="!isPotenciaMaxDisabled()"
@@ -20,9 +20,14 @@
       [max]="getPotenciaMaximakW()"
       step="1"
       (change)="onSliderChange($event)"
+      discrete
+      [displayWith]="formatLabel"
+      showTickMarks 
     >
       <input matSliderThumb #slider [(ngModel)]="potenciaMaxAsignadakW" />
     </mat-slider>
-    <span class="unidad-component-simple-panel" *ngIf="!isPotenciaMaxDisabled()">{{ potenciaMaxAsignadakW }} kW</span>
+    <span class="unidad-component-simple-panel" *ngIf="!isPotenciaMaxDisabled()"
+      >{{ potenciaMaxAsignadakW | number:'1.0-0' }} kW</span
+    >
   </div>
 </div>

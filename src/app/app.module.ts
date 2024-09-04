@@ -50,7 +50,7 @@ import { CostoComponent } from './pasos/paso3/costo/costo.component';
 import { TarifaIntercambioComponent } from './pasos/paso3/tarifa-intercambio/tarifa-intercambio.component';
 import { TotalComponent } from './pasos/paso2/total/total.component';
 import { NgChartsModule } from 'ng2-charts';
-import { MatSliderModule } from '@angular/material/slider';
+import { MatSliderModule, MatSliderThumb } from '@angular/material/slider';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { EnvironmentService } from './services/environment.service';
 import { firstValueFrom } from 'rxjs';
@@ -59,7 +59,7 @@ import { AhorrosComponent } from './pasos/paso3/ahorros/ahorros.component';
 import { InstruccionesComponent } from './instrucciones/instrucciones.component';
 import { CustomNumberPipe } from './pipes/custom-number.pipe';
 import { TarifaDialogComponent } from './pasos/paso2/tarifa/tarifa-dialog/tarifa-dialog.component';
-import { registerLocaleData } from '@angular/common';
+import { DecimalPipe, registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 
 export function initializeApp(environmentService: EnvironmentService): () => Promise<void> {
@@ -122,7 +122,8 @@ registerLocaleData(localeEs, 'es');
     MatRadioModule,
     NgxSpinnerModule.forRoot(),
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    
   ],
   providers: [
     EnvironmentService,
@@ -132,7 +133,8 @@ registerLocaleData(localeEs, 'es');
       deps: [EnvironmentService],
       multi: true,
     },
-    { provide: LOCALE_ID, useValue: 'es' }
+    { provide: LOCALE_ID, useValue: 'es' },
+    DecimalPipe
   ],
   bootstrap: [AppComponent] 
 })
