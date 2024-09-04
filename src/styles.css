@@ -820,3 +820,16 @@ input[type=number] {
     display: none !important; /* Oculta el fondo de pantalla */
   }
 }
+
+/*estilos para que desaparezca el driver*/
+@media (max-width: 760px) {
+  .driver-active .driver-popover {
+    display: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .driver-active .driver-overlay {
+    display: none !important;
+  }
+}

@@ -39,25 +39,6 @@
   }
 
 /***********************************************************************/
- /* Estilos para personalizar la barra de desplazamiento vertical */
- .informacion::-webkit-scrollbar {
-  width: 8px; 
-}
-
-.informacion::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.informacion::-webkit-scrollbar-thumb {
-  background: #b8b6b6; 
-  border-radius: 4px; 
-}
-
-.informacion::-webkit-scrollbar-thumb:hover {
-  background: #555; 
-}
-
-/***************************************************************************/
   .advertencia #recomendacion {
     text-align: left;
     color: var(--font-light);
@@ -252,6 +233,26 @@
   transform: scale(1.01); 
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); 
 }
+/********************************************************/
+
+ /* Estilos para personalizar la barra de desplazamiento vertical */
+ .informacion::-webkit-scrollbar {
+  width: 8px; 
+}
+
+.informacion::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+.informacion::-webkit-scrollbar-thumb {
+  background: #b8b6b6; 
+  border-radius: 4px; 
+}
+
+.informacion::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-green); 
+}
+
 
 
 /********************************************************/
