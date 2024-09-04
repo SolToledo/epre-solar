@@ -6,6 +6,8 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  ChangeDetectorRef,
+  LOCALE_ID,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -14,11 +16,13 @@ import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { TarifaDialogComponent } from './tarifa-dialog/tarifa-dialog.component';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-tarifa',
   templateUrl: './tarifa.component.html',
   styleUrls: ['./tarifa.component.css'],
+  providers: [DecimalPipe] 
 })
 export class TarifaComponent implements OnInit, AfterViewInit {
   tarifaContratada: string = '';
@@ -74,14 +78,17 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       potenciaMaxMinima: 10,
     },
   ];
+  formattedValue: string = '';
 
   constructor(
     private sharedService: SharedService,
     private consumoTarifaService: ConsumoTarifaService,
     private mapService: MapService,
     private router: Router,
-    private dialog: MatDialog
-  ) {}
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
+  ) {
+  }
 
   ngOnInit(): void {
     this.tarifaContratada = this.sharedService.getTarifaContratada() ?? '';
@@ -254,9 +261,15 @@ export class TarifaComponent implements OnInit, AfterViewInit {
 
   onSliderChange(event: any): void {
     const value = event.value as number;
+    
     if (!isNaN(value)) {
       this.potenciaMaxAsignadakW = Math.round(value);
       this.onPotenciaInputChange();
+      this.cdr.detectChanges(); 
     }
+  }
+
+  formatLabel(value: number): string {
+    return new Intl.NumberFormat('es-ES').format(value * 1000);
   }
 }
