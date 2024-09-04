@@ -78,7 +78,19 @@ export class Paso3Component implements OnInit {
         .then((resultados) => (this.resultadosFront = resultados))
         .then(() => this.initialLoadFields())
         .then(() => this.sharedService.setIsLoading(false))
-        .catch((error) => console.error('Error en calculate:', error));
+        .catch((error) => {
+          this.snackBar.open(
+            'Hubo un problema al calcular los ahorros solares. Inténtelo más tarde.',
+            'Cerrar',
+            {
+              duration: 5000,
+              panelClass: ['error-snackbar'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            }
+          );
+          this.router.navigate(['/pasos/1']);
+        });
     } else {
       this.snackBar.open(
         'Resultados calculados en base a uno de los 33 puntos.',
@@ -110,10 +122,7 @@ export class Paso3Component implements OnInit {
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
         .payBackSimpleYears * 12
     );
-    console.log("plazo en paso 3 :", this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
-      .payBackSimpleYears * 12);
-    
-    
+
     this.panelesCantidad = this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
