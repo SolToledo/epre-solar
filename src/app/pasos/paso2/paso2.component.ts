@@ -137,7 +137,6 @@ export class Paso2Component implements OnInit {
               'Cuando haya completado todos los campos, presione este botón para continuar.',
             side: 'left',
             align: 'start',
-            nextBtnText: 'Siguiente',
             prevBtnText: 'Anterior',
             doneBtnText: 'Terminar',
           },
