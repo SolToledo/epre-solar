@@ -150,7 +150,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       data: {
         message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} kW, superando la potencia máxima de ${
           this.potenciaMaxAsignadakW
-        } kW asignada para la tarifa seleccionada.`,
+        } kW asignada para la tarifa seleccionada. Presione aceptar para volver a seleccionar una superficie o cancelar para cambiar la tarifa`,
       },
     });
 
@@ -221,7 +221,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       case 'TRA-SD':
         return 'Ingrese un valor mayor a 10 kW';
       default:
-        return `Máxima asignada: ${this.potenciaMaxAsignadakW} kW`;
+        return `Potencia Máxima asignada: ${this.potenciaMaxAsignadakW} kW`;
     }
   }
 
