@@ -49,39 +49,46 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   yearlyEnergy!: number;
   @Input() yearlyEnergyInitial!: number;
   porcentajeCubierto: number = 0;
+  carbonOffSetInicialTon!: number;
 
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
-  ) {
-    
-  }
+  ) {}
 
   ngOnInit(): void {
     this.subscription = new Subscription();
 
-    this.subscription.add(
-      this.sharedService.carbonOffSet$.subscribe((nuevoValor) => {
-        this.carbonOffSet = nuevoValor;
-        // this.recalcularEmisiones(nuevoValor);
-        // this.updateEmisionesChart();
-      })
-    );
+    this.carbonOffSetInicialTon = this.sharedService.getCarbonOffSet();
+    this.periodoVeinteanalEmisionesGEIEvitadas =
+      this.periodoVeinteanalEmisionesGEIEvitadas.map((item) => ({
+        ...item,
+        emisionesTonCO2Original: item.emisionesTonCO2,
+      }));
+
     this.yearlyEnergy = this.sharedService.getYearlyEnergyAcKwh();
     this.recuperoInversionMeses = this.sharedService.getPlazoInversionValue();
   }
 
   ngAfterViewInit(): void {
-    // this.createEnergiaChart();
-    // this.updateEnergyChart();
+    this.createEmisionesChart();
+    this.actualizarEmisionesChart();
     this.createAhorrosChart();
-    // this.createEmisionesChart();
+    this.createEnergiaChart();
+    this.updateEnergyChart();
+    this.subscription.add(
+      this.sharedService.carbonOffSet$.subscribe((nuevoValor) => {
+        this.calcularEmisionesAjustadas(nuevoValor);
+        this.actualizarEmisionesChart();
+      })
+    );
+
     this.subscription.add(
       this.sharedService.yearlyEnergyAcKwh$.subscribe((yearlyEnergy) => {
         this.yearlyEnergy = yearlyEnergy;
         setTimeout(() => {
           this.updateAhorrosChart();
-          // this.updateEnergyChart();
+          this.updateEnergyChart();
         }, 100);
       })
     );
@@ -123,14 +130,18 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           datasets: [
             {
               label: 'Emisiones GEI evitadas acumuladas',
-              data: this.periodoVeinteanalEmisionesGEIEvitadas.map(
-                (item) => item.emisionesTonCO2
-              ),
+              data: this.calcularEmisionesAcumuladas(),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 2,
-              fill: true,
+              fill: false,
               tension: 0.4,
+              pointRadius: 2, // 0 sin puntos en la línea
+              type: 'line',
+              pointRotation: 90,
+              pointBackgroundColor: 'green',
+              pointHoverRadius: 3,
+              normalized: true,
             },
           ],
         },
@@ -157,7 +168,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
               position: 'top',
             },
             datalabels: {
-              display: true, // Desactiva las etiquetas de datos
+              display: true,
             },
           },
         },
@@ -167,59 +178,44 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private recalcularEmisiones(nuevoValor: number): void {
-    if (
-      this.periodoVeinteanalEmisionesGEIEvitadas &&
-      this.periodoVeinteanalEmisionesGEIEvitadas.length > 0
-    ) {
-      const valorInicial =
-        this.periodoVeinteanalEmisionesGEIEvitadas[0].emisionesTonCO2;
-      const factor = nuevoValor / valorInicial;
-
-      this.periodoVeinteanalEmisionesGEIEvitadas =
-        this.periodoVeinteanalEmisionesGEIEvitadas.map((item, index) => {
-          const emisionesAjustadas = item.emisionesTonCO2 * factor;
-          const acumulado =
-            index === 0
-              ? emisionesAjustadas
-              : emisionesAjustadas +
-                this.periodoVeinteanalEmisionesGEIEvitadas[index - 1]
-                  .emisionesTonCO2;
-          return {
-            ...item,
-            emisionesTonCO2: acumulado,
-          };
-        });
-    }
+  private calcularEmisionesAjustadas(nuevoValor: number): void {
+    const factor =
+      nuevoValor /
+      this.periodoVeinteanalEmisionesGEIEvitadas[0].emisionesTonCO2Original!;
+    this.periodoVeinteanalEmisionesGEIEvitadas =
+      this.periodoVeinteanalEmisionesGEIEvitadas.map((item) => ({
+        ...item,
+        emisionesTonCO2: item.emisionesTonCO2Original! * factor,
+      }));
   }
 
-  private updateEmisionesChart(): void {
+  private calcularEmisionesAcumuladas(): number[] {
+    return this.periodoVeinteanalEmisionesGEIEvitadas.reduce<number[]>(
+      (acc, item, index) => {
+        const acumulado =
+          index === 0
+            ? item.emisionesTonCO2
+            : acc[index - 1] + item.emisionesTonCO2;
+        acc.push(acumulado);
+        return acc;
+      },
+      []
+    );
+  }
+
+  private actualizarEmisionesChart(): void {
     if (this.emisionesChart) {
       this.emisionesChart.data.datasets[0].data =
-        this.periodoVeinteanalEmisionesGEIEvitadas.map(
-          (item) => item.emisionesTonCO2
-        );
+        this.calcularEmisionesAcumuladas();
       this.emisionesChart.update();
     }
   }
 
   private createAhorrosChart(): void {
     const ctx = this.ahorrosChartRef.nativeElement.getContext('2d');
-    console.log('ctx :', ctx);
 
     if (ctx) {
       // Datos de entrada
-      console.log(
-        'ahorrosChartRef.nativeElement :',
-        this.ahorrosChartRef.nativeElement
-      );
-      console.log(
-        'periodoVeinteanalFlujoIngresosMonetarios :',
-        this.periodoVeinteanalFlujoIngresosMonetarios
-      );
-      console.log('yearlyEnergy :', this.yearlyEnergy);
-      console.log('yearlyEnergyInitial :', this.yearlyEnergyInitial);
-
       const labels = this.periodoVeinteanalFlujoIngresosMonetarios.map(
         (item) => `${item.year}`
       );
@@ -233,12 +229,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       const recuperoInversionYear = Math.round(
         this.recuperoInversionMeses / 12
       );
-      console.log('labels :', labels);
-      console.log('ahorroData :', ahorroData);
-      console.log('ingresoData :', ingresoData);
-      console.log('recuperoInversionYear :', recuperoInversionYear);
-      console.log('recuperoInversionMeses :', this.recuperoInversionMeses);
-
       // Obtener el año actual de la primera etiqueta
       const startYear = parseInt(labels[0], 10);
       // Calcular el año de recuperación de inversión
@@ -247,15 +237,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       const recuperoInversionIndex = labels.indexOf(
         recuperoInversionActualYear.toString()
       );
-      console.log('startYear :', startYear);
-      console.log('recuperoInversionActualYear :', recuperoInversionActualYear);
-      console.log('recuperoInversionIndex :', recuperoInversionIndex);
       // Crear configuración del gráfico
       const data: ChartData<'line' | 'bubble'> = {
         labels: labels,
         datasets: [
           {
-            label: 'Ahorro en Electricidad (USD)',
+            label: 'Ahorro en Electricidad',
             data: ahorroData,
             borderColor: 'rgba(54, 162, 235, 1)', // Color de la línea
             backgroundColor: 'rgba(54, 162, 235, 0.1)', // Relleno debajo de la línea
@@ -266,7 +253,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             type: 'line', // Tipo de gráfico de línea
           },
           {
-            label: 'Ingreso por Inyección Eléctrica (USD)',
+            label: 'Ingreso por Inyección Eléctrica',
             data: ingresoData,
             borderColor: 'rgba(75, 192, 192, 1)', // Color de la línea
             backgroundColor: 'rgba(75, 192, 192, 0.1)', // Relleno debajo de la línea
@@ -274,28 +261,29 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             borderWidth: 2,
             pointRadius: 0, // Sin puntos en la línea
             tension: 0.4, // Suaviza las curvas
-            type: 'line', // Tipo de gráfico de línea
+            type: 'line', 
           },
           {
             label: 'Punto de Recupero de Inversión',
+            
             data:
               recuperoInversionIndex !== -1
                 ? [
                     {
-                      x: recuperoInversionActualYear, // Usa el año calculado
-                      y: Math.max(...ahorroData, ...ingresoData) * 0.5, // Ajusta el valor Y según sea necesario
-                      r: 6, // Radio de la burbuja
+                      x: recuperoInversionActualYear, 
+                      y: Math.max(...ahorroData, ...ingresoData) * 0.5, 
+                      r: 5,
                     },
                   ]
                 : [],
-            backgroundColor: 'rgba(255, 99, 132, 0.8)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 2,
-            type: 'bubble', // Tipo de gráfico de burbuja
+            backgroundColor: 'rgba(0, 98, 65, 1)',
+            borderColor: 'rgb(0, 98, 65)',
+            type: 'bubble',
+            pointStyle: 'circle',
+            
           },
         ],
       };
-      console.log('data :', data);
 
       const options: ChartOptions<'line' | 'bubble'> = {
         responsive: true,
@@ -305,10 +293,23 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             display: true,
             position: 'top',
             align: 'start',
+            labels: {
+              usePointStyle: true,
+            },
           },
           tooltip: {
+            callbacks: {
+              // Personalizar el texto del tooltip
+              label: function(context) {
+                if (context.dataset.label === 'Punto de Recupero de Inversión') {
+                  // Devuelve el texto que se mostrará en el tooltip
+                  return `Año: ${context.parsed.x}`;
+                }
+                return context.dataset.label + ': ' + context.parsed.y.toFixed(0);
+              }
+            },
             enabled: true,
-            mode: 'index',
+            mode: 'nearest',
             intersect: false,
           },
         },
@@ -328,14 +329,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       };
-      console.log('options :', options);
       // Crear el gráfico
       this.ahorrosChart = new Chart(ctx, {
         type: 'bubble', // Tipo principal del gráfico
         data: data,
         options: options,
       });
-      console.log('this.ahorrosChart :', this.ahorrosChart);
     } else {
       console.error('El contexto 2D no está disponible.');
     }
@@ -393,7 +392,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private recalcularFlujoIngresos(): void {
-    
     this.periodoVeinteanalFlujoIngresosMonetarios.forEach((item) => {
       item.ahorroEnElectricidadTotalUsd = this.calcularAhorro(
         item.ahorroEnElectricidadTotalUsd
@@ -403,7 +401,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     });
     this.yearlyEnergyInitial = Number(this.yearlyEnergy);
-    console.log(typeof  Number(this.yearlyEnergy));
   }
 
   private calcularAhorro(ahorroActual: number): number {
@@ -411,9 +408,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       console.warn('yearlyEnergyInitial es cero');
       return ahorroActual;
     }
-    console.log("(this.yearlyEnergy / this.yearlyEnergyInitial) * ahorroActual : ", this.yearlyEnergy, this.yearlyEnergyInitial, ahorroActual);
-    
-    return (Number(this.yearlyEnergy) / Number(this.yearlyEnergyInitial)) * ahorroActual;
+
+    return (
+      (Number(this.yearlyEnergy) / Number(this.yearlyEnergyInitial)) *
+      ahorroActual
+    );
   }
 
   private calcularIngreso(ingresoActual: number): number {
@@ -421,7 +420,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       console.warn('yearlyEnergyInitial es cero');
       return ingresoActual;
     }
-    return (Number(this.yearlyEnergy) / Number(this.yearlyEnergyInitial)) * ingresoActual;
+    return (
+      (Number(this.yearlyEnergy) / Number(this.yearlyEnergyInitial)) *
+      ingresoActual
+    );
   }
 
   private createEnergiaChart(): void {

@@ -109,9 +109,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
         this.potenciaMaxAsignadakW * 1000 <
         this.sharedService.getPotenciaInstalacionW()
       ) {
-        console.log(
-          'redibujar la cantidad de paneles acorde a la potencia maxima contratada'
-        );
+        this.openDialog();
         this.sharedService.setIsStopCalculate(true);
         this.sharedService.setConsumosMensuales([]);
       } else {
@@ -150,18 +148,14 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       autoFocus: true,
       closeOnNavigation: false,
       data: {
-        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} Kw, superando la potencia máxima de ${
+        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} kW, superando la potencia máxima de ${
           this.potenciaMaxAsignadakW
-        } Kw asignada para su tarifa contratada. Aceptar para editar la superficie o cancelar para elegir una nueva ubicación.`,
+        } kW asignada para la tarifa seleccionada.`,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.mapService.setDrawingMode(null);
-        this.mapService.getPolygons()[0].setEditable(true);
-        this.sharedService.setIsStopCalculate(true);
-      } else {
         this.sharedService.setTutorialShown(true);
         this.router.navigate(['pasos/1']).then(() => {
           this.mapService.clearDrawing();
@@ -170,6 +164,8 @@ export class TarifaComponent implements OnInit, AfterViewInit {
           this.sharedService.setPotenciaMaxAsignadaW(0);
           this.sharedService.setTarifaContratada('');
         });
+      } else {
+        this.sharedService.setTarifaContratada('');
       }
     });
   }

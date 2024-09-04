@@ -14,8 +14,8 @@ import { SolarDataFront } from '../interfaces/solar-data-front';
   providedIn: 'root',
 })
 export class SolarApiService {
-  private readonly apiUrl: string = 'http://localhost:3000';
-  // private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
+  // private readonly apiUrl: string = 'http://localhost:3000';
+  private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
   private _resultados!: ResultadosFrontDTO;
   annualConsumption: number = 0;
   private panelsSupportedSubscription!: Subscription;
@@ -102,7 +102,6 @@ export class SolarApiService {
       );
 
       this._resultados = this.resultadoService.generarResultados(response);
-      // console.log(this._resultados);
       return this.getResultados;
     } catch (error) {
       console.error('Error en el cálculo:', error);
