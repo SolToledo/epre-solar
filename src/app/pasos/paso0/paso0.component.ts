@@ -31,7 +31,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
           popover: {
             title: 'Información importante',
             description:
-              'Esta aplicación permite calcular los ahorros económicos y en emisiones, de la instalación de generación distribuida solar en hogares, comercios o industrias',
+              'Esta aplicación permite calcular los ahorros económicos y en emisiones, de la instalación de generación solar distribuida en hogares, comercios o industrias.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -57,7 +57,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
           popover: {
             title: 'Consumo de electricidad y categoría tarifaria',
             description:
-              'Deben seleccionarse la categoría del suministro eléctrico donde se quiere instalar equipamiento de Generación Distribuida, y consumos de electricidad registrados en los 12 últimos meses.',
+              'Deben seleccionarse la categoría del Suministro eléctrico donde se quiere instalar equipamiento de Generación Distribuida, y consumos de electricidad registrados en los 12 últimos meses.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -70,7 +70,7 @@ export class Paso0Component implements OnInit, AfterViewInit {
           popover: {
             title: 'Consumo de electricidad y categoría tarifaria',
             description:
-              'En caso de no contar con la misma, se considerarán los valores promedios de consumo para la categoría tarifaria del suministro.',
+              'En caso de no contar con la misma, se considerarán los valores promedios de consumo para la categoría tarifaria del Suministro.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
