@@ -61,7 +61,6 @@ export class Paso2Component implements OnInit {
         this.isStopCalculate = newValue;
       }
     })
-
     
   }
 
@@ -83,7 +82,7 @@ export class Paso2Component implements OnInit {
           popover: {
             title: 'Consumo',
             description:
-              'Esta es la sección de Consumo. Aquí puede configurar su consumo energético.',
+              'Aquí puede configurar su consumo energético.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
