@@ -9,7 +9,13 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { Chart, ChartOptions, ChartData, ChartType, ChartDataset } from 'chart.js';
+import {
+  Chart,
+  ChartOptions,
+  ChartData,
+  ChartType,
+  ChartDataset,
+} from 'chart.js';
 import 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { Subscription } from 'rxjs';
@@ -72,7 +78,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.createEmisionesChart();
+    /* this.createEmisionesChart();
     this.actualizarEmisionesChart();
     this.createAhorrosChart();
     this.createEnergiaChart();
@@ -98,7 +104,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.recuperoInversionMeses = Math.round(meses);
       })
     );
-    this.cdr.detectChanges();
+    this.cdr.detectChanges(); */
   }
 
   ngOnDestroy(): void {
@@ -211,13 +217,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.emisionesChart.update();
     }
   }
-  
 
   private createAhorrosChart(): void {
     const ctx = this.ahorrosChartRef.nativeElement.getContext('2d');
-    
+
     if (ctx) {
-      
       // Datos de entrada
       const labels = this.periodoVeinteanalFlujoIngresosMonetarios.map(
         (item) => `${item.year}`
@@ -228,12 +232,14 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       const ingresoData = this.periodoVeinteanalFlujoIngresosMonetarios.map(
         (item) => item.ingresoPorInyeccionElectricaUsd
       );
-      
+
       // Convertir los meses de recuperación a años
-      const recuperoInversionYear = Math.round(this.recuperoInversionMeses / 12);
+      const recuperoInversionYear = Math.round(
+        this.recuperoInversionMeses / 12
+      );
       const startYear = parseInt(labels[0], 10);
       const recuperoInversionActualYear = startYear + recuperoInversionYear;
-  
+
       // Crear configuración del gráfico
       const data: ChartData<'line'> = {
         labels: labels,
@@ -264,7 +270,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         ],
       };
-  
+
       const options: ChartOptions<'line'> = {
         responsive: true,
         maintainAspectRatio: true,
@@ -283,7 +289,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (context.dataset.label === 'Año de Recupero de Inversión') {
                   return `Año: ${context.parsed.x}`;
                 }
-                return `${context.dataset.label}: ${context.parsed.y.toFixed(0)}`;
+                return `${context.dataset.label}: ${context.parsed.y.toFixed(
+                  0
+                )}`;
               },
             },
             enabled: true,
@@ -315,7 +323,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       };
-  
+
       // Crear el gráfico
       this.ahorrosChart = new Chart(ctx, {
         type: 'line',
@@ -326,7 +334,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error('El contexto 2D no está disponible.');
     }
   }
-  
 
   private updateAhorrosChart(): void {
     this.recalcularFlujoIngresos();
@@ -388,7 +395,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         item.ingresoPorInyeccionElectricaUsd
       );
     });
-    this.yearlyEnergyInitial = Number(this.yearlyEnergy);
+    this.yearlyEnergyInitial = this.yearlyEnergy;
   }
 
   private calcularAhorro(ahorroActual: number): number {
@@ -397,10 +404,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       return ahorroActual;
     }
 
-    return (
-      (Number(this.yearlyEnergy) / Number(this.yearlyEnergyInitial)) *
-      ahorroActual
-    );
+    return (this.yearlyEnergy / this.yearlyEnergyInitial) * ahorroActual;
   }
 
   private calcularIngreso(ingresoActual: number): number {
@@ -408,10 +412,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       console.warn('yearlyEnergyInitial es cero');
       return ingresoActual;
     }
-    return (
-      (Number(this.yearlyEnergy) / Number(this.yearlyEnergyInitial)) *
-      ingresoActual
-    );
+    return (this.yearlyEnergy / this.yearlyEnergyInitial) * ingresoActual;
   }
 
   private createEnergiaChart(): void {
@@ -520,10 +521,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.yearlyEnergy || energiaFotovoltaicaPromedio,
       ];
 
-      // Llama a la función para actualizar el gráfico
       this.energiaChart.update();
       this.energiaChart.render();
-      this.cdr.detectChanges(); // Si estás utilizando ChangeDetectionStrategy.OnPush, esto es necesario.
+      this.cdr.detectChanges(); 
     }
   }
 }
