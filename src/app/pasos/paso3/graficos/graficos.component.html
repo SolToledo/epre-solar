@@ -1,4 +1,5 @@
 <div class="container-graficos">
+
   <!-- Energia consumida y generada -->
   <div class="item-grafico">
     <div class="grafico-container-borde">
@@ -23,15 +24,8 @@
         <div class="grafico-component">
           <canvas #energiaChart></canvas>
         </div>
-        <hr />
-        <div class="footer">
-          <p>
-            Está cubriendo aproximadamente el
-            {{ porcentajeCubierto | number : "1.0-2" }} % de su consumo total
-            anual con la energía generada.
-          </p>
-        </div>
       </div>
+
     </div>
   </div>
 
@@ -58,12 +52,6 @@
         <div class="grafico-component">
           <canvas #ahorrosChart></canvas>
         </div>
-        <!-- <hr />
-        <div class="footer">
-          <p>
-            Recupero inversión ({{ recuperoInversionMeses }} meses)
-          </p>
-        </div>-->
       </div>
     </div>
   </div>
@@ -95,8 +83,6 @@
         <div class="grafico-component">
           <canvas #emisionesChart></canvas>
         </div>
-        <!--  <hr />
-          <div class="footer"></div>-->
       </div>
     </div>
   </div>
