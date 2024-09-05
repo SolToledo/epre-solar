@@ -6,7 +6,7 @@ import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
   providedIn: 'root',
 })
 export class SharedService {
-
+  
   private tarifaContratada: string = '';
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
@@ -42,6 +42,8 @@ export class SharedService {
   isStopCalculate$ = this.isStopCalculateSubject.asObservable();
   private consumosMensualesSubject = new BehaviorSubject<number[]>([]);
   consumosMensuales$ = this.consumosMensualesSubject.asObservable();
+  private tarifaIntercambioUsdkWhSubject = new BehaviorSubject<number>(0);
+  tarifaIntercambioUsdkWh$ = this.tarifaIntercambioUsdkWhSubject.asObservable();
 
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratada = tarifaContratada;
@@ -182,4 +184,11 @@ export class SharedService {
     return this.consumosMensualesSubject.getValue();
   }
 
+  getTarifaIntercambioUsdkWh() {
+    return this.tarifaIntercambioUsdkWhSubject.getValue();
+  }
+
+  setTarifaIntercambioUsdkWh(tarifaIntercambio: number) {
+    this.tarifaIntercambioUsdkWhSubject.next(tarifaIntercambio);
+  }
 }

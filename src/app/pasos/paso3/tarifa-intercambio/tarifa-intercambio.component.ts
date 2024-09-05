@@ -1,10 +1,22 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-tarifa-intercambio',
   templateUrl: './tarifa-intercambio.component.html',
   styleUrls: ['./tarifa-intercambio.component.css']
 })
-export class TarifaIntercambioComponent {
+export class TarifaIntercambioComponent implements OnInit, AfterViewInit {
+  tarifaIntercambioUsdkWh!: number;
 
+  constructor(private sharedService: SharedService) {}
+
+
+  ngOnInit(): void {
+    this.tarifaIntercambioUsdkWh = parseFloat(this.sharedService.getTarifaIntercambioUsdkWh().toFixed(3));
+  }
+
+  ngAfterViewInit(): void {
+    
+  }
 }

@@ -36,7 +36,7 @@ export class ResultadoService {
     });
   }
 
-  ahorrosUsdCalcularPromediosVeinteanales(
+  private ahorrosUsdCalcularPromediosVeinteanales(
     periodoVeinteanalFlujoIngresosMonetarios: FlujoIngresosMonetariosFront[]
   ) {
     const sumaAhorros = periodoVeinteanalFlujoIngresosMonetarios.reduce(
@@ -46,7 +46,6 @@ export class ResultadoService {
       0
     );
 
-    // Calcula el promedio dividiendo la suma por el número de anios
     const ahorroPromedio =
       sumaAhorros / periodoVeinteanalFlujoIngresosMonetarios.length;
     this.sharedService.setAhorroAnualUsdPromedio(ahorroPromedio);
