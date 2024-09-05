@@ -3,26 +3,25 @@
     <div class="titulo-general">
       <p>Energía generada anual</p>
     </div>
-    <div class="informacion-general">
-      <div class="ajustar-contenido">
-        <div class="info-component">
-          <div class="icono">
-            <img
-              src="assets/icon-sol.png"
-              class="tamaño-icon"
-              alt="Icono de energia"
-            />
-          </div>
-          <div class="resultado-centro">
-            <p class="resultado">{{ yearlyEnergyAcKwh | number : "1.0-0" }}</p>
-          </div>
 
-          <div class="unidad-component">
-            <p class="unidad-comp">kWh-</p>
-            <P class="texto-lateral-comp">año</P>
+    <div class="informacion-general">      
+      <div class="datos">
+
+        <div class="icono">
+          <img
+            src="assets/icon-sol.png"
+            class="tamaño-icon"
+            alt="Icono de energia"
+          />
         </div>
+  
+        <div class="resultado-centro">
+          <p class="resultado">  {{ yearlyEnergyAcKwh | number : "1.0-0" }} </p>
+          <p class="unidad">kWh-año</p>
         </div>
+
       </div>
     </div>
+
   </div>
 </div>

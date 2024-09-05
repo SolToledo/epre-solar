@@ -1,22 +1,25 @@
 <div class="resultados-paso3">
-  <div class="component-container-borde">
-      <div class="titulo-general-long ">
-          <p>Potencia de la instalación</p>
+    <div class="component-container-borde">
+      <div class="titulo-general-long">
+        <p>Potencia de la instalación</p>
       </div>
-      <div class="informacion-general">
-          <div class="ajustar-contenido">
-              <div class="info-component">      
-                  <div class="icono">
-                      <img src="assets/icon-pot-intal.png"  class="tamaño-icon" alt="Icono de potencia">
-                  </div>
-                  <div class="resultado-centro">
-                      <p class="resultado">{{instalacionPotencia | number:'1.0-0'  }}</p>
-                  </div>
-                  <div class="unidad-component-simple">
-                      <p class="unidad-simple">kW</p>
-                  </div>
-              </div>
+  
+      <div class="informacion-general">      
+        <div class="datos">
+  
+            <div class="icono">
+                <img src="assets/icon-pot-intal.png"  
+                class="tamaño-icon" 
+                alt="Icono de potencia">
+            </div>
+    
+          <div class="resultado-centro">
+            <p class="resultado">  {{instalacionPotencia | number:'1.0-0'  }} </p>
+            <p class="unidad">kW</p>
           </div>
+  
+        </div>
       </div>
+  
+    </div>
   </div>
-</div>
