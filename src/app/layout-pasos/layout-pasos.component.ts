@@ -75,7 +75,7 @@ export class LayoutPasosComponent implements OnInit, AfterViewInit {
   toggleCollapse() {
     // Permitir colapsar y expandir cualquier paso
     this.isCollapsed = !this.isCollapsed;
-    this.cdr.detectChanges();
+    // this.cdr.detectChanges();
     if (this.mapService.getPolygons().length > 0) {
       setTimeout(() => {
         this.mapService.recenterMapToVisibleArea();

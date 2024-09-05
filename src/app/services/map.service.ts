@@ -3,7 +3,6 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { LocationService } from './location.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedService } from './shared.service';
-import { Paso1Component } from '../pasos/paso1/paso1.component';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +43,7 @@ export class MapService {
       zoom: this.zoomInicial,
       disableDefaultUI: false,
       zoomControl: false,
-      mapTypeId: google.maps.MapTypeId.SATELLITE,
+      mapTypeId: google.maps.MapTypeId.HYBRID,
       mapTypeControl: false,
       zoomControlOptions: {
         position: google.maps.ControlPosition.INLINE_START_BLOCK_END,
@@ -54,6 +53,18 @@ export class MapService {
       rotateControl: false,
       gestureHandling: 'cooperative',
       mapId: 'DEMO_MAP_ID',
+      styles: [
+        {
+          featureType: 'poi',
+          elementType: 'labels',
+          stylers: [{ visibility: 'off' }]
+        },
+        {
+          featureType: 'transit',
+          elementType: 'labels',
+          stylers: [{ visibility: 'off' }]
+        }
+      ]
     });
     this.mapSubject.next(this.map);
   }

@@ -17,7 +17,7 @@ async function bootstrap() {
     await platformBrowserDynamic()
       .bootstrapModule(AppModule)
       .catch(err => console.error(err));
-    console.log('Google Maps API loaded successfully');
+    
   };
   script.onerror = () => {
     console.error('Error loading Google Maps API');
