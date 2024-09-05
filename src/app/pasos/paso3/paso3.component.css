@@ -48,13 +48,13 @@
 
 .container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
   gap: 10px;
 }
 
 .item {
   background-color: var(--gris);
-  min-width: 200px;
+  min-width: 235px;
   min-height:100px ;
   display: flex;
   flex-direction: column;
@@ -187,7 +187,7 @@
 }
 
 /*texto entre los botones superiores*/
-.valor-mostrado{
+/*.valor-mostrado{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -205,12 +205,12 @@
   color: var(--font-light);
   font-weight: 400;
   margin: 0%;
-}
+}*/
 
 /*texto inferior a los botones superiores*/
-.valor-mostrado-bis {
+/*.valor-mostrado-bis {
   display: none;
-}
+}*/
 
 
 
