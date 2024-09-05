@@ -155,9 +155,9 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       autoFocus: true,
       closeOnNavigation: false,
       data: {
-        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} kW, superando la potencia máxima de ${
+        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface() / 1000} paneles, con una Potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} kW, superando la Potencia máxima de ${
           this.potenciaMaxAsignadakW
-        } kW asignada para la tarifa seleccionada. Presione aceptar para volver a seleccionar una superficie o cancelar para cambiar la tarifa`,
+        } kW asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la Potencia contratada o cancelar para volver al paso anterior y elegir otra superficie.`,
       },
     });
 
