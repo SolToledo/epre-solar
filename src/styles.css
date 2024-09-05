@@ -587,7 +587,7 @@ button[disabled] {
 }
 /*********************************************************************************/
 /*CHECKBOX*/
-.mat-mdc-radio-button.mat-accent {
+/*.mat-mdc-radio-button.mat-accent {
   --mdc-radio-disabled-selected-icon-color: #000;
   --mdc-radio-disabled-unselected-icon-color: #000;
   --mdc-radio-unselected-hover-icon-color: #212121;
@@ -611,7 +611,7 @@ button[disabled] {
 
 .mat-accent {
   --mat-option-selected-state-label-text-color: var(--medium-green) !important;
-}
+}*/
 
 /*********************************************************************************/
 /* Ocultar los controles de número en navegadores basados en WebKit */
