@@ -70,7 +70,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
       this.sharedService.setPanelCapacityW(panelCapacity);
       this.panelCapacityW = panelCapacity;
     });
-    this.panelesCantidad = this.maxPanelsArea$;
+    // this.panelesCantidad = this.maxPanelsArea$;
   }
 
   ngAfterViewInit(): void {

@@ -9,7 +9,7 @@ export interface SolarDataFront {
             width: number
         },
         panelsCountApi:number,
-        
+        panelsSelected?: number,
     },
     tarifaCategory: string,
     yearlyEnergyAcKwh: number

@@ -22,7 +22,7 @@ import { DecimalPipe } from '@angular/common';
   selector: 'app-tarifa',
   templateUrl: './tarifa.component.html',
   styleUrls: ['./tarifa.component.css'],
-  providers: [DecimalPipe] 
+  providers: [DecimalPipe],
 })
 export class TarifaComponent implements OnInit, AfterViewInit {
   tarifaContratada: string = '';
@@ -87,8 +87,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     private router: Router,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.tarifaContratada = this.sharedService.getTarifaContratada() ?? '';
@@ -117,17 +116,15 @@ export class TarifaComponent implements OnInit, AfterViewInit {
         this.sharedService.getPotenciaInstalacionW()
       ) {
         this.openDialog();
-        this.sharedService.setIsStopCalculate(true);
-        this.sharedService.setConsumosMensuales([]);
-      } else {
-        this.sharedService.setTarifaContratada(this.tarifaContratada);
-        this.isCategorySelected.emit(this.isOptionSelected());
-        this.sharedService.setPotenciaMaxAsignadaW(
-          this.potenciaMaxAsignadakW * 1000
-        );
         this.sharedService.setIsStopCalculate(false);
-        this.updateConsumosMensuales();
       }
+      this.sharedService.setTarifaContratada(this.tarifaContratada);
+      this.isCategorySelected.emit(this.isOptionSelected());
+      this.sharedService.setPotenciaMaxAsignadaW(
+        this.potenciaMaxAsignadakW * 1000
+      );
+      this.sharedService.setIsStopCalculate(false);
+      this.updateConsumosMensuales();
     }
   }
 
@@ -157,12 +154,16 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       data: {
         message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} kW, superando la potencia máxima de ${
           this.potenciaMaxAsignadakW
-        } kW asignada para la tarifa seleccionada. Presione aceptar para volver a seleccionar una superficie o cancelar para cambiar la tarifa`,
+        } kW asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar para volver al paso anterior y elegir otra superficie`,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        this.calcularMaxPanelsPerMaxPotencia();
+        this.mapService.reDrawPanels(this.sharedService.getPanelsSelected());
+      } else {
+        this.sharedService.setTarifaContratada('');
         this.sharedService.setTutorialShown(true);
         this.router.navigate(['pasos/1']).then(() => {
           this.mapService.clearDrawing();
@@ -171,10 +172,21 @@ export class TarifaComponent implements OnInit, AfterViewInit {
           this.sharedService.setPotenciaMaxAsignadaW(0);
           this.sharedService.setTarifaContratada('');
         });
-      } else {
-        this.sharedService.setTarifaContratada('');
       }
     });
+  }
+  private calcularMaxPanelsPerMaxPotencia() {
+    const panelCapacity = this.sharedService.getPanelCapacityW();
+    this.sharedService.setPotenciaMaxAsignadaW(
+      this.potenciaMaxAsignadakW * 1000
+    );
+    const maxPotenciaContratada =
+      this.sharedService.getPotenciaMaxAsignadaValue();
+    const maxPanelsPerMaxPotencia = maxPotenciaContratada / panelCapacity;
+    this.sharedService.setPotenciaInstalacionW(
+      maxPanelsPerMaxPotencia * panelCapacity
+    );
+    this.sharedService.setPanelsCountSelected(maxPanelsPerMaxPotencia);
   }
 
   updateConsumosMensuales(): void {
@@ -261,11 +273,11 @@ export class TarifaComponent implements OnInit, AfterViewInit {
 
   onSliderChange(event: any): void {
     const value = event.value as number;
-    
+
     if (!isNaN(value)) {
       this.potenciaMaxAsignadakW = Math.round(value);
       this.onPotenciaInputChange();
-      this.cdr.detectChanges(); 
+      this.cdr.detectChanges();
     }
   }
 

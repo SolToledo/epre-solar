@@ -96,9 +96,12 @@ export class SolarApiService {
         categoriaSeleccionada,
         polygonArea,
         panelsSupported: this.panelsSupported,
+        panelsSelected: this.sharedService.getPanelsSelected(),
         potenciaMaxAsignada: this.potenciaMaxAsignada,
+
       };
-  
+      console.log(datosCalculo);
+      
       // Esperar la respuesta de la solicitud HTTP
       const response = await lastValueFrom(
         this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)

@@ -123,7 +123,7 @@ export class Paso3Component implements OnInit {
         .payBackSimpleYears * 12
     );
 
-    this.panelesCantidad = this.resultadosFront.solarData.panels.panelsCountApi;
+    this.panelesCantidad = this.resultadosFront.solarData.panels.panelsSelected ?? this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
 
