@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { Chart, ChartData, ChartOptions } from 'chart.js';
+import { Chart, ChartOptions, ChartData, ChartType, ChartDataset } from 'chart.js';
 import 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { Subscription } from 'rxjs';
@@ -19,6 +19,7 @@ import { FlujoIngresosMonetariosFront } from 'src/app/interfaces/flujo-ingresos-
 import { GeneracionFotovoltaicaFront } from 'src/app/interfaces/generacion-fotovoltaica-front';
 import { SharedService } from 'src/app/services/shared.service';
 Chart.register(annotationPlugin);
+
 @Component({
   selector: 'app-graficos',
   templateUrl: './graficos.component.html',
@@ -210,11 +211,13 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.emisionesChart.update();
     }
   }
+  
 
   private createAhorrosChart(): void {
     const ctx = this.ahorrosChartRef.nativeElement.getContext('2d');
-
+    
     if (ctx) {
+      
       // Datos de entrada
       const labels = this.periodoVeinteanalFlujoIngresosMonetarios.map(
         (item) => `${item.year}`
@@ -225,73 +228,50 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       const ingresoData = this.periodoVeinteanalFlujoIngresosMonetarios.map(
         (item) => item.ingresoPorInyeccionElectricaUsd
       );
+      
       // Convertir los meses de recuperación a años
-      const recuperoInversionYear = Math.round(
-        this.recuperoInversionMeses / 12
-      );
-      // Obtener el año actual de la primera etiqueta
+      const recuperoInversionYear = Math.round(this.recuperoInversionMeses / 12);
       const startYear = parseInt(labels[0], 10);
-      // Calcular el año de recuperación de inversión
       const recuperoInversionActualYear = startYear + recuperoInversionYear;
-      // Verificar si el año calculado está en las etiquetas
-      const recuperoInversionIndex = labels.indexOf(
-        recuperoInversionActualYear.toString()
-      );
+  
       // Crear configuración del gráfico
-      const data: ChartData<'line' | 'bubble'> = {
+      const data: ChartData<'line'> = {
         labels: labels,
         datasets: [
           {
             label: 'Ahorro en Electricidad',
             data: ahorroData,
-            borderColor: 'rgba(54, 162, 235, 1)', // Color de la línea
-            backgroundColor: 'rgba(54, 162, 235, 0.1)', // Relleno debajo de la línea
+            borderColor: 'rgba(30, 144, 255, 1)', // Azul para la línea
+            backgroundColor: 'rgba(30, 144, 255, 0.1)', // Fondo azul
             fill: false,
             borderWidth: 2,
-            pointRadius: 0, // Sin puntos en la línea
-            tension: 0.4, // Suaviza las curvas
-            type: 'line', // Tipo de gráfico de línea
+            pointRadius: 0,
+            tension: 0.4,
+            type: 'line',
+            pointStyle: 'rectRounded',
           },
           {
             label: 'Ingreso por Inyección Eléctrica',
             data: ingresoData,
-            borderColor: 'rgba(75, 192, 192, 1)', // Color de la línea
-            backgroundColor: 'rgba(75, 192, 192, 0.1)', // Relleno debajo de la línea
+            borderColor: 'rgba(255, 165, 0, 1)', // Naranja para la línea
+            backgroundColor: 'rgba(255, 165, 0, 0.1)', // Fondo naranja
             fill: false,
             borderWidth: 2,
-            pointRadius: 0, // Sin puntos en la línea
-            tension: 0.4, // Suaviza las curvas
-            type: 'line', 
-          },
-          {
-            label: 'Punto de Recupero de Inversión',
-            
-            data:
-              recuperoInversionIndex !== -1
-                ? [
-                    {
-                      x: recuperoInversionActualYear, 
-                      y: Math.max(...ahorroData, ...ingresoData) * 0.5, 
-                      r: 5,
-                    },
-                  ]
-                : [],
-            backgroundColor: 'rgba(0, 98, 65, 1)',
-            borderColor: 'rgb(0, 98, 65)',
-            type: 'bubble',
-            pointStyle: 'circle',
-            
+            pointRadius: 0,
+            tension: 0.4,
+            type: 'line',
+            pointStyle: 'rectRounded',
           },
         ],
       };
-
-      const options: ChartOptions<'line' | 'bubble'> = {
+  
+      const options: ChartOptions<'line'> = {
         responsive: true,
         maintainAspectRatio: true,
         plugins: {
           legend: {
             display: true,
-            position: 'top',
+            position: 'bottom',
             align: 'start',
             labels: {
               usePointStyle: true,
@@ -299,14 +279,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           tooltip: {
             callbacks: {
-              // Personalizar el texto del tooltip
-              label: function(context) {
-                if (context.dataset.label === 'Punto de Recupero de Inversión') {
-                  // Devuelve el texto que se mostrará en el tooltip
+              label: function (context) {
+                if (context.dataset.label === 'Año de Recupero de Inversión') {
                   return `Año: ${context.parsed.x}`;
                 }
-                return context.dataset.label + ': ' + context.parsed.y.toFixed(0);
-              }
+                return `${context.dataset.label}: ${context.parsed.y.toFixed(0)}`;
+              },
             },
             enabled: true,
             mode: 'nearest',
@@ -319,6 +297,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
               display: true,
               text: 'Año',
             },
+            ticks: {
+              autoSkip: true,
+              maxRotation: 45,
+              minRotation: 0,
+            },
           },
           y: {
             title: {
@@ -326,12 +309,16 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
               text: 'USD',
             },
             beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.2)',
+            },
           },
         },
       };
+  
       // Crear el gráfico
       this.ahorrosChart = new Chart(ctx, {
-        type: 'bubble', // Tipo principal del gráfico
+        type: 'line',
         data: data,
         options: options,
       });
@@ -339,6 +326,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error('El contexto 2D no está disponible.');
     }
   }
+  
 
   private updateAhorrosChart(): void {
     this.recalcularFlujoIngresos();
