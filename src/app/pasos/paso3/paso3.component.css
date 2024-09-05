@@ -17,8 +17,8 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 10px;
-    flex: 1; /* Usa el espacio disponible en content */
-    overflow: hidden; /* Previene el desbordamiento de los elementos hijos */
+    flex: 1;
+    overflow: hidden; 
   }
   
   /*-------------------------------------------------------------*/
@@ -35,7 +35,7 @@
     display: flex;
     flex-direction: column;
     gap: 11px;
-    overflow-y: auto; /* Agrega un scroll vertical si el contenido se desborda */
+    overflow-y: auto;
     overflow-x:hidden; 
     padding:5px;
   }
@@ -98,11 +98,10 @@
   }
   
   .informacion::-webkit-scrollbar-thumb:hover {
-    /*background: #555; */
     background-color: var(--dark-green);
   }
   
-/*----------------------------------------------------------------------------------------------------------*/  
+/*--------------------------------------------------------------------------*/  
 /* Estilos para los botones secundarios  EDITAR/DESCARGAR/ENVIAR*/
 .action-buttons{
   width: 100%;
@@ -185,35 +184,6 @@
 #boton-editar:hover .material-icons {
   color: white; 
 }
-
-/*texto entre los botones superiores*/
-/*.valor-mostrado{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-bottom:2px solid var(--light-background);
-  box-shadow:0 4px 10px -2px rgba(0, 98, 65, 0.3); 
-  width: 50%;
-  height: 40px;
-}
-
-#valor{
-  font-size: 15px;
-  color: var(--font-light);
-  font-weight: 400;
-  margin: 0%;
-}*/
-
-/*texto inferior a los botones superiores*/
-/*.valor-mostrado-bis {
-  display: none;
-}*/
-
-
-
 
 /*------------------------------------------------------------------*/
 /* Estilos para el modal */

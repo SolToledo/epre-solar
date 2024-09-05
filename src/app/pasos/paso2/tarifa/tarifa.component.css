@@ -1,15 +1,3 @@
-/*COLORES*/
-:root {
-  --dark-green: #1e3932;
-  --medium-green: #006241;
-  --light-green: #00754a;
-  --light-background: #d4e9e2;
-  --golden: #cba258;
-  --gris: #edebe9;
-  --font-dark: #000000de;
-  --font-light: #424242;
-  --bordes: #a9b8ad;
-}
 
 .tarifa-container {
   width: 100%;
@@ -30,7 +18,7 @@ select {
 select:focus {
   border-color: var(--medium-green);
 }
-/*****************************************************/
+
 .potencia-contratada{
   width: 100%;
 }
@@ -44,47 +32,30 @@ select:focus {
 
 .potencia-content p{
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--font-light);
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
 
-input {
- /* width: 50px;*/
- width: 80px;
+.unidad-component-simple-panel {
+  width:95px;
+  min-width:95px;
   height: 35px;
+  margin-bottom: 0%;
   border: 2px solid var(--light-background);
-  border-radius: 8px; 
-  padding: 0; /* Elimina el padding interno para asegurar que el texto esté completamente centrado */
-  font-size: 16px;
-  font-family: 'Sodo Sans', sans-serif;
-  color: black;
-  text-align: center; /* Centra horizontalmente el texto */
-  line-height: 25px; /* Asegura que el texto esté centrado verticalmente */
-  transition: border-color 0.3s ease; 
+  border-radius: 8px;
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  font-size: 15px;
+  font-weight:bold;
+  color: var(--medium-green);
 }
-
-input:focus {
-  border-color: var(--medium-green);
-  outline: none; 
-}
-
-/* Ocultar los controles de número en navegadores basados en WebKit */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
-
-/* Asegurarse de que la apariencia de los inputs de número sea consistente */
-input[type=number] {
-  appearance: none;
-}
-
-
 
 
 @media (max-width: 760px) {
@@ -97,17 +68,5 @@ input[type=number] {
   }
 }
 
-.unidad-component-simple-panel {
-  width:67px;
-  min-width: 67px;
-  height: 35px;
-  margin-bottom: 0%;
-  border: 2px solid var(--light-background);
-  border-radius: 8px;
-  margin-left: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-}
+
 

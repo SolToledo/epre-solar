@@ -22,7 +22,7 @@
       (change)="onSliderChange($event)"
       discrete
       [displayWith]="formatLabel"
-      showTickMarks 
+      
     >
       <input matSliderThumb #slider [(ngModel)]="potenciaMaxAsignadakW" />
     </mat-slider>
@@ -31,3 +31,20 @@
     >
   </div>
 </div>
+
+
+
+
+<!--<div class="slider">
+  <mat-slider
+    class="custom-slider"
+    min="4"
+    [max]="maxPanelsArea$"
+    step="1"
+    (change)="onSliderChange()"
+    discrete
+    [displayWith]="formatLabel"
+  >
+    <input matSliderThumb [(ngModel)]="panelesCantidad" #slider />
+  </mat-slider>
+</div>-->

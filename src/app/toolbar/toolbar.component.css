@@ -26,6 +26,7 @@ span {
 #epre{
     max-width: 140px;
     margin-right: 70px;
+    cursor: pointer;
 }
 
 #solar{
@@ -37,10 +38,12 @@ span {
     max-width: 275px;
     margin-right: 50px;
     margin-top: 3px;
+    cursor: pointer;
 }
 
 #sanjuan{
     max-width: 190px;
+    cursor: pointer; 
 }
 
 /* Resoluciones mayores a 1600px */

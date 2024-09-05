@@ -580,33 +580,6 @@ button[disabled] {
   --mat-mdc-slider-hover-ripple-color: rgba(76, 175, 80, 0.1)!important;
   --mat-mdc-slider-focus-ripple-color: rgba(76, 175, 80, 0.2)!important;
 }
-/*********************************************************************************/
-/*CHECKBOX*/
-/*.mat-mdc-radio-button.mat-accent {
-  --mdc-radio-disabled-selected-icon-color: #000;
-  --mdc-radio-disabled-unselected-icon-color: #000;
-  --mdc-radio-unselected-hover-icon-color: #212121;
-  --mdc-radio-unselected-icon-color: rgba(0, 0, 0, 0.54);
-  --mdc-radio-unselected-pressed-icon-color: rgba(0, 0, 0, 0.54);
-  --mdc-radio-selected-focus-icon-color: var(--medium-green) !important;
-  --mdc-radio-selected-hover-icon-color: var(--medium-green) !important;
-  --mdc-radio-selected-icon-color: var(--medium-green) !important;
-  --mdc-radio-selected-pressed-icon-color: var(--medium-green) !important;
-  --mat-radio-ripple-color: #000;
-  --mat-radio-checked-ripple-color: var(--medium-green) !important;
-  --mat-radio-disabled-label-color: rgba(0, 0, 0, 0.38);
-}
-
-.mat-mdc-radio-button {
-  --mdc-radio-disabled-selected-icon-opacity: 0.38;
-  --mdc-radio-disabled-unselected-icon-opacity: 0.38;
-  --mdc-radio-state-layer-size: 40px;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-.mat-accent {
-  --mat-option-selected-state-label-text-color: var(--medium-green) !important;
-}*/
 
 /*********************************************************************************/
 /* Ocultar los controles de número en navegadores basados en WebKit */
@@ -634,11 +607,6 @@ input[type=number] {
   #span-general {
     font-size: 17px; 
   }
-}
-
-.dolar-simbolo {
-  font-size: 0.9em; /* Ajusta el tamaño del símbolo */
-  margin-right: 8px; /* Ajusta el espacio entre el símbolo y el número */
 }
 
 
