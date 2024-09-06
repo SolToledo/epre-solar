@@ -7,6 +7,9 @@ import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 })
 export class SharedService {
   
+  private costoInstalacionSubject = new BehaviorSubject<number>(0);
+  costoInstalacion$ =this.costoInstalacionSubject.asObservable();
+
   private tarifaContratadaSubject = new BehaviorSubject<string>('');
   tarifaContratada$ = this.tarifaContratadaSubject.asObservable();
 
@@ -192,6 +195,13 @@ export class SharedService {
 
   setTarifaIntercambioUsdkWh(tarifaIntercambio: number) {
     this.tarifaIntercambioUsdkWhSubject.next(tarifaIntercambio);
+  }
+
+  getCostoInstalacion() {
+    return this.costoInstalacionSubject.getValue();
+  }
+  setCostoInstalacion(costoInstalacion: number) {
+    this.costoInstalacionSubject.next(costoInstalacion);
   }
 
 }
