@@ -7,7 +7,9 @@ import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 })
 export class SharedService {
   
-  private tarifaContratada: string = '';
+  private tarifaContratadaSubject = new BehaviorSubject<string>('');
+  tarifaContratada$ = this.tarifaContratadaSubject.asObservable();
+
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
   private predefinedCoordinatesSubject = new BehaviorSubject<boolean>(false);
@@ -46,11 +48,11 @@ export class SharedService {
   tarifaIntercambioUsdkWh$ = this.tarifaIntercambioUsdkWhSubject.asObservable();
 
   setTarifaContratada(tarifaContratada: string) {
-    this.tarifaContratada = tarifaContratada;
+    this.tarifaContratadaSubject.next(tarifaContratada);
   }
 
   getTarifaContratada(): string {
-    return this.tarifaContratada;
+    return this.tarifaContratadaSubject.getValue();
   }
 
   setTutorialShown(value: boolean): void {
@@ -191,4 +193,5 @@ export class SharedService {
   setTarifaIntercambioUsdkWh(tarifaIntercambio: number) {
     this.tarifaIntercambioUsdkWhSubject.next(tarifaIntercambio);
   }
+
 }

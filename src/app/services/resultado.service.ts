@@ -12,7 +12,7 @@ export class ResultadoService {
   constructor(
     private gmailService: GmailService,
     private sharedService: SharedService
-  ) {}
+  ) { }
 
   generarResultados(response: any): ResultadosFrontDTO {
     console.log('response para generar resultados', response);
@@ -25,7 +25,7 @@ export class ResultadoService {
       periodoVeinteanalFlujoEnergia: response.periodoVeinteanalFlujoEnergia,
       periodoVeinteanalFlujoIngresosMonetarios:
         response.periodoVeinteanalFlujoIngresosMonetarios,
-      ahorroUsdPromedio: this.ahorrosUsdCalcularPromediosVeinteanales(
+      ahorroUsd: this.ahorrosUsdCalcular(
         response.periodoVeinteanalFlujoIngresosMonetarios
       ),
       periodoVeinteanalEmisionesGEIEvitadas:
@@ -36,20 +36,24 @@ export class ResultadoService {
     });
   }
 
-  private ahorrosUsdCalcularPromediosVeinteanales(
+  private ahorrosUsdCalcular(
     periodoVeinteanalFlujoIngresosMonetarios: FlujoIngresosMonetariosFront[]
   ) {
-    const sumaAhorros = periodoVeinteanalFlujoIngresosMonetarios.reduce(
+    /* const sumaAhorros = periodoVeinteanalFlujoIngresosMonetarios.reduce(
       (acumulador, anio) => {
         return acumulador + anio.ahorroEnElectricidadTotalUsd + anio.ingresoPorInyeccionElectricaUsd;
       },
       0
-    );
-
-    const ahorroPromedio =
+    ); 
+     const ahorroPromedio =
       sumaAhorros / periodoVeinteanalFlujoIngresosMonetarios.length;
-    this.sharedService.setAhorroAnualUsdPromedio(ahorroPromedio);
-    return ahorroPromedio;
+    */
+    const sumaAhorros = periodoVeinteanalFlujoIngresosMonetarios[0].ahorroEnElectricidadTotalUsd +
+      periodoVeinteanalFlujoIngresosMonetarios[0].ingresoPorInyeccionElectricaUsd;
+
+
+    this.sharedService.setAhorroAnualUsdPromedio(sumaAhorros);
+    return sumaAhorros;
   }
 
   private checkUpdatePanelCapacity(newPanelCapacityW: number): void {

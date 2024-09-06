@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { ResultadoService } from './resultado.service';
@@ -13,15 +13,17 @@ import { SolarDataFront } from '../interfaces/solar-data-front';
 @Injectable({
   providedIn: 'root',
 })
-export class SolarApiService {
+export class SolarApiService implements OnDestroy  {
   private readonly apiUrl: string = 'http://localhost:3000';
   // private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
   private _resultados!: ResultadosFrontDTO;
   annualConsumption: number = 0;
-  private panelsSupportedSubscription!: Subscription;
   panelsSupported: number = 0;
   private mapService!: MapService;
   potenciaMaxAsignada!: number;
+  private panelsSupportedSubscription!: Subscription;
+  private consumoSubscription!: Subscription;
+  private potenciaMaxAsignadaSubscription!: Subscription;
 
   constructor(
     private http: HttpClient,
@@ -32,6 +34,19 @@ export class SolarApiService {
     private router: Router,
     private snackBar: MatSnackBar
   ) {}
+
+  ngOnDestroy() {
+    // Desuscripción manual para evitar fugas de memoria
+    if (this.consumoSubscription) {
+      this.consumoSubscription.unsubscribe();
+    }
+    if (this.panelsSupportedSubscription) {
+      this.panelsSupportedSubscription.unsubscribe();
+    }
+    if (this.potenciaMaxAsignadaSubscription) {
+      this.potenciaMaxAsignadaSubscription.unsubscribe();
+    }
+  }
 
   private getMapService(): MapService {
     if (!this.mapService) {
@@ -47,16 +62,16 @@ export class SolarApiService {
       const polygonCoordinates = mapService.getPolygonCoordinates();
       const polygonArea = mapService.getPolygonArea();
       const categoriaSeleccionada = this.sharedService.getTarifaContratada();
-  
-      this.consumoService.totalConsumo$.subscribe({
+      
+      this.consumoSubscription = this.consumoService.totalConsumo$.subscribe({
         next: (value) => (this.annualConsumption = value),
       });
-  
-      this.sharedService.maxPanelsPerSuperface$.subscribe({
+
+      this.panelsSupportedSubscription = this.sharedService.maxPanelsPerSuperface$.subscribe({
         next: (value) => (this.panelsSupported = value),
       });
-  
-      this.sharedService.potenciaMaxAsignada$.subscribe({
+
+      this.potenciaMaxAsignadaSubscription = this.sharedService.potenciaMaxAsignada$.subscribe({
         next: (value) => (this.potenciaMaxAsignada = value),
       });
   
@@ -98,15 +113,14 @@ export class SolarApiService {
         panelsSupported: this.panelsSupported,
         panelsSelected: this.sharedService.getPanelsSelected(),
         potenciaMaxAsignada: this.potenciaMaxAsignada,
-
       };
-      console.log(datosCalculo);
+      console.log("Datos que se envian al endpoint : ", datosCalculo);
       
       // Esperar la respuesta de la solicitud HTTP
       const response = await lastValueFrom(
         this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
       );
-      
+      console.log("Datos que devuelve el endpoint : ", response);
       // Procesar la respuesta
       this._resultados = this.resultadoService.generarResultados(response);
       console.log('Resultados entrando al front: ', this._resultados);

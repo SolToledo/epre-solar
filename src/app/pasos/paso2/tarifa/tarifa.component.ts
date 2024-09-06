@@ -123,6 +123,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       this.sharedService.setPotenciaMaxAsignadaW(
         this.potenciaMaxAsignadakW * 1000
       );
+      this.calcularMaxPanelsPerMaxPotencia();
       this.sharedService.setIsStopCalculate(false);
       this.updateConsumosMensuales();
     }
@@ -152,7 +153,9 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       autoFocus: true,
       closeOnNavigation: false,
       data: {
-        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW()} kW, superando la potencia máxima de ${
+        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${
+          this.sharedService.getPotenciaInstalacionW() / 1000
+        } kW, superando la potencia máxima de ${
           this.potenciaMaxAsignadakW
         } kW asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar para volver al paso anterior y elegir otra superficie`,
       },
@@ -186,13 +189,23 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     this.sharedService.setPotenciaInstalacionW(
       maxPanelsPerMaxPotencia * panelCapacity
     );
-    this.sharedService.setPanelsCountSelected(maxPanelsPerMaxPotencia);
+    if (
+      maxPanelsPerMaxPotencia > this.sharedService.getMaxPanelsPerSuperface()
+    ) {
+      this.sharedService.setPanelsCountSelected(
+        this.sharedService.getMaxPanelsPerSuperface()
+      );
+    } else {
+      this.sharedService.setPanelsCountSelected(maxPanelsPerMaxPotencia);
+    }
   }
 
   updateConsumosMensuales(): void {
-    this.consumosMensuales = this.consumoTarifaService.getConsumoMensual(
-      this.tarifaContratada
-    );
+    if (!this.sharedService.getIsStopCalculate()) {
+      this.consumosMensuales = this.consumoTarifaService.getConsumoMensual(
+        this.tarifaContratada
+      );
+    }
   }
 
   isPotenciaMaxDisabled(): boolean {
