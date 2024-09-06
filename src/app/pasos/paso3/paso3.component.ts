@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import html2canvas from 'html2canvas';
 import { GmailService } from 'src/app/services/gmail.service';
@@ -8,7 +8,6 @@ import { SharedService } from 'src/app/services/shared.service';
 import { ResultadosFrontDTO } from '../../interfaces/resultados-front-dto';
 import { DimensionPanel } from 'src/app/interfaces/dimension-panel';
 import { MapService } from 'src/app/services/map.service';
-import jsPDF from 'jspdf';
 import { ConsumoTarifaService } from 'src/app/services/consumo-tarifa.service';
 import { ConsumoService } from 'src/app/services/consumo.service';
 import { NearbyLocationService } from 'src/app/services/nearby-location.service';
@@ -127,8 +126,9 @@ export class Paso3Component implements OnInit {
     this.panelesCantidad = this.resultadosFront.solarData.panels.panelsSelected ?? this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
-
-    this.sharedService.setTarifaIntercambioUsdkWh(this.resultadosFront.periodoVeinteanalProyeccionTarifas[0].cargoVariableConsumoUsdKwh)
+    const cargos = this.resultadosFront.periodoVeinteanalProyeccionTarifas[0];
+    console.log("cargoVariableConsumoUsdkWh ", cargos.cargoVariableConsumoUsdkWh)
+    this.sharedService.setTarifaIntercambioUsdkWh(cargos.cargoVariableConsumoUsdkWh)
     
     this.sharedService.setPanelCapacityW(this.panelCapacityW);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
