@@ -78,7 +78,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    /* this.createEmisionesChart();
+    this.createEmisionesChart();
     this.actualizarEmisionesChart();
     this.createAhorrosChart();
     this.createEnergiaChart();
@@ -104,7 +104,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.recuperoInversionMeses = Math.round(meses);
       })
     );
-    this.cdr.detectChanges(); */
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -245,7 +245,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         labels: labels,
         datasets: [
           {
-            label: 'Ahorro en Electricidad',
+            label: 'Ahorro por autoconsumo de energía',
             data: ahorroData,
             borderColor: 'rgba(30, 144, 255, 1)', // Azul para la línea
             backgroundColor: 'rgba(30, 144, 255, 0.1)', // Fondo azul
@@ -257,7 +257,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             pointStyle: 'rectRounded',
           },
           {
-            label: 'Ingreso por Inyección Eléctrica',
+            label: 'Ingreso por excedentes de energía',
             data: ingresoData,
             borderColor: 'rgba(255, 165, 0, 1)', // Naranja para la línea
             backgroundColor: 'rgba(255, 165, 0, 0.1)', // Fondo naranja
@@ -361,7 +361,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         recuperoInversionActualYear.toString()
       );
 
-      this.ahorrosChart.data.datasets[2].data =
+      /* this.ahorrosChart.data.datasets[2].data =
         recuperoInversionIndex !== -1
           ? [
               {
@@ -378,7 +378,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
                 r: 6,
               },
             ]
-          : [];
+          : []; */
       this.ahorrosChart.update();
       this.ahorrosChart.render();
     } else {

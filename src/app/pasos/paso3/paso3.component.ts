@@ -127,7 +127,6 @@ export class Paso3Component implements OnInit {
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
     const cargos = this.resultadosFront.periodoVeinteanalProyeccionTarifas[0];
-    console.log("cargoVariableConsumoUsdkWh ", cargos.cargoVariableConsumoUsdkWh)
     this.sharedService.setTarifaIntercambioUsdkWh(cargos.cargoVariableConsumoUsdkWh)
     
     this.sharedService.setPanelCapacityW(this.panelCapacityW);
@@ -141,6 +140,8 @@ export class Paso3Component implements OnInit {
     this.proporcionAutoconsumo = 85; // todo: traer dato de los parametros
 
     this.costoInstalacion = this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
+
+    this.sharedService.setCostoInstalacion(this.costoInstalacion);
 
     this.consumoService.totalConsumo$.subscribe({
       next: (value) => (this.consumoTotalAnual = value),
