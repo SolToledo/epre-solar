@@ -125,6 +125,7 @@ export class Paso3Component implements OnInit {
 
     this.panelesCantidad = this.resultadosFront.solarData.panels.panelsSelected ?? this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
+    this.sharedService.setDimensionPanels(this.dimensionPanel);
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
     const cargos = this.resultadosFront.periodoVeinteanalProyeccionTarifas[0];
     this.sharedService.setTarifaIntercambioUsdkWh(cargos.cargoVariableConsumoUsdkWh)

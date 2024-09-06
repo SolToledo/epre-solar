@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
+import { DimensionPanel } from '../interfaces/dimension-panel';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
+  
+  private dimensionPanel!: { height: number; width: number; };
+  private areaPanelsSelectedSubject = new BehaviorSubject<number>(0);
+  areaPanelsSelected$ = this.areaPanelsSelectedSubject.asObservable();
   
   private costoInstalacionSubject = new BehaviorSubject<number>(0);
   costoInstalacion$ =this.costoInstalacionSubject.asObservable();
@@ -202,6 +207,28 @@ export class SharedService {
   }
   setCostoInstalacion(costoInstalacion: number) {
     this.costoInstalacionSubject.next(costoInstalacion);
+  }
+
+  calculateAreaPanelsSelected(totalPanels: number) {
+    const dimensionPanel: DimensionPanel = this.getDimensionPanel();
+    const areaPanel = dimensionPanel.height * dimensionPanel.width;
+    const areaPanelsSelected = areaPanel * totalPanels;
+    this.setAreaPanelsSelected(areaPanelsSelected);
+  }
+  setAreaPanelsSelected(areaPanelsSelected: number) {
+    this.areaPanelsSelectedSubject.next(areaPanelsSelected);
+  }
+  getAreaPanelsSelected() {
+    return this.areaPanelsSelectedSubject.getValue();
+  }
+  getDimensionPanel(): DimensionPanel {
+    return this.dimensionPanel || {
+      height: 1.879,
+      width: 1.045
+    }
+  }
+  setDimensionPanels(dimensionPanel: DimensionPanel) {
+    this.dimensionPanel = dimensionPanel;
   }
 
 }

@@ -338,7 +338,7 @@ export class MapService {
   ) {
     const margin: number = 0.1;
     this.clearPanels();
-
+    
     const bounds = new google.maps.LatLngBounds();
     polygon.getPath().forEach((latLng) => {
       bounds.extend(latLng);
@@ -423,6 +423,7 @@ export class MapService {
         this.sharedService.setPanelsCountSelected(totalPanels);
       }
     }
+    this.sharedService.calculateAreaPanelsSelected(totalPanels);
   }
 
   reDrawPanels(panelesCantidad: number) {
