@@ -22,6 +22,7 @@ import { PdfService } from 'src/app/services/pdf.service';
 export class Paso3Component implements OnInit {
   isModalOpen = false;
   email: string = '';
+  costoInstalacion!: number;
 
   openModal(): void {
     this.isModalOpen = true;
@@ -139,7 +140,7 @@ export class Paso3Component implements OnInit {
 
     this.proporcionAutoconsumo = 85; // todo: traer dato de los parametros
 
-    
+    this.costoInstalacion = this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
 
     this.consumoService.totalConsumo$.subscribe({
       next: (value) => (this.consumoTotalAnual = value),
@@ -271,10 +272,6 @@ export class Paso3Component implements OnInit {
     } catch {
       console.log('this.resultadosFront no disponible');
     }
-  }
-
-  getCostoInstalacion() {
-    return 3500;
   }
 
   enabledDrawing() {
