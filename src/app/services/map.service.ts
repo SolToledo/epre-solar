@@ -283,8 +283,8 @@ export class MapService {
 
   private validateArea(polygon: google.maps.Polygon): boolean {
     const area = this.getPolygonArea(polygon);
-    const minArea = 14.7; // Área mínima para cuatro paneles
-    const maxArea = 500; // 500 metros cuadrados
+    const minArea = this.sharedService.calculateAreaPanels(1) * 5;
+    const maxArea = this.sharedService.calculateAreaPanels(100); 
 
     if (area < minArea) {
       this.snackBar.open(

@@ -209,11 +209,19 @@ export class SharedService {
     this.costoInstalacionSubject.next(costoInstalacion);
   }
 
-  calculateAreaPanelsSelected(totalPanels: number) {
+  calculateAreaPanelsSelected(totalPanels: number): number {
+    if(totalPanels>=4) {
+      const areaPanelsSelected = this.calculateAreaPanels(totalPanels)
+      this.setAreaPanelsSelected(areaPanelsSelected);
+      return areaPanelsSelected;
+    }
+    return 0
+  }
+  calculateAreaPanels(panelsCount: number): number {
     const dimensionPanel: DimensionPanel = this.getDimensionPanel();
     const areaPanel = dimensionPanel.height * dimensionPanel.width;
-    const areaPanelsSelected = areaPanel * totalPanels;
-    this.setAreaPanelsSelected(areaPanelsSelected);
+    const areaPanels = areaPanel * panelsCount;
+    return areaPanels;
   }
   setAreaPanelsSelected(areaPanelsSelected: number) {
     this.areaPanelsSelectedSubject.next(areaPanelsSelected);

@@ -72,14 +72,18 @@ export class PanelesComponent implements OnInit, OnDestroy {
         this.sharedService.getPotenciaMaxAsignadaValue();
 
       const newPotenciaInstalacion = panelCapacity * panelsCountSelected;
-      if (!(newPotenciaInstalacion > maxPotenciaInstalacion)) {
+      if (newPotenciaInstalacion <= maxPotenciaInstalacion) {
         this.sharedService.setPanelCapacityW(panelCapacity);
         this.panelCapacityW = panelCapacity;
         return;
+      }else{
+        this.disableSelectedOption(panelCapacity);
+        this.potenciaPanelesControl.setValue(panelCapacity.toString());
+        
+        console.log('Se supera la potencia maxima contratada, la configuración no es posible...'); // todo: cambiar alert por un driverjs
+        return;
       }
-      this.disableSelectedOption(panelCapacity);
-      this.potenciaPanelesControl.setValue(panelCapacity.toString());
-      alert('Se supera la potencia maxima contratada, la configuración no es posible...'); // todo: cambiar alert por un driverjs
+     
     });
   }
 

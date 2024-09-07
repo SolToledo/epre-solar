@@ -334,18 +334,6 @@ export class LocationService {
         const predefinedLocation = this.findNearbyLocation(lat, lng);
 
         if (predefinedLocation) {
-          /* this.snackBar.open(
-            `Ubicación cerca de una ubicación predefinida: ${lat} - ${lng}. 
-             Se utilizarán datos predefinidos.`,
-            '',
-            {
-              duration: 5000,
-              panelClass: ['custom-snackbar'],
-              verticalPosition: 'top',
-              horizontalPosition: 'center',
-            }
-          ); */
-
           const predefinedLatLng = new google.maps.LatLng(
             predefinedLocation.lat,
             predefinedLocation.lng
@@ -401,16 +389,7 @@ export class LocationService {
         this.sharedService.setNearbyLocation(nearbyLocation);
         map.setZoom(22);
         map.panTo(new google.maps.LatLng(lat, lng));
-        /* this.snackBar.open(
-          'El área seleccionada está dentro de ubicaciones predeterminadas con datos obtenidos de la base de datos PVGIS-ERA5.',
-          '',
-          {
-              duration: 5000,
-              panelClass: ['custom-snackbar'],
-              verticalPosition: 'top',
-              horizontalPosition: 'center',
-          }
-        ); */
+        
         return nearbyLocation;
       } else {
         map.setZoom(22);
