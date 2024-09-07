@@ -64,26 +64,13 @@ export class PanelesComponent implements OnInit, OnDestroy {
           this.plazoRecuperoInversion = plazo;
         },
       });
-
+      this.disableOptionsExceedingMaxCapacity();
     this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
+      
       const panelCapacity = parseInt(value, 10);
-      const panelsCountSelected = this.sharedService.getPanelsSelected();
-      const maxPotenciaInstalacion =
-        this.sharedService.getPotenciaMaxAsignadaValue();
-
-      const newPotenciaInstalacion = panelCapacity * panelsCountSelected;
-      if (newPotenciaInstalacion <= maxPotenciaInstalacion) {
-        this.sharedService.setPanelCapacityW(panelCapacity);
+      this.sharedService.setPanelCapacityW(panelCapacity);
         this.panelCapacityW = panelCapacity;
         return;
-      }else{
-        this.disableSelectedOption(panelCapacity);
-        this.potenciaPanelesControl.setValue(panelCapacity.toString());
-        
-        console.log('Se supera la potencia maxima contratada, la configuración no es posible...'); // todo: cambiar alert por un driverjs
-        return;
-      }
-     
     });
   }
 
@@ -105,9 +92,10 @@ export class PanelesComponent implements OnInit, OnDestroy {
       4,
       Math.min(this.panelesCantidad, this.maxPanelsArea$)
     );
-    
+
     this.mapService.reDrawPanels(this.panelesCantidad);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
+    this.disableOptionsExceedingMaxCapacity();
   }
 
   formatLabel(value: number): string {
@@ -124,7 +112,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
     return panelHeight * panelWidth * this.panelesCantidad;
   }
 
-  disableSelectedOption(panelCapacity: number) {
+  /* disableSelectedOption(panelCapacity: number) {
     const selectElement = document.querySelector('select#power-select'); // Ajusta el selector a tu select
     const optionToDisable = selectElement?.querySelector(
       `option[value="${panelCapacity}"]`
@@ -132,6 +120,26 @@ export class PanelesComponent implements OnInit, OnDestroy {
 
     if (optionToDisable) {
       optionToDisable.setAttribute('disabled', 'true');
+    }
+  } */
+
+  disableOptionsExceedingMaxCapacity() {
+    const maxPotenciaInstalacion =
+      this.sharedService.getPotenciaMaxAsignadaValue();
+    const panelsCountSelected = this.sharedService.getPanelsSelected();
+    const selectElement = document.querySelector('select#power-select');
+
+    if (selectElement) {
+      selectElement.querySelectorAll('option').forEach((option) => {
+        const panelCapacity = parseInt(option.value, 10);
+        const newPotenciaInstalacion = panelCapacity * panelsCountSelected;
+
+        if (newPotenciaInstalacion > maxPotenciaInstalacion) {
+          option.setAttribute('disabled', 'true');
+        } else {
+          option.removeAttribute('disabled');
+        }
+      });
     }
   }
 }
