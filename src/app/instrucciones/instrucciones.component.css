@@ -8,16 +8,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+}
 
-  .modal-content {
+.modal-content {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
     width: 80%;
     max-width: 500px;
     position: relative;
-  }  
+}
 
 .close-button {
     position: absolute;
@@ -26,7 +26,7 @@
     font-size: 2em;
     color: var(--dark-green);
     cursor: pointer;
-  }
+}
 
 .close-button:hover {
     color: var(--medium-green);
@@ -46,18 +46,6 @@
     overflow-y: auto;
     margin: 5px 0;
     padding: 5px;
-  }
-
-/* Subtítulos */
-.tutorial-subtitle {
-    font-size: 1.2em;
-    color:var(--dark-green);
-    border-bottom: 2px solid var(--light-background);
-    padding-bottom: 5px;
-    margin-top: 30px;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-family: 'Sodo Sans', sans-serif;
 }
 
 /* Sección de subtítulos de nivel 3 */
@@ -71,7 +59,7 @@
 /* Texto general */
 .tutorial-text {
     font-size: 1em;
-    color:var(--font-light);
+    color: var(--font-light);
     margin-bottom: 15px;
     line-height: 1.8;
 }
@@ -85,26 +73,6 @@
 
 .tutorial-link:hover {
     text-decoration: underline;
-}
-
-/* Listas */
-.tutorial-list {
-    list-style-type: none;
-    padding-left: 0;
-    margin-top: 20px;
-}
-
-.tutorial-list-item {
-    background-color: var(--light-background);
-    margin-bottom: 10px;
-    padding: 15px;
-    border-left: 4px solid var(--medium-green);
-    border-radius: 8px;
-}
-
-.tutorial-list-item strong {
-    color: var(--dark-green);
-    font-weight: bold;
 }
 
 /********************************/
@@ -126,29 +94,17 @@
     background: var(--dark-green) !important;
 }
 
-
-
 /* Estilos responsivos */
 @media (max-width: 768px) {
     .tutorial-title {
         font-size: 1.8em;
     }
-    
-    .tutorial-subtitle {
-        font-size: 1.3em;
-    }
-    
+
     .tutorial-section {
         font-size: 1.1em;
     }
-    
+
     .tutorial-text {
         font-size: 0.95em;
     }
-    
-    .tutorial-list-item {
-        padding: 10px;
-    }
 }
-
-
