@@ -20,6 +20,7 @@ export class ResultadoService {
 
     return (this.resultados = {
       solarData: response.solarData,
+      parametros: response.parametros,
       periodoVeinteanalGeneracionFotovoltaica:
         response.periodoVeinteanalGeneracionFotovoltaica,
       periodoVeinteanalFlujoEnergia: response.periodoVeinteanalFlujoEnergia,
@@ -39,15 +40,6 @@ export class ResultadoService {
   private ahorrosUsdCalcular(
     periodoVeinteanalFlujoIngresosMonetarios: FlujoIngresosMonetariosFront[]
   ) {
-    /* const sumaAhorros = periodoVeinteanalFlujoIngresosMonetarios.reduce(
-      (acumulador, anio) => {
-        return acumulador + anio.ahorroEnElectricidadTotalUsd + anio.ingresoPorInyeccionElectricaUsd;
-      },
-      0
-    ); 
-     const ahorroPromedio =
-      sumaAhorros / periodoVeinteanalFlujoIngresosMonetarios.length;
-    */
     const sumaAhorros = periodoVeinteanalFlujoIngresosMonetarios[0].ahorroEnElectricidadTotalUsd +
       periodoVeinteanalFlujoIngresosMonetarios[0].ingresoPorInyeccionElectricaUsd;
 

@@ -13,6 +13,7 @@ import { ConsumoService } from 'src/app/services/consumo.service';
 import { NearbyLocationService } from 'src/app/services/nearby-location.service';
 import { Paso2Component } from '../paso2/paso2.component';
 import { PdfService } from 'src/app/services/pdf.service';
+import { ParametrosFront } from 'src/app/interfaces/parametros-front';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -24,6 +25,7 @@ export class Paso3Component implements OnInit {
   costoInstalacion!: number;
 
   timestamp: string = '';
+  potenciaPanelHip!: number;
 
   openModal(): void {
     this.isModalOpen = true;
@@ -131,6 +133,7 @@ export class Paso3Component implements OnInit {
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.sharedService.setDimensionPanels(this.dimensionPanel);
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
+    
     const cargos = this.resultadosFront.periodoVeinteanalProyeccionTarifas[0];
     this.sharedService.setTarifaIntercambioUsdkWh(cargos.cargoVariableConsumoUsdkWh)
     
@@ -141,8 +144,12 @@ export class Paso3Component implements OnInit {
         this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000
       ).toFixed(3)
     );
-
-    this.proporcionAutoconsumo = 85; // todo: traer dato de los parametros
+    const parametros: ParametrosFront = this.resultadosFront.parametros!;
+    
+    this.sharedService.panelCapacityW$.subscribe({
+      next: capacity => this.potenciaPanelHip = capacity
+    })
+    this.proporcionAutoconsumo = parametros.caracteristicasSistema.proporcionAutoconsumo; 
 
     this.costoInstalacion = this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
 
