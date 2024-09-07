@@ -12,7 +12,7 @@ export class ResultadoService {
   constructor(
     private gmailService: GmailService,
     private sharedService: SharedService
-  ) { }
+  ) {}
 
   generarResultados(response: any): ResultadosFrontDTO {
     console.log('response para generar resultados', response);
@@ -26,6 +26,8 @@ export class ResultadoService {
       periodoVeinteanalFlujoEnergia: response.periodoVeinteanalFlujoEnergia,
       periodoVeinteanalFlujoIngresosMonetarios:
         response.periodoVeinteanalFlujoIngresosMonetarios,
+      periodoVeinteanalCostoMantenimiento:
+        response.periodoVeinteanalCostoMantenimiento,
       ahorroUsd: this.ahorrosUsdCalcular(
         response.periodoVeinteanalFlujoIngresosMonetarios
       ),
@@ -40,9 +42,10 @@ export class ResultadoService {
   private ahorrosUsdCalcular(
     periodoVeinteanalFlujoIngresosMonetarios: FlujoIngresosMonetariosFront[]
   ) {
-    const sumaAhorros = periodoVeinteanalFlujoIngresosMonetarios[0].ahorroEnElectricidadTotalUsd +
-      periodoVeinteanalFlujoIngresosMonetarios[0].ingresoPorInyeccionElectricaUsd;
-
+    const sumaAhorros =
+      periodoVeinteanalFlujoIngresosMonetarios[0].ahorroEnElectricidadTotalUsd +
+      periodoVeinteanalFlujoIngresosMonetarios[0]
+        .ingresoPorInyeccionElectricaUsd;
 
     this.sharedService.setAhorroAnualUsdPromedio(sumaAhorros);
     return sumaAhorros;

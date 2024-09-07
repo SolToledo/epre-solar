@@ -26,6 +26,12 @@ export class Paso3Component implements OnInit {
 
   timestamp: string = '';
   potenciaPanelHip!: number;
+  eficienciaInstalacion!: number;
+  degradacionAnualPanel!: number;
+  proporcionInyectada!: number;
+  costoEquipoMedicion!: number;
+  costoMantenimiento!: number;
+  tasaInflacionUsd!: number;
 
   openModal(): void {
     this.isModalOpen = true;
@@ -145,14 +151,22 @@ export class Paso3Component implements OnInit {
       ).toFixed(3)
     );
     const parametros: ParametrosFront = this.resultadosFront.parametros!;
+    console.log(parametros);
     
     this.sharedService.panelCapacityW$.subscribe({
       next: capacity => this.potenciaPanelHip = capacity
     })
+    this.eficienciaInstalacion = parametros.caracteristicasSistema.eficienciaInstalacion;
+    this.degradacionAnualPanel = parametros.caracteristicasSistema.degradacionAnualPanel;
     this.proporcionAutoconsumo = parametros.caracteristicasSistema.proporcionAutoconsumo; 
+    this.proporcionInyectada = parametros.caracteristicasSistema.proporcionInyeccion;
+    this.costoEquipoMedicion = parametros.inversionCostos.equipoDeMedicionUsdAplicado;
+    this.costoMantenimiento = parametros.inversionCostos.costoDeMantenimientoInicialUsd;
+    this.tasaInflacionUsd = parametros.economicas.tasaInflacionUsd;
+
+
 
     this.costoInstalacion = this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
-
     this.sharedService.setCostoInstalacion(this.costoInstalacion);
 
     this.consumoService.totalConsumo$.subscribe({

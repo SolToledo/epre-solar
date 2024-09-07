@@ -12,7 +12,7 @@
           </button>
         </div>
 
-       <!-- <div class="valor-mostrado">
+        <!-- <div class="valor-mostrado">
           <p id="valor">*Todos los valores son estimados.</p>
         </div>-->
 
@@ -27,7 +27,7 @@
         </div>
       </div>
 
-     <!-- <div class="visible-container">
+      <!-- <div class="visible-container">
         <div class="valor-mostrado-bis">
           <p id="valor-bis">*Todos los valores son estimados.</p>
         </div>
@@ -45,7 +45,9 @@
         <div class="container">
           <div class="item"><app-ahorros></app-ahorros></div>
 
-          <div class="item"><app-costo [costoInstalacion]="costoInstalacion"></app-costo></div>
+          <div class="item">
+            <app-costo [costoInstalacion]="costoInstalacion"></app-costo>
+          </div>
 
           <div class="item">
             <app-plazo
@@ -72,7 +74,6 @@
               [carbonOffsetFactorTnPerMWh]="carbonOffsetFactorTnPerMWh"
             ></app-emisiones>
           </div>
-          
         </div>
         <!--container-->
 
@@ -100,24 +101,47 @@
         <div class="container-hipotesis">
           <h3 id="titulo-hipotesis">Hipótesis adoptadas</h3>
           <p id="texto-hipotesis">
-            Los resultados de la evaluación a partir de la aplicación “Generación Solar Distribuida San Juan”, deben considerarse aproximados y
-            no representan opinión ni dictamen técnico del E.P.R.E. Se
-            reproducen a modo de referencia para el desarrollo de estudios
-            técnicos fundamentados y particularizados en cada Suministro,
-            habiéndose adoptado las siguientes hipótesis:
+            Los resultados de la evaluación a partir de la aplicación
+            “Generación Solar Distribuida San Juan”, deben considerarse
+            aproximados y no representan opinión ni dictamen técnico del
+            E.P.R.E. Se reproducen a modo de referencia para el desarrollo de
+            estudios técnicos fundamentados y particularizados en cada
+            Suministro, habiéndose adoptado las siguientes hipótesis:
           </p>
-          <p id="hipotesis"> ⦁ Potencia de cada panel =  {{potenciaPanelHip}} W.</p>
-          <p id="hipotesis"> ⦁ Eficiancia de la instalación = 80%</p>
-          <p id="hipotesis"> ⦁ Degradación anual de paneles = 0,40%</p>
-          <p id="hipotesis"> ⦁ Proporción de energía autoconsumida =</p>
-          <p id="hipotesis"> ⦁ Proporción de energía inyectada =</p>
-          <p id="hipotesis"> ⦁ Equipo de medición  = 500 USD</p>
-          <p id="hipotesis"> ⦁ Mantenimiento inicial = 15 USD/año</p>
-          <p id="hipotesis"> ⦁ Tasa de inflación (USD) = 5%</p>
-          <p id="hipotesis"> ⦁ Tasa de descuento de flujo de fondos (USD) =</p>
-          <p id="hipotesis"> ⦁ Tarifas vigentes a la fecha de la realización del presente cálculo.</p>
-          <p id="hipotesis"> ⦁ Fecha de su consulta: {{ timestamp }}</p>
-          <p id="hipotesis"> ⦁ Generación Solar Distribuida San Juan v.1.0.1. (Septiembre 2024)</p>
+          <p id="hipotesis">
+            ⦁ Potencia de cada panel = {{ potenciaPanelHip }} W.
+          </p>
+          <p id="hipotesis">
+            ⦁ Eficiencia de la instalación = {{ eficienciaInstalacion * 100 | number:'1.2-2'}} %
+          </p>
+          <p id="hipotesis">
+            ⦁ Degradación anual de paneles = {{ degradacionAnualPanel * 100 | number:'1.2-2'}} %
+          </p>
+          <p id="hipotesis">
+            ⦁ Proporción de energía autoconsumida =
+            {{ proporcionAutoconsumo * 100  | number:'1.2-2'}} %
+          </p>
+          <p id="hipotesis">
+            ⦁ Proporción de energía inyectada = {{ proporcionInyectada * 100 | number:'1.2-2' }} %
+          </p>
+          <p id="hipotesis">
+            ⦁ Equipo de medición =
+            {{ costoEquipoMedicion | number : "1.0-0" }} USD
+          </p>
+          <p id="hipotesis">
+            ⦁ Mantenimiento inicial = {{ costoMantenimiento | number:'1.2-2' }} USD/año
+          </p>
+          <p id="hipotesis">
+            ⦁ Tasa de inflación (USD) = {{ tasaInflacionUsd * 100 | number:'1.2-2' }} %
+          </p>
+          <p id="hipotesis">
+            ⦁ Tarifas vigentes a la fecha de la realización del presente
+            cálculo.
+          </p>
+          <p id="hipotesis">⦁ Fecha de su consulta: {{ timestamp }}</p>
+          <p id="hipotesis">
+            ⦁ Generación Solar Distribuida San Juan v.1.0.1. (Septiembre 2024)
+          </p>
         </div>
         <!--hipotesis-container-->
 

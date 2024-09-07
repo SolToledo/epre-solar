@@ -1,3 +1,4 @@
+import { CostoMantenimientoFront } from "./costo-mantenimiento-front";
 import { EmisionesGeiEvitadasFront } from "./emisiones-gei-evitadas-front";
 import { FlujoEnergiaFront } from "./flujo-energia-front";
 import { FlujoIngresosMonetariosFront } from "./flujo-ingresos-monetarios-front";
@@ -16,6 +17,7 @@ export interface ResultadosFrontDTO {
   ahorroUsd: number;
   periodoVeinteanalEmisionesGEIEvitadas: EmisionesGeiEvitadasFront[];
   periodoVeinteanalProyeccionTarifas: ProyeccionTarifasFront[];
+  periodoVeinteanalCostoMantenimiento: CostoMantenimientoFront[];
   resultadosFinancieros: {
     casoConCapitalPropio: any[],
     indicadoresFinancieros: any
