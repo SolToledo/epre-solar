@@ -73,10 +73,7 @@
 #texto-hipotesis{
   color: var(--font-light);
 }
-#subtitulo-hipotesis{
-  color: var(--font-light);
-  font-weight: 300;
-}
+
 
 #hipotesis{
   color: var(--font-light);
