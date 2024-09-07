@@ -186,6 +186,8 @@ export class MapService {
         clickable: true,
         editable: true,
         zIndex: 1,
+        geodesic: true,
+        strokePosition: google.maps.StrokePosition.OUTSIDE
       },
     });
     this.drawingManager.setMap(this.map);
