@@ -23,6 +23,8 @@ export class Paso3Component implements OnInit {
   email: string = '';
   costoInstalacion!: number;
 
+  timestamp: string = '';
+
   openModal(): void {
     this.isModalOpen = true;
   }
@@ -71,6 +73,8 @@ export class Paso3Component implements OnInit {
     setTimeout(() => {
       this.mapService.recenterMapToVisibleArea();
     }, 300);
+
+    this.setTimestamp();
 
     if (!this.sharedService.getNearbyLocation()) {
       this.solarService
@@ -289,4 +293,36 @@ export class Paso3Component implements OnInit {
       verticalPosition: 'top',
     });
   }
+
+  // Método para establecer el timestamp
+  private setTimestamp() {
+    const date = new Date();
+    const userAgent = navigator.userAgent;
+    const browserVersion = this.getBrowserVersion(userAgent);
+
+    this.timestamp = `${date.toLocaleDateString()} ${date.toLocaleTimeString()} - Navegador: ${browserVersion}`;
+  }
+
+  // Método auxiliar para obtener la versión del navegador
+  private getBrowserVersion(userAgent: string): string {
+    if (userAgent.indexOf('Firefox') > -1) {
+      return 'Firefox ' + userAgent.split('Firefox/')[1];
+    } else if (userAgent.indexOf('Chrome') > -1) {
+      return 'Chrome ' + userAgent.split('Chrome/')[1].split(' ')[0];
+    } else if (userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') === -1) {
+      return 'Safari ' + userAgent.split('Version/')[1].split(' ')[0];
+    } else if (userAgent.indexOf('Edg') > -1) {
+      return 'Edge ' + userAgent.split('Edg/')[1];
+    } else {
+      return 'Navegador desconocido';
+    }
+  }
+
+
+
+
+
+
+
+
 }
