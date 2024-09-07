@@ -67,10 +67,20 @@ export class PanelesComponent implements OnInit, OnDestroy {
 
     this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
       const panelCapacity = parseInt(value, 10);
-      this.sharedService.setPanelCapacityW(panelCapacity);
-      this.panelCapacityW = panelCapacity;
+      const panelsCountSelected = this.sharedService.getPanelsSelected();
+      const maxPotenciaInstalacion =
+        this.sharedService.getPotenciaMaxAsignadaValue();
+
+      const newPotenciaInstalacion = panelCapacity * panelsCountSelected;
+      if (!(newPotenciaInstalacion > maxPotenciaInstalacion)) {
+        this.sharedService.setPanelCapacityW(panelCapacity);
+        this.panelCapacityW = panelCapacity;
+        return;
+      }
+      this.disableSelectedOption(panelCapacity);
+      this.potenciaPanelesControl.setValue(panelCapacity.toString());
+      alert('Se supera la potencia maxima contratada, la configuración no es posible...'); // todo: cambiar alert por un driverjs
     });
-    // this.panelesCantidad = this.maxPanelsArea$;
   }
 
   ngAfterViewInit(): void {
@@ -108,5 +118,16 @@ export class PanelesComponent implements OnInit, OnDestroy {
     const panelHeight = this.dimensionPanel.height / 100;
     const panelWidth = this.dimensionPanel.width / 100;
     return panelHeight * panelWidth * this.panelesCantidad;
+  }
+
+  disableSelectedOption(panelCapacity: number) {
+    const selectElement = document.querySelector('select#power-select'); // Ajusta el selector a tu select
+    const optionToDisable = selectElement?.querySelector(
+      `option[value="${panelCapacity}"]`
+    );
+
+    if (optionToDisable) {
+      optionToDisable.setAttribute('disabled', 'true');
+    }
   }
 }
