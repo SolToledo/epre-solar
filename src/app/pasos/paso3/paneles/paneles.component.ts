@@ -105,7 +105,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
       4,
       Math.min(this.panelesCantidad, this.maxPanelsArea$)
     );
-
+    
     this.mapService.reDrawPanels(this.panelesCantidad);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
   }

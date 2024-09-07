@@ -8,7 +8,7 @@ import { SharedService } from 'src/app/services/shared.service';
   styleUrls: ['./potencia.component.css'],
 })
 export class PotenciaComponent {
-  instalacionPotencia!: number;
+  instalacionPotenciakW!: number;
 
   private panelsCountSelectedSubscription!: Subscription;
   private panelCapacitySubscription!: Subscription;
@@ -16,7 +16,7 @@ export class PotenciaComponent {
 
   panelsCountSelected: number = 0;
   panelCapacityW: number = 0;
-  potenciaMaxCategoriaSelect: number = 0;
+  potenciaMaxCategoriaSelectkW: number = 0;
 
   constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef) {
     this.panelCapacityW = this.sharedService.getPanelCapacityW();
@@ -37,9 +37,9 @@ export class PotenciaComponent {
       }
     });
 
-    this.potenciaMaxCategoriaSubscription = this.sharedService.potenciaMaxAsignada$.subscribe({
-      next: (potenciaMax) => {
-        this.potenciaMaxCategoriaSelect = potenciaMax * 1000
+    this.potenciaMaxCategoriaSubscription = this.sharedService.potenciaMaxAsignadaW$.subscribe({
+      next: (potenciaMaxW) => {
+        this.potenciaMaxCategoriaSelectkW = potenciaMaxW / 1000
       }
     })
   }
@@ -58,11 +58,11 @@ export class PotenciaComponent {
   }
 
   private updateInstalacionPotencia(): void {
-    this.instalacionPotencia = this.panelsCountSelected * this.panelCapacityW;
-    if (this.instalacionPotencia > this.potenciaMaxCategoriaSelect) {
-      this.instalacionPotencia = this.potenciaMaxCategoriaSelect;
+    this.instalacionPotenciakW = this.panelsCountSelected * this.panelCapacityW / 1000;
+    if (this.instalacionPotenciakW > this.potenciaMaxCategoriaSelectkW) {
+      this.instalacionPotenciakW = this.potenciaMaxCategoriaSelectkW;
     }
-    this.sharedService.setPotenciaInstalacionW(this.instalacionPotencia);
+    this.sharedService.setPotenciaInstalacionW(this.instalacionPotenciakW * 1000);
     this.cdr.detectChanges();
   }
 }

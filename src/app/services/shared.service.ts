@@ -7,13 +7,13 @@ import { DimensionPanel } from '../interfaces/dimension-panel';
   providedIn: 'root',
 })
 export class SharedService {
-  
+
   private dimensionPanel!: { height: number; width: number; };
   private areaPanelsSelectedSubject = new BehaviorSubject<number>(0);
   areaPanelsSelected$ = this.areaPanelsSelectedSubject.asObservable();
-  
+
   private costoInstalacionSubject = new BehaviorSubject<number>(0);
-  costoInstalacion$ =this.costoInstalacionSubject.asObservable();
+  costoInstalacion$ = this.costoInstalacionSubject.asObservable();
 
   private tarifaContratadaSubject = new BehaviorSubject<string>('');
   tarifaContratada$ = this.tarifaContratadaSubject.asObservable();
@@ -39,7 +39,7 @@ export class SharedService {
   private ahorroAnualUsdPromedioSubject = new BehaviorSubject<number>(0);
   ahorroAnualUsdPromedio$ = this.ahorroAnualUsdPromedioSubject.asObservable();
   private potenciaMaxAsignadaSubject = new BehaviorSubject<number>(0);
-  potenciaMaxAsignada$ = this.potenciaMaxAsignadaSubject.asObservable();
+  potenciaMaxAsignadaW$ = this.potenciaMaxAsignadaSubject.asObservable();
   private potenciaInstalacionSubject = new BehaviorSubject<number>(0);
   potenciaInstalacion$ = this.potenciaInstalacionSubject.asObservable();
   private resultadosFrontSubject = new BehaviorSubject<Partial<ResultadosFrontDTO>>({});
@@ -210,7 +210,7 @@ export class SharedService {
   }
 
   calculateAreaPanelsSelected(totalPanels: number): number {
-    if(totalPanels>=4) {
+    if (totalPanels >= 4) {
       const areaPanelsSelected = this.calculateAreaPanels(totalPanels)
       this.setAreaPanelsSelected(areaPanelsSelected);
       return areaPanelsSelected;

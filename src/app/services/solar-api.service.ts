@@ -13,7 +13,7 @@ import { SolarDataFront } from '../interfaces/solar-data-front';
 @Injectable({
   providedIn: 'root',
 })
-export class SolarApiService implements OnDestroy  {
+export class SolarApiService implements OnDestroy {
   // private readonly apiUrl: string = 'http://localhost:3000';
   private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
   private _resultados!: ResultadosFrontDTO;
@@ -33,7 +33,7 @@ export class SolarApiService implements OnDestroy  {
     private sharedService: SharedService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnDestroy() {
     // Desuscripción manual para evitar fugas de memoria
@@ -57,12 +57,12 @@ export class SolarApiService implements OnDestroy  {
 
   async calculate(): Promise<any> {
     const mapService = this.getMapService();
-  
+
     try {
       const polygonCoordinates = mapService.getPolygonCoordinates();
       const polygonArea = mapService.getPolygonArea();
       const categoriaSeleccionada = this.sharedService.getTarifaContratada();
-      
+
       this.consumoSubscription = this.consumoService.totalConsumo$.subscribe({
         next: (value) => (this.annualConsumption = value),
       });
@@ -71,10 +71,10 @@ export class SolarApiService implements OnDestroy  {
         next: (value) => (this.panelsSupported = value),
       });
 
-      this.potenciaMaxAsignadaSubscription = this.sharedService.potenciaMaxAsignada$.subscribe({
+      this.potenciaMaxAsignadaSubscription = this.sharedService.potenciaMaxAsignadaW$.subscribe({
         next: (value) => (this.potenciaMaxAsignada = value),
       });
-  
+
       // Verifica los datos y muestra mensajes específicos
       const missingFields = [];
       if (!this.annualConsumption) missingFields.push('Consumo anual');
@@ -84,7 +84,7 @@ export class SolarApiService implements OnDestroy  {
       if (!this.panelsSupported) missingFields.push('Paneles soportados');
       if (!this.potenciaMaxAsignada)
         missingFields.push('Potencia máxima asignada');
-  
+
       if (missingFields.length > 0) {
         this.snackBar.open(
           `Faltan los siguientes datos: ${missingFields.join(', ')}`,
@@ -96,7 +96,7 @@ export class SolarApiService implements OnDestroy  {
             verticalPosition: 'top',
           }
         );
-  
+
         setTimeout(() => {
           this.router
             .navigate(['/pasos/1'])
@@ -104,7 +104,7 @@ export class SolarApiService implements OnDestroy  {
         }, 2000);
         return;
       }
-  
+
       const datosCalculo = {
         annualConsumption: this.annualConsumption,
         polygonCoordinates,
@@ -115,7 +115,7 @@ export class SolarApiService implements OnDestroy  {
         potenciaMaxAsignada: this.potenciaMaxAsignada,
       };
       console.log("Datos que se envian al endpoint : ", datosCalculo);
-      
+
       // Esperar la respuesta de la solicitud HTTP
       const response = await lastValueFrom(
         this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
@@ -124,15 +124,15 @@ export class SolarApiService implements OnDestroy  {
       // Procesar la respuesta
       this._resultados = this.resultadoService.generarResultados(response);
       console.log('Resultados entrando al front: ', this._resultados);
-  
+
       return this.getResultados;
     } catch (error) {
       this.sharedService.setIsLoading(false);
-      
-      
+
+
     }
   }
-  
+
 
   get getResultados(): ResultadosFrontDTO {
     return this._resultados;

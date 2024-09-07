@@ -87,19 +87,19 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     private router: Router,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.tarifaContratada = this.sharedService.getTarifaContratada() ?? '';
 
-    this.sharedService.potenciaMaxAsignada$.subscribe({
+    this.sharedService.potenciaMaxAsignadaW$.subscribe({
       next: (newPotenciaMax) => {
         this.potenciaMaxAsignadakW = newPotenciaMax / 1000;
       },
     });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   isOptionSelected(): boolean {
     return this.tarifaContratada !== '';
@@ -153,11 +153,9 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       autoFocus: true,
       closeOnNavigation: false,
       data: {
-        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${
-          this.sharedService.getPotenciaInstalacionW() / 1000
-        } kW, superando la potencia máxima de ${
-          this.potenciaMaxAsignadakW
-        } kW asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar para volver al paso anterior y elegir otra superficie`,
+        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW() / 1000
+          } kW, superando la potencia máxima de ${this.potenciaMaxAsignadakW
+          } kW asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar para volver al paso anterior y elegir otra superficie`,
       },
     });
 
