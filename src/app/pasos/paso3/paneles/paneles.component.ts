@@ -112,17 +112,6 @@ export class PanelesComponent implements OnInit, OnDestroy {
     return panelHeight * panelWidth * this.panelesCantidad;
   }
 
-  /* disableSelectedOption(panelCapacity: number) {
-    const selectElement = document.querySelector('select#power-select'); // Ajusta el selector a tu select
-    const optionToDisable = selectElement?.querySelector(
-      `option[value="${panelCapacity}"]`
-    );
-
-    if (optionToDisable) {
-      optionToDisable.setAttribute('disabled', 'true');
-    }
-  } */
-
   disableOptionsExceedingMaxCapacity() {
     const maxPotenciaInstalacion =
       this.sharedService.getPotenciaMaxAsignadaValue();

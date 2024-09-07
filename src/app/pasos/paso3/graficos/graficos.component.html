@@ -1,5 +1,4 @@
 <div class="container-graficos">
-
   <!-- Energia consumida y generada -->
   <div class="item-grafico">
     <div class="grafico-container-borde">
@@ -25,7 +24,6 @@
           <canvas #energiaChart></canvas>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -82,6 +80,36 @@
       <div class="informacion-general">
         <div class="grafico-component">
           <canvas #emisionesChart></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="item-grafico">
+    <div class="grafico-container-borde">
+      <div class="head">
+        <div class="icono">
+          <img
+            src="assets/icon-CO2.png"
+            class="tamaño-icon"
+            alt="Icono de Emisiones CO2"
+          />
+        </div>
+        <div class="titulo">
+          <p>Emisiones CO<sub class="small-sup">2</sub> evitadas acumuladas</p>
+        </div>
+        <div class="resultado-container">
+          <div class="resultado">
+            <p class="resultado-numero"></p>
+          </div>
+          <div class="unidad">
+            <p class="unidad-texto"></p>
+          </div>
+        </div>
+      </div>
+      <div class="informacion-general">
+        <div class="grafico-component">
+          <div id="chart">
+          </div>
         </div>
       </div>
     </div>

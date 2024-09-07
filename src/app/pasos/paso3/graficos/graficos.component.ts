@@ -24,6 +24,7 @@ import { FlujoEnergiaFront } from 'src/app/interfaces/flujo-energia-front';
 import { FlujoIngresosMonetariosFront } from 'src/app/interfaces/flujo-ingresos-monetarios-front';
 import { GeneracionFotovoltaicaFront } from 'src/app/interfaces/generacion-fotovoltaica-front';
 import { SharedService } from 'src/app/services/shared.service';
+import * as ApexCharts from 'apexcharts';
 Chart.register(annotationPlugin);
 
 @Component({
@@ -83,6 +84,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.createAhorrosChart();
     this.createEnergiaChart();
     this.updateEnergyChart();
+    this.createChartWithApexChart();
     this.subscription.add(
       this.sharedService.carbonOffSet$.subscribe((nuevoValor) => {
         this.calcularEmisionesAjustadas(nuevoValor);
@@ -105,6 +107,24 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     );
     this.cdr.detectChanges();
+  }
+  createChartWithApexChart() {
+    var options = {
+      chart: {
+        type: 'line'
+      },
+      series: [{
+        name: 'sales',
+        data: [30,40,45,50,49,60,70,91,125]
+      }],
+      xaxis: {
+        categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+      }
+    }
+    
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    
+    chart.render();
   }
 
   ngOnDestroy(): void {
