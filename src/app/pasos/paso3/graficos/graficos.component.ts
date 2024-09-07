@@ -27,6 +27,7 @@ import { SharedService } from 'src/app/services/shared.service';
 import * as ApexCharts from 'apexcharts';
 Chart.register(annotationPlugin);
 
+
 @Component({
   selector: 'app-graficos',
   templateUrl: './graficos.component.html',
@@ -80,6 +81,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.createEmisionesChart();
+    this.chartEnergia();
     this.actualizarEmisionesChart();
     this.createAhorrosChart();
     this.createEnergiaChart();
@@ -108,6 +110,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     this.cdr.detectChanges();
   }
+
   createChartWithApexChart() {
     var options = {
       chart: {
@@ -126,6 +129,41 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     
     chart.render();
   }
+
+
+  chartEnergia() {
+    var options = {
+      chart: {
+        type: 'bar'
+      },
+      series: [{
+        name: "distibuted",
+        data: [21, 22, 10, 28, 16, 21, 13, 30]
+      }],
+      xaxis: {
+        categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+      },
+      colors: [
+        "#008FFB",
+        "#00E396",
+        "#FEB019",
+        "#FF4560",
+        "#775DD0",
+        "#546E7A",
+        "#26a69a",
+        "#D10CE8"
+      ],
+      
+    }
+    
+    var chart = new ApexCharts(document.querySelector("#chartEnergia"), options);
+    
+    chart.render();
+  }
+
+
+
+
 
   ngOnDestroy(): void {
     if (this.emisionesChart) {
