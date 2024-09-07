@@ -22,8 +22,8 @@
 
 h2 {
   margin-top: 0;
-  font-family: 'Times New Roman', Times, serif; /* Tipo de letra */
   font-weight: bold;
+  font-size: 22px;
 }
 
 .close-button {
@@ -34,17 +34,18 @@ h2 {
   cursor: pointer;
 }
 .terms-content {
-  max-height: 300px;
+  max-height: 330px;
   overflow-y: auto;
   margin: 20px 0;
-  text-align: justify; /* Alinear justificado */
-  padding: 10px; /* Padding de 5px */
+  text-align: justify; 
+  padding: 10px; 
+  background-color: var(--light-background);
 }
 
 .terms-content p {
-  font-family: 'Times New Roman', Times, serif; /* Tipo de letra */
   text-align: justify; /* Alinear justificado */
   color: var(--font-dark);
+  font-size: 14px;
 }
 
 .check {
@@ -52,7 +53,7 @@ h2 {
 }
 
 .check input[type="checkbox"]:disabled + label {
-  color: #888; /* Color para el texto del checkbox cuando está deshabilitado */
+  color: #888;
 }
 
 .button-group {
@@ -139,6 +140,7 @@ h2 {
   margin: 0%;
   color: var(--dark-green);
 }
+
 #contactos p{
   margin: 0;
 }
@@ -156,4 +158,23 @@ h2 {
 .check p{
   font-size: 13px;
   text-decoration: underline;
+}
+
+
+@media (min-width: 1601px) {
+  h2 {
+    font-size: 24px;
+  }
+
+  .terms-content p {
+     font-size: 16px;
+   }
+
+   .check p{
+    font-size: 15px;
+  }
+
+  #contactos{
+    font-size: 16px;
+  }
 }
