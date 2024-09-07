@@ -64,13 +64,14 @@ export class PanelesComponent implements OnInit, OnDestroy {
           this.plazoRecuperoInversion = plazo;
         },
       });
-      this.disableOptionsExceedingMaxCapacity();
+
+    this.disableOptionsExceedingMaxCapacity();
+
     this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
-      
       const panelCapacity = parseInt(value, 10);
       this.sharedService.setPanelCapacityW(panelCapacity);
-        this.panelCapacityW = panelCapacity;
-        return;
+      this.panelCapacityW = panelCapacity;
+      return;
     });
   }
 
@@ -88,6 +89,18 @@ export class PanelesComponent implements OnInit, OnDestroy {
   }
 
   onSliderChange() {
+    const maxPotenciaInstalacion =
+      this.sharedService.getPotenciaMaxAsignadaValue();
+    const panelCapacity = this.panelCapacityW;
+
+    const maxAllowedPanels = Math.floor(maxPotenciaInstalacion / panelCapacity);
+    // Limita el valor máximo del slider al número máximo permitido de paneles
+    this.slider.max = Math.min(maxAllowedPanels, this.maxPanelsArea$);
+
+    if (this.panelesCantidad > this.slider.max) {
+      this.panelesCantidad = this.slider.max;
+    }
+
     this.panelesCantidad = Math.max(
       4,
       Math.min(this.panelesCantidad, this.maxPanelsArea$)
@@ -100,16 +113,6 @@ export class PanelesComponent implements OnInit, OnDestroy {
 
   formatLabel(value: number): string {
     return value >= 1000 ? Math.round(value / 1000) + 'k' : `${value}`;
-  }
-
-  get totalCapacityKW(): number {
-    return (this.panelCapacityW * this.panelesCantidad) / 1000;
-  }
-
-  get surfaceArea(): number {
-    const panelHeight = this.dimensionPanel.height / 100;
-    const panelWidth = this.dimensionPanel.width / 100;
-    return panelHeight * panelWidth * this.panelesCantidad;
   }
 
   disableOptionsExceedingMaxCapacity() {
