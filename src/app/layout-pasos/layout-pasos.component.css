@@ -35,11 +35,13 @@
   .paso.collapsed {
     width: 30px; 
     overflow: hidden;
+    visibility: hidden;
     right: 0;
   }
   
   .paso.expanded {
     width: 55%; 
+    visibility: visible;
   }
 
  

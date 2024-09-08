@@ -46,7 +46,7 @@ export class MapService {
       mapTypeId: google.maps.MapTypeId.HYBRID,
       mapTypeControl: false,
       zoomControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_BOTTOM,
+        position: google.maps.ControlPosition.LEFT_BOTTOM,
       },
       fullscreenControl: false,
       streetViewControl: false,

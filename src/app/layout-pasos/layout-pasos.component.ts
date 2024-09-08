@@ -22,11 +22,11 @@ import { SharedService } from '../services/shared.service';
   styleUrls: ['./layout-pasos.component.css'],
   animations: [
     trigger('menuCollapsed', [
-      state('expand', style({ width: 'visibility: hidden' })),
-      state('collapsed', style({ width: '100%' })),
+      state('expand', style({ width: '0', visibility: 'hidden' })),
+      state('collapsed', style({ width: '100%', visibility: 'visible' })),
       transition('expand <=> collapsed', animate('200ms')),
     ]),
-  ], 
+  ],
 })
 export class LayoutPasosComponent implements OnInit, AfterViewInit {
   currentStep: number = 0;
