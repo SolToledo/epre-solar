@@ -101,7 +101,7 @@ export class Paso3Component implements OnInit {
               verticalPosition: 'top',
             }
           );
-          this.router.navigate(['/pasos/1']);
+          // this.router.navigate(['/pasos/1']);
         });
     } else {
       this.snackBar.open(
@@ -175,33 +175,7 @@ export class Paso3Component implements OnInit {
   }
 
   downloadPDF(): void {
-    html2canvas(document.querySelector('#info-container')!, {}).then(
-      (canvas) => {
-        const resultadosScreenshot = canvas.toDataURL('image/png');
-        html2canvas(document.querySelector('#graficos')!, {}).then(
-          (canvas2) => {
-            const graficos = canvas2.toDataURL('image/png');
-            // Recolectar los resultados calculados
-            const resultadosCalculados = {
-              panelesCantidad: this.panelesCantidad,
-              dimensionPanel: this.dimensionPanel,
-              panelCapacityW: this.panelCapacityW,
-              yearlyEnergyAcKwh: this.yearlyEnergyAcKwh,
-              carbonOffsetFactorTnPerMWh: this.carbonOffsetFactorTnPerMWh,
-              instalacionPotencia: this.instalacionPotencia,
-              // Puedes añadir más campos de resultados si es necesario
-            };
-
-            // Llamar al servicio para descargar el PDF
-            this.pdfService.downloadPDF(
-              resultadosScreenshot,
-              graficos,
-              resultadosCalculados
-            );
-          }
-        );
-      }
-    );
+    this.pdfService.generatePDF().then(()=>{}).catch(()=>{});
   }
 
   sendEmail(): void {
