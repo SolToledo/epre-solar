@@ -9,15 +9,15 @@ import { MapService } from '../services/map.service';
 export class MapaComponent implements OnInit, AfterViewInit {
   @ViewChild('mapElement') mapElement!: ElementRef;
 
-  constructor(private mapService: MapService) {
-    
-  }
-  
-  ngOnInit(): void {
-  }
+  constructor(private mapService: MapService) {}
 
-  ngAfterViewInit(): void {
-    this.mapService.initializeMap(this.mapElement.nativeElement);
+  ngOnInit(): void {}
+
+  async ngAfterViewInit(): Promise<void> {
+    try {
+      await this.mapService.initializeMap(this.mapElement.nativeElement);
+    } catch (error) {
+      console.error('Error initializing the map:', error);
+    }
   }
- 
 }

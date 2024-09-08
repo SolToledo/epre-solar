@@ -52,7 +52,7 @@ export class LayoutPasosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.cdr.detectChanges();
+    // this.cdr.detectChanges();
   }
 
   ngAfterViewInit(): void {

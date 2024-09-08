@@ -34,11 +34,11 @@ export class MapService {
   ) {}
 
   async initializeMap(mapElement: HTMLElement) {
-    const { Map } = (await google.maps.importLibrary(
-      'maps'
-    )) as google.maps.MapsLibrary;
+    if (!window.google || !window.google.maps) {
+      throw new Error('Google Maps API not loaded');
+    }
 
-    this.map = new Map(mapElement, {
+    this.map = new google.maps.Map(mapElement, {
       center: this.center,
       zoom: this.zoomInicial,
       disableDefaultUI: false,
@@ -46,68 +46,14 @@ export class MapService {
       mapTypeId: google.maps.MapTypeId.HYBRID,
       mapTypeControl: false,
       zoomControlOptions: {
-        position: google.maps.ControlPosition.INLINE_START_BLOCK_END,
+        position: google.maps.ControlPosition.RIGHT_BOTTOM,
       },
       fullscreenControl: false,
       streetViewControl: false,
       rotateControl: false,
       gestureHandling: 'cooperative',
-      mapId: 'MAP-ID',
-      styles: [
-        // Ocultar todos los elementos geométricos (carreteras, paisajes, etc.)
-        {
-          featureType: 'all',
-          elementType: 'geometry',
-          stylers: [{ visibility: 'off' }]
-        },
-        {
-          featureType: 'all',
-          elementType: 'geometry.fill',
-          stylers: [{ visibility: 'off' }]
-        },
-        {
-          featureType: 'all',
-          elementType: 'geometry.stroke',
-          stylers: [{ visibility: 'off' }]
-        },
-        // Ocultar todas las etiquetas excepto las de las calles
-        {
-          featureType: 'administrative',
-          elementType: 'labels',
-          stylers: [{ visibility: 'on' }]
-        },
-        {
-          featureType: 'poi',
-          elementType: 'labels',
-          stylers: [{ visibility: 'off' }]
-        },
-        {
-          featureType: 'poi.government',
-          elementType: 'labels',
-          stylers: [{ visibility: 'on' }]
-        },
-        {
-          featureType: 'transit',
-          elementType: 'labels',
-          stylers: [{ visibility: 'off' }]
-        },
-        {
-          featureType: 'water',
-          elementType: 'labels',
-          stylers: [{ visibility: 'off' }]
-        },
-        // Mostrar solo las etiquetas de las carreteras (nombres de las calles)
-        {
-          featureType: 'road',
-          elementType: 'labels.text',
-          stylers: [{ visibility: 'on' }]
-        },
-        {
-          featureType: 'road',
-          elementType: 'labels.icon',
-          stylers: [{ visibility: 'off' }]
-        }
-      ]
+      mapId: 'b822b45cb79aba09',
+      
     });
     this.mapSubject.next(this.map);
   }
