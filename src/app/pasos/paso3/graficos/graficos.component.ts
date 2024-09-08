@@ -162,9 +162,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-
-
-
   ngOnDestroy(): void {
     if (this.emisionesChart) {
       this.emisionesChart.destroy();
