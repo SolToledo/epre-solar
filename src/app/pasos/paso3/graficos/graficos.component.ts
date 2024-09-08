@@ -8,7 +8,6 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  SimpleChanges,
 } from '@angular/core';
 
 import { Subscription } from 'rxjs';
@@ -26,7 +25,9 @@ import * as ApexCharts from 'apexcharts';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() periodoVeinteanalEmisionesGEIEvitadas!: EmisionesGeiEvitadasFront[];
+  @Input()
+  periodoVeinteanalEmisionesGEIEvitadasOriginal!: EmisionesGeiEvitadasFront[];
+  periodoVeinteanalEmisionesGEIEvitadasCopia: EmisionesGeiEvitadasFront[] = [];
   @Input() periodoVeinteanalFlujoEnergia!: FlujoEnergiaFront[];
   @Input()
   periodoVeinteanalFlujoIngresosMonetarios!: FlujoIngresosMonetariosFront[];
@@ -39,7 +40,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('ahorrosChart') ahorrosChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('energiaChart')
   energiaChartRef!: ElementRef<HTMLCanvasElement>;
-  private chart!: ApexCharts; // Instancia del gráfico
+
   private subscription!: Subscription;
   recuperoInversionMeses!: number;
   carbonOffSet!: number;
@@ -47,16 +48,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() yearlyEnergyInitial!: number;
   porcentajeCubierto: number = 0;
   carbonOffSetInicialTon!: number;
+  chartEnergia!: ApexCharts;
+  emisionesChart!: ApexCharts;
 
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    
-    
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.yearlyEnergyInitial = this.sharedService.getYearlyEnergyAcKwh();
@@ -68,10 +68,250 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.updateChartEnergiaConsumo();
       },
     });
+    this.carbonOffSet = this.sharedService.getCarbonOffSetTnAnual();
+    this.initializeChartEmisionesEvitadasAcumuladas();
+    this.sharedService.CarbonOffSetTnAnual$.subscribe({
+      next: (value) => {
+        this.calculateEmisionesEvitadasConNuevoValor(value);
+
+        // Actualiza el gráfico con los nuevos valores
+        this.updateChartEmisionesEvitadasAcumuladas();
+
+        // Detecta cambios en la vista si es necesario
+        this.cdr.detectChanges();
+      },
+    });
   }
 
- 
-  //GRAFICOS
+  // Función para recalcular el array con base en el nuevo valor de carbonOffSet
+  private calculateEmisionesEvitadasConNuevoValor(nuevoCarbonOffSet: number) {
+    // Clona el array original para no modificarlo directamente
+    this.periodoVeinteanalEmisionesGEIEvitadasCopia = JSON.parse(
+      JSON.stringify(this.periodoVeinteanalEmisionesGEIEvitadasOriginal)
+    );
+
+    // Obtén el valor original del primer año para calcular la proporción
+    const valorOriginalPrimerAño =
+      this.periodoVeinteanalEmisionesGEIEvitadasOriginal[0].emisionesTonCO2;
+
+    // Calcula la proporción de cambio
+    const proporcion = nuevoCarbonOffSet / valorOriginalPrimerAño;
+
+    // Aplica el nuevo valor y ajusta los valores restantes de manera proporcional
+    this.periodoVeinteanalEmisionesGEIEvitadasCopia =
+      this.periodoVeinteanalEmisionesGEIEvitadasOriginal.map((item, index) => {
+        return {
+          ...item,
+          emisionesTonCO2:
+            index === 0 ? nuevoCarbonOffSet : item.emisionesTonCO2 * proporcion,
+        };
+      });
+  }
+
+  // Función para actualizar el gráfico con los nuevos valores
+  private updateChartEmisionesEvitadasAcumuladas() {
+    // Calcula los valores acumulados
+    let acumulado = 0;
+    const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
+      (entry) => {
+        acumulado += entry.emisionesTonCO2;
+        return acumulado;
+      }
+    );
+
+    // Extrae los años del array
+    const categories = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
+      (entry) => entry.year.toString()
+    );
+
+    // Actualiza el gráfico con las nuevas opciones
+    const options = {
+      series: [
+        {
+          name: 'Emisiones CO₂ Acumuladas',
+          data: seriesData,
+        },
+      ],
+      chart: {
+        height: 350,
+        width: 470,
+        type: 'area',
+        toolbar: {
+          show: false,
+        },
+        zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+        colors: ['#96c0b2'],
+        width: 4,
+      },
+      fill: {
+        colors: ['#96c0b2'],
+        opacity: 0.05,
+      },
+      markers: {
+        size: 0,
+        hover: {
+          size: 6,
+          colors: ['#00754a'],
+          strokeColor: '#00754a',
+          strokeWidth: 2,
+        },
+      },
+      xaxis: {
+        categories: categories,
+        title: {
+          text: 'Año',
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Ton CO₂',
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      tooltip: {
+        enabled: true,
+        theme: 'light',
+        x: {
+          format: 'yyyy',
+        },
+        marker: {
+          show: true,
+        },
+        style: {
+          fontSize: '12px',
+          fontFamily: 'sodo sans, sans-serif',
+        },
+      },
+    };
+
+    if (this.emisionesChart) {
+      this.emisionesChart.updateOptions(options);
+    }
+  }
+
+  private initializeChartEmisionesEvitadasAcumuladas() {
+    // Asegúrate de que periodoVeinteanalEmisionesGEIEvitadas está definido y no está vacío
+    if (
+      !this.periodoVeinteanalEmisionesGEIEvitadasOriginal ||
+      this.periodoVeinteanalEmisionesGEIEvitadasOriginal.length === 0
+    ) {
+      console.error(
+        'periodoVeinteanalEmisionesGEIEvitadas no está definido o está vacío'
+      );
+      return;
+    }
+
+    // Calcula los valores acumulados
+    let acumulado = 0;
+    const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasOriginal.map(
+      (entry) => {
+        acumulado += entry.emisionesTonCO2; // Acumula las emisiones
+        return acumulado;
+      }
+    );
+
+    // Extrae los años del array
+    const categories = this.periodoVeinteanalEmisionesGEIEvitadasOriginal.map(
+      (entry) => entry.year.toString()
+    );
+
+    const options = {
+      series: [
+        {
+          name: 'Emisiones CO₂ Acumuladas',
+          data: seriesData,
+        },
+      ],
+      chart: {
+        height: 350,
+        width: 470, // Establece el ancho a 470
+        type: 'area',
+        toolbar: {
+          show: false, // Oculta la barra de herramientas
+        },
+        zoom: {
+          enabled: false, // Desactiva el zoom
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+        colors: ['#96c0b2'], // Color de la línea
+        width: 4, // Hacer la línea un poco más gruesa
+      },
+      fill: {
+        colors: ['#96c0b2'], // Color de la sombra
+        opacity: 0.05, // Ajusta la opacidad de la sombra a un valor menor
+      },
+      markers: {
+        size: 0, // Oculta todos los puntos
+        hover: {
+          size: 6, // Tamaño del punto cuando se muestra el tooltip
+          colors: ['#00754a'], // Color del punto cuando se muestra el tooltip
+          strokeColor: '#00754a', // Color del borde del punto cuando se muestra el tooltip
+          strokeWidth: 2, // Ancho del borde del punto
+        },
+      },
+      xaxis: {
+        categories: categories,
+        title: {
+          text: 'Año', // Título del eje X
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Ton CO₂', // Título del eje Y con el 2 en subíndice
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      tooltip: {
+        enabled: true, // Habilita el tooltip
+        theme: 'light', // Tema del tooltip (dark o light)
+        x: {
+          format: 'yyyy',
+        },
+        marker: {
+          show: true, // Muestra el marcador en el tooltip
+        },
+        style: {
+          fontSize: '12px', // Tamaño de fuente del texto del tooltip
+          fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
+        },
+      },
+    };
+
+    this.emisionesChart = new ApexCharts(
+      document.querySelector('#emisionesChartRef') as HTMLElement,
+      options
+    );
+
+    this.emisionesChart.render();
+  }
+
   private initializeChartEnergiaConsumo() {
     const options = {
       chart: {
@@ -237,17 +477,17 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     };
 
-    this.chart = new ApexCharts(
+    this.chartEnergia = new ApexCharts(
       document.querySelector('#chartEnergia') as HTMLElement,
       options
     );
 
-    this.chart.render();
+    this.chartEnergia.render();
   }
 
   private updateChartEnergiaConsumo() {
-    if (this.chart) {
-      this.chart.updateOptions({
+    if (this.chartEnergia) {
+      this.chartEnergia.updateOptions({
         series: [
           {
             name: 'Consumo Total Anual',
@@ -262,94 +502,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private createChartEnergiaConsumidaGenerada() {
-    if (
-      !this.periodoVeinteanalGeneracionFotovoltaica ||
-      this.consumoTotalAnual === undefined ||
-      this.yearlyEnergy === undefined
-    ) {
-      return; // Salimos si faltan datos
-    }
-
-    const yearlyEnergy = this.yearlyEnergy;
-    const consumoAnual = this.consumoTotalAnual;
-
-    var options = {
-      chart: {
-        height: 300,
-        width: 470,
-        type: 'bar',
-        toolbar: {
-          show: false,
-        },
-        zoom: {
-          enabled: false,
-        },
-      },
-
-      series: [
-        {
-          name: 'Consumo Anual',
-          data: [consumoAnual],
-        },
-        {
-          name: 'Generación Anual',
-          data: [yearlyEnergy],
-        },
-      ],
-
-      colors: ['#96c0b2', '#e4c58d'],
-
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          endingShape: 'rounded',
-        },
-      },
-
-      dataLabels: {
-        enabled: false,
-      },
-
-      legend: {
-        show: true,
-      },
-
-      grid: {
-        show: true,
-      },
-
-      yaxis: {
-        title: {
-          text: 'kWh',
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-
-      xaxis: {
-        categories: ['Consumo vs Generación'], // Solo una categoría
-        labels: {
-          style: {
-            colors: ['#424242'],
-            fontSize: '12px',
-          },
-        },
-      },
-    };
-
-    var chart = new ApexCharts(
-      document.querySelector('#chartEnergia'),
-      options
-    );
-
-    chart.render();
-  }
-
-  chartEmisionesEvitadasAcumuladas() {
+  private chartEmisionesEvitadasAcumuladas() {
     var options = {
       series: [
         {

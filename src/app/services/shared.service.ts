@@ -46,8 +46,8 @@ export class SharedService {
   resultadosFront$ = this.resultadosFrontSubject.asObservable();
   private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
   maxPanelsPerSuperface$ = this.maxPanelsPerSuperfaceSubject.asObservable();
-  private carbonOffSetSubject = new BehaviorSubject<number>(0);
-  carbonOffSet$ = this.carbonOffSetSubject.asObservable();
+  private CarbonOffSetTnAnualSubject = new BehaviorSubject<number>(0);
+  CarbonOffSetTnAnual$ = this.CarbonOffSetTnAnualSubject.asObservable();
   private isStopCalculateSubject = new BehaviorSubject<boolean>(false);
   isStopCalculate$ = this.isStopCalculateSubject.asObservable();
   private consumosMensualesSubject = new BehaviorSubject<number[]>([]);
@@ -170,12 +170,12 @@ export class SharedService {
     return this.maxPanelsPerSuperfaceSubject.getValue();
   }
 
-  setCarbonOffSet(carbonOffSet: number) {
-    this.carbonOffSetSubject.next(carbonOffSet);
+  setCarbonOffSetTnAnual(carbonOffSet: number) {
+    this.CarbonOffSetTnAnualSubject.next(carbonOffSet);
   }
 
-  getCarbonOffSet() {
-    return this.carbonOffSetSubject.getValue();
+  getCarbonOffSetTnAnual() {
+    return this.CarbonOffSetTnAnualSubject.getValue();
   }
 
   setIsStopCalculate(isStop: boolean) {
