@@ -134,25 +134,56 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   chartEnergia() {
     var options = {
       chart: {
+        height: 350,
         type: 'bar'
       },
+
       series: [{
         name: "distibuted",
-        data: [21, 22, 10, 28, 16, 21, 13, 30]
+        data: [21, 22]
       }],
-      xaxis: {
-        categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
-      },
+
       colors: [
-        "#008FFB",
-        "#00E396",
-        "#FEB019",
-        "#FF4560",
-        "#775DD0",
-        "#546E7A",
-        "#26a69a",
-        "#D10CE8"
+        "#00754a",
+        "#cba258",
       ],
+
+      plotOptions: {
+        bar: {
+          columnWidth: "45%",
+          distributed: true
+        }
+      },
+
+      dataLabels: {
+        enabled: false
+      },
+
+      legend: {
+        show: true
+      },
+
+      grid: {
+        show: true
+      },
+
+      xaxis: {
+        categories: [
+          ["Consumo anual"],
+          ["Generación fotovoltaica anual"],
+        ],
+        labels: {
+          style: {
+            colors: [
+              "#008FFB",
+              "#00E396",
+            ],
+            fontSize: "12px"
+          }
+        }
+      }
+
+
       
     }
     
