@@ -10,10 +10,12 @@ export class WelcomeComponent implements OnInit {
   
   constructor(private router: Router) {}
   ngOnInit(): void {
-    localStorage.clear();
+    setTimeout(() => {
+      this.router.navigate(['pasos/0']);
+    }, 500);
   }
 
   goToInformacion() {
-    this.router.navigate(['pasos/0']);
+    
   }
 }

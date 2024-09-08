@@ -16,11 +16,10 @@ const routes: Routes = [
       { path: '1', component: Paso1Component },
       { path: '2', component: Paso2Component },
       { path: '3', component: Paso3Component },
-      { path: '', redirectTo: '0', pathMatch: 'full' }
-    ],
-    
+      { path: '**', redirectTo: '' }
+    ]
   },
-  { path: '**', component: WelcomeComponent },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
