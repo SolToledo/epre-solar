@@ -10,7 +10,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { EmisionesGeiEvitadasFront } from 'src/app/interfaces/emisiones-gei-evitadas-front';
 import { FlujoEnergiaFront } from 'src/app/interfaces/flujo-energia-front';
 import { FlujoIngresosMonetariosFront } from 'src/app/interfaces/flujo-ingresos-monetarios-front';
@@ -31,6 +31,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() periodoVeinteanalFlujoEnergia!: FlujoEnergiaFront[];
   @Input()
   periodoVeinteanalFlujoIngresosMonetarios!: FlujoIngresosMonetariosFront[];
+  periodoVeinteanalFlujoIngresosMonetariosCopia: FlujoIngresosMonetariosFront[] =
+    [];
   @Input()
   periodoVeinteanalGeneracionFotovoltaica!: GeneracionFotovoltaicaFront[];
   @Input() consumoTotalAnual!: number;
@@ -50,7 +52,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   carbonOffSetInicialTon!: number;
   chartEnergia!: ApexCharts;
   emisionesChart!: ApexCharts;
-
+  chartAhorroRecupero!: ApexCharts;
+  mesesRecupero!: number;
+  private isUpdating: boolean = false;
+  private destroy$ = new Subject<void>(); // Subject para manejar desuscripciones
+  
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
@@ -61,28 +67,45 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.yearlyEnergyInitial = this.sharedService.getYearlyEnergyAcKwh();
     this.initializeChartEnergiaConsumo();
-    this.sharedService.yearlyEnergyAcKwh$.subscribe({
-      next: (yearly) => {
-        this.yearlyEnergy = yearly;
-        this.cdr.detectChanges();
-        this.updateChartEnergiaConsumo();
-      },
-    });
+    this.initializeChartAhorroRecupero();
+
+    this.sharedService.yearlyEnergyAcKwh$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (yearly) => {
+          this.yearlyEnergy = yearly;
+          this.cdr.detectChanges();
+          this.updateChartEnergiaConsumo();
+          this.updateChartAhorroRecupero();
+        },
+      });
+
+    this.sharedService.plazoInversion$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((mesesRecupero) => {
+        this.mesesRecupero = mesesRecupero;
+        this.updateChartAhorroRecupero(); // Actualiza la anotación del gráfico
+      });
+
     this.carbonOffSet = this.sharedService.getCarbonOffSetTnAnual();
     this.initializeChartEmisionesEvitadasAcumuladas();
-    this.sharedService.CarbonOffSetTnAnual$.subscribe({
-      next: (value) => {
-        this.calculateEmisionesEvitadasConNuevoValor(value);
 
-        // Actualiza el gráfico con los nuevos valores
-        this.updateChartEmisionesEvitadasAcumuladas();
-
-        // Detecta cambios en la vista si es necesario
-        this.cdr.detectChanges();
-      },
-    });
+    this.sharedService.CarbonOffSetTnAnual$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (value) => {
+          this.calculateEmisionesEvitadasConNuevoValor(value);
+          this.updateChartEmisionesEvitadasAcumuladas();
+          this.cdr.detectChanges();
+        },
+      });
   }
 
+  ngOnDestroy(): void {
+    // Emitir un valor para cerrar las suscripciones
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   // Función para recalcular el array con base en el nuevo valor de carbonOffSet
   private calculateEmisionesEvitadasConNuevoValor(nuevoCarbonOffSet: number) {
     // Clona el array original para no modificarlo directamente
@@ -593,7 +616,194 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     chart.render();
   }
 
-  chartAhorroRecupero() {
+  initializeChartAhorroRecupero() {
+    // Copia el array original para modificar los valores si es necesario
+    this.periodoVeinteanalFlujoIngresosMonetariosCopia = JSON.parse(
+      JSON.stringify(this.periodoVeinteanalFlujoIngresosMonetarios)
+    );
+
+    // Calcula el "momento de recupero" (ejemplo)
+    const momentoRecuperoInversion =
+      this.sharedService.getPlazoInversionValue();
+
+    // Prepara los datos para el gráfico
+    const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
+      (item) => item.ahorroEnElectricidadTotalUsd
+    );
+    const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
+      (item) => item.ingresoPorInyeccionElectricaUsd
+    );
+    const categories = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
+      (item) => item.year.toString()
+    );
+
+    var options = {
+      series: [
+        {
+          name: 'Ahorro por autoconsumo de energía',
+          data: ahorroData, // Datos de ahorro
+        },
+        {
+          name: 'Ingreso por excedente de energía',
+          data: ingresoData, // Datos de ingreso
+        },
+      ],
+
+      chart: {
+        height: 300,
+        width: 470,
+        type: 'line',
+        toolbar: {
+          show: false, // Oculta la barra de herramientas
+        },
+        zoom: {
+          enabled: false, // Desactiva el zoom
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        width: 5,
+        curve: 'straight',
+        dashArray: [0, 0],
+      },
+      colors: ['#96c0b2', '#e4c58d'],
+      markers: {
+        size: 0,
+        hover: {
+          sizeOffset: 6,
+        },
+      },
+      xaxis: {
+        categories: categories, // Muestra los años como categorías en el eje X
+        title: {
+          text: 'Años',
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'USD',
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      grid: {
+        borderColor: '#f1f1f1',
+      },
+      tooltip: {
+        enabled: true, // Activa el tooltip
+        theme: 'light',
+      },
+      annotations: {
+        xaxis: [
+          {
+            x: new Date(momentoRecuperoInversion).getTime(), // Fecha del momento de recupero
+            strokeDashArray: 0,
+            borderColor: '#00754a',
+            label: {
+              borderColor: '#00754a',
+              style: {
+                color: '#fff',
+                background: '#00754a',
+              },
+              text: 'Momento de recupero',
+            },
+          },
+        ],
+      },
+    };
+
+    // Renderiza el gráfico
+    this.chartAhorroRecupero = new ApexCharts(
+      document.querySelector('#chartAhorroRecupero'),
+      options
+    );
+    this.chartAhorroRecupero.render();
+  }
+
+  private updateChartAhorroRecupero() {
+    if (this.isUpdating) return; // Evitar llamada infinita recursiva
+  this.isUpdating = true;
+    // Recalcula los valores si cambia yearlyEnergy (opcional, según lógica que implementes)
+    this.recalculateFlujoIngresosMonetarios(this.yearlyEnergy);
+
+    // Actualiza los datos del gráfico
+    const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
+      (item) => item.ahorroEnElectricidadTotalUsd
+    );
+    const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
+      (item) => item.ingresoPorInyeccionElectricaUsd
+    );
+
+    // Actualiza el gráfico con las nuevas opciones
+    if (this.chartAhorroRecupero) {
+      this.chartAhorroRecupero.updateOptions({
+        series: [
+          {
+            name: 'Ahorro por autoconsumo de energía',
+            data: ahorroData,
+          },
+          {
+            name: 'Ingreso por excedente de energía',
+            data: ingresoData,
+          },
+        ],
+        annotations: {
+          xaxis: [
+            {
+              x: new Date(this.recuperoInversionMeses).getTime(), // Actualiza la anotación de recupero de inversión
+              strokeDashArray: 0,
+              borderColor: '#00754a',
+              label: {
+                borderColor: '#00754a',
+                style: {
+                  color: '#fff',
+                  background: '#00754a',
+                },
+                text: 'Momento de recupero',
+              },
+            },
+          ],
+        },
+      });
+    }
+    this.isUpdating = false;
+  }
+
+  // Método para recalcular los valores del flujo de ingresos monetarios
+  private recalculateFlujoIngresosMonetarios(yearlyEnergy: number): void {
+    if (this.isUpdating) return; 
+    this.isUpdating = true;
+    // Itera sobre la copia del array y ajusta los valores basados en el nuevo yearlyEnergy
+    this.periodoVeinteanalFlujoIngresosMonetariosCopia.forEach(
+      (item, index) => {
+        // Recalcula el ahorro en electricidad total y el ingreso por inyección eléctrica
+        // utilizando el nuevo valor de yearlyEnergy. Aquí es donde puedes aplicar la fórmula
+        // específica para tu lógica.
+
+        // Ejemplo básico de ajuste proporcional basado en yearlyEnergy
+        const factor = yearlyEnergy / this.yearlyEnergyInitial; // tienes el valor original almacenado
+        item.ahorroEnElectricidadTotalUsd =
+          this.periodoVeinteanalFlujoIngresosMonetarios[index]
+            .ahorroEnElectricidadTotalUsd * factor;
+        item.ingresoPorInyeccionElectricaUsd =
+          this.periodoVeinteanalFlujoIngresosMonetarios[index]
+            .ingresoPorInyeccionElectricaUsd * factor;
+      }
+    );
+
+    // Actualiza el gráfico con los nuevos valores recalculados
+    this.updateChartAhorroRecupero();
+    this.isUpdating = false;
+  }
+  /* initializeChartAhorroRecupero() {
     var options = {
       series: [
         {
@@ -690,15 +900,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     };
 
-    var chart = new ApexCharts(
+    this.chartAhorroRecupero = new ApexCharts(
       document.querySelector('#chartAhorroRecupero'),
       options
     );
 
-    chart.render();
-  }
-
-  //GRAFICOS
-
-  ngOnDestroy(): void {}
+    this.chartAhorroRecupero.render();
+  } */
 }
