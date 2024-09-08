@@ -52,6 +52,7 @@ export class MapService {
       streetViewControl: false,
       rotateControl: false,
       gestureHandling: 'cooperative',
+      mapId: 'MAP-ID',
       styles: [
         // Ocultar todos los elementos geométricos (carreteras, paisajes, etc.)
         {
