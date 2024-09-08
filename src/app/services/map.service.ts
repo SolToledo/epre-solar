@@ -73,12 +73,17 @@ export class MapService {
         {
           featureType: 'administrative',
           elementType: 'labels',
-          stylers: [{ visibility: 'off' }]
+          stylers: [{ visibility: 'on' }]
         },
         {
           featureType: 'poi',
           elementType: 'labels',
           stylers: [{ visibility: 'off' }]
+        },
+        {
+          featureType: 'poi.government',
+          elementType: 'labels',
+          stylers: [{ visibility: 'on' }]
         },
         {
           featureType: 'transit',

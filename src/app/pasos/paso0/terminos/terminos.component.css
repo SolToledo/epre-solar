@@ -39,6 +39,7 @@ h2 {
   margin: 20px 0;
   text-align: justify; 
   padding: 10px; 
+  box-sizing: border-box;
   background-color: var(--light-background);
 }
 
