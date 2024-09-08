@@ -21,7 +21,7 @@ import { TarifaComponent } from './pasos/paso2/tarifa/tarifa.component';
 import { ResultadoComponent } from './pasos/paso2/resultado/resultado.component';
 import { EnergiaComponent } from './pasos/paso3/energia/energia.component';
 import { PanelesComponent } from './pasos/paso3/paneles/paneles.component';
-import { TerminosComponent } from './terminos/terminos.component';
+import { TerminosComponent } from './pasos/paso0/terminos/terminos.component';
 import { Paso0Component } from './pasos/paso0/paso0.component';
 
 //Angular Material

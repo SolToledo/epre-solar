@@ -52,16 +52,58 @@ export class MapService {
       streetViewControl: false,
       rotateControl: false,
       gestureHandling: 'cooperative',
-      mapId: 'DEMO_MAP_ID',
       styles: [
+        // Ocultar todos los elementos geométricos (carreteras, paisajes, etc.)
+        {
+          featureType: 'all',
+          elementType: 'geometry',
+          stylers: [{ visibility: 'off' }]
+        },
+        {
+          featureType: 'all',
+          elementType: 'geometry.fill',
+          stylers: [{ visibility: 'off' }]
+        },
+        {
+          featureType: 'all',
+          elementType: 'geometry.stroke',
+          stylers: [{ visibility: 'off' }]
+        },
+        // Ocultar todas las etiquetas excepto las de las calles
+        {
+          featureType: 'administrative',
+          elementType: 'labels',
+          stylers: [{ visibility: 'on' }]
+        },
         {
           featureType: 'poi',
           elementType: 'labels',
           stylers: [{ visibility: 'off' }]
         },
         {
+          featureType: 'poi.government',
+          elementType: 'labels',
+          stylers: [{ visibility: 'on' }]
+        },
+        {
           featureType: 'transit',
           elementType: 'labels',
+          stylers: [{ visibility: 'off' }]
+        },
+        {
+          featureType: 'water',
+          elementType: 'labels',
+          stylers: [{ visibility: 'off' }]
+        },
+        // Mostrar solo las etiquetas de las carreteras (nombres de las calles)
+        {
+          featureType: 'road',
+          elementType: 'labels.text',
+          stylers: [{ visibility: 'on' }]
+        },
+        {
+          featureType: 'road',
+          elementType: 'labels.icon',
           stylers: [{ visibility: 'off' }]
         }
       ]
