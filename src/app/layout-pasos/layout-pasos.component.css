@@ -9,7 +9,7 @@
   .content-total {
     box-sizing: border-box;
     background-color: white;
-    height: calc(100% - 90px); /* la altura total menos 90px del toolbar */
+    height: calc(100% - 90px); 
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -22,8 +22,8 @@
   }
   
   .paso {
-    width: 589px; /* Ancho inicial del contenedor */
-    height: 100%; /* Altura total menos la toolbar */
+    width: 589px; 
+    height: 100%; 
     position: absolute;
     right: 0;
     top: 0;

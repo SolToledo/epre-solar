@@ -272,11 +272,11 @@ export class TarifaComponent implements OnInit, AfterViewInit {
   getPotenciaMaximakW(): number | null {
     switch (this.tarifaContratada) {
       case 'T2-CMP':
-        return 50; //
+      return 50; 
       case 'T3-BT':
       case 'T3-MT13.2R':
       case 'TRA-SD':
-        return 2000; // 2000 kW en watts (máximo permitido por ley)
+        return 2000; 
       default:
         return null;
     }

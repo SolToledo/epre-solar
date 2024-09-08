@@ -1,14 +1,3 @@
-:root {
-  --dark-green: #1e3932;
-  --medium-green: #006241;
-  --light-green: #00754a;
-  --light-background: #d4e9e2;
-  --golden: #cba258;
-  --gris: #edebe9;
-  --font-dark: #000000de;
-  --font-light: #424242;
-  --bordes: #a9b8ad;
-}
 .content-paso-uno {
   .info-container {
     background-color: white;
@@ -19,12 +8,12 @@
     flex: 1; 
     overflow: hidden; 
   }
-  /*-----------------------------------------------------------*/
+ 
   .toolbar-pasos {
     width: 100%;
     margin-top: 0px;
   }
-  /********************************************************************/
+ 
   .informacion {
     width: 100%;
     height: 100%;
@@ -38,7 +27,6 @@
     padding: 5px;
   }
 
-/***********************************************************************/
   .advertencia #recomendacion {
     text-align: left;
     color: var(--font-light);
@@ -83,8 +71,7 @@
     margin-right: 0px;
     font-family: "Sodo Sans", sans-serif;
   }
-
-  /**********************************************************/
+ 
   .input-boton {
     width: 100%;
     display: flex;
@@ -93,7 +80,7 @@
     align-items: center;
     gap: 38px;
   }
-  /* estilos para input */
+ 
   #pac-input {
     width: 100%;
     height: 35px;
@@ -122,7 +109,6 @@
     color: #3c763d !important; 
   }
 
-  /*boton del input*/
   #buscar {
     background-color: var(--dark-green);
     color: white;
@@ -144,7 +130,7 @@
   #buscar:hover {
     background-color: var(--medium-green);
   }
-  /*-----------------------------------*/
+ 
   .botones {
     width: 100%;
     display: flex;
@@ -213,7 +199,7 @@
     color: white; 
   }
 
-  /*------------------------------------------------*/
+  
   :is(button[disabled]) {
     background-color: #d3d3d3; 
     color: #a9a9a9; 
@@ -223,8 +209,6 @@
 }
 
 
-/*********************************************************/
-/*efecto de las tarjetas al pasar el mouse*/
 .info-inicio {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -233,7 +217,7 @@
   transform: scale(1.01); 
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); 
 }
-/********************************************************/
+
 
  /* Estilos para personalizar la barra de desplazamiento vertical */
  .informacion::-webkit-scrollbar {
@@ -254,9 +238,7 @@
 }
 
 
-
 /********************************************************/
-/* Estilos para resoluciones mayores a 1366px */
 @media only screen and (min-width: 1400px) {
   .informacion{
     gap: 25px;

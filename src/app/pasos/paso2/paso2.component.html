@@ -22,7 +22,7 @@
             <div class="advertencia">
                 <span id="span-general" (click)="showInstructions()">Ayuda</span>
             </div>
-          </div><!--titulo-inicio-->
+          </div>
         </div>
 
         <div class="info-cargar" #categoriaSelect>
@@ -46,7 +46,6 @@
               <h2>CONSUMO ENERGÉTICO</h2>
             </div>
           </div>
-          <!--icono-titulo-->
 
           <div class="slide">
             <mat-slide-toggle #manualToggle [disabled]="!allFieldsFilled && !isEditable"
@@ -54,8 +53,7 @@
             >
           </div>
         </div>
-        <!--titulo-container-->
-
+      
         <div class="info-cargar-consumo" #consumoContainer>
           <app-consumo
             (allFieldsCompleted)="onAllFieldsCompleted($event)"
@@ -63,13 +61,11 @@
             [isEditable]="isEditable"
           ></app-consumo>
         </div>
-        <!--info-cargar-->
 
         <div class="total">
           <app-total></app-total>
         </div>
       </div>
-      <!--info-inicio-->
 
       <div class="button-container">
         <div class="boton">
@@ -87,18 +83,18 @@
             Realizar Cálculo <span class="material-icons">chevron_right</span>
           </button>
         </div>
-      </div><!--button-container-->
+      </div>
       
-    </div><!--informacion-->
+    </div>
     
-  </div><!--info-container-->
+  </div>
   
   <app-instrucciones
   [isVisible]="showInstructionsModal"
   (closed)="handleInstructionsClosed()"
   ></app-instrucciones>
   
-</div><!--content-->
+</div>
 
 
 

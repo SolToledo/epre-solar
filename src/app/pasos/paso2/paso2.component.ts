@@ -78,7 +78,7 @@ export class Paso2Component implements OnInit {
       showProgress: false,
       steps: [
         {
-          element: '#titulo', // ID del elemento
+          element: '#titulo', 
           popover: {
             title: 'Consumo',
             description:

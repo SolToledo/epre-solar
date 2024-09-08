@@ -33,7 +33,6 @@
   border-radius: 8px;
 }
 
-/*efecto de las tarjetas al pasar el mouse*/
 .item-grafico {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -42,7 +41,7 @@
   transform: scale(1.01);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
-/*************************************************/
+
 .grafico-container-borde {
   width: 100%;
   height: 100%;
@@ -117,10 +116,7 @@
   background-color: white;
 }
 
-
-
 /*****************************************************/
-/* Estilos para pantallas menores a 1300px */
 @media (max-width: 1200px) {
   .titulo p {
     font-size: 14px;

@@ -4,15 +4,12 @@
     height: calc(100vh - 90px); 
   }
 
-  /*particular*/
   .contenido-container  {
     display: flex;
     flex-direction: column; 
-    justify-content: center; /* Centra verticalmente */
-    align-items: center; /* Centra horizontalmente */
+    justify-content: center; 
+    align-items: center; 
   }
-
-
   
 /*titulo*/
 h1, span{
@@ -36,9 +33,9 @@ p{
 
 .boton-centrado {
   margin-top: 15vh;
-   display: flex; /* Hace que el div contenga el botón sea un contenedor flex */
-   justify-content: center; /* Centra el botón horizontalmente */
-   width: 100%; /* Asegura que el div contenga el botón ocupe todo el ancho disponible */
+   display: flex; 
+   justify-content: center; 
+   width: 100%; 
 }
 
 #boton-siguiente {
