@@ -35,7 +35,6 @@
   .paso.collapsed {
     width: 30px; 
     overflow: hidden;
-    visibility: hidden;
     right: 0;
   }
   

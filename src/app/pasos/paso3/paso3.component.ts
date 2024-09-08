@@ -175,7 +175,8 @@ export class Paso3Component implements OnInit {
   }
 
   downloadPDF(): void {
-    this.pdfService.generatePDF().then(()=>{}).catch(()=>{});
+    this.pdfService.generatePDF().then(()=>{
+    }).catch(()=>{});
   }
 
   sendEmail(): void {
