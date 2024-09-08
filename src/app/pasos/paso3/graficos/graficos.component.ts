@@ -82,6 +82,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.createEmisionesChart();
     this.chartEnergia();
+    this.chartAhorroRecupero();
     this.actualizarEmisionesChart();
     this.createAhorrosChart();
     this.createEnergiaChart();
@@ -111,31 +112,101 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  
+//GRAFICOS
   createChartWithApexChart() {
     var options = {
-      chart: {
-        type: 'line'
-      },
       series: [{
-        name: 'sales',
-        data: [30,40,45,50,49,60,70,91,125]
+        name:  'Emisiones CO₂',
+        data: [31, 40, 28, 51, 42, 109, 100]
       }],
+      chart: {
+        height: 350,
+        width: 470, // Establece el ancho a 470
+        type: 'area',
+        toolbar: {
+          show: false // Oculta la barra de herramientas
+        },
+        zoom: {
+          enabled: false // Desactiva el zoom
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'smooth',
+        colors: ['#96c0b2'], // Color de la línea
+        width: 4 // Hacer la línea un poco más gruesa
+      },
+      fill: {
+        colors: ['#96c0b2'], // Color de la sombra
+        opacity: 0.05 // Ajusta la opacidad de la sombra a un valor menor
+      },
+      markers: {
+        size: 0, // Oculta todos los puntos
+        hover: {
+          size: 6, // Tamaño del punto cuando se muestra el tooltip
+          colors: ['#00754a'], // Color del punto cuando se muestra el tooltip
+          strokeColor: '#00754a', // Color del borde del punto cuando se muestra el tooltip
+          strokeWidth: 2 // Ancho del borde del punto
+        }
+      },
       xaxis: {
-        categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+        categories: ['2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033', '2034'],
+        title: {
+          text: 'Año', // Título del eje X
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif'
+          }
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Ton CO₂', // Título del eje Y con el 2 en subíndice
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif'
+          }
+        }
+      },
+      tooltip: {
+        enabled: true, // Habilita el tooltip
+        theme: 'light', // Tema del tooltip (dark o light)
+        x: {
+          format: 'dd/MM/yy HH:mm'
+        },
+        marker: {
+          show: true // Muestra el marcador en el tooltip
+        },
+        style: {
+          fontSize: '12px', // Tamaño de fuente del texto del tooltip
+          fontFamily: 'sodo sans, sans-serif' // Tipografía del texto del tooltip
+        }
       }
-    }
-    
+
+      
+    };
+  
     var chart = new ApexCharts(document.querySelector("#chart"), options);
     
     chart.render();
   }
-
-
+  
+  
   chartEnergia() {
     var options = {
       chart: {
-        height: 350,
-        type: 'bar'
+        height: 300,
+        width: 470,
+        type: 'bar',
+        toolbar: {
+          show: false // Oculta la barra de herramientas
+        },
+        zoom: {
+          enabled: false // Desactiva el zoom
+        }
       },
 
       series: [{
@@ -199,6 +270,112 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     
     chart.render();
   }
+
+
+  chartAhorroRecupero() {
+    var options = {
+      series: [
+        {
+          name: "Ahorro por autoconsumo de energía",
+          data: [45, 52, 38, 24, 33, 26]
+        },
+        {
+          name: "Ingreso por excedentede energía",
+          data: [35, 41, 62, 42, 13, 18]
+        }
+      ],
+  
+      chart: {
+        height: 300,
+        width: 470,
+        type: "line",
+        toolbar: {
+          show: false // Oculta la barra de herramientas
+        },
+        zoom: {
+          enabled: false // Desactiva el zoom
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        width: 5,
+        curve: "straight",
+        dashArray: [0, 0]  // Ajusta el dashArray según las líneas que mantengas
+      },
+      colors: [
+        "#96c0b2",  // Color para la primera línea
+        "#e4c58d"   // Color para la segunda línea
+      ],
+      markers: {
+        size: 0,
+        hover: {
+          sizeOffset: 6
+        }
+      },
+      xaxis: {
+        labels: {
+          trim: false
+        },
+        categories: [
+          "01 Jan",
+          "02 Jan",
+          "03 Jan",
+          "04 Jan",
+          "05 Jan",
+          "06 Jan"
+        ],
+        type: "datetime",
+        title: {
+          text: "Años", // Título del eje X
+          style: {
+            fontSize: "12px",
+            fontFamily: "sodo sans, sans-serif",
+          }
+        }
+      },
+      yaxis: {
+        title: {
+          text: "USD", // Título del eje Y
+          style: {
+            fontSize: "12px",
+            fontFamily: "sodo sans, sans-serif",
+          }
+        }
+      },
+      grid: {
+        borderColor: "#f1f1f1"
+      },
+      tooltip: {
+        enabled: false  // Desactiva el tooltip
+      },
+      annotations: {
+        xaxis: [
+          {
+            x: new Date("04 Jan").getTime(),  // Ajusta la fecha según lo necesario
+            strokeDashArray: 0,
+            borderColor: "#00754a",
+            label: {
+              borderColor: "#00754a",
+              style: {
+                color: "#fff",
+                background: "#00754a"
+              },
+              text: "Momento de recupero"
+            }
+          }
+        ],
+ 
+      }
+    };
+  
+    var chart = new ApexCharts(document.querySelector("#chartAhorroRecupero"), options);
+  
+    chart.render();
+  }
+  
+//GRAFICOS
 
 
   ngOnDestroy(): void {
