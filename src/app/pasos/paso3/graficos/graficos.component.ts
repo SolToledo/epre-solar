@@ -39,9 +39,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('emisionesChart')
   emisionesChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('ahorrosChart') ahorrosChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('energiaChart')
+  @ViewChild('chartAhorroRecuperoRef') chartAhorroRecuperoRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartEnergiaRef')
   energiaChartRef!: ElementRef<HTMLCanvasElement>;
+  
 
   private subscription!: Subscription;
   recuperoInversionMeses!: number;
@@ -56,7 +57,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   mesesRecupero!: number;
   private isUpdating: boolean = false;
   private destroy$ = new Subject<void>(); // Subject para manejar desuscripciones
-  
+
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
@@ -90,15 +91,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.carbonOffSet = this.sharedService.getCarbonOffSetTnAnual();
     this.initializeChartEmisionesEvitadasAcumuladas();
 
-    this.sharedService.CarbonOffSetTnAnual$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (value) => {
-          this.calculateEmisionesEvitadasConNuevoValor(value);
-          this.updateChartEmisionesEvitadasAcumuladas();
-          this.cdr.detectChanges();
-        },
-      });
+    this.sharedService.CarbonOffSetTnAnual$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (value) => {
+        this.calculateEmisionesEvitadasConNuevoValor(value);
+        this.updateChartEmisionesEvitadasAcumuladas();
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   ngOnDestroy(): void {
@@ -106,6 +107,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  
   // Función para recalcular el array con base en el nuevo valor de carbonOffSet
   private calculateEmisionesEvitadasConNuevoValor(nuevoCarbonOffSet: number) {
     // Clona el array original para no modificarlo directamente
@@ -132,101 +134,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // Función para actualizar el gráfico con los nuevos valores
-  private updateChartEmisionesEvitadasAcumuladas() {
-    // Calcula los valores acumulados
-    let acumulado = 0;
-    const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
-      (entry) => {
-        acumulado += entry.emisionesTonCO2;
-        return acumulado;
-      }
-    );
-
-    // Extrae los años del array
-    const categories = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
-      (entry) => entry.year.toString()
-    );
-
-    // Actualiza el gráfico con las nuevas opciones
-    const options = {
-      series: [
-        {
-          name: 'Emisiones CO₂ Acumuladas',
-          data: seriesData,
-        },
-      ],
-      chart: {
-        height: 350,
-        width: 470,
-        type: 'area',
-        toolbar: {
-          show: false,
-        },
-        zoom: {
-          enabled: false,
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: 'smooth',
-        colors: ['#96c0b2'],
-        width: 4,
-      },
-      fill: {
-        colors: ['#96c0b2'],
-        opacity: 0.05,
-      },
-      markers: {
-        size: 0,
-        hover: {
-          size: 6,
-          colors: ['#00754a'],
-          strokeColor: '#00754a',
-          strokeWidth: 2,
-        },
-      },
-      xaxis: {
-        categories: categories,
-        title: {
-          text: 'Año',
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      yaxis: {
-        title: {
-          text: 'Ton CO₂',
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      tooltip: {
-        enabled: true,
-        theme: 'light',
-        x: {
-          format: 'yyyy',
-        },
-        marker: {
-          show: true,
-        },
-        style: {
-          fontSize: '12px',
-          fontFamily: 'sodo sans, sans-serif',
-        },
-      },
-    };
-
-    if (this.emisionesChart) {
-      this.emisionesChart.updateOptions(options);
-    }
-  }
-
   private initializeChartEmisionesEvitadasAcumuladas() {
     // Asegúrate de que periodoVeinteanalEmisionesGEIEvitadas está definido y no está vacío
     if (
@@ -501,130 +408,32 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.chartEnergia = new ApexCharts(
-      document.querySelector('#chartEnergia') as HTMLElement,
+      document.querySelector('#chartEnergiaRef') as HTMLElement,
       options
     );
 
     this.chartEnergia.render();
   }
 
-  private updateChartEnergiaConsumo() {
-    if (this.chartEnergia) {
-      this.chartEnergia.updateOptions({
-        series: [
-          {
-            name: 'Consumo Total Anual',
-            data: [this.consumoTotalAnual],
-          },
-          {
-            name: 'Generación Fotovoltaica Anual',
-            data: [this.yearlyEnergy],
-          },
-        ],
-      });
-    }
-  }
-
-  private chartEmisionesEvitadasAcumuladas() {
-    var options = {
-      series: [
-        {
-          name: 'Emisiones CO₂',
-          data: [31, 40, 28, 51, 42, 109, 100],
-        },
-      ],
-      chart: {
-        height: 350,
-        width: 470, // Establece el ancho a 470
-        type: 'area',
-        toolbar: {
-          show: false, // Oculta la barra de herramientas
-        },
-        zoom: {
-          enabled: false, // Desactiva el zoom
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: 'smooth',
-        colors: ['#96c0b2'], // Color de la línea
-        width: 4, // Hacer la línea un poco más gruesa
-      },
-      fill: {
-        colors: ['#96c0b2'], // Color de la sombra
-        opacity: 0.05, // Ajusta la opacidad de la sombra a un valor menor
-      },
-      markers: {
-        size: 0, // Oculta todos los puntos
-        hover: {
-          size: 6, // Tamaño del punto cuando se muestra el tooltip
-          colors: ['#00754a'], // Color del punto cuando se muestra el tooltip
-          strokeColor: '#00754a', // Color del borde del punto cuando se muestra el tooltip
-          strokeWidth: 2, // Ancho del borde del punto
-        },
-      },
-      xaxis: {
-        categories: [
-          '2025',
-          '2026',
-          '2027',
-          '2028',
-          '2029',
-          '2030',
-          '2031',
-          '2032',
-          '2033',
-          '2034',
-        ],
-        title: {
-          text: 'Año', // Título del eje X
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      yaxis: {
-        title: {
-          text: 'Ton CO₂', // Título del eje Y con el 2 en subíndice
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      tooltip: {
-        enabled: true, // Habilita el tooltip
-        theme: 'light', // Tema del tooltip (dark o light)
-        x: {
-          format: 'dd/MM/yy HH:mm',
-        },
-        marker: {
-          show: true, // Muestra el marcador en el tooltip
-        },
-        style: {
-          fontSize: '12px', // Tamaño de fuente del texto del tooltip
-          fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
-        },
-      },
-    };
-
-    var chart = new ApexCharts(document.querySelector('#chart'), options);
-
-    chart.render();
-  }
-
-  initializeChartAhorroRecupero() {
+  private initializeChartAhorroRecupero() {
     // Copia el array original para modificar los valores si es necesario
     this.periodoVeinteanalFlujoIngresosMonetariosCopia = JSON.parse(
       JSON.stringify(this.periodoVeinteanalFlujoIngresosMonetarios)
     );
 
     // Calcula el "momento de recupero" (ejemplo)
-    const momentoRecuperoInversion =
-      this.sharedService.getPlazoInversionValue();
+    // Obtén el valor de recuperación en meses
+    const recuperoInversionMeses = this.sharedService.getPlazoInversionValue();
+
+    // Convierte meses a una fecha, asumamos el primer año como base
+    const baseDate = new Date(
+      this.periodoVeinteanalFlujoIngresosMonetariosCopia[0].year,
+      0,
+      1
+    ); // Enero del primer año
+    const momentoRecuperoInversion = new Date(
+      baseDate.setMonth(baseDate.getMonth() + recuperoInversionMeses)
+    ).getTime();
 
     // Prepara los datos para el gráfico
     const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
@@ -722,15 +531,127 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Renderiza el gráfico
     this.chartAhorroRecupero = new ApexCharts(
-      document.querySelector('#chartAhorroRecupero'),
+      document.querySelector('#chartAhorroRecuperoRef') as HTMLElement,
       options
     );
     this.chartAhorroRecupero.render();
   }
 
+  private updateChartEmisionesEvitadasAcumuladas() {
+    // Calcula los valores acumulados
+    let acumulado = 0;
+    const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
+      (entry) => {
+        acumulado += entry.emisionesTonCO2;
+        return acumulado;
+      }
+    );
+
+    // Extrae los años del array
+    const categories = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
+      (entry) => entry.year.toString()
+    );
+
+    // Actualiza el gráfico con las nuevas opciones
+    const options = {
+      series: [
+        {
+          name: 'Emisiones CO₂ Acumuladas',
+          data: seriesData,
+        },
+      ],
+      chart: {
+        height: 350,
+        width: 470,
+        type: 'area',
+        toolbar: {
+          show: false,
+        },
+        zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+        colors: ['#96c0b2'],
+        width: 4,
+      },
+      fill: {
+        colors: ['#96c0b2'],
+        opacity: 0.05,
+      },
+      markers: {
+        size: 0,
+        hover: {
+          size: 6,
+          colors: ['#00754a'],
+          strokeColor: '#00754a',
+          strokeWidth: 2,
+        },
+      },
+      xaxis: {
+        categories: categories,
+        title: {
+          text: 'Año',
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Ton CO₂',
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      tooltip: {
+        enabled: true,
+        theme: 'light',
+        x: {
+          format: 'yyyy',
+        },
+        marker: {
+          show: true,
+        },
+        style: {
+          fontSize: '12px',
+          fontFamily: 'sodo sans, sans-serif',
+        },
+      },
+    };
+
+    if (this.emisionesChart) {
+      this.emisionesChart.updateOptions(options);
+    }
+  }
+
+  private updateChartEnergiaConsumo() {
+    if (this.chartEnergia) {
+      this.chartEnergia.updateOptions({
+        series: [
+          {
+            name: 'Consumo Total Anual',
+            data: [this.consumoTotalAnual],
+          },
+          {
+            name: 'Generación Fotovoltaica Anual',
+            data: [this.yearlyEnergy],
+          },
+        ],
+      });
+    }
+  }
+
   private updateChartAhorroRecupero() {
     if (this.isUpdating) return; // Evitar llamada infinita recursiva
-  this.isUpdating = true;
+    this.isUpdating = true;
     // Recalcula los valores si cambia yearlyEnergy (opcional, según lógica que implementes)
     this.recalculateFlujoIngresosMonetarios(this.yearlyEnergy);
 
@@ -779,7 +700,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Método para recalcular los valores del flujo de ingresos monetarios
   private recalculateFlujoIngresosMonetarios(yearlyEnergy: number): void {
-    if (this.isUpdating) return; 
+    if (this.isUpdating) return;
     this.isUpdating = true;
     // Itera sobre la copia del array y ajusta los valores basados en el nuevo yearlyEnergy
     this.periodoVeinteanalFlujoIngresosMonetariosCopia.forEach(
@@ -803,108 +724,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.updateChartAhorroRecupero();
     this.isUpdating = false;
   }
-  /* initializeChartAhorroRecupero() {
-    var options = {
-      series: [
-        {
-          name: 'Ahorro por autoconsumo de energía',
-          data: [45, 52, 38, 24, 33, 26],
-        },
-        {
-          name: 'Ingreso por excedentede energía',
-          data: [35, 41, 62, 42, 13, 18],
-        },
-      ],
 
-      chart: {
-        height: 300,
-        width: 470,
-        type: 'line',
-        toolbar: {
-          show: false, // Oculta la barra de herramientas
-        },
-        zoom: {
-          enabled: false, // Desactiva el zoom
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        width: 5,
-        curve: 'straight',
-        dashArray: [0, 0], // Ajusta el dashArray según las líneas que mantengas
-      },
-      colors: [
-        '#96c0b2', // Color para la primera línea
-        '#e4c58d', // Color para la segunda línea
-      ],
-      markers: {
-        size: 0,
-        hover: {
-          sizeOffset: 6,
-        },
-      },
-      xaxis: {
-        labels: {
-          trim: false,
-        },
-        categories: [
-          '01 Jan',
-          '02 Jan',
-          '03 Jan',
-          '04 Jan',
-          '05 Jan',
-          '06 Jan',
-        ],
-        type: 'datetime',
-        title: {
-          text: 'Años', // Título del eje X
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      yaxis: {
-        title: {
-          text: 'USD', // Título del eje Y
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      grid: {
-        borderColor: '#f1f1f1',
-      },
-      tooltip: {
-        enabled: false, // Desactiva el tooltip
-      },
-      annotations: {
-        xaxis: [
-          {
-            x: new Date('04 Jan').getTime(), // Ajusta la fecha según lo necesario
-            strokeDashArray: 0,
-            borderColor: '#00754a',
-            label: {
-              borderColor: '#00754a',
-              style: {
-                color: '#fff',
-                background: '#00754a',
-              },
-              text: 'Momento de recupero',
-            },
-          },
-        ],
-      },
-    };
-
-    this.chartAhorroRecupero = new ApexCharts(
-      document.querySelector('#chartAhorroRecupero'),
-      options
-    );
-
-    this.chartAhorroRecupero.render();
-  } */
+     
 }
