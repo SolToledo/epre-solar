@@ -14,8 +14,13 @@ import { SolarDataFront } from '../interfaces/solar-data-front';
   providedIn: 'root',
 })
 export class SolarApiService implements OnDestroy {
+<<<<<<< HEAD
    private readonly apiUrl: string = 'http://localhost:3000';
   //private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
+=======
+  private readonly apiUrl: string = 'http://localhost:3000';
+  // private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
+>>>>>>> 8bbedc0af0c458681d8c41877883bce4d2cb43bf
   private _resultados!: ResultadosFrontDTO;
   annualConsumption: number = 0;
   panelsSupported: number = 0;
