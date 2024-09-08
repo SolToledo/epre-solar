@@ -46,7 +46,8 @@ export class Paso1Component implements OnInit {
     const { AdvancedMarkerElement } = (await google.maps.importLibrary(
       'marker'
     )) as google.maps.MarkerLibrary;
-    this.map = this.mapService.getMap();
+    // this.map = this.map;
+    // this.map = this.mapService.getMap();
 
     if (!this.map) {
       this.router.navigate(['/']);
