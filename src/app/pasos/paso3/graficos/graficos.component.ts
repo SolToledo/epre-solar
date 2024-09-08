@@ -130,7 +130,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         };
       });
   }
-
+/****************************************************************************************** */
   // Función para actualizar el gráfico con los nuevos valores
   private updateChartEmisionesEvitadasAcumuladas() {
     // Calcula los valores acumulados
@@ -197,7 +197,14 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       },
+      
       yaxis: {
+        labels: {
+          formatter: (val: number): string => {
+            // Redondea el número a entero y lo formatea
+            return val.toLocaleString('de-DE'); 
+          },
+        },
         title: {
           text: 'Ton CO₂',
           style: {
@@ -206,6 +213,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       },
+
+
       tooltip: {
         enabled: true,
         theme: 'light',
@@ -226,7 +235,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.emisionesChart.updateOptions(options);
     }
   }
-
+/*********************************************************************************************** */
   private initializeChartEmisionesEvitadasAcumuladas() {
     // Asegúrate de que periodoVeinteanalEmisionesGEIEvitadas está definido y no está vacío
     if (
@@ -334,7 +343,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.emisionesChart.render();
   }
-
+/******************************************************************************************************************* */
   private initializeChartEnergiaConsumo() {
     const options = {
       chart: {
@@ -477,6 +486,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       },
 
       yaxis: {
+        labels: {
+          formatter: (val: number): string => {
+            return val.toLocaleString('de-DE'); // Formatea el número con punto como separador de miles
+          },
+        },
         title: {
           text: 'kWh',
           style: {
@@ -488,7 +502,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
       xaxis: {
         type: 'category', // Tipo de eje (puede ser 'numeric' o 'datetime')
-        categories: ['Consumo vs Generación'],
+        categories: [' '],
         labels: {
           show: true, // Muestra u oculta las etiquetas
           style: {
@@ -587,8 +601,14 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       yaxis: {
+        labels: {
+          formatter: (val: number): string => {
+            return val.toLocaleString('de-DE'); // Formatea el número con punto como separador de miles
+          },
+        },
+
         title: {
-          text: 'Ton CO₂', // Título del eje Y con el 2 en subíndice
+          text: 'Ton CO₂', 
           style: {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
@@ -609,6 +629,55 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
         },
       },
+      responsive: [
+        {
+          breakpoint: 1000,
+          options: {
+            chart: {
+              width: '100%', // El gráfico ocupa todo el ancho disponible
+              height: 300, // Ajusta la altura
+            },
+            xaxis: {
+              labels: {
+                style: {
+                  fontSize: '10px', // Tamaño de fuente más pequeño
+                },
+              },
+            },
+            yaxis: {
+              labels: {
+                style: {
+                  fontSize: '10px', // Tamaño de fuente más pequeño
+                },
+              },
+            },
+          },
+        },
+        {
+          breakpoint: 600,
+          options: {
+            chart: {
+              width: '100%', // El gráfico ocupa todo el ancho disponible
+              height: 250, // Ajusta la altura
+            },
+            xaxis: {
+              labels: {
+                style: {
+                  fontSize: '8px', // Tamaño de fuente más pequeño
+                },
+              },
+            },
+            yaxis: {
+              labels: {
+                style: {
+                  fontSize: '8px', // Tamaño de fuente más pequeño
+                },
+              },
+            },
+          },
+        },
+      ],
+
     };
 
     var chart = new ApexCharts(document.querySelector('#chart'), options);
@@ -686,6 +755,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       yaxis: {
+        labels: {
+          formatter: (val: number): string => {
+            return val.toLocaleString('de-DE'); // Formatea el número con punto como separador de miles
+          },
+        },
         title: {
           text: 'USD',
           style: {
@@ -694,6 +768,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       },
+
       grid: {
         borderColor: '#f1f1f1',
       },
