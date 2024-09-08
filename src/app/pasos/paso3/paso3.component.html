@@ -23,8 +23,8 @@
         </div>
       </div>
 
-      <div class="informacion">
-        <div class="container-ingreso-datos">
+      <div class="informacion" id="cuadroInformativo">
+        <div class="container-ingreso-datos" id="appPaneles">
           <app-paneles
             [dimensionPanel]="dimensionPanel"
             [panelCapacityW]="panelCapacityW"
@@ -67,8 +67,8 @@
         </div>
         <!--container-->
 
-        <div class="container-graficos" id="graficos">
-          <div class="item-grafico">
+        <div class="container-graficos" >
+          <div class="item-grafico" id="graficos">
             <app-graficos
               [periodoVeinteanalEmisionesGEIEvitadas]="
                 getEmisionesGEIEvitadas()
