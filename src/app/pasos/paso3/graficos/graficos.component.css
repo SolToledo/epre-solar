@@ -14,9 +14,6 @@
   --verde:#96c0b2;
   --amarillo:#e4c58d;
   --gris:#424242;
-
-
-
 }
 
 
@@ -119,6 +116,8 @@
   align-items: center;
   background-color: white;
 }
+
+
 
 /*****************************************************/
 /* Estilos para pantallas menores a 1300px */
