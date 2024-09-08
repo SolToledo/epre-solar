@@ -144,8 +144,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       }],
 
       colors: [
-        "#00754a",
-        "#cba258",
+        "#96c0b2",
+        "#e4c58d",
       ],
 
       plotOptions: {
@@ -167,24 +167,32 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         show: true
       },
 
+      yaxis: {
+        title: {
+          text: "kWh",
+          style: {
+            fontSize: "12px",  // Tamaño de fuente para que sea consistente
+            fontFamily: "sodo sans, sans-serif",  // Ajusta la tipografía
+          }
+        }
+      },
+
       xaxis: {
         categories: [
-          ["Consumo anual"],
-          ["Generación fotovoltaica anual"],
+          ["Consumo", "anual"],
+          ["Generación", "fotovoltaica", "anual"]
         ],
+        
         labels: {
           style: {
             colors: [
-              "#008FFB",
-              "#00E396",
+              "#424242",
+              "#424242",
             ],
-            fontSize: "12px"
-          }
+            fontSize: "12px",
+          },
         }
       }
-
-
-      
     }
     
     var chart = new ApexCharts(document.querySelector("#chartEnergia"), options);
