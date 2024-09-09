@@ -17,6 +17,7 @@ import { FlujoIngresosMonetariosFront } from 'src/app/interfaces/flujo-ingresos-
 import { GeneracionFotovoltaicaFront } from 'src/app/interfaces/generacion-fotovoltaica-front';
 import { SharedService } from 'src/app/services/shared.service';
 import * as ApexCharts from 'apexcharts';
+import { color } from 'html2canvas/dist/types/css/types/color';
 
 @Component({
   selector: 'app-graficos',
@@ -133,7 +134,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         };
       });
   }
-  /****************************************************************************************** */
+/************************************************************************************************************************************************************** */
   // Función para actualizar el gráfico con los nuevos valores
   private initializeChartEmisionesEvitadasAcumuladas() {
     // Asegúrate de que periodoVeinteanalEmisionesGEIEvitadasOriginal está definido y no está vacío
@@ -200,14 +201,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     const options = {
       series: [
         {
-          name: 'Emisiones CO₂ Evitadas Acumuladas',
-          data: data,
+          name: 'Emisiones CO₂ Acumuladas',
+          data: seriesData,
+          color:'#499b80',
         },
       ],
       chart: {
         height: 350,
-        width: 470, // Establece el ancho a 470
-        type: 'line', // Cambiado de 'area' a 'line'
+        width: 470, 
+        type: 'area',
         toolbar: {
           show: false, // Oculta la barra de herramientas
         },
@@ -252,6 +254,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
+          offsetY: -25, // Ajusta el valor para acercar el título al gráfico
         },
       },
       yaxis: {
@@ -292,8 +295,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.emisionesChart.render();
   }
-
-  /******************************************************************************************************************* */
+/************************************************************************************************************************************************************** */
   private initializeChartEnergiaConsumo() {
     const options = {
       chart: {
@@ -368,8 +370,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         offsetX: 0, // Offset horizontal
         offsetY: -20, // Offset vertical
         style: {
+          /*fontSize: '12px',
+          colors: ['#fff'],*/
           fontSize: '12px',
-          colors: ['#fff'],
+          fontFamily: 'sodo sans, sans-serif',
+         
         },
       },
 
@@ -378,9 +383,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         position: 'bottom', // Posición de la leyenda
         horizontalAlign: 'left', // Alineación horizontal
         floating: false,
-        fontSize: '14px',
-        fontFamily: 'Arial, sans-serif',
-        fontWeight: 400,
         labels: {
           colors: '#000',
         },
@@ -388,8 +390,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           width: 8,
           height: 8,
           strokeWidth: 0,
-          strokeColor: '#fff',
-          fillColors: undefined,
+         /* strokeColor: '#fff',
+          fillColors: undefined,*/
           radius: 2,
           customHTML: undefined,
           onClick: undefined,
@@ -435,21 +437,27 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
 
+
       yaxis: {
         labels: {
+          style: {
+            colors: '#333333', // Cambia el color a un tono más oscuro para los números del eje Y
+            fontSize: '10px',
+          },
           formatter: (val: number): string => {
             return val.toLocaleString('de-DE'); // Formatea el número con punto como separador de miles
           },
         },
         title: {
-          text: 'kWh',
+          text: 'kWh', // Título del eje Y
           style: {
+            color: '#333333', // Cambia el color a un tono más oscuro para el título
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
         },
       },
-
+   
       xaxis: {
         type: 'category', // Tipo de eje (puede ser 'numeric' o 'datetime')
         categories: [' '],
@@ -461,6 +469,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           rotate: -45, // Rotación de las etiquetas
         },
+        offsetY: -25, // Ajusta el valor para acercar el título al gráfico
       },
     };
 
@@ -471,7 +480,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('Instancia de ApexCharts:', this.chartEnergia);
     this.chartEnergia.render();
   }
-
+/**************************************************************************************************************************************************************** */
   private initializeChartAhorroRecupero() {
     this.periodoVeinteanalFlujoIngresosMonetariosCopia = JSON.parse(
       JSON.stringify(this.periodoVeinteanalFlujoIngresosMonetarios)
@@ -499,15 +508,17 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           name: 'Ahorro por autoconsumo de energía',
           data: ahorroData,
+          color:'#96c0b2',
         },
         {
           name: 'Ingreso por excedente de energía',
           data: ingresoData,
+          color:'#e4c58d',
         },
       ],
       chart: {
         height: 300,
-        width: 470,
+        width: 470,       
         type: 'line',
         toolbar: {
           show: false,
@@ -515,6 +526,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         zoom: {
           enabled: false,
         },
+      },
+      stroke: {
+        curve: 'smooth',
+        colors: ['#96c0b2','#e4c58d'], // Color de la línea
+        width: 3, // Hacer la línea un poco más gruesa
       },
       xaxis: {
         categories: categories,
@@ -524,6 +540,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
+          offsetY: -25, // Ajusta el valor para acercar el título al gráfico
         },
       },
       yaxis: {
@@ -559,7 +576,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
                 color: '#fff',
                 background: '#00754a',
               },
-              text: 'Momento de recupero',
+              text: 'Punto de recupero',
             },
           },
         ],
@@ -573,6 +590,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     this.chartAhorroRecupero.render();
   }
+/*************************************************************************************************************************************************************** */  
+
 
   private updateChartEmisionesEvitadasAcumuladas() {
     // Calcula los valores acumulados
