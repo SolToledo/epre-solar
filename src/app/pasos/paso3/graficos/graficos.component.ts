@@ -163,13 +163,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     // Calcula las diferencias y simula la degradación
     const seriesData = modifiedData
       .map((item, index, array) => {
-        if (index === 0) return { year: item.year, diferencia: 0 };
-
-        const prevItem = array[index - 1];
-        const degradacion = 0.004; // Ajusta este valor para simular la degradación
+        let prevItem;
+        index===0? prevItem = array[index]: prevItem = array[index - 1];
+        const degradacion = 0.004; 
         const emisionesReducidas =
-          prevItem.emisionesTonCO2 - prevItem.emisionesTonCO2 * degradacion;
-
+          prevItem.emisionesTonCO2 - (prevItem.emisionesTonCO2 * degradacion);
+          console.log("prevItem.emisionesTonCO2 - (prevItem.emisionesTonCO2 * degradacion) ", emisionesReducidas)
         return {
           year: item.year,
           diferencia: emisionesReducidas,
@@ -187,7 +186,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Calcula el acumulado sumando las diferencias
     const acumuladoData = seriesData.map((item) => {
-      acumulado += item.diferencia ?? 0;
+      acumulado += item.diferencia;
       return {
         year: item.year,
         acumulado: acumulado,
@@ -200,15 +199,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     const categories = acumuladoData
       .filter((d) => d && typeof d.year !== 'undefined')
       .map((d) => d.year.toString());
-    const data = acumuladoData.map((d) => d.acumulado);
+    const data = modifiedData.map((d) => d.emisionesTonCO2);
 
-    console.log('data ', data);
+    console.log('data ', modifiedData);
     // Configura el gráfico
     const options = {
       series: [
         {
           name: 'Emisiones CO₂ Acumuladas',
-          data: seriesData,
+          data: data,
           color:'#499b80',
         },
       ],
@@ -228,7 +227,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       stroke: {
         curve: 'smooth',
-        colors: ['#96c0b2'], // Color de la línea
+        colors: ['black'], // Color de la línea
         width: 4, // Hacer la línea un poco más gruesa
       },
       fill: {
