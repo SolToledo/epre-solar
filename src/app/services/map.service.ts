@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { LocationService } from './location.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedService } from './shared.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,7 @@ export class MapService {
   private zoomInicial = 13;
   zoom: number = this.zoomInicial;
   private mapSubject = new Subject<google.maps.Map>();
+  
   private polygons: google.maps.Polygon[] = [];
   private panels: google.maps.Rectangle[] = [];
 
@@ -33,6 +35,12 @@ export class MapService {
     private sharedService: SharedService
   ) {}
 
+  ngOnInit(): void {
+    this.mapSubject.subscribe({
+      next: map => this.map = map
+    })
+    
+  }
   async initializeMap(mapElement: HTMLElement) {
     if (!window.google || !window.google.maps) {
       throw new Error('Google Maps API not loaded');
@@ -149,10 +157,6 @@ export class MapService {
     if (this.map) {
       this.map.setZoom(this.zoom);
     }
-  }
-
-  map$() {
-    return this.mapSubject.asObservable();
   }
 
   getDrawingManager(): google.maps.drawing.DrawingManager {
@@ -485,5 +489,9 @@ export class MapService {
     this.clearPolygons();
     this.clearPanels();
     this.disableDrawingMode();
+  }
+
+  getMap$() {
+    this.mapSubject
   }
 }
