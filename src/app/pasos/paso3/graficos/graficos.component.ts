@@ -178,9 +178,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         (item): item is { year: number; diferencia: number } => item !== null
       );
 
-    console.log('seriesData ', seriesData);
-    console.log('modifiedData ', modifiedData);
-
     // Inicializa el acumulado con el valor de emisiones del primer año
     let acumulado = 0; // Comienza en cero
 
@@ -192,8 +189,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         acumulado: acumulado,
       };
     });
-
-    console.log('acumuladoData ', acumuladoData);
 
     // Extrae los años y el acumulado para el gráfico
     const categories = acumuladoData
