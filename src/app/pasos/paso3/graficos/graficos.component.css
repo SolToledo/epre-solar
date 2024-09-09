@@ -20,13 +20,14 @@
 
 .container-graficos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(470px, 1fr));
   gap: 10px;
 }
 
 .item-grafico {
   background-color: rgb(189, 185, 185);
-  min-width: 350px;
+ /* min-width: 350px;*/
+ min-height: 470px;
   min-height: 300px;
   display: flex;
   flex-direction: column;

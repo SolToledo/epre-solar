@@ -68,8 +68,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.yearlyEnergyInitial = this.sharedService.getYearlyEnergyAcKwh();
     this.initializeChartEnergiaConsumo();
-    this.initializeChartAhorroRecupero();
-
+    
     this.sharedService.yearlyEnergyAcKwh$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -85,7 +84,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((mesesRecupero) => {
         this.mesesRecupero = mesesRecupero;
-        this.updateChartAhorroRecupero(); // Actualiza la anotación del gráfico
+        this.updateChartAhorroRecupero(); 
       });
 
     this.carbonOffSet = this.sharedService.getCarbonOffSetTnAnual();
@@ -100,8 +99,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
       },
     });
+    this.initializeChartAhorroRecupero();
+    this.cdr.detectChanges();
   }
 
+  
   ngOnDestroy(): void {
     // Emitir un valor para cerrar las suscripciones
     this.destroy$.next();
@@ -421,76 +423,50 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initializeChartAhorroRecupero() {
-    // Copia el array original para modificar los valores si es necesario
     this.periodoVeinteanalFlujoIngresosMonetariosCopia = JSON.parse(
       JSON.stringify(this.periodoVeinteanalFlujoIngresosMonetarios)
     );
-
-    // Calcula el "momento de recupero" (ejemplo)
-    // Obtén el valor de recuperación en meses
+  
     const recuperoInversionMeses = this.sharedService.getPlazoInversionValue();
-
-    // Convierte meses a una fecha, asumamos el primer año como base
-    const baseDate = new Date(
-      this.periodoVeinteanalFlujoIngresosMonetariosCopia[0].year,
-      0,
-      1
-    ); // Enero del primer año
-    const momentoRecuperoInversion = new Date(
-      baseDate.setMonth(baseDate.getMonth() + recuperoInversionMeses)
-    ).getTime();
-
-    // Prepara los datos para el gráfico
+    const recuperoInversionAnios = Math.round(recuperoInversionMeses / 12);
+    const primerAno = this.periodoVeinteanalFlujoIngresosMonetariosCopia[0].year;
+    const anoRecuperoInversion = primerAno + recuperoInversionAnios;
+  
     const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => item.ahorroEnElectricidadTotalUsd
     );
     const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => item.ingresoPorInyeccionElectricaUsd
     );
+  
     const categories = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => item.year.toString()
     );
-
-    var options = {
+  
+    const options = {
       series: [
         {
           name: 'Ahorro por autoconsumo de energía',
-          data: ahorroData, // Datos de ahorro
+          data: ahorroData,
         },
         {
           name: 'Ingreso por excedente de energía',
-          data: ingresoData, // Datos de ingreso
+          data: ingresoData,
         },
       ],
-
       chart: {
         height: 300,
         width: 470,
         type: 'line',
         toolbar: {
-          show: false, // Oculta la barra de herramientas
+          show: false,
         },
         zoom: {
-          enabled: false, // Desactiva el zoom
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        width: 5,
-        curve: 'straight',
-        dashArray: [0, 0],
-      },
-      colors: ['#96c0b2', '#e4c58d'],
-      markers: {
-        size: 0,
-        hover: {
-          sizeOffset: 6,
+          enabled: false,
         },
       },
       xaxis: {
-        categories: categories, // Muestra los años como categorías en el eje X
+        categories: categories,
         title: {
           text: 'Años',
           style: {
@@ -502,7 +478,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       yaxis: {
         labels: {
           formatter: (val: number): string => {
-            return val.toLocaleString('de-DE'); // Formatea el número con punto como separador de miles
+            return val.toLocaleString('de-DE');
           },
         },
         title: {
@@ -513,18 +489,17 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       },
-
       grid: {
         borderColor: '#f1f1f1',
       },
       tooltip: {
-        enabled: true, // Activa el tooltip
+        enabled: true,
         theme: 'light',
       },
       annotations: {
         xaxis: [
           {
-            x: new Date(momentoRecuperoInversion).getTime(), // Fecha del momento de recupero
+            x: anoRecuperoInversion.toString(), // Momento de recupero como string, si usas categorías como string
             strokeDashArray: 0,
             borderColor: '#00754a',
             label: {
@@ -539,7 +514,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         ],
       },
     };
-
+  
+    // Log para verificar el valor de la anotación
+    console.log("Anotación del año de recupero:", anoRecuperoInversion.toString());
+  
     // Renderiza el gráfico
     this.chartAhorroRecupero = new ApexCharts(
       document.querySelector('#chartAhorroRecuperoRef') as HTMLElement,
@@ -547,6 +525,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     this.chartAhorroRecupero.render();
   }
+  
+
 
   private updateChartEmisionesEvitadasAcumuladas() {
     // Calcula los valores acumulados
@@ -614,6 +594,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       yaxis: {
+        labels: {
+          formatter: (val: number): string => {
+            return val.toLocaleString('de-DE'); // Formatea el número con punto como separador de miles
+          },
+        },
+
         title: {
           text: 'Ton CO₂',
           style: {
@@ -687,7 +673,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             data: ingresoData,
           },
         ],
-        annotations: {
+        
+       annotations: {
           xaxis: [
             {
               x: new Date(this.recuperoInversionMeses).getTime(), // Actualiza la anotación de recupero de inversión
@@ -704,6 +691,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             },
           ],
         },
+
+
       });
     }
     this.isUpdating = false;
