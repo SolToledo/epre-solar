@@ -65,14 +65,26 @@ export class PanelesComponent implements OnInit, OnDestroy {
         },
       });
 
-    this.disableOptionsExceedingMaxCapacity();
-
     this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
       const panelCapacity = parseInt(value, 10);
       this.sharedService.setPanelCapacityW(panelCapacity);
       this.panelCapacityW = panelCapacity;
-      return;
+
+      // Verifica si el número de paneles actual excede la potencia máxima
+      const maxPotenciaInstalacion =
+        this.sharedService.getPotenciaMaxAsignadaValue();
+      const maxAllowedPanels = Math.floor(
+        maxPotenciaInstalacion / panelCapacity
+      );
+
+      if (this.panelesCantidad > maxAllowedPanels) {
+        this.panelesCantidad = maxAllowedPanels;
+        this.sharedService.setPanelsCountSelected(this.panelesCantidad);
+      }
+
+      this.mapService.reDrawPanels(this.panelesCantidad);
     });
+    this.sharedService.setPanelsCountSelected(this.panelesCantidad);
   }
 
   ngAfterViewInit(): void {
@@ -103,35 +115,16 @@ export class PanelesComponent implements OnInit, OnDestroy {
 
     this.panelesCantidad = Math.max(
       4,
-      Math.min(this.panelesCantidad, this.maxPanelsArea$)
+      Math.min(this.panelesCantidad, this.slider.max)
     );
 
     this.mapService.reDrawPanels(this.panelesCantidad);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
-    this.disableOptionsExceedingMaxCapacity();
   }
 
   formatLabel(value: number): string {
     return value >= 1000 ? Math.round(value / 1000) + 'k' : `${value}`;
   }
 
-  disableOptionsExceedingMaxCapacity() {
-    const maxPotenciaInstalacion =
-      this.sharedService.getPotenciaMaxAsignadaValue();
-    const panelsCountSelected = this.sharedService.getPanelsSelected();
-    const selectElement = document.querySelector('select#power-select');
-
-    if (selectElement) {
-      selectElement.querySelectorAll('option').forEach((option) => {
-        const panelCapacity = parseInt(option.value, 10);
-        const newPotenciaInstalacion = panelCapacity * panelsCountSelected;
-
-        if (newPotenciaInstalacion > maxPotenciaInstalacion) {
-          option.setAttribute('disabled', 'true');
-        } else {
-          option.removeAttribute('disabled');
-        }
-      });
-    }
-  }
+  
 }

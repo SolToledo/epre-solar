@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class PotenciaComponent {
   panelCapacityW: number = 0;
   potenciaMaxCategoriaSelectkW: number = 0;
 
-  constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef) {
+  constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef, private mapService: MapService) {
     this.panelCapacityW = this.sharedService.getPanelCapacityW();
   }
 
@@ -33,13 +34,14 @@ export class PotenciaComponent {
     this.panelCapacitySubscription = this.sharedService.panelCapacityW$.subscribe({
       next: value => {
         this.panelCapacityW = value;
-        this.updateInstalacionPotencia();
+        this.verificarYActualizarPaneles();
       }
     });
 
     this.potenciaMaxCategoriaSubscription = this.sharedService.potenciaMaxAsignadaW$.subscribe({
       next: (potenciaMaxW) => {
         this.potenciaMaxCategoriaSelectkW = potenciaMaxW / 1000
+        this.verificarYActualizarPaneles();
       }
     })
   }
@@ -64,5 +66,21 @@ export class PotenciaComponent {
     }
     this.sharedService.setPotenciaInstalacionW(this.instalacionPotenciakW * 1000);
     this.cdr.detectChanges();
+  }
+
+  private verificarYActualizarPaneles(): void {
+    const potenciaTotal = this.panelsCountSelected * this.panelCapacityW;
+    
+    if (potenciaTotal > this.potenciaMaxCategoriaSelectkW * 1000) {
+      // Ajusta el número de paneles al máximo posible sin exceder la potencia máxima
+      const maxPanels = Math.floor(this.potenciaMaxCategoriaSelectkW * 1000 / this.panelCapacityW);
+      this.panelsCountSelected = maxPanels;
+      this.sharedService.setPanelsCountSelected(this.panelsCountSelected);
+      
+      this.mapService.reDrawPanels(this.panelsCountSelected);
+      
+    }
+  
+    this.updateInstalacionPotencia(); // Actualiza la potencia total
   }
 }
