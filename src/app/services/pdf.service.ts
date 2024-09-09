@@ -22,10 +22,28 @@ export class PdfService {
     // Encabezado
     await this.encabezadoGenerate(doc);
     await this.resultadosGenerate(doc);
-
+    this.footerGenerate(doc);
     // Save the PDF
-    doc.save('resultado-estimado.pdf');
+    doc.save('resultado-id.pdf');
   }
+  private footerGenerate(doc: jsPDF) {
+    const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = doc.internal.pageSize.getHeight();
+    const footerText = 'http://solar.epresanjuan.gob.ar';
+  
+    // Configurar el tamaño y fuente del texto
+    doc.setFontSize(10);
+    doc.setFont('Arial', 'normal');
+  
+    // Posicionar el texto en la parte inferior derecha
+    const textWidth = doc.getTextWidth(footerText); // Obtener el ancho del texto
+    const xPosition = pdfWidth - textWidth - 10; // Margen de 10px desde el borde derecho
+    const yPosition = pdfHeight - 10; // Margen de 10px desde el borde inferior
+  
+    // Dibujar el texto en la posición calculada
+    doc.text(footerText, xPosition, yPosition);
+  }
+  
   private async resultadosGenerate(doc: jsPDF) {
     // await this.insertarCapturaPantalla(doc, 'graficos', 180, 10, 70);
     await this.insertarCapturaPantalla(
@@ -84,10 +102,10 @@ export class PdfService {
     const logoImage = '/assets/img/a4_header_img.jpg'; // Ruta de la imagen con todos los logos
     const pdfWidth = doc.internal.pageSize.getWidth();
     // Generar el UUID
-    const uniqueID = this.generateUUID();
+    const uniqueID = this.generateShortUUID();
     // Añadir el ID en el PDF (puede ser en la parte superior o inferior)
     doc.setFontSize(10);
-    doc.text(`ID: ${uniqueID}`, pdfWidth - 60, 8); // Esquina superior derecha
+    doc.text(`ID: ${uniqueID}`, pdfWidth - 38, 8); // Esquina superior derecha
     // Dimensiones originales de la imagen (en píxeles)
     const originalImageWidth = 753;
     const originalImageHeight = 80;
@@ -142,14 +160,7 @@ export class PdfService {
     };
   }
 
-  private generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0,
-          v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
+  private generateShortUUID(): string {
+    return Math.random().toString(36).substring(2, 14);
   }
 }
