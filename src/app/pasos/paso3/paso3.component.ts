@@ -59,6 +59,7 @@ export class Paso3Component implements OnInit {
   proporcionAutoconsumo: number = 0;
   consumoTotalAnual: number = 0;
   paso2!: Paso2Component;
+  isDownloading: boolean = false;
 
   constructor(
     private router: Router,
@@ -104,15 +105,6 @@ export class Paso3Component implements OnInit {
           // this.router.navigate(['/pasos/1']);
         });
     } else {
-      this.snackBar.open(
-        'Resultados calculados en base a uno de los 33 puntos.',
-        '',
-        {
-          duration: 5000,
-          panelClass: ['custom-snackbar'],
-        }
-      );
-
       this.nearbyService
         .calculate(this.sharedService.getNearbyLocation())
         .then((resultado) => {
@@ -135,14 +127,18 @@ export class Paso3Component implements OnInit {
         .payBackMonths
     );
 
-    this.panelesCantidad = this.resultadosFront.solarData.panels.panelsSelected ?? this.resultadosFront.solarData.panels.panelsCountApi;
+    this.panelesCantidad =
+      this.resultadosFront.solarData.panels.panelsSelected ??
+      this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.sharedService.setDimensionPanels(this.dimensionPanel);
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
-    
+
     const cargos = this.resultadosFront.periodoVeinteanalProyeccionTarifas[0];
-    this.sharedService.setTarifaIntercambioUsdkWh(cargos.cargoVariableConsumoUsdkWh)
-    
+    this.sharedService.setTarifaIntercambioUsdkWh(
+      cargos.cargoVariableConsumoUsdkWh
+    );
+
     this.sharedService.setPanelCapacityW(this.panelCapacityW);
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
     this.carbonOffsetFactorTnPerMWh = parseFloat(
@@ -152,21 +148,26 @@ export class Paso3Component implements OnInit {
     );
     const parametros: ParametrosFront = this.resultadosFront.parametros!;
     console.log(parametros);
-    
+
     this.sharedService.panelCapacityW$.subscribe({
-      next: capacity => this.potenciaPanelHip = capacity
-    })
-    this.eficienciaInstalacion = parametros.caracteristicasSistema.eficienciaInstalacion;
-    this.degradacionAnualPanel = parametros.caracteristicasSistema.degradacionAnualPanel;
-    this.proporcionAutoconsumo = parametros.caracteristicasSistema.proporcionAutoconsumo; 
-    this.proporcionInyectada = parametros.caracteristicasSistema.proporcionInyeccion;
-    this.costoEquipoMedicion = parametros.inversionCostos.equipoDeMedicionUsdAplicado;
-    this.costoMantenimiento = parametros.inversionCostos.costoDeMantenimientoInicialUsd;
+      next: (capacity) => (this.potenciaPanelHip = capacity),
+    });
+    this.eficienciaInstalacion =
+      parametros.caracteristicasSistema.eficienciaInstalacion;
+    this.degradacionAnualPanel =
+      parametros.caracteristicasSistema.degradacionAnualPanel;
+    this.proporcionAutoconsumo =
+      parametros.caracteristicasSistema.proporcionAutoconsumo;
+    this.proporcionInyectada =
+      parametros.caracteristicasSistema.proporcionInyeccion;
+    this.costoEquipoMedicion =
+      parametros.inversionCostos.equipoDeMedicionUsdAplicado;
+    this.costoMantenimiento =
+      parametros.inversionCostos.costoDeMantenimientoInicialUsd;
     this.tasaInflacionUsd = parametros.economicas.tasaInflacionUsd;
 
-
-
-    this.costoInstalacion = this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
+    this.costoInstalacion =
+      this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
     this.sharedService.setCostoInstalacion(this.costoInstalacion);
 
     this.consumoService.totalConsumo$.subscribe({
@@ -175,8 +176,14 @@ export class Paso3Component implements OnInit {
   }
 
   downloadPDF(): void {
-    this.pdfService.generatePDF().then(()=>{
-    }).catch(()=>{});
+    if (!this.isDownloading) {
+      this.isDownloading = true;
+      this.pdfService
+        .generatePDF()
+        .then(() => {})
+        .catch(() => {})
+        .finally(() => (this.isDownloading = false));
+    }
   }
 
   sendEmail(): void {
@@ -305,7 +312,10 @@ export class Paso3Component implements OnInit {
       return 'Firefox ' + userAgent.split('Firefox/')[1];
     } else if (userAgent.indexOf('Chrome') > -1) {
       return 'Chrome ' + userAgent.split('Chrome/')[1].split(' ')[0];
-    } else if (userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') === -1) {
+    } else if (
+      userAgent.indexOf('Safari') > -1 &&
+      userAgent.indexOf('Chrome') === -1
+    ) {
       return 'Safari ' + userAgent.split('Version/')[1].split(' ')[0];
     } else if (userAgent.indexOf('Edg') > -1) {
       return 'Edge ' + userAgent.split('Edg/')[1];

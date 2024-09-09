@@ -7,7 +7,7 @@ import html2canvas from 'html2canvas';
 })
 export class PdfService {
   private doc: jsPDF;
-  
+
   constructor() {
     this.doc = new jsPDF({
       orientation: 'portrait',
@@ -22,38 +22,50 @@ export class PdfService {
     // Encabezado
     await this.encabezadoGenerate(doc);
     await this.resultadosGenerate(doc);
-
+    this.footerGenerate(doc);
     // Save the PDF
-    doc.save('resultado-estimado.pdf');
+    doc.save('resultado-id.pdf');
   }
-  private async resultadosGenerate(doc: jsPDF) {
-    doc.setFontSize(16);
+  private footerGenerate(doc: jsPDF) {
+    const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = doc.internal.pageSize.getHeight();
+    const footerText = 'http://solar.epresanjuan.gob.ar';
+  
+    // Configurar el tamaño y fuente del texto
+    doc.setFontSize(10);
     doc.setFont('Arial', 'normal');
-    doc.text('RESULTADOS:', 10, 60);
+  
+    // Posicionar el texto en la parte inferior derecha
+    const textWidth = doc.getTextWidth(footerText); // Obtener el ancho del texto
+    const xPosition = pdfWidth - textWidth - 10; // Margen de 10px desde el borde derecho
+    const yPosition = pdfHeight - 10; // Margen de 10px desde el borde inferior
+  
+    // Dibujar el texto en la posición calculada
+    doc.text(footerText, xPosition, yPosition);
+  }
+  
+  private async resultadosGenerate(doc: jsPDF) {
     // await this.insertarCapturaPantalla(doc, 'graficos', 180, 10, 70);
     await this.insertarCapturaPantalla(
       doc,
       'appPanelesId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      70
+      60
     );
     await this.insertarCapturaPantalla(
       doc,
       'ahorrosId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      110
+      100
     );
-    doc.setFontSize(16);
-    doc.setFont('Arial', 'normal');
-    doc.text('HIPOTESIS:', 10, 195);
     await this.insertarCapturaPantalla(
       doc,
       'hipotesisId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      205
+      195
     );
   }
   private async insertarCapturaPantalla(
@@ -64,7 +76,7 @@ export class PdfService {
     y: number
   ) {
     const resultadosElement = document.getElementById(idElement);
-  
+
     if (resultadosElement) {
       // Configura las opciones de html2canvas para reducir la resolución
       const canvas = await html2canvas(resultadosElement, {
@@ -72,76 +84,72 @@ export class PdfService {
         useCORS: true, // Permitir cargar imágenes de orígenes cruzados
         logging: false, // Desactiva el logging
       });
-  
+
       // Convertir el canvas a formato JPEG y reducir la calidad
       const imgData = canvas.toDataURL('image/jpeg', 0.7); // Calidad de 0.7 para reducir el tamaño
-  
+
       // Calcular la altura de la imagen manteniendo la relación de aspecto
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
+
       // Insertar la imagen en el PDF
       doc.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight);
     } else {
       console.error('No se pudo encontrar el elemento de resultados.');
     }
   }
-  
 
   private async encabezadoGenerate(doc: jsPDF) {
-    const logos = [
-      '/assets/logo_epre.png',
-      '/assets/Logo-AppSolar.png',
-      '/assets/Logo-IEE-UNSJ-CONICET.jpg',
-      '/assets/sanjuan.png',
-    ];
-
-    const logoWidth = 30; // Ajusta el tamaño del logo
-    const logoHeight = 15; // Ajusta el tamaño del logo
+    const logoImage = '/assets/img/a4_header_img.jpg'; // Ruta de la imagen con todos los logos
     const pdfWidth = doc.internal.pageSize.getWidth();
-    const spaceBetweenLogos =
-      (pdfWidth - logoWidth * logos.length) / (logos.length + 1); // Espacio entre logos
+    // Generar el UUID
+    const uniqueID = this.generateShortUUID();
+    // Añadir el ID en el PDF (puede ser en la parte superior o inferior)
+    doc.setFontSize(10);
+    doc.text(`ID: ${uniqueID}`, pdfWidth - 38, 8); // Esquina superior derecha
+    // Dimensiones originales de la imagen (en píxeles)
+    const originalImageWidth = 753;
+    const originalImageHeight = 80;
 
-    const yLogoPosition = 10; // Altura en la página donde colocar los logos
-    const padding = 5; // Espacio extra para el recuadro alrededor de los logos
+    // Ajustar el ancho de la imagen al tamaño del PDF
+    const imgWidth = pdfWidth - 20; // Ancho ajustado dejando 10px de margen a cada lado
+    const imgHeight = (originalImageHeight * imgWidth) / originalImageWidth; // Mantener la proporción
 
-    // Determinar el ancho y alto del recuadro
-    const headerHeight = logoHeight + 2 * padding; // Alto del recuadro considerando el padding
-    const headerY = yLogoPosition - padding; // Posición Y del recuadro
-    const headerX = 5; // Posición X del recuadro (para alinearlo a la izquierda con margen)
-    const headerWidth = pdfWidth - 2 * headerX; // Ancho del recuadro (deja un margen a los lados)
+    // Posición de la imagen en el PDF
+    const xPosition = 10; // Margen de 10px desde la izquierda
+    const yPosition = 10; // Margen desde la parte superior
 
-    // Dibujar el recuadro del encabezado
-    doc.setLineWidth(0.5); // Grosor del borde
-    doc.rect(headerX, headerY, headerWidth, headerHeight); // Dibuja el rectángulo del encabezado
-
-    // Colocar los logos dentro del recuadro
-    for (let i = 0; i < logos.length; i++) {
-      const x = spaceBetweenLogos + i * (logoWidth + spaceBetweenLogos);
-      await this.addImageToPDF(
-        doc,
-        logos[i],
-        x,
-        yLogoPosition,
-        logoWidth,
-        logoHeight
-      );
-    }
+    // Dibujar la imagen en el PDF
+    await this.addImageToPDF(
+      doc,
+      logoImage,
+      xPosition,
+      yPosition,
+      imgWidth,
+      imgHeight
+    );
     // Título después de los logos
     doc.setFontSize(22);
     doc.setFont('Arial', 'bold');
     doc.text('RESULTADOS ESTIMADOS', pdfWidth / 2, 50, { align: 'center' });
   }
 
-  private async addImageToPDF(doc: jsPDF, imageUrl: string, x: number, y: number, width: number, height: number) {
+  private async addImageToPDF(
+    doc: jsPDF,
+    imageUrl: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
     const img = new Image();
     img.src = imageUrl;
-  
+
     img.onload = () => {
       // Puedes usar el método toDataURL para comprimir la imagen
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
       canvas.height = img.height;
-      
+
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.drawImage(img, 0, 0);
@@ -150,5 +158,9 @@ export class PdfService {
         doc.addImage(compressedImageData, 'JPEG', x, y, width, height);
       }
     };
+  }
+
+  private generateShortUUID(): string {
+    return Math.random().toString(36).substring(2, 14);
   }
 }
