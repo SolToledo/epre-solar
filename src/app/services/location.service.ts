@@ -469,14 +469,5 @@ export class LocationService {
     return (degrees * Math.PI) / 180;
   }
 
-  private requestSavingsCalculation(location: NearbyLocation): void {
-    this.sharedService.setPredefinedCoordinates(true);
-    this.sharedService.setNearbyLocation(location);
-    this.nearbyService
-      .calculate(location)
-      .then((response) => {
-        this.sharedService.setResultadosFrontNearby(response);
-      })
-      .catch((error) => console.error(error));
-  }
+  
 }

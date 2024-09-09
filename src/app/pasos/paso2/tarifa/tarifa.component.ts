@@ -86,7 +86,8 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     private mapService: MapService,
     private router: Router,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private decimalPipe: DecimalPipe
   ) { }
 
   ngOnInit(): void {
@@ -153,9 +154,12 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       autoFocus: true,
       closeOnNavigation: false,
       data: {
-        message: `La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, con una potencia total de la instalación de ${this.sharedService.getPotenciaInstalacionW() / 1000
-          } kW, superando la potencia máxima de ${this.potenciaMaxAsignadakW
-          } kW asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar para volver al paso anterior y elegir otra superficie`,
+        message: `
+  La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, 
+  con una potencia total de la instalación de ${this.decimalPipe.transform(this.sharedService.getPotenciaInstalacionW() / 1000, '1.2-2')} kW, 
+  superando la potencia máxima de ${this.decimalPipe.transform(this.potenciaMaxAsignadakW, '1.0-0')} kW 
+  asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar 
+  para volver al paso anterior y elegir otra superficie.`,
       },
     });
 

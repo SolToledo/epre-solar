@@ -200,7 +200,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     const categories = acumuladoData
       .filter((d) => d && typeof d.year !== 'undefined')
       .map((d) => d.year.toString());
-    const data = modifiedData.map((d) => d.emisionesTonCO2);
+    const data = acumuladoData.map((d) => d.acumulado);
 
     console.log('data ', data);
     // Configura el gráfico
@@ -215,7 +215,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       chart: {
         height: 350,
         width: 470, 
-        type: 'area',
+        type: 'line',
         toolbar: {
           show: false, // Oculta la barra de herramientas
         },
