@@ -27,33 +27,27 @@ export class PdfService {
     doc.save('resultado-estimado.pdf');
   }
   private async resultadosGenerate(doc: jsPDF) {
-    doc.setFontSize(16);
-    doc.setFont('Arial', 'normal');
-    doc.text('RESULTADOS:', 10, 60);
     // await this.insertarCapturaPantalla(doc, 'graficos', 180, 10, 70);
     await this.insertarCapturaPantalla(
       doc,
       'appPanelesId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      70
+      60
     );
     await this.insertarCapturaPantalla(
       doc,
       'ahorrosId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      110
+      100
     );
-    doc.setFontSize(16);
-    doc.setFont('Arial', 'normal');
-    doc.text('HIPOTESIS:', 10, 195);
     await this.insertarCapturaPantalla(
       doc,
       'hipotesisId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      205
+      195
     );
   }
   private async insertarCapturaPantalla(

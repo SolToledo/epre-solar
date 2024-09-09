@@ -15,6 +15,7 @@
         <div class="descargar-enviar-component">
           <button id="downloadButton" (click)="downloadPDF()">
             <mat-icon class="icono-secundario">download</mat-icon>
+            <div class="custom-loader" *ngIf="isDownloading"></div>
           </button>
           <br />
           <button id="emailButton" (click)="openModal()">
