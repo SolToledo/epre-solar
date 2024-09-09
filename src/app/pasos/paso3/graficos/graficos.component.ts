@@ -45,6 +45,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chartEnergiaRef')
   energiaChartRef!: ElementRef<HTMLCanvasElement>;
 
+
+  chartSolLuna: any;  // Declaración de la propiedad/******************************************************************************************************* */
+
   private subscription!: Subscription;
   recuperoInversionMeses!: number;
   carbonOffSet!: number;
@@ -102,6 +105,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initializeChartEnergiaConsumo();
     this.initializeChartEmisionesEvitadasAcumuladas();
     this.cdr.detectChanges();
+
+
+   this.initializeGraficoSolLuna()
   }
 
   ngOnDestroy(): void {
@@ -337,15 +343,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
       series: [
         {
-          name: 'Consumo Total Anual',
-          data: [this.consumoTotalAnual],
-          color: '#96c0b2',
+          /*name: 'Consumo Total Anual',*/
+          data: [this.consumoTotalAnual, this.yearlyEnergy],
+          /*color: '#96c0b2',*/
         },
-        {
+       /* {
           name: 'Generación Anual',
           data: [this.yearlyEnergy],
           color: '#e4c58d',
-        },
+        },*/
       ],
 
       colors: ['#96c0b2', '#e4c58d'],
@@ -786,4 +792,76 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.updateChartAhorroRecupero();
     this.isUpdating = false;
   }
+
+
+
+  /*Prueba*/
+  private initializeGraficoSolLuna() {
+    const options = {
+      chart: {
+        type: 'bar',
+        height: 350,
+        width: 470,
+        endingShape: 'rounded',
+        background: 'transparent',
+        toolbar: {
+          show: false, // Eliminar el menú del gráfico
+        },
+      },
+      series: [
+        {
+          data: [this.consumoTotalAnual, this.yearlyEnergy],
+        },
+      ],
+      colors: ['#96c0b2', '#e4c58d'], // Colores para las barras
+      plotOptions: {
+        bar: {
+          columnWidth: '50%',
+          distributed: true, // Diferenciar colores entre las barras
+        },
+      },
+      xaxis: {
+        categories: ['Consumo total anual', 'Generación Anual'], // Etiquetas en el eje X (pero ocultas)
+        labels: {
+          show: false, // Ocultar las etiquetas del eje X
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'kWh', // Cambiar el texto del título del eje Y a "kWh"
+          style: {
+            fontSize: '14px',
+            fontFamily: 'sodo sans, sans-serif',
+            color: '#424242',
+          },
+        },
+        labels: {
+          formatter: (val: number): string => {
+            return val.toLocaleString('de-DE'); // Formateo de separador de miles
+          },
+        },
+      },
+      legend: {
+        show: true, // Mostrar la leyenda con los textos y colores
+      },
+    };
+  
+    this.chartSolLuna = new ApexCharts(
+      document.querySelector('#chartSolLunaRef') as HTMLElement,
+      options
+    );
+  
+    this.chartSolLuna.render();
+  }
+  
+
+
+
+
+
+
+  
 }
+
+
+
