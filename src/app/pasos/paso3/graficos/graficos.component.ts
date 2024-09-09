@@ -38,12 +38,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   periodoVeinteanalGeneracionFotovoltaica!: GeneracionFotovoltaicaFront[];
   @Input() consumoTotalAnual!: number;
 
-  @ViewChild('emisionesChart')
+  @ViewChild('emisionesChartRef')
   emisionesChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('chartSolLunaRef')
   chartSolLunaRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('chartEnergiaRef')
-  energiaChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartAhorroRecuperoRef')
+  chartAhorroRecuperoRef!: ElementRef<HTMLCanvasElement>;
 
 
   chartSolLuna: any;  // Declaración de la propiedad/******************************************************************************************************* */
@@ -102,12 +102,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     });
     this.initializeChartAhorroRecupero();
-    this.initializeChartEnergiaConsumo();
+    this.initializeGraficoSolLuna()
+    // this.initializeChartEnergiaConsumo();
     this.initializeChartEmisionesEvitadasAcumuladas();
     this.cdr.detectChanges();
 
 
-   this.initializeGraficoSolLuna()
   }
 
   ngOnDestroy(): void {
@@ -598,7 +598,6 @@ private initializeChartEnergiaConsumo() {
     this.chartAhorroRecupero.render();
   }
 /*************************************************************************************************************************************************************** */  
-
 
   private updateChartEmisionesEvitadasAcumuladas() {
     // Calcula los valores acumulados
