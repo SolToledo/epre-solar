@@ -296,18 +296,19 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.emisionesChart.render();
   }
 /************************************************************************************************************************************************************** */
-  private initializeChartEnergiaConsumo() {
+ 
+private initializeChartEnergiaConsumo() {
     const options = {
       chart: {
         height: 300,
         width: 470,
         type: 'bar',
-        endingShape: 'rounded', // Offset vertical del contenedor padre
-        background: 'transparent', // Color de fondo del gráfico
-        foreColor: '#ccc', // Color del texto
+        endingShape: 'rounded', 
+        background: 'transparent', 
+        foreColor: '#ccc', 
         animations: {
-          enabled: true, // Habilita/deshabilita animaciones
-          easing: 'easeinout', // Tipo de efecto de transición
+          enabled: true, 
+          easing: 'easeinout', 
           speed: 800, // Velocidad de la animación
           animateGradually: {
             enabled: true,
@@ -846,10 +847,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   
     this.chartSolLuna.render();
   }
-  
-
-
-
 
 
 
