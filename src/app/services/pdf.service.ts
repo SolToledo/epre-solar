@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
-import { MapService } from './map.service';
-import { SharedService } from './shared.service';
 import html2canvas from 'html2canvas';
 
 @Injectable({
@@ -9,12 +7,12 @@ import html2canvas from 'html2canvas';
 })
 export class PdfService {
   private doc: jsPDF;
-  private sodoSansFontBase64 = '';
+  
   constructor() {
     this.doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
-      format: 'a4',
+      format: [216, 356],
     });
   }
 
@@ -25,75 +23,69 @@ export class PdfService {
     await this.encabezadoGenerate(doc);
     await this.resultadosGenerate(doc);
 
-    // Resultados
-
-    /* 
-        // Hipótesis
-        doc.text('HIPÓTESIS:', 10, 70);
-        doc.text('Aquí va el texto de la hipótesis de la App.', 10, 80);
-
-        // Footer
-        const date = new Date();
-        const formattedDate = `${date.toLocaleDateString()}`;
-        const formattedTime = `${date.toLocaleTimeString()}`;
-        const browserAgent = navigator.userAgent;
-
-        doc.setFontSize(10);
-        doc.setFont('Arial', 'italic');
-        doc.text(
-          `${formattedDate} - ${formattedTime} - ${browserAgent} - solar.epresanjuan.gob.ar`,
-          10,
-          290,
-          { align: 'center' }
-        );
- */
     // Save the PDF
     doc.save('resultado-estimado.pdf');
   }
   private async resultadosGenerate(doc: jsPDF) {
-    
     doc.setFontSize(16);
     doc.setFont('Arial', 'normal');
     doc.text('RESULTADOS:', 10, 60);
     // await this.insertarCapturaPantalla(doc, 'graficos', 180, 10, 70);
-    /* await this.insertarCapturaPantalla(doc, 'appPaneles', doc.internal.pageSize.getWidth() / 3, 10, 70); */
-    const resultadosElement = document.getElementById('cuadroInformativo');
-    if (resultadosElement ) {
-      // Usar html2canvas para capturar el contenido completo (aunque esté fuera de la vista)
+    await this.insertarCapturaPantalla(
+      doc,
+      'appPanelesId',
+      doc.internal.pageSize.getWidth() - 20,
+      10,
+      70
+    );
+    await this.insertarCapturaPantalla(
+      doc,
+      'ahorrosId',
+      doc.internal.pageSize.getWidth() - 20,
+      10,
+      110
+    );
+    doc.setFontSize(16);
+    doc.setFont('Arial', 'normal');
+    doc.text('HIPOTESIS:', 10, 195);
+    await this.insertarCapturaPantalla(
+      doc,
+      'hipotesisId',
+      doc.internal.pageSize.getWidth() - 20,
+      10,
+      205
+    );
+  }
+  private async insertarCapturaPantalla(
+    doc: jsPDF,
+    idElement: string,
+    imgWidth: number,
+    x: number = 10,
+    y: number
+  ) {
+    const resultadosElement = document.getElementById(idElement);
+  
+    if (resultadosElement) {
+      // Configura las opciones de html2canvas para reducir la resolución
       const canvas = await html2canvas(resultadosElement, {
-        scrollX: 0,
-        scrollY: 0,
-        windowWidth: resultadosElement.scrollWidth,
-        windowHeight: resultadosElement.scrollHeight
+        scale: 1, // Reducción de la escala de renderizado, puede ajustar a 0.5 o 0.75 según sea necesario
+        useCORS: true, // Permitir cargar imágenes de orígenes cruzados
+        logging: false, // Desactiva el logging
       });
   
-      // Convertir el canvas a imagen en formato Data URL
-      const imgData = canvas.toDataURL('image/png');
+      // Convertir el canvas a formato JPEG y reducir la calidad
+      const imgData = canvas.toDataURL('image/jpeg', 0.7); // Calidad de 0.7 para reducir el tamaño
   
-      // Agregar la imagen al PDF
-      const imgWidth = 200; // Ancho de la imagen en el PDF
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Mantener la proporción de la imagen
+      // Calcular la altura de la imagen manteniendo la relación de aspecto
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
   
-      // Insertar la imagen en el PDF (posición X, Y, ancho y alto)
-      doc.addImage(imgData, 'PNG', 10, 80, imgWidth, imgHeight);
+      // Insertar la imagen en el PDF
+      doc.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight);
     } else {
       console.error('No se pudo encontrar el elemento de resultados.');
     }
   }
-  private async insertarCapturaPantalla(doc: jsPDF, idElement: string, imgWidth: number, x: number = 10, y:number) {
-    const resultadosElement = document.getElementById(idElement); 
-
-    if (resultadosElement) {
-      const canvas = await html2canvas(resultadosElement);
-
-      const imgData = canvas.toDataURL('image/png');
-
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; 
-      doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-    } else {
-      console.error('No se pudo encontrar el elemento de resultados.');
-    }
-  }
+  
 
   private async encabezadoGenerate(doc: jsPDF) {
     const logos = [
@@ -109,35 +101,54 @@ export class PdfService {
     const spaceBetweenLogos =
       (pdfWidth - logoWidth * logos.length) / (logos.length + 1); // Espacio entre logos
 
+    const yLogoPosition = 10; // Altura en la página donde colocar los logos
+    const padding = 5; // Espacio extra para el recuadro alrededor de los logos
+
+    // Determinar el ancho y alto del recuadro
+    const headerHeight = logoHeight + 2 * padding; // Alto del recuadro considerando el padding
+    const headerY = yLogoPosition - padding; // Posición Y del recuadro
+    const headerX = 5; // Posición X del recuadro (para alinearlo a la izquierda con margen)
+    const headerWidth = pdfWidth - 2 * headerX; // Ancho del recuadro (deja un margen a los lados)
+
+    // Dibujar el recuadro del encabezado
+    doc.setLineWidth(0.5); // Grosor del borde
+    doc.rect(headerX, headerY, headerWidth, headerHeight); // Dibuja el rectángulo del encabezado
+
+    // Colocar los logos dentro del recuadro
     for (let i = 0; i < logos.length; i++) {
       const x = spaceBetweenLogos + i * (logoWidth + spaceBetweenLogos);
-      const y = 10; // Altura en la página donde quieres colocar los logos
-
-      await this.addImageToPDF(doc, logos[i], x, y, logoWidth, logoHeight);
+      await this.addImageToPDF(
+        doc,
+        logos[i],
+        x,
+        yLogoPosition,
+        logoWidth,
+        logoHeight
+      );
     }
-
     // Título después de los logos
     doc.setFontSize(22);
     doc.setFont('Arial', 'bold');
     doc.text('RESULTADOS ESTIMADOS', pdfWidth / 2, 50, { align: 'center' });
   }
 
-  private addImageToPDF(
-    doc: jsPDF,
-    imagePath: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ) {
-    return new Promise<void>((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        doc.addImage(img, 'PNG', x, y, width, height);
-        resolve();
-      };
-      img.onerror = reject;
-      img.src = imagePath;
-    });
+  private async addImageToPDF(doc: jsPDF, imageUrl: string, x: number, y: number, width: number, height: number) {
+    const img = new Image();
+    img.src = imageUrl;
+  
+    img.onload = () => {
+      // Puedes usar el método toDataURL para comprimir la imagen
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(img, 0, 0);
+        // Comprimir la imagen a formato JPEG y ajustar la calidad (0.7 = 70%)
+        const compressedImageData = canvas.toDataURL('image/jpeg', 0.7); // Cambia a 'image/jpeg' y ajusta la calidad
+        doc.addImage(compressedImageData, 'JPEG', x, y, width, height);
+      }
+    };
   }
 }

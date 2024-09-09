@@ -24,7 +24,7 @@
       </div>
 
       <div class="informacion" id="cuadroInformativo">
-        <div class="container-ingreso-datos" id="appPaneles">
+        <div class="container-ingreso-datos" id="appPanelesId">
           <app-paneles
             [dimensionPanel]="dimensionPanel"
             [panelCapacityW]="panelCapacityW"
@@ -32,10 +32,10 @@
         </div>
         <!--container-ingreso-datos-->
 
-        <div class="container">
+        <div class="container" id="ahorrosId">
           <div class="item"><app-ahorros></app-ahorros></div>
 
-          <div class="item">
+          <div class="item" id="costoInstalacionId">
             <app-costo [costoInstalacion]="costoInstalacion"></app-costo>
           </div>
 
@@ -88,7 +88,7 @@
         </div>
         <!--container-graficos-->
 
-        <div class="container-hipotesis">
+        <div class="container-hipotesis" id="hipotesisId">
           <h3 id="titulo-hipotesis">Hipótesis adoptadas</h3>
           <p id="texto-hipotesis">
             Los resultados de la evaluación a partir de la aplicación
