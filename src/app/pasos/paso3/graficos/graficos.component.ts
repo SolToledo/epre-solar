@@ -514,18 +514,45 @@ private initializeChartEnergiaConsumo() {
         {
           name: 'Ahorro por autoconsumo de energía',
           data: ahorroData,
-          color:'#96c0b2',
+          color: '#96c0b2',
         },
         {
           name: 'Ingreso por excedente de energía',
           data: ingresoData,
-          color:'#e4c58d',
+          color: '#e4c58d',
+        },
+        {
+          name: 'Punto de recupero',
+          data: [0], // Solo un punto para mostrar en la leyenda
+          color: '#008ae3', // Color del punto en la leyenda
+          showInLegend: true,
+          type: ' ', // Tipo de línea
+          stroke: {
+            width: 0, // No trazar ninguna línea
+          },
+          markers: {
+            size: 10, // Tamaño del punto en la leyenda
+            colors: ['#00754a'], // Color del marcador
+            strokeColors: '#00754a', // Color del borde del marcador
+            strokeWidth: 2, // Ancho del borde del marcador
+            hover: {
+              size: 7, // Tamaño del punto al pasar el ratón por encima
+            }
+          },
+          tooltip: {
+            enabled: false, // Desactiva tooltips para esta serie
+          },
+          plotOptions: {
+            line: {
+              colors: ['transparent'], // Línea invisible
+            },
+          },
         },
       ],
       chart: {
         height: 300,
-        width: 470,       
-        type: 'line',
+        width: 470,
+        type: 'line', // Tipo de gráfico general
         toolbar: {
           show: false,
         },
@@ -535,8 +562,8 @@ private initializeChartEnergiaConsumo() {
       },
       stroke: {
         curve: 'smooth',
-        colors: ['#96c0b2','#e4c58d'], // Color de la línea
-        width: 3, // Hacer la línea un poco más gruesa
+        colors: ['#96c0b2', '#e4c58d'], // Colores de las líneas reales
+        width: 3, // Grosor de las líneas
       },
       xaxis: {
         categories: categories,
@@ -546,7 +573,7 @@ private initializeChartEnergiaConsumo() {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
-          offsetY: -25, // Ajusta el valor para acercar el título al gráfico
+          offsetY: -25,
         },
       },
       yaxis: {
@@ -573,16 +600,16 @@ private initializeChartEnergiaConsumo() {
       annotations: {
         xaxis: [
           {
-            x: anoRecuperoInversion.toString(), // Momento de recupero como string, si usas categorías como string
-            strokeDashArray: 0,
-            borderColor: '#00754a',
+            x: anoRecuperoInversion.toString(),
+            strokeDashArray: 5, // Estilo de línea de puntos (valor mayor para más puntos)
+            borderColor: '#008ae3', // Color celeste oscuro
+            borderWidth: 2, // Aumenta el espesor de la línea
             label: {
-              borderColor: '#00754a',
+              borderColor: '#008ae3', // Color del borde de la etiqueta
               style: {
-                color: '#fff',
-                background: '#00754a',
+                color: '#ffffff', // Color del texto de la etiqueta
+                background: '#0076a8', // Color de fondo de la etiqueta
               },
-              text: 'Punto de recupero',
             },
           },
         ],
