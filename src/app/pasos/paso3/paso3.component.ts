@@ -323,4 +323,8 @@ export class Paso3Component implements OnInit {
       return 'Navegador desconocido';
     }
   }
+
+
+
+
 }
