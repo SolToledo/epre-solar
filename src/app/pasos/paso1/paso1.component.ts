@@ -49,9 +49,10 @@ export class Paso1Component implements OnInit {
     this.map = this.mapService.getMap();
 
     if (!this.map) {
-      this.router.navigate(['/']);
-      console.error('El mapa no está inicializado.');
-      return;
+      /* this.router.navigate(['/']); */
+      this.map = this.mapService.getMap();
+      /* console.error('El mapa no está inicializado.');
+      return; */
     }
     this.map.setZoom(23);
     this.marker = new AdvancedMarkerElement({

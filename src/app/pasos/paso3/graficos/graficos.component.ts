@@ -39,10 +39,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('emisionesChart')
   emisionesChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('chartAhorroRecuperoRef') chartAhorroRecuperoRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartAhorroRecuperoRef')
+  chartAhorroRecuperoRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('chartEnergiaRef')
   energiaChartRef!: ElementRef<HTMLCanvasElement>;
-  
 
   private subscription!: Subscription;
   recuperoInversionMeses!: number;
@@ -67,8 +67,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.yearlyEnergyInitial = this.sharedService.getYearlyEnergyAcKwh();
-    this.initializeChartEnergiaConsumo();
-    
+
     this.sharedService.yearlyEnergyAcKwh$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -84,11 +83,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((mesesRecupero) => {
         this.mesesRecupero = mesesRecupero;
-        this.updateChartAhorroRecupero(); 
+        this.updateChartAhorroRecupero();
       });
 
     this.carbonOffSet = this.sharedService.getCarbonOffSetTnAnual();
-    this.initializeChartEmisionesEvitadasAcumuladas();
 
     this.sharedService.CarbonOffSetTnAnual$.pipe(
       takeUntil(this.destroy$)
@@ -100,16 +98,17 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     });
     this.initializeChartAhorroRecupero();
+    this.initializeChartEnergiaConsumo();
+    this.initializeChartEmisionesEvitadasAcumuladas();
     this.cdr.detectChanges();
   }
 
-  
   ngOnDestroy(): void {
     // Emitir un valor para cerrar las suscripciones
     this.destroy$.next();
     this.destroy$.complete();
   }
-  
+
   // Función para recalcular el array con base en el nuevo valor de carbonOffSet
   private calculateEmisionesEvitadasConNuevoValor(nuevoCarbonOffSet: number) {
     // Clona el array original para no modificarlo directamente
@@ -134,45 +133,81 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         };
       });
   }
-/****************************************************************************************** */
+  /****************************************************************************************** */
   // Función para actualizar el gráfico con los nuevos valores
   private initializeChartEmisionesEvitadasAcumuladas() {
-    // Asegúrate de que periodoVeinteanalEmisionesGEIEvitadas está definido y no está vacío
+    // Asegúrate de que periodoVeinteanalEmisionesGEIEvitadasOriginal está definido y no está vacío
     if (
       !this.periodoVeinteanalEmisionesGEIEvitadasOriginal ||
       this.periodoVeinteanalEmisionesGEIEvitadasOriginal.length === 0
     ) {
       console.error(
-        'periodoVeinteanalEmisionesGEIEvitadas no está definido o está vacío'
+        'periodoVeinteanalEmisionesGEIEvitadasOriginal no está definido o está vacío'
       );
       return;
     }
 
-    // Calcula los valores acumulados
-    let acumulado = 0;
-    const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasOriginal.map(
-      (entry) => {
-        acumulado += entry.emisionesTonCO2; // Acumula las emisiones
-        return acumulado;
-      }
-    );
+    // Añadir el punto inicial en 0 para el primer año
+    const modifiedData = [
+      { year: 2024, emisionesTonCO2: 0 },
+      ...this.periodoVeinteanalEmisionesGEIEvitadasOriginal,
+    ];
 
-    // Extrae los años del array
-    const categories = this.periodoVeinteanalEmisionesGEIEvitadasOriginal.map(
-      (entry) => entry.year.toString()
-    );
+    // Calcula las diferencias y simula la degradación
+    const seriesData = modifiedData
+      .map((item, index, array) => {
+        if (index === 0) return { year: item.year, diferencia: 0 };
 
+        const prevItem = array[index - 1];
+        const degradacion = 0.004; // Ajusta este valor para simular la degradación
+        const emisionesReducidas =
+          prevItem.emisionesTonCO2 - prevItem.emisionesTonCO2 * degradacion;
+
+        return {
+          year: item.year,
+          diferencia: emisionesReducidas,
+        };
+      })
+      .filter(
+        (item): item is { year: number; diferencia: number } => item !== null
+      );
+
+    console.log('seriesData ', seriesData);
+    console.log('modifiedData ', modifiedData);
+
+    // Inicializa el acumulado con el valor de emisiones del primer año
+    let acumulado = 0; // Comienza en cero
+
+    // Calcula el acumulado sumando las diferencias
+    const acumuladoData = seriesData.map((item) => {
+      acumulado += item.diferencia ?? 0;
+      return {
+        year: item.year,
+        acumulado: acumulado,
+      };
+    });
+
+    console.log('acumuladoData ', acumuladoData);
+
+    // Extrae los años y el acumulado para el gráfico
+    const categories = acumuladoData
+      .filter((d) => d && typeof d.year !== 'undefined')
+      .map((d) => d.year.toString());
+    const data = modifiedData.map((d) => d.emisionesTonCO2);
+
+    console.log('data ', data);
+    // Configura el gráfico
     const options = {
       series: [
         {
-          name: 'Emisiones CO₂ Acumuladas',
-          data: seriesData,
+          name: 'Emisiones CO₂ Evitadas Acumuladas',
+          data: data,
         },
       ],
       chart: {
         height: 350,
         width: 470, // Establece el ancho a 470
-        type: 'area',
+        type: 'line', // Cambiado de 'area' a 'line'
         toolbar: {
           show: false, // Oculta la barra de herramientas
         },
@@ -189,16 +224,24 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         width: 4, // Hacer la línea un poco más gruesa
       },
       fill: {
-        colors: ['#96c0b2'], // Color de la sombra
-        opacity: 0.05, // Ajusta la opacidad de la sombra a un valor menor
+        type: 'gradient',
+        gradient: {
+          shade: 'dark',
+          gradientToColors: ['#FDD835'],
+          shadeIntensity: 0.5,
+          type: 'vertical',
+          opacityFrom: 0.5,
+          opacityTo: 0,
+          stops: [0, 100, 100, 100],
+        },
       },
       markers: {
-        size: 0, // Oculta todos los puntos
+        size: 0,
+        colors: ['#FFA41B'],
+        strokeColors: '#fff',
+        strokeWidth: 2,
         hover: {
-          size: 6, // Tamaño del punto cuando se muestra el tooltip
-          colors: ['#00754a'], // Color del punto cuando se muestra el tooltip
-          strokeColor: '#00754a', // Color del borde del punto cuando se muestra el tooltip
-          strokeWidth: 2, // Ancho del borde del punto
+          size: 7,
         },
       },
       xaxis: {
@@ -212,8 +255,13 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       yaxis: {
+        labels: {
+          formatter: (val: number): string => {
+            return val.toLocaleString('de-DE');
+          },
+        },
         title: {
-          text: 'Ton CO₂', // Título del eje Y con el 2 en subíndice
+          text: 'Ton CO₂', // Título del eje Y
           style: {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
@@ -227,7 +275,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           format: 'yyyy',
         },
         marker: {
-          show: true, // Muestra el marcador en el tooltip
+          show: false, // Muestra el marcador en el tooltip
         },
         style: {
           fontSize: '12px', // Tamaño de fuente del texto del tooltip
@@ -236,6 +284,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     };
 
+    // Inicializa y renderiza el gráfico
     this.emisionesChart = new ApexCharts(
       document.querySelector('#emisionesChartRef') as HTMLElement,
       options
@@ -243,7 +292,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.emisionesChart.render();
   }
-/******************************************************************************************************************* */
+
+  /******************************************************************************************************************* */
   private initializeChartEnergiaConsumo() {
     const options = {
       chart: {
@@ -418,7 +468,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       document.querySelector('#chartEnergiaRef') as HTMLElement,
       options
     );
-
+    console.log('Instancia de ApexCharts:', this.chartEnergia);
     this.chartEnergia.render();
   }
 
@@ -426,23 +476,24 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.periodoVeinteanalFlujoIngresosMonetariosCopia = JSON.parse(
       JSON.stringify(this.periodoVeinteanalFlujoIngresosMonetarios)
     );
-  
+
     const recuperoInversionMeses = this.sharedService.getPlazoInversionValue();
     const recuperoInversionAnios = Math.round(recuperoInversionMeses / 12);
-    const primerAno = this.periodoVeinteanalFlujoIngresosMonetariosCopia[0].year;
+    const primerAno =
+      this.periodoVeinteanalFlujoIngresosMonetariosCopia[0].year;
     const anoRecuperoInversion = primerAno + recuperoInversionAnios;
-  
+
     const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => item.ahorroEnElectricidadTotalUsd
     );
     const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => item.ingresoPorInyeccionElectricaUsd
     );
-  
+
     const categories = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => item.year.toString()
     );
-  
+
     const options = {
       series: [
         {
@@ -514,10 +565,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         ],
       },
     };
-  
-    // Log para verificar el valor de la anotación
-    console.log("Anotación del año de recupero:", anoRecuperoInversion.toString());
-  
+
     // Renderiza el gráfico
     this.chartAhorroRecupero = new ApexCharts(
       document.querySelector('#chartAhorroRecuperoRef') as HTMLElement,
@@ -525,18 +573,20 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     this.chartAhorroRecupero.render();
   }
-  
-
 
   private updateChartEmisionesEvitadasAcumuladas() {
     // Calcula los valores acumulados
-    let acumulado = 0;
-    const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
-      (entry) => {
-        acumulado += entry.emisionesTonCO2;
-        return acumulado;
-      }
-    );
+    const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasCopia
+      .map((item, index, array) => {
+        if (index === 0) return null;
+
+        const prevItem = array[index - 1];
+        return {
+          year: item.year,
+          diferencia: prevItem.emisionesTonCO2 - item.emisionesTonCO2,
+        };
+      })
+      .filter((item) => item !== null);
 
     // Extrae los años del array
     const categories = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
@@ -673,8 +723,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             data: ingresoData,
           },
         ],
-        
-       annotations: {
+
+        annotations: {
           xaxis: [
             {
               x: new Date(this.recuperoInversionMeses).getTime(), // Actualiza la anotación de recupero de inversión
@@ -691,8 +741,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             },
           ],
         },
-
-
       });
     }
     this.isUpdating = false;
@@ -705,11 +753,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     // Itera sobre la copia del array y ajusta los valores basados en el nuevo yearlyEnergy
     this.periodoVeinteanalFlujoIngresosMonetariosCopia.forEach(
       (item, index) => {
-        // Recalcula el ahorro en electricidad total y el ingreso por inyección eléctrica
-        // utilizando el nuevo valor de yearlyEnergy. Aquí es donde puedes aplicar la fórmula
-        // específica para tu lógica.
-
-        // Ejemplo básico de ajuste proporcional basado en yearlyEnergy
         const factor = yearlyEnergy / this.yearlyEnergyInitial; // tienes el valor original almacenado
         item.ahorroEnElectricidadTotalUsd =
           this.periodoVeinteanalFlujoIngresosMonetarios[index]
@@ -724,6 +767,4 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.updateChartAhorroRecupero();
     this.isUpdating = false;
   }
-
-     
 }
