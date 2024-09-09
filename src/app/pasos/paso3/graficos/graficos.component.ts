@@ -40,8 +40,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('emisionesChart')
   emisionesChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('chartAhorroRecuperoRef')
-  chartAhorroRecuperoRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartSolLunaRef')
+  chartSolLunaRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('chartEnergiaRef')
   energiaChartRef!: ElementRef<HTMLCanvasElement>;
 
@@ -796,7 +796,7 @@ private initializeChartEnergiaConsumo() {
 
 
 
-  /*Prueba*/
+/* metodo reemplazado por Sol */
   private initializeGraficoSolLuna() {
     const options = {
       chart: {
