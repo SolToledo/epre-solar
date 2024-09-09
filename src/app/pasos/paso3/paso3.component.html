@@ -99,39 +99,46 @@
             estudios técnicos fundamentados y particularizados en cada
             Suministro, habiéndose adoptado las siguientes hipótesis:
           </p>
-          <p id="hipotesis">
+          <p class="hipotesis">
+            ⦁ Categoría de tarifa seleccionada = {{ categoriaTarifa }}.
+          </p>
+          <p class="hipotesis">
             ⦁ Potencia de cada panel = {{ potenciaPanelHip }} W.
           </p>
-          <p id="hipotesis">
+          <p class="hipotesis">
             ⦁ Eficiencia de la instalación = {{ eficienciaInstalacion * 100 | number:'1.2-2'}} %
           </p>
-          <p id="hipotesis">
+          <p class="hipotesis">
             ⦁ Degradación anual de paneles = {{ degradacionAnualPanel * 100 | number:'1.2-2'}} %
           </p>
-          <p id="hipotesis">
+          <p class="hipotesis">
             ⦁ Proporción de energía autoconsumida =
             {{ proporcionAutoconsumo * 100  | number:'1.2-2'}} %
           </p>
-          <p id="hipotesis">
+          <p class="hipotesis">
             ⦁ Proporción de energía inyectada = {{ proporcionInyectada * 100 | number:'1.2-2' }} %
           </p>
-          <p id="hipotesis">
+          <p class="hipotesis">
             ⦁ Equipo de medición =
             {{ costoEquipoMedicion | number : "1.0-0" }} USD
+            <span *ngIf="categoriaTarifa.includes('T1'); else noIvaText"> (incluye IVA).</span>
+            <ng-template #noIvaText> (no incluye IVA).</ng-template>
           </p>
-          <p id="hipotesis">
-            ⦁ Mantenimiento inicial = {{ costoMantenimiento | number:'1.2-2' }} USD/año
+          <p class="hipotesis">
+            ⦁ Mantenimiento anual = 1 % del costo de instalación.
           </p>
-          <p id="hipotesis">
+          <p class="hipotesis">
             ⦁ Tasa de inflación (USD) = {{ tasaInflacionUsd * 100 | number:'1.2-2' }} %
           </p>
-          <p id="hipotesis">
-            ⦁ Tarifas vigentes a la fecha de la realización del presente
-            cálculo.
+          <p class="hipotesis">
+            ⦁ Tarifas vigentes a {{fechaActual}}.
           </p>
-          <p id="hipotesis">⦁ Fecha de su consulta: {{ timestamp }}</p>
-          <p id="hipotesis">
-            ⦁ Generación Solar Distribuida San Juan v.1.0.1. (Septiembre 2024)
+          <p></p>
+          <p></p>
+          <hr>
+          <p class="hipotesis"> Fecha de su consulta: {{ timestamp }}</p>
+          <p class="hipotesis">
+             Generación Solar Distribuida San Juan v.1.0.1. (Septiembre 2024)
           </p>
         </div>
         <!--hipotesis-container-->

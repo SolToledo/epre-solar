@@ -294,8 +294,8 @@ export class MapService {
       this.clearPanels();
       return false;
     }
-
-    if (area > maxArea) {
+    /* DESHABILITADA LA LIMITACION SUPERIOR */
+    /* if (area > maxArea) {
       this.snackBar.open(
         `La selección es demasiado grande. Por favor, reduzca la seleccion a un área menor a ${maxArea} m².`,
         'Cerrar',
@@ -309,7 +309,7 @@ export class MapService {
       this.overlayCompleteSubject.next(false);
       this.setDrawingMode(null);
       return false;
-    }
+    } */
     return true;
   }
 

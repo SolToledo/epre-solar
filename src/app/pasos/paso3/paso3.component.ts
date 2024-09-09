@@ -32,15 +32,8 @@ export class Paso3Component implements OnInit {
   costoEquipoMedicion!: number;
   costoMantenimiento!: number;
   tasaInflacionUsd!: number;
-
-  openModal(): void {
-    this.isModalOpen = true;
-  }
-
-  closeModal(): void {
-    this.isModalOpen = false;
-  }
-
+  fechaActual!: string;
+  categoriaTarifa!: string;
   items: any[] = [];
   currentStep: number = 3;
   mostrarModal: boolean = false;
@@ -76,7 +69,9 @@ export class Paso3Component implements OnInit {
     this.sharedService.isLoading$.subscribe({
       next: (value) => (this.isLoading = value),
     });
+    this.actualizarFecha();
   }
+  
   ngOnInit(): void {
     this.sharedService.setIsLoading(true);
     setTimeout(() => {
@@ -173,6 +168,9 @@ export class Paso3Component implements OnInit {
     this.consumoService.totalConsumo$.subscribe({
       next: (value) => (this.consumoTotalAnual = value),
     });
+    this.sharedService.tarifaContratada$.subscribe({
+      next: tarifa => this.categoriaTarifa = tarifa
+    })
   }
 
   downloadPDF(): void {
@@ -324,7 +322,23 @@ export class Paso3Component implements OnInit {
     }
   }
 
+  private actualizarFecha() {
+    const now = new Date();
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    
+    const mes = meses[now.getMonth()];
+    const anio = now.getFullYear();
 
+    this.fechaActual = `${mes} de ${anio}`;
+  }
+
+  openModal(): void {
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+  }
 
 
 }
