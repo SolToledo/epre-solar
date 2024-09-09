@@ -43,15 +43,33 @@ export class PanelesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.potenciaPanelesControl.setValue(this.panelCapacityW.toString() ?? 400);
 
+    // Subscripción para obtener la cantidad máxima de paneles permitida por el área
     this.maxPanelsPerAreaSubscription =
       this.sharedService.maxPanelsPerSuperface$.subscribe({
         next: (value) => {
           this.maxPanelsArea$ = value;
+          // Verificar si la potencia máxima permite colocar todos los paneles
+          const maxPotenciaInstalacion =
+            this.sharedService.getPotenciaMaxAsignadaValue();
+          const maxAllowedPanels = Math.floor(
+            maxPotenciaInstalacion / this.panelCapacityW
+          );
+
+          // Establecer el número máximo de paneles considerando tanto la superficie como la potencia
+          const maxPanelesPermitidos = Math.min(
+            maxAllowedPanels,
+            this.maxPanelsArea$
+          );
+
           this.panelesCantidad = Math.max(
             4,
-            Math.min(this.panelesCantidad, this.maxPanelsArea$)
+            Math.min(this.panelesCantidad, maxPanelesPermitidos)
           );
           this.sharedService.setPanelsCountSelected(this.panelesCantidad);
+          // Ajustar el slider para que el máximo sea la cantidad de paneles permitidos
+          if(this.slider){
+            this.slider.max = maxPanelesPermitidos;
+          }
         },
       });
 
@@ -65,6 +83,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
         },
       });
 
+      // Subscripción para cambios en la potencia de los paneles
     this.potenciaPanelesControl.valueChanges.subscribe((value: any) => {
       const panelCapacity = parseInt(value, 10);
       this.sharedService.setPanelCapacityW(panelCapacity);
@@ -125,6 +144,4 @@ export class PanelesComponent implements OnInit, OnDestroy {
   formatLabel(value: number): string {
     return value >= 1000 ? Math.round(value / 1000) + 'k' : `${value}`;
   }
-
-  
 }

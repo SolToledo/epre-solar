@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { DimensionPanel } from '../interfaces/dimension-panel';
 
