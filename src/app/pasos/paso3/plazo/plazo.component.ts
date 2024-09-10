@@ -23,6 +23,7 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
   panelsCountSelected: number = 0;
 
   @Input() yearlyEnergyAcKwhInitial: number = 0;
+  plazoRecuperoDirecta!: number;
 
   constructor(
     private sharedService: SharedService,
@@ -75,8 +76,9 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.plazoRecuperoInversion = 
         (this.plazoRecuperoInversionInicial * this.yearlyEnergyAcKwhInitial) /
         newYearlyEnergyAcKwh;
+      this.plazoRecuperoDirecta =( newYearlyEnergyAcKwh * this.plazoRecuperoInversionInicial) / this.yearlyEnergyAcKwhInitial;
       
-      this.sharedService.setPlazoInversion(this.plazoRecuperoInversion);
+      this.sharedService.setPlazoInversion(this.plazoRecuperoDirecta);
     } else {
       this.plazoRecuperoInversion = this.plazoRecuperoInversionInicial;
     }

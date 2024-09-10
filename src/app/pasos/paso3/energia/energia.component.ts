@@ -17,9 +17,9 @@ export class EnergiaComponent implements OnInit, AfterViewInit {
 
   private initialYearlyEnergyAcKwh: number = 0;
   private initialPanelsCount: number = 0; 
+  potenciaInstalacionInitialW!: number;
 
   constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef) {
-    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
   }
 
   ngOnInit(): void {
@@ -27,11 +27,11 @@ export class EnergiaComponent implements OnInit, AfterViewInit {
     this.panelCapacityW = this.sharedService.getPanelCapacityW(); 
     this.panelsCountSelected = this.sharedService.getPanelsSelected(); 
     this.initialPanelsCount = this.panelsCountSelected;
-    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
     this.cdr.detectChanges();
   }
 
   ngAfterViewInit(): void {
+
     // Suscribirse a los cambios en la cantidad de paneles seleccionados
     this.panelsCountSelectedSubscription =
       this.sharedService.panelsCountSelected$.pipe(skip(1)).subscribe({
@@ -49,6 +49,9 @@ export class EnergiaComponent implements OnInit, AfterViewInit {
           this.updateYearlyEnergy();
         },
       });
+
+      
+      this.potenciaInstalacionInitialW = this.sharedService.getPotenciaInstalacionW();
   }
 
   ngOnDestroy(): void {
@@ -60,13 +63,27 @@ export class EnergiaComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // Método para actualizar yearlyEnergyAcKwh basado en la cantidad de paneles y capacidad del panel
   private updateYearlyEnergy(): void {
-    this.yearlyEnergyAcKwh = 
-      (this.initialYearlyEnergyAcKwh * 
-      (this.panelsCountSelected / this.initialPanelsCount) * 
-      (this.panelCapacityW / 400)).toFixed(0);
-    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
+    // Obtenemos los valores iniciales en vatios
+    const yearlyEnergyInitialW = this.initialYearlyEnergyAcKwh * 1000;
+    const potenciaInstalacionInitialW = this.potenciaInstalacionInitialW;
+  
+    // Obtenemos la nueva potencia de instalación
+    const newPotenciaW = this.sharedService.getPotenciaInstalacionW();
+  
+    // Validación para evitar divisiones por cero o valores inválidos
+    if (potenciaInstalacionInitialW > 0) {
+      // Calculamos la energía anual basada en la nueva potencia
+      const yearlyEnergyActualW = (newPotenciaW * yearlyEnergyInitialW) / potenciaInstalacionInitialW;
+      
+      // Convertimos la energía anual de vatios a kilovatios-hora
+      this.yearlyEnergyAcKwh = yearlyEnergyActualW / 1000;
+  
+      // Actualizamos el valor redondeado en el sharedService
+      this.sharedService.setYearlyEnergyAcKwh(Math.round(this.yearlyEnergyAcKwh));
+    } else {
+      console.error('Error: La potencia de instalación inicial no puede ser 0 o un valor inválido.');
+    }
   }
   
 }
