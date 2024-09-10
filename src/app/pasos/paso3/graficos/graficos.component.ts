@@ -46,8 +46,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   chartAhorroRecuperoRef!: ElementRef<HTMLCanvasElement>;
 
 
-  chartSolLuna: any;  // Declaración de la propiedad/******************************************************************************************************* */
-
+  
   private subscription!: Subscription;
   recuperoInversionMeses!: number;
   carbonOffSet!: number;
@@ -56,6 +55,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   porcentajeCubierto: number = 0;
   carbonOffSetInicialTon!: number;
   chartEnergia!: ApexCharts;
+  chartSolLuna!: ApexCharts;
   emisionesChart!: ApexCharts;
   chartAhorroRecupero!: ApexCharts;
   mesesRecupero!: number;
@@ -71,6 +71,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.yearlyEnergyInitial = this.sharedService.getYearlyEnergyAcKwh();
+    setTimeout(() => {
+      this.initializeGraficoSolLuna();
+    }, 100);
 
     this.sharedService.yearlyEnergyAcKwh$
       .pipe(takeUntil(this.destroy$))
@@ -78,7 +81,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (yearly) => {
           this.yearlyEnergy = yearly;
           this.cdr.detectChanges();
-          this.updateChartEnergiaConsumo();
+          setTimeout(() => {
+            this.updateChartEnergiaConsumo();
+          }, 100);
           this.updateChartAhorroRecupero();
         },
       });
@@ -102,7 +107,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     });
     this.initializeChartAhorroRecupero();
-    this.initializeGraficoSolLuna()
+   
     // this.initializeChartEnergiaConsumo();
     this.initializeChartEmisionesEvitadasAcumuladas();
     this.cdr.detectChanges();
@@ -300,189 +305,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 /************************************************************************************************************************************************************** */
  
-private initializeChartEnergiaConsumo() {
-    const options = {
-      chart: {
-        height: 300,
-        width: 470,
-        type: 'bar',
-        endingShape: 'rounded', 
-        background: 'transparent', 
-        foreColor: '#ccc', 
-        animations: {
-          enabled: true, 
-          easing: 'easeinout', 
-          speed: 800, // Velocidad de la animación
-          animateGradually: {
-            enabled: true,
-            delay: 500,
-          },
-          dynamicAnimation: {
-            enabled: true,
-            speed: 350,
-          },
-        },
-        toolbar: {
-          show: false,
-          tools: {
-            download: true,
-            selection: true,
-            zoom: true,
-            zoomin: true,
-            zoomout: true,
-            pan: true,
-            customIcons: [],
-          },
-        },
-        zoom: {
-          enabled: false,
-        },
-      },
-
-      series: [
-        {
-          /*name: 'Consumo Total Anual',*/
-          data: [this.consumoTotalAnual, this.yearlyEnergy],
-          /*color: '#96c0b2',*/
-        },
-       /* {
-          name: 'Generación Anual',
-          data: [this.yearlyEnergy],
-          color: '#e4c58d',
-        },*/
-      ],
-
-      colors: ['#96c0b2', '#e4c58d'],
-
-      plotOptions: {
-        bar: {
-          columnWidth: '55%', // Anchura de la columna
-          distributed: false,
-          horizontal: false, // Orientación horizontal o vertical
-          endingShape: 'rounded', // Forma del final de la columna
-          borderRadius: 4, // Radio de esquina de la columna
-          barHeight: '100%', // Altura de la columna
-        },
-      },
-
-      dataLabels: {
-        enabled: true, // Muestra u oculta las etiquetas de datos
-        formatter: function (val: any) {
-          return val.toFixed(0);
-        },
-        textAnchor: 'middle', // Alineación horizontal del texto
-        offsetX: 0, // Offset horizontal
-        offsetY: -20, // Offset vertical
-        style: {
-          /*fontSize: '12px',
-          colors: ['#fff'],*/
-          fontSize: '12px',
-          fontFamily: 'sodo sans, sans-serif',
-         
-        },
-      },
-
-      legend: {
-        show: true, // Muestra u oculta la leyenda
-        position: 'bottom', // Posición de la leyenda
-        horizontalAlign: 'left', // Alineación horizontal
-        floating: false,
-        labels: {
-          colors: '#000',
-        },
-        markers: {
-          width: 8,
-          height: 8,
-          strokeWidth: 0,
-         /* strokeColor: '#fff',
-          fillColors: undefined,*/
-          radius: 2,
-          customHTML: undefined,
-          onClick: undefined,
-          offsetX: 0,
-          offsetY: -2,
-        },
-        itemMargin: {
-          horizontal: 10,
-          vertical: 0,
-        },
-        onItemClick: {
-          toggleDataSeries: true,
-        },
-      },
-
-      grid: {
-        show: true, // Muestra u oculta la cuadrícula
-        borderColor: '#f0f0f0', // Color del borde
-        strokeDashArray: 0, // Estilo de línea discontinua
-        xaxis: {
-          lines: {
-            show: true, // Muestra líneas horizontales
-          },
-        },
-        yaxis: {
-          lines: {
-            show: true, // Muestra líneas verticales
-          },
-        },
-        row: {
-          colors: undefined, // Colores alternados para filas
-          opacity: 0.5,
-        },
-        column: {
-          colors: undefined, // Colores alternados para columnas
-          opacity: 0.5,
-        },
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-        },
-      },
-
-
-      yaxis: {
-        labels: {
-          style: {
-            colors: '#333333', // Cambia el color a un tono más oscuro para los números del eje Y
-            fontSize: '10px',
-          },
-          formatter: (val: number): string => {
-            return val.toLocaleString('de-DE'); // Formatea el número con punto como separador de miles
-          },
-        },
-        title: {
-          text: 'kWh', // Título del eje Y
-          style: {
-            color: '#333333', // Cambia el color a un tono más oscuro para el título
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-   
-      xaxis: {
-        type: 'category', // Tipo de eje (puede ser 'numeric' o 'datetime')
-        categories: [' '],
-        labels: {
-          show: true, // Muestra u oculta las etiquetas
-          style: {
-            colors: ['#424242', '#424242'],
-            fontSize: '12px',
-          },
-          rotate: -45, // Rotación de las etiquetas
-        },
-        offsetY: -25, // Ajusta el valor para acercar el título al gráfico
-      },
-    };
-
-    this.chartEnergia = new ApexCharts(
-      document.querySelector('#chartEnergiaRef') as HTMLElement,
-      options
-    );
-    this.chartEnergia.render();
-  }
 /**************************************************************************************************************************************************************** */
   private initializeChartAhorroRecupero() {
     this.periodoVeinteanalFlujoIngresosMonetariosCopia = JSON.parse(
@@ -727,22 +549,7 @@ private initializeChartEnergiaConsumo() {
     }
   }
 
-  private updateChartEnergiaConsumo() {
-    if (this.chartEnergia) {
-      this.chartEnergia.updateOptions({
-        series: [
-          {
-            name: 'Consumo Total Anual',
-            data: [this.consumoTotalAnual],
-          },
-          {
-            name: 'Generación Fotovoltaica Anual',
-            data: [this.yearlyEnergy],
-          },
-        ],
-      });
-    }
-  }
+ 
 
   private updateChartAhorroRecupero() {
     if (this.isUpdating) return; // Evitar llamada infinita recursiva
@@ -899,6 +706,20 @@ private initializeGraficoSolLuna() {
   );
 
   this.chartSolLuna.render();
+}
+
+private updateChartEnergiaConsumo() {
+  if (this.chartSolLuna) {
+    this.chartSolLuna.updateOptions({
+      series: [
+        {
+          data: [this.consumoTotalAnual, this.yearlyEnergy],
+          name: [' valor'],
+        },
+      ],
+    }, false, false); // Los dos últimos parámetros indican que no se debe sobrescribir toda la configuración ni redibujar el gráfico completo
+    this.cdr.detectChanges();
+  }
 }
 
 
