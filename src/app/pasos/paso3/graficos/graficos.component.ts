@@ -846,7 +846,7 @@ private initializeGraficoSolLuna() {
         columnWidth: '50%',
         distributed: true, // Diferenciar colores entre las barras
         colors: {
-          backgroundBarOpacity: 0.3, // Ajustar la opacidad del fondo de las barras (más transparente)
+          backgroundBarOpacity: 0.3, // Ajustar la opacidad del fondo de las barras
         },
       },
     },
