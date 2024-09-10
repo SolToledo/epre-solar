@@ -203,13 +203,13 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           name: 'Emisiones CO₂ Acumuladas',
           data: data,
-          color:'#499b80',
+          color:'#96c0b2',
         },
       ],
       chart: {
         height: 350,
         width: 470, 
-        type: 'line',
+        type: 'area',
         toolbar: {
           show: false, // Oculta la barra de herramientas
         },
@@ -222,24 +222,24 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       stroke: {
         curve: 'smooth',
-        colors: ['black'], // Color de la línea
-        width: 4, // Hacer la línea un poco más gruesa
+        colors: ['#96c0b2'], // Color de la línea
+        width: 3, // Hacer la línea un poco más gruesa
       },
       fill: {
         type: 'gradient',
         gradient: {
           shade: 'dark',
-          gradientToColors: ['#FDD835'],
-          shadeIntensity: 0.5,
+          gradientToColors: ['#e4c58d'],// Color final del degradado (amarillo)
+          shadeIntensity: 0.8,
           type: 'vertical',
-          opacityFrom: 0.5,
-          opacityTo: 0,
+          opacityFrom: 0.8,
+          opacityTo: 0.3,
           stops: [0, 100, 100, 100],
         },
       },
       markers: {
         size: 0,
-        colors: ['#FFA41B'],
+        colors: ['#96c0b2'],
         strokeColors: '#fff',
         strokeWidth: 2,
         hover: {
@@ -276,6 +276,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         theme: 'light', // Tema del tooltip (dark o light)
         x: {
           format: 'yyyy',
+        },
+        y: {
+          formatter: (value: number) => {
+            return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} tCO₂/año`;
+          },
         },
         marker: {
           show: false, // Muestra el marcador en el tooltip
@@ -525,17 +530,16 @@ private initializeChartEnergiaConsumo() {
           stroke: {
             width: 0, // No trazar ninguna línea
           },
-          markers: {
-            size: 10, // Tamaño del punto en la leyenda
-            colors: ['#00754a'], // Color del marcador
-            strokeColors: '#00754a', // Color del borde del marcador
-            strokeWidth: 2, // Ancho del borde del marcador
-            hover: {
-              size: 7, // Tamaño del punto al pasar el ratón por encima
-            }
-          },
+          
           tooltip: {
-            enabled: false, // Desactiva tooltips para esta serie
+            enabled: true,
+            theme: 'light',
+            y: {
+              formatter: (val: number) => {
+                const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
+                return valorTruncado.toLocaleString('de-DE'); // Formatear con puntos de miles
+              }
+            }
           },
           plotOptions: {
             line: {
@@ -591,7 +595,14 @@ private initializeChartEnergiaConsumo() {
       tooltip: {
         enabled: true,
         theme: 'light',
+        y: {
+          formatter: (val: number) => {
+            const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
+            return `${valorTruncado.toLocaleString('de-DE')} USD/año`; // Formatear con puntos de miles y agregar el texto
+          },
+        },
       },
+
       annotations: {
         xaxis: [
           {
@@ -599,13 +610,6 @@ private initializeChartEnergiaConsumo() {
             strokeDashArray: 5, // Estilo de línea de puntos (valor mayor para más puntos)
             borderColor: '#008ae3', // Color celeste oscuro
             borderWidth: 2, // Aumenta el espesor de la línea
-            label: {
-              borderColor: '#008ae3', // Color del borde de la etiqueta
-              style: {
-                color: '#ffffff', // Color del texto de la etiqueta
-                background: '#0076a8', // Color de fondo de la etiqueta
-              },
-            },
           },
         ],
       },
@@ -617,6 +621,7 @@ private initializeChartEnergiaConsumo() {
       options
     );
     this.chartAhorroRecupero.render();
+    this.cdr.detectChanges();
   }
 /*************************************************************************************************************************************************************** */  
 
@@ -662,20 +667,20 @@ private initializeChartEnergiaConsumo() {
         enabled: false,
       },
       stroke: {
-        curve: 'smooth',
-        colors: ['#96c0b2'],
+        curve: 'straight',
+        colors: ['#008ae3'],
         width: 4,
       },
       fill: {
-        colors: ['#96c0b2'],
+        colors: ['#008ae3'],
         opacity: 0.05,
       },
       markers: {
         size: 0,
         hover: {
           size: 6,
-          colors: ['#00754a'],
-          strokeColor: '#00754a',
+          colors: ['#008ae3'],
+          strokeColor: '#008ae3',
           strokeWidth: 2,
         },
       },
@@ -817,63 +822,89 @@ private initializeChartEnergiaConsumo() {
 
 
 /* metodo reemplazado por Sol */
-  private initializeGraficoSolLuna() {
-    const options = {
-      chart: {
-        type: 'bar',
-        height: 350,
-        width: 470,
-        endingShape: 'rounded',
-        background: 'transparent',
-        toolbar: {
-          show: false, // Eliminar el menú del gráfico
+private initializeGraficoSolLuna() {
+  const options = {
+    chart: {
+      type: 'bar',
+      height: 350,
+      width: 470,
+      endingShape: 'rounded',
+      background: 'transparent',
+      toolbar: {
+        show: false, // Eliminar el menú del gráfico
+      },
+    },
+    series: [
+      {
+        data: [this.consumoTotalAnual, this.yearlyEnergy],
+        name: [' valor'],
+      },
+    ],
+    colors: ['#96c0b2', '#e4c58d'], // Colores para las barras
+    plotOptions: {
+      bar: {
+        columnWidth: '50%',
+        distributed: true, // Diferenciar colores entre las barras
+        colors: {
+          backgroundBarOpacity: 0.3, // Ajustar la opacidad del fondo de las barras (más transparente)
         },
       },
-      series: [
-        {
-          data: [this.consumoTotalAnual, this.yearlyEnergy],
-        },
-      ],
-      colors: ['#96c0b2', '#e4c58d'], // Colores para las barras
-      plotOptions: {
-        bar: {
-          columnWidth: '50%',
-          distributed: true, // Diferenciar colores entre las barras
+    },
+    xaxis: {
+      categories: ['Consumo total anual', 'Generación Anual'], // Etiquetas en el eje X (pero ocultas)
+      labels: {
+        show: false, // Ocultar las etiquetas del eje X
+      },
+    },
+    yaxis: {
+      title: {
+        text: 'kWh', // Cambiar el texto del título del eje Y a "kWh"
+        style: {
+          fontSize: '14px',
+          fontFamily: 'sodo sans, sans-serif',
+          color: '#6d6b6b',
         },
       },
-      xaxis: {
-        categories: ['Consumo total anual', 'Generación Anual'], // Etiquetas en el eje X (pero ocultas)
-        labels: {
-          show: false, // Ocultar las etiquetas del eje X
+      labels: {
+        formatter: (val: number): string => {
+          return val.toLocaleString('de-DE'); // Formateo de separador de miles
         },
       },
-      yaxis: {
-        title: {
-          text: 'kWh', // Cambiar el texto del título del eje Y a "kWh"
-          style: {
-            fontSize: '14px',
-            fontFamily: 'sodo sans, sans-serif',
-            color: '#424242',
-          },
-        },
-        labels: {
-          formatter: (val: number): string => {
-            return val.toLocaleString('de-DE'); // Formateo de separador de miles
-          },
-        },
+    },
+    legend: {
+      show: true, // Mostrar la leyenda con los textos y colores
+    },
+    dataLabels: {
+      enabled: true, // Mostrar los valores dentro de las barras
+      formatter: (val: number): string => {
+        return val.toLocaleString('de-DE'); // Formatear los valores con puntos como separadores de miles
       },
-      legend: {
-        show: true, // Mostrar la leyenda con los textos y colores
+      style: {
+        fontSize: '12px',
+        colors: ['#424242'], // Cambiar el color del texto a gris oscuro
       },
-    };
-  
-    this.chartSolLuna = new ApexCharts(
-      document.querySelector('#chartSolLunaRef') as HTMLElement,
-      options
-    );
-  
-    this.chartSolLuna.render();
-  }
+    },
+
+    tooltip: {
+      enabled: true, // Habilitar el tooltip
+      theme: 'light', // Tema del tooltip (dark o light)
+      y: {
+        formatter: (val: number) => {
+          return `${val.toLocaleString('de-DE')} kWh`; // Formatear el valor con puntos y agregar texto
+        }
+      }
+    }
+  };
+
+  this.chartSolLuna = new ApexCharts(
+    document.querySelector('#chartSolLunaRef') as HTMLElement,
+    options
+  );
+
+  this.chartSolLuna.render();
+}
+
+
 
 
 
