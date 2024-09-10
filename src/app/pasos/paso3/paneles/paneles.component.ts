@@ -42,7 +42,6 @@ export class PanelesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.potenciaPanelesControl.setValue(this.panelCapacityW.toString() ?? 400);
-
     // Subscripción para obtener la cantidad máxima de paneles permitida por el área
     this.maxPanelsPerAreaSubscription =
       this.sharedService.maxPanelsPerSuperface$.subscribe({
@@ -103,11 +102,12 @@ export class PanelesComponent implements OnInit, OnDestroy {
 
       this.mapService.reDrawPanels(this.panelesCantidad);
     });
-    this.sharedService.setPanelsCountSelected(this.panelesCantidad);
+    
   }
 
   ngAfterViewInit(): void {
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
+    this.mapService.reDrawPanels(this.panelesCantidad);
   }
 
   ngOnDestroy(): void {
