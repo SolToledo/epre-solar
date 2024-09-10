@@ -277,6 +277,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         x: {
           format: 'yyyy',
         },
+        y: {
+          formatter: (value: number) => {
+            return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} tCO₂/año`;
+          },
+        },
         marker: {
           show: false, // Muestra el marcador en el tooltip
         },
@@ -531,7 +536,8 @@ private initializeChartEnergiaConsumo() {
             theme: 'light',
             y: {
               formatter: (val: number) => {
-                return Math.trunc(val).toLocaleString('de-DE'); // Truncar decimales y luego formatear con punto
+                const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
+                return valorTruncado.toLocaleString('de-DE'); // Formatear con puntos de miles
               }
             }
           },
@@ -589,7 +595,14 @@ private initializeChartEnergiaConsumo() {
       tooltip: {
         enabled: true,
         theme: 'light',
+        y: {
+          formatter: (val: number) => {
+            const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
+            return `${valorTruncado.toLocaleString('de-DE')} USD/año`; // Formatear con puntos de miles y agregar el texto
+          },
+        },
       },
+
       annotations: {
         xaxis: [
           {
@@ -608,6 +621,7 @@ private initializeChartEnergiaConsumo() {
       options
     );
     this.chartAhorroRecupero.render();
+    this.cdr.detectChanges();
   }
 /*************************************************************************************************************************************************************** */  
 
@@ -823,7 +837,7 @@ private initializeGraficoSolLuna() {
     series: [
       {
         data: [this.consumoTotalAnual, this.yearlyEnergy],
-        name: ['kWh'],
+        name: [' valor'],
       },
     ],
     colors: ['#96c0b2', '#e4c58d'], // Colores para las barras
@@ -831,6 +845,9 @@ private initializeGraficoSolLuna() {
       bar: {
         columnWidth: '50%',
         distributed: true, // Diferenciar colores entre las barras
+        colors: {
+          backgroundBarOpacity: 0.3, // Ajustar la opacidad del fondo de las barras (más transparente)
+        },
       },
     },
     xaxis: {
@@ -867,6 +884,16 @@ private initializeGraficoSolLuna() {
         colors: ['#424242'], // Cambiar el color del texto a gris oscuro
       },
     },
+
+    tooltip: {
+      enabled: true, // Habilitar el tooltip
+      theme: 'light', // Tema del tooltip (dark o light)
+      y: {
+        formatter: (val: number) => {
+          return `${val.toLocaleString('de-DE')} kWh`; // Formatear el valor con puntos y agregar texto
+        }
+      }
+    }
   };
 
   this.chartSolLuna = new ApexCharts(
