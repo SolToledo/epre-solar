@@ -206,7 +206,7 @@ export class SharedService {
     return this.costoInstalacionSubject.getValue();
   }
   setCostoInstalacion(costoInstalacion: number) {
-    this.costoInstalacionSubject.next(costoInstalacion);
+    this.costoInstalacionSubject.next(Math.round(costoInstalacion));
   }
 
   calculateAreaPanelsSelected(totalPanels: number): number {

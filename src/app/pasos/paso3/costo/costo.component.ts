@@ -1,85 +1,90 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-costo',
   templateUrl: './costo.component.html',
-  styleUrls: ['./costo.component.css']
+  styleUrls: ['./costo.component.css'],
 })
-export class CostoComponent implements OnInit, OnDestroy{
+export class CostoComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  
-  @Input()
+
   costoInstalacion: number = 0;
   costoInstalacionInitial: number = 0;
   panelsCountInitial: number = 0;
   panelsCountSelected: number = 0;
   panelCapacityW: number = 0;
   panelCapacityWInitial: number = 0;
+  potenciaInstalacionInitialW!: number;
+  potenciaInstalacionAcutalW!: number;
 
-  constructor(private sharedService:SharedService, private cdr:ChangeDetectorRef){}
+  constructor(
+    private sharedService: SharedService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.sharedService.costoInstalacion$.pipe(takeUntil(this.destroy$), distinctUntilChanged())
-    .subscribe({
-      next: (costo) => {
-        if (this.costoInstalacionInitial === 0) {
-          this.costoInstalacionInitial = costo;
-          this.costoInstalacion = costo;
-        } else {
-          this.costoInstalacion = costo;
-        }
-        this.updateCostoInstalacion();
-        this.cdr.detectChanges();
-      },
-    });
+    // Inicializamos valores iniciales
+    
+  }
 
-  this.sharedService.panelsCountSelected$
-    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
-    .subscribe({
-      next: (newPanelsCountSelected) => {
-        if (this.panelsCountInitial === 0) {
-          this.panelsCountInitial = newPanelsCountSelected;
-        }
-        this.panelsCountSelected = newPanelsCountSelected;
-        this.updateCostoInstalacion();
-        this.cdr.detectChanges();
-      },
-    });
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    this.costoInstalacionInitial = this.sharedService.getCostoInstalacion();
+    this.potenciaInstalacionInitialW =
+      this.sharedService.getPotenciaInstalacionW();
 
-  this.sharedService.panelCapacityW$
-    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
-    .subscribe({
-      next: (newPanelCapacity) => {
-        if (this.panelCapacityWInitial === 0) {
-          this.panelCapacityWInitial = newPanelCapacity;
-        }
-        this.panelCapacityW = newPanelCapacity;
-        this.updateCostoInstalacion();
-        this.cdr.detectChanges();
-      },
-    });
+    // Suscripción al costo de instalación
+    this.sharedService.costoInstalacion$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (newCosto) => {
+          this.costoInstalacion = newCosto;
+        },
+      });
+
+    // Suscripción a la potencia de instalación
+    this.sharedService.potenciaInstalacion$
+      .pipe(takeUntil(this.destroy$)) // Desuscribimos cuando el componente se destruye
+      .subscribe({
+        next: (newPotenciaInstalacion) => {
+          this.potenciaInstalacionAcutalW = newPotenciaInstalacion;
+          this.updateCostoInstalacion(); // Actualizamos el costo cuando cambia la potencia
+          this.cdr.detectChanges(); // Forzamos la detección de cambios
+        },
+      });
   }
 
   ngOnDestroy(): void {
+    // Desuscribirnos de todas las suscripciones al destruir el componente
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  // Método para actualizar el costo de instalación basado en la potencia
   private updateCostoInstalacion() {
-    if (this.panelsCountSelected > 0 && this.panelCapacityW > 0 && this.panelsCountInitial > 0 && this.panelCapacityWInitial > 0) {
-      const newAhorroValue =
-        (this.panelsCountSelected * this.panelCapacityW * this.costoInstalacionInitial) /
-        (this.panelsCountInitial * this.panelCapacityWInitial);
-  
-      // Convertimos el valor calculado a un número entero
-      const roundedCostoInstalacionValue = parseInt(newAhorroValue.toFixed(0));
-  
-      // Solo actualizamos si el nuevo valor es diferente del actual
-      if (roundedCostoInstalacionValue !== this.sharedService.getCostoInstalacion()) {
-        this.sharedService.setCostoInstalacion(roundedCostoInstalacionValue);
-      }
+    const potenciaInstalacionInitialW = this.potenciaInstalacionInitialW;
+    const potenciaInstalacionActualW =
+      this.sharedService.getPotenciaInstalacionW();
+    const costoInstalacionInitial = this.costoInstalacionInitial;
+
+    // Factor para calcular el costo en función del cambio en potencia
+    const factorCambio =
+      potenciaInstalacionActualW / potenciaInstalacionInitialW;
+
+    const newCosto = costoInstalacionInitial * factorCambio;
+
+    // Si el nuevo costo es diferente al actual, actualizamos
+    if (newCosto !== this.costoInstalacion) {
+      this.costoInstalacion = Math.round(newCosto); // Redondeamos si es necesario
+      this.sharedService.setCostoInstalacion(this.costoInstalacion);
     }
   }
 }

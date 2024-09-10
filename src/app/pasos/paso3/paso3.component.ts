@@ -164,7 +164,7 @@ export class Paso3Component implements OnInit {
     this.costoInstalacion =
       this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
     this.sharedService.setCostoInstalacion(this.costoInstalacion);
-
+    console.log("this.costoInstalacion ", this.costoInstalacion)
     this.consumoService.totalConsumo$.subscribe({
       next: (value) => (this.consumoTotalAnual = value),
     });

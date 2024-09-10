@@ -168,7 +168,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         const degradacion = 0.004; 
         const emisionesReducidas =
           prevItem.emisionesTonCO2 - (prevItem.emisionesTonCO2 * degradacion);
-          console.log("prevItem.emisionesTonCO2 - (prevItem.emisionesTonCO2 * degradacion) ", emisionesReducidas)
         return {
           year: item.year,
           diferencia: emisionesReducidas,
@@ -196,7 +195,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       .map((d) => d.year.toString());
     const data = modifiedData.map((d) => d.emisionesTonCO2);
 
-    console.log('data ', modifiedData);
     // Configura el gráfico
     const options = {
       series: [
@@ -483,7 +481,6 @@ private initializeChartEnergiaConsumo() {
       document.querySelector('#chartEnergiaRef') as HTMLElement,
       options
     );
-    console.log('Instancia de ApexCharts:', this.chartEnergia);
     this.chartEnergia.render();
   }
 /**************************************************************************************************************************************************************** */
