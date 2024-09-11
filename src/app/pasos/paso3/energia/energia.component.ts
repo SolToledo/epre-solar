@@ -44,18 +44,19 @@ export class EnergiaComponent implements OnInit, AfterViewInit {
     if (this.potenciaInstalacionW > 0 && this.yearlyEnergyAckWhInitial > 0) {
       const panelsCountSelect = this.sharedService.getPanelsSelected();
       const panelsCapacityW = this.sharedService.getPanelCapacityW();
-
-    
+  
       const newYearlyEnergykWh = this.getNewYearlyEnergykWhApi(panelsCountSelect, panelsCapacityW);
   
       if (newYearlyEnergykWh) {
         // Actualizamos el valor en el componente
         this.yearlyEnergyAckWh = newYearlyEnergykWh;
-
+  
+        // Emitimos el valor actualizado a través del SharedService
+        this.sharedService.setYearlyEnergyAckWh(newYearlyEnergykWh);
+  
         // Notificar a Angular que actualice la vista
         this.cdr.detectChanges();
       }
-  
     } else {
       console.error('Error: La potencia de instalación inicial o la energía anual inicial no pueden ser 0.');
     }
@@ -64,7 +65,7 @@ export class EnergiaComponent implements OnInit, AfterViewInit {
   private getNewYearlyEnergykWhApi(panelsCountSelect: number, panelsCapacityW: number): number {
     const yearlyAnualConfigurations = this.sharedService.getYearlysAnualConfigurations();
     const config = yearlyAnualConfigurations.find((config)=> config.panelsCount === panelsCountSelect);
-
+    
     if (config) {
       // Ajustamos el cálculo según la capacidad de los paneles
       return config.yearlyEnergyDcKwh * (panelsCapacityW / 400) * this.eficienciaInstalacion;
