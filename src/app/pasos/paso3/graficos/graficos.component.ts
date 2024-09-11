@@ -10,14 +10,13 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { EmisionesGeiEvitadasFront } from 'src/app/interfaces/emisiones-gei-evitadas-front';
 import { FlujoEnergiaFront } from 'src/app/interfaces/flujo-energia-front';
 import { FlujoIngresosMonetariosFront } from 'src/app/interfaces/flujo-ingresos-monetarios-front';
 import { GeneracionFotovoltaicaFront } from 'src/app/interfaces/generacion-fotovoltaica-front';
 import { SharedService } from 'src/app/services/shared.service';
 import * as ApexCharts from 'apexcharts';
-import { color } from 'html2canvas/dist/types/css/types/color';
 
 @Component({
   selector: 'app-graficos',
@@ -45,7 +44,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chartAhorroRecuperoRef')
   chartAhorroRecuperoRef!: ElementRef<HTMLCanvasElement>;
 
-  private subscription!: Subscription;
   recuperoInversionMeses!: number;
   carbonOffSet!: number;
   yearlyEnergy!: number;
@@ -57,7 +55,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   emisionesChart!: ApexCharts;
   chartAhorroRecupero!: ApexCharts;
   mesesRecupero!: number;
-  private isUpdating: boolean = false;
   private destroy$ = new Subject<void>(); // Subject para manejar desuscripciones
 
   constructor(
@@ -65,52 +62,21 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {}
-
-  ngAfterViewInit(): void {
-    this.yearlyEnergyInitial = this.sharedService.getYearlyEnergyAcKwh();
-    setTimeout(() => {
-      this.initializeGraficoSolLuna();
-    }, 100);
-    this.initializeChartAhorroRecupero();
-    this.recuperoInversionMeses = this.sharedService.getPlazoInversionValue();
-    this.sharedService.yearlyEnergyAcKwh$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (yearly) => {
-          this.yearlyEnergy = yearly;
-          this.cdr.detectChanges();
-          setTimeout(() => {
-            this.updateChartEnergiaConsumo();
-          }, 0);
-          this.updateChartAhorroRecupero();
-        },
-      });
-
-
-    this.sharedService.plazoInversion$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((mesesRecupero) => {
-        this.mesesRecupero = mesesRecupero;
-        this.updateChartAhorroRecupero();
-      });
-
-    this.carbonOffSet = this.sharedService.getCarbonOffSetTnAnual();
-    this.carbonOffSetInicialTon = this.sharedService.getCarbonOffSetTnAnual();
-    this.initializeChartEmisionesEvitadasAcumuladas();
-
-    this.sharedService.CarbonOffSetTnAnual$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (value) => {
-        this.calculateEmisionesEvitadasConNuevoValor(value);
-        this.updateChartEmisionesEvitadasAcumuladas();
-        this.cdr.detectChanges();
+  ngOnInit(): void {
+    this.sharedService.yearlyEnergyAcKwh$.subscribe({
+      next: (yearlyEnergy) => {
+        this.yearlyEnergy = yearlyEnergy;
+        if (this.chartSolLuna) this.updateChartEnergiaConsumo();
+        if (this.chartAhorroRecupero) this.updateChartAhorroRecupero();
+        if (this.chartAhorroRecupero) this.updateChartAhorroRecupero();
       },
     });
+  }
 
-    // this.initializeChartEnergiaConsumo();
-    this.cdr.detectChanges();
+  ngAfterViewInit(): void {
+    this.initializeGraficoSolLuna();
+    this.initializeChartAhorroRecupero();
+    this.initializeChartEmisionesEvitadasAcumuladas();
   }
 
   ngOnDestroy(): void {
@@ -130,17 +96,32 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.periodoVeinteanalFlujoIngresosMonetariosCopia[0].year;
     const anoRecuperoInversion = primerAno + recuperoInversionAnios;
 
-    const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
-      (item) => item.ahorroEnElectricidadTotalUsd
-    );
-    const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
-      (item) => item.ingresoPorInyeccionElectricaUsd
-    );
+    // Calcular los valores promedio
+    const cantPeriodos =
+      this.periodoVeinteanalFlujoIngresosMonetariosCopia.length;
+
+    const promedioAhorro =
+      this.periodoVeinteanalFlujoIngresosMonetariosCopia.reduce(
+        (sum, item) => sum + item.ahorroEnElectricidadTotalUsd,
+        0
+      ) / cantPeriodos;
+    const promedioIngreso =
+      this.periodoVeinteanalFlujoIngresosMonetariosCopia.reduce(
+        (sum, item) => sum + item.ingresoPorInyeccionElectricaUsd,
+        0
+      ) / cantPeriodos;
+
+    // Crear arrays con los valores promedio repetidos para cada año
+    const ahorroData = Array(cantPeriodos).fill(promedioAhorro);
+    const ingresoData = Array(cantPeriodos).fill(promedioIngreso);
 
     const categories = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => item.year.toString()
     );
 
+    console.log('ahorroData:', ahorroData);
+    console.log('ingresoData:', ingresoData);
+    console.log('categories:', categories);
     const options = {
       series: [
         {
@@ -158,7 +139,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           data: [0], // Solo un punto para mostrar en la leyenda
           color: '#008ae3', // Color del punto en la leyenda
           showInLegend: true,
-          type: ' ', // Tipo de línea
+          type: 'line', // Tipo de línea
           stroke: {
             width: 0, // No trazar ninguna línea
           },
@@ -181,7 +162,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       ],
       chart: {
-        height: 300,
+        height: 350,
         width: 470,
         type: 'line', // Tipo de gráfico general
         toolbar: {
@@ -261,9 +242,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error('El gráfico no está inicializado.');
       return;
     }
-
+    const recuperoInversionMeses = this.sharedService.getPlazoInversionValue();
     // Obtener el valor actualizado de los meses y calcular el año de recupero
-    const recuperoInversionAnios = Math.round(this.mesesRecupero / 12);
+    const recuperoInversionAnios = Math.round(recuperoInversionMeses / 12);
     const primerAno =
       this.periodoVeinteanalFlujoIngresosMonetariosCopia[0].year;
     const anoRecuperoInversion = primerAno + recuperoInversionAnios;
@@ -280,13 +261,24 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       ],
     };
 
-    // Actualizar los datos de la gráfica
-    const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
-      (item) => item.ahorroEnElectricidadTotalUsd
-    );
-    const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
-      (item) => item.ingresoPorInyeccionElectricaUsd
-    );
+    // Calcular los valores promedio
+    const cantPeriodos =
+      this.periodoVeinteanalFlujoIngresosMonetariosCopia.length;
+
+    const promedioAhorro =
+      this.periodoVeinteanalFlujoIngresosMonetariosCopia.reduce(
+        (sum, item) => sum + item.ahorroEnElectricidadTotalUsd,
+        0
+      ) / cantPeriodos;
+    const promedioIngreso =
+      this.periodoVeinteanalFlujoIngresosMonetariosCopia.reduce(
+        (sum, item) => sum + item.ingresoPorInyeccionElectricaUsd,
+        0
+      ) / cantPeriodos;
+
+    // Crear arrays con los valores promedio repetidos para cada año
+    const ahorroData = Array(cantPeriodos).fill(promedioAhorro);
+    const ingresoData = Array(cantPeriodos).fill(promedioIngreso);
 
     // Actualizar los datos y las anotaciones en el gráfico
     this.chartAhorroRecupero.updateOptions({
@@ -301,7 +293,76 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           data: ingresoData,
           color: '#e4c58d',
         },
+        {
+          name: 'Punto de recupero',
+          data: [0], // Solo un punto para mostrar en la leyenda
+          color: '#008ae3', // Color del punto en la leyenda
+          showInLegend: true,
+          type: 'line', // Tipo de línea
+          stroke: {
+            width: 0, // No trazar ninguna línea
+          },
+
+          tooltip: {
+            enabled: true,
+            theme: 'light',
+            y: {
+              formatter: (val: number) => {
+                const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
+                return valorTruncado.toLocaleString('de-DE'); // Formatear con puntos de miles
+              },
+            },
+          },
+          plotOptions: {
+            line: {
+              colors: ['transparent'], // Línea invisible
+            },
+          },
+        },
       ],
+      chart: {
+        height: 300,
+        width: 470,
+        type: 'line', // Tipo de gráfico general
+        toolbar: {
+          show: false,
+        },
+        zoom: {
+          enabled: false,
+        },
+      },
+      stroke: {
+        curve: 'smooth',
+        colors: ['#96c0b2', '#e4c58d'], // Colores de las líneas reales
+        width: 3, // Grosor de las líneas
+      },
+      yaxis: {
+        labels: {
+          formatter: (val: number): string => {
+            return val.toLocaleString('de-DE');
+          },
+        },
+        title: {
+          text: 'USD',
+          style: {
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      grid: {
+        borderColor: '#f1f1f1',
+      },
+      tooltip: {
+        enabled: true,
+        theme: 'light',
+        y: {
+          formatter: (val: number) => {
+            const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
+            return `${valorTruncado.toLocaleString('de-DE')} USD/año`; // Formatear con puntos de miles y agregar el texto
+          },
+        },
+      },
       annotations: updatedAnnotations,
     });
 
@@ -309,9 +370,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-
-  /* metodo reemplazado por Sol */
-    /* Metodo para inicializar el grafico Sol-Luna */
+  /* Metodo para inicializar el grafico Sol-Luna */
   private initializeGraficoSolLuna() {
     const options = {
       chart: {
@@ -394,7 +453,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cdr.detectChanges(); // Forzar detección de cambios en Angular
   }
 
-
   private updateChartEnergiaConsumo() {
     if (this.chartSolLuna) {
       this.chartSolLuna.updateOptions(
@@ -412,7 +470,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cdr.detectChanges();
     }
   }
-
 
   private initializeChartEmisionesEvitadasAcumuladas() {
     if (
