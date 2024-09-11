@@ -217,6 +217,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           enabled: false, // Desactiva el zoom
         },
       },
+
       dataLabels: {
         enabled: false,
       },
@@ -254,7 +255,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
-          offsetY: -25, // Ajusta el valor para acercar el título al gráfico
+          offsetY: -15, // Ajusta el valor para acercar el título al gráfico
         },
       },
       yaxis: {
@@ -271,6 +272,20 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       },
+      legend: {
+        show: true, // Mostrar la leyenda
+        position: 'bottom', // Colocar la leyenda en la parte inferior
+        horizontalAlign: 'center', // Centrar la leyenda
+        markers: {
+          width: 12, // Tamaño del marcador de color
+          height: 12,
+          radius: 12, // Forma circular
+        },
+        labels: {
+          colors: '#333', // Color del texto de la leyenda
+        },
+      },
+
       tooltip: {
         enabled: true, // Habilita el tooltip
         theme: 'light', // Tema del tooltip (dark o light)
@@ -549,7 +564,7 @@ private initializeChartEnergiaConsumo() {
         },
       ],
       chart: {
-        height: 300,
+        height: 350,
         width: 470,
         type: 'line', // Tipo de gráfico general
         toolbar: {
@@ -723,6 +738,7 @@ private initializeChartEnergiaConsumo() {
           fontFamily: 'sodo sans, sans-serif',
         },
       },
+      
     };
 
     if (this.emisionesChart) {
