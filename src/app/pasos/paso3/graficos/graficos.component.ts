@@ -590,7 +590,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     const factorDeAjuste = nuevoCarbonOffSet / this.carbonOffSetInicialTon;
 
     // Recalcula el array de emisiones evitadas con el nuevo valor
-    this.periodoVeinteanalEmisionesGEIEvitadasOriginal =
+    this.periodoVeinteanalEmisionesGEIEvitadasCopia =
       this.periodoVeinteanalEmisionesGEIEvitadasOriginal.map((item) => {
         return {
           ...item,
@@ -600,7 +600,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     console.log(
       'Array recalculado:',
-      this.periodoVeinteanalEmisionesGEIEvitadasOriginal
+      this.periodoVeinteanalEmisionesGEIEvitadasCopia
     );
   }
 
@@ -608,7 +608,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     // Añadir el punto inicial en 0 para el primer año
     const modifiedData = [
       { year: 2024, emisionesTonCO2: 0 },
-      ...this.periodoVeinteanalEmisionesGEIEvitadasOriginal,
+      ...this.periodoVeinteanalEmisionesGEIEvitadasCopia,
     ];
 
     // Calcula las diferencias y simula la degradación
