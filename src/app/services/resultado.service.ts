@@ -12,7 +12,7 @@ export class ResultadoService {
   constructor(
     private gmailService: GmailService,
     private sharedService: SharedService
-  ) {}
+  ) { }
 
   generarResultados(response: any): ResultadosFrontDTO {
     console.log('response para generar resultados', response);
@@ -47,7 +47,7 @@ export class ResultadoService {
       periodoVeinteanalFlujoIngresosMonetarios[0]
         .ingresoPorInyeccionElectricaUsd;
 
-    this.sharedService.setAhorroAnualUsdPromedio(sumaAhorros);
+    this.sharedService.setAhorroAnualUsd(sumaAhorros);
     return sumaAhorros;
   }
 

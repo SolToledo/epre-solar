@@ -1,3 +1,5 @@
+import { YearlysAnualConfigurationFront } from "./yearlys-anual-configuration-front"
+
 export interface SolarDataFront {
     annualConsumption: number,
     carbonOffsetFactorKgPerMWh: number,
@@ -10,6 +12,7 @@ export interface SolarDataFront {
         },
         panelsCountApi:number,
         panelsSelected?: number,
+        yearlysAnualConfigurations?: YearlysAnualConfigurationFront
     },
     tarifaCategory: string,
     yearlyEnergyAcKwh: number

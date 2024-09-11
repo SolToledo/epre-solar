@@ -17,7 +17,6 @@ import { SharedService } from 'src/app/services/shared.service';
 export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
   private plazoInversionSubscription!: Subscription;
   private yearlyEnergyAcKwhSubscription!: Subscription;
-  private panelsCountSelectedSubscription!: Subscription;
   plazoRecuperoInversion: number = 0;
   plazoRecuperoInversionInicial: number = 0;
   panelsCountSelected: number = 0;

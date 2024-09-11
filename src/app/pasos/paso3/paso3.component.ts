@@ -14,6 +14,7 @@ import { NearbyLocationService } from 'src/app/services/nearby-location.service'
 import { Paso2Component } from '../paso2/paso2.component';
 import { PdfService } from 'src/app/services/pdf.service';
 import { ParametrosFront } from 'src/app/interfaces/parametros-front';
+import { YearlyAnualConfigurations } from '../../../../../../solar-app-backend/src/interfaces/yearly-anual-configurations/yearly-anual-configurations.interface';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -47,7 +48,7 @@ export class Paso3Component implements OnInit {
   private polygons!: any[];
   isLoading!: boolean;
   instalacionPotencia: number = 0;
-  yearlyEnergyAcKwh: number = 0;
+  yearlyEnergyAckWhDefault: number = 0;
   yearlyEnergyInitial!: number;
   proporcionAutoconsumo: number = 0;
   consumoTotalAnual: number = 0;
@@ -72,7 +73,7 @@ export class Paso3Component implements OnInit {
     });
     this.actualizarFecha();
   }
-  
+
   ngOnInit(): void {
     this.sharedService.setIsLoading(true);
     setTimeout(() => {
@@ -113,12 +114,22 @@ export class Paso3Component implements OnInit {
   }
 
   private initialLoadFields(): void {
-    this.yearlyEnergyAcKwh = parseFloat(
+    const yearlyAnualConfigurations =
+      this.resultadosFront.solarData.panels.yearlysAnualConfigurations ?? [];
+
+    if (yearlyAnualConfigurations) {
+      this.sharedService.setYearlysAnualConfigurations(
+        yearlyAnualConfigurations
+      );
+    }
+
+    this.yearlyEnergyAckWhDefault = parseFloat(
       this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
     );
-    this.yearlyEnergyInitial = this.yearlyEnergyAcKwh;
-    this.periodoVeinteanalCasoConCapitalPropioInitial = this.resultadosFront.resultadosFinancieros.casoConCapitalPropio;
-    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
+    this.yearlyEnergyInitial = this.yearlyEnergyAckWhDefault;
+    this.periodoVeinteanalCasoConCapitalPropioInitial =
+      this.resultadosFront.resultadosFinancieros.casoConCapitalPropio;
+    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAckWhDefault);
     this.sharedService.setPlazoInversion(
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
         .payBackMonths
@@ -170,8 +181,8 @@ export class Paso3Component implements OnInit {
       next: (value) => (this.consumoTotalAnual = value),
     });
     this.sharedService.tarifaContratada$.subscribe({
-      next: tarifa => this.categoriaTarifa = tarifa
-    })
+      next: (tarifa) => (this.categoriaTarifa = tarifa),
+    });
   }
 
   downloadPDF(): void {
@@ -325,8 +336,21 @@ export class Paso3Component implements OnInit {
 
   private actualizarFecha() {
     const now = new Date();
-    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-    
+    const meses = [
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
+    ];
+
     const mes = meses[now.getMonth()];
     const anio = now.getFullYear();
 
@@ -340,6 +364,4 @@ export class Paso3Component implements OnInit {
   closeModal(): void {
     this.isModalOpen = false;
   }
-
-
 }

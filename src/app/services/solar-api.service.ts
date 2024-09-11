@@ -123,6 +123,7 @@ export class SolarApiService implements OnDestroy {
       console.log("Datos que devuelve el endpoint : ", response);
       // Procesar la respuesta
       this._resultados = this.resultadoService.generarResultados(response);
+      console.log("RESULTADOS ", this._resultados)
       return this.getResultados;
     } catch (error) {
       this.sharedService.setIsLoading(false);

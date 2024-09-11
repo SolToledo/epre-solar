@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { DimensionPanel } from '../interfaces/dimension-panel';
+import { YearlysAnualConfigurationFront } from '../interfaces/yearlys-anual-configuration-front';
+import { YearlyAnualConfigurations } from '../../../../../solar-app-backend/dist/interfaces/yearly-anual-configurations/yearly-anual-configurations.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +19,9 @@ export class SharedService {
 
   private tarifaContratadaSubject = new BehaviorSubject<string>('');
   tarifaContratada$ = this.tarifaContratadaSubject.asObservable();
+
+  private yearlysAnualConfigurationSubject: any = new BehaviorSubject<any>([]);
+  YearlyAnualConfigurations$ = this.yearlysAnualConfigurationSubject.asObservable()
 
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
@@ -36,8 +41,10 @@ export class SharedService {
   panelCapacityW$ = this.panelCapacityWSubject.asObservable();
   private yearlyEnergyAcKwhSubject = new BehaviorSubject<number>(0);
   yearlyEnergyAcKwh$ = this.yearlyEnergyAcKwhSubject.asObservable();
-  private ahorroAnualUsdPromedioSubject = new BehaviorSubject<number>(0);
-  ahorroAnualUsdPromedio$ = this.ahorroAnualUsdPromedioSubject.asObservable();
+
+  private ahorroAnualUsdSubject = new BehaviorSubject<number>(0);
+  ahorroAnualUsd$ = this.ahorroAnualUsdSubject.asObservable();
+
   private potenciaMaxAsignadaSubject = new BehaviorSubject<number>(0);
   potenciaMaxAsignadaW$ = this.potenciaMaxAsignadaSubject.asObservable();
   private potenciaInstalacionSubject = new BehaviorSubject<number>(0);
@@ -123,12 +130,12 @@ export class SharedService {
     return this.yearlyEnergyAcKwhSubject.getValue();
   }
 
-  setAhorroAnualUsdPromedio(ahorroPromedio: number) {
-    this.ahorroAnualUsdPromedioSubject.next(ahorroPromedio);
+  setAhorroAnualUsd(ahorroElectricidadInyeccion: number) {
+    this.ahorroAnualUsdSubject.next(ahorroElectricidadInyeccion);
   }
 
-  getAhorroAnualUsdPromedio() {
-    return this.ahorroAnualUsdPromedioSubject.getValue();
+  getAhorroAnualUsd() {
+    return this.ahorroAnualUsdSubject.getValue();
   }
 
   setPotenciaMaxAsignadaW(potenciaMaxAsignada: number) {
@@ -238,5 +245,14 @@ export class SharedService {
   setDimensionPanels(dimensionPanel: DimensionPanel) {
     this.dimensionPanel = dimensionPanel;
   }
+
+  setYearlysAnualConfigurations(yearlyAnualConfigurations: YearlysAnualConfigurationFront | never[]) {
+    this.yearlysAnualConfigurationSubject.next(yearlyAnualConfigurations);
+  }
+
+  getYearlysAnualConfigurations() {
+    return this.yearlysAnualConfigurationSubject.getValue();
+  }
+
 
 }

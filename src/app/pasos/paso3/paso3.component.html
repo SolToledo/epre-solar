@@ -42,7 +42,7 @@
 
           <div class="item">
             <app-plazo
-              [yearlyEnergyAcKwhInitial]="yearlyEnergyAcKwh"
+              [yearlyEnergyAcKwhInitial]="yearlyEnergyAckWhDefault"
               [periodoVeinteanalCasoConCapitalPropioInitial]="periodoVeinteanalCasoConCapitalPropioInitial"
             ></app-plazo>
           </div>
@@ -52,7 +52,7 @@
           </div>
 
           <div class="item">
-            <app-energia [yearlyEnergyAcKwh]="yearlyEnergyAcKwh"></app-energia>
+            <app-energia [yearlyEnergyAckWh]="yearlyEnergyAckWhDefault"></app-energia>
           </div>
 
           <div class="item"><app-superficie></app-superficie></div>
@@ -83,7 +83,7 @@
                 getGeneracionFotovoltaica()
               "
               [consumoTotalAnual]="consumoTotalAnual"
-              [yearlyEnergyInitial]="yearlyEnergyInitial"
+              [yearlyEnergyInitial]="yearlyEnergyAckWhDefault"
             >
             </app-graficos>
           </div>
