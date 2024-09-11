@@ -67,7 +67,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    
+  }
 
   ngAfterViewInit(): void {
     this.yearlyEnergyInitial = this.sharedService.getYearlyEnergyAcKwh();
@@ -95,7 +97,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.updateChartAhorroRecupero();
       });
 
-    this.carbonOffSet = this.sharedService.getCarbonOffSetTnAnual();
+      this.carbonOffSet = this.sharedService.getCarbonOffSetTnAnual();
+      this.carbonOffSetInicialTon = this.sharedService.getCarbonOffSetTnAnual();
+      this.initializeChartEmisionesEvitadasAcumuladas();
 
     this.sharedService.CarbonOffSetTnAnual$.pipe(
       takeUntil(this.destroy$)
@@ -109,7 +113,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initializeChartAhorroRecupero();
    
     // this.initializeChartEnergiaConsumo();
-    this.initializeChartEmisionesEvitadasAcumuladas();
     this.cdr.detectChanges();
 
 
@@ -121,191 +124,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // Función para recalcular el array con base en el nuevo valor de carbonOffSet
-  private calculateEmisionesEvitadasConNuevoValor(nuevoCarbonOffSet: number) {
-    // Clona el array original para no modificarlo directamente
-    this.periodoVeinteanalEmisionesGEIEvitadasCopia = JSON.parse(
-      JSON.stringify(this.periodoVeinteanalEmisionesGEIEvitadasOriginal)
-    );
-
-    // Obtén el valor original del primer año para calcular la proporción
-    const valorOriginalPrimerAño =
-      this.periodoVeinteanalEmisionesGEIEvitadasOriginal[0].emisionesTonCO2;
-
-    // Calcula la proporción de cambio
-    const proporcion = nuevoCarbonOffSet / valorOriginalPrimerAño;
-
-    // Aplica el nuevo valor y ajusta los valores restantes de manera proporcional
-    this.periodoVeinteanalEmisionesGEIEvitadasCopia =
-      this.periodoVeinteanalEmisionesGEIEvitadasOriginal.map((item, index) => {
-        return {
-          ...item,
-          emisionesTonCO2:
-            index === 0 ? nuevoCarbonOffSet : item.emisionesTonCO2 * proporcion,
-        };
-      });
-  }
-/************************************************************************************************************************************************************** */
-  // Función para actualizar el gráfico con los nuevos valores
-  private initializeChartEmisionesEvitadasAcumuladas() {
-    // Asegúrate de que periodoVeinteanalEmisionesGEIEvitadasOriginal está definido y no está vacío
-    if (
-      !this.periodoVeinteanalEmisionesGEIEvitadasOriginal ||
-      this.periodoVeinteanalEmisionesGEIEvitadasOriginal.length === 0
-    ) {
-      console.error(
-        'periodoVeinteanalEmisionesGEIEvitadasOriginal no está definido o está vacío'
-      );
-      return;
-    }
-
-    // Añadir el punto inicial en 0 para el primer año
-    const modifiedData = [
-      { year: 2024, emisionesTonCO2: 0 },
-      ...this.periodoVeinteanalEmisionesGEIEvitadasOriginal,
-    ];
-
-    // Calcula las diferencias y simula la degradación
-    const seriesData = modifiedData
-      .map((item, index, array) => {
-        let prevItem;
-        index===0? prevItem = array[index]: prevItem = array[index - 1];
-        const degradacion = 0.004; 
-        const emisionesReducidas =
-          prevItem.emisionesTonCO2 - (prevItem.emisionesTonCO2 * degradacion);
-        return {
-          year: item.year,
-          diferencia: emisionesReducidas,
-        };
-      })
-      .filter(
-        (item): item is { year: number; diferencia: number } => item !== null
-      );
-
-    // Inicializa el acumulado con el valor de emisiones del primer año
-    let acumulado = 0; // Comienza en cero
-
-    // Calcula el acumulado sumando las diferencias
-    const acumuladoData = seriesData.map((item) => {
-      acumulado += item.diferencia;
-      return {
-        year: item.year,
-        acumulado: acumulado,
-      };
-    });
-
-    // Extrae los años y el acumulado para el gráfico
-    const categories = acumuladoData
-      .filter((d) => d && typeof d.year !== 'undefined')
-      .map((d) => d.year.toString());
-    const data = modifiedData.map((d) => d.emisionesTonCO2);
-
-    // Configura el gráfico
-    const options = {
-      series: [
-        {
-          name: 'Emisiones CO₂ Acumuladas',
-          data: data,
-          color:'#96c0b2',
-        },
-      ],
-      chart: {
-        height: 350,
-        width: 470, 
-        type: 'area',
-        toolbar: {
-          show: false, // Oculta la barra de herramientas
-        },
-        zoom: {
-          enabled: false, // Desactiva el zoom
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: 'smooth',
-        colors: ['#96c0b2'], // Color de la línea
-        width: 3, // Hacer la línea un poco más gruesa
-      },
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shade: 'dark',
-          gradientToColors: ['#e4c58d'],// Color final del degradado (amarillo)
-          shadeIntensity: 0.8,
-          type: 'vertical',
-          opacityFrom: 0.8,
-          opacityTo: 0.3,
-          stops: [0, 100, 100, 100],
-        },
-      },
-      markers: {
-        size: 0,
-        colors: ['#96c0b2'],
-        strokeColors: '#fff',
-        strokeWidth: 2,
-        hover: {
-          size: 7,
-        },
-      },
-      xaxis: {
-        categories: categories,
-        title: {
-          text: 'Año', // Título del eje X
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-          offsetY: -25, // Ajusta el valor para acercar el título al gráfico
-        },
-      },
-      yaxis: {
-        labels: {
-          formatter: (val: number): string => {
-            return val.toLocaleString('de-DE');
-          },
-        },
-        title: {
-          text: 'Ton CO₂', // Título del eje Y
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      tooltip: {
-        enabled: true, // Habilita el tooltip
-        theme: 'light', // Tema del tooltip (dark o light)
-        x: {
-          format: 'yyyy',
-        },
-        y: {
-          formatter: (value: number) => {
-            return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} tCO₂/año`;
-          },
-        },
-        marker: {
-          show: false, // Muestra el marcador en el tooltip
-        },
-        style: {
-          fontSize: '12px', // Tamaño de fuente del texto del tooltip
-          fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
-        },
-      },
-    };
-
-    // Inicializa y renderiza el gráfico
-    this.emisionesChart = new ApexCharts(
-      document.querySelector('#emisionesChartRef') as HTMLElement,
-      options
-    );
-
-    this.emisionesChart.render();
-  }
-/************************************************************************************************************************************************************** */
- 
-/**************************************************************************************************************************************************************** */
   private initializeChartAhorroRecupero() {
     this.periodoVeinteanalFlujoIngresosMonetariosCopia = JSON.parse(
       JSON.stringify(this.periodoVeinteanalFlujoIngresosMonetarios)
@@ -442,114 +260,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.chartAhorroRecupero.render();
     this.cdr.detectChanges();
   }
-/*************************************************************************************************************************************************************** */  
-
-  private updateChartEmisionesEvitadasAcumuladas() {
-    // Calcula los valores acumulados
-    const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasCopia
-      .map((item, index, array) => {
-        if (index === 0) return null;
-
-        const prevItem = array[index - 1];
-        return {
-          year: item.year,
-          diferencia: prevItem.emisionesTonCO2 - item.emisionesTonCO2,
-        };
-      })
-      .filter((item) => item !== null);
-
-    // Extrae los años del array
-    const categories = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
-      (entry) => entry.year.toString()
-    );
-
-    // Actualiza el gráfico con las nuevas opciones
-    const options = {
-      series: [
-        {
-          name: 'Emisiones CO₂ Acumuladas',
-          data: seriesData,
-        },
-      ],
-      chart: {
-        height: 350,
-        width: 470,
-        type: 'area',
-        toolbar: {
-          show: false,
-        },
-        zoom: {
-          enabled: false,
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: 'straight',
-        colors: ['#008ae3'],
-        width: 4,
-      },
-      fill: {
-        colors: ['#008ae3'],
-        opacity: 0.05,
-      },
-      markers: {
-        size: 0,
-        hover: {
-          size: 6,
-          colors: ['#008ae3'],
-          strokeColor: '#008ae3',
-          strokeWidth: 2,
-        },
-      },
-      xaxis: {
-        categories: categories,
-        title: {
-          text: 'Año',
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      yaxis: {
-        labels: {
-          formatter: (val: number): string => {
-            return val.toLocaleString('de-DE'); // Formatea el número con punto como separador de miles
-          },
-        },
-
-        title: {
-          text: 'Ton CO₂',
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      tooltip: {
-        enabled: true,
-        theme: 'light',
-        x: {
-          format: 'yyyy',
-        },
-        marker: {
-          show: true,
-        },
-        style: {
-          fontSize: '12px',
-          fontFamily: 'sodo sans, sans-serif',
-        },
-      },
-    };
-
-    if (this.emisionesChart) {
-      this.emisionesChart.updateOptions(options);
-    }
-  }
-
- 
+  
 
   private updateChartAhorroRecupero() {
     if (this.isUpdating) return; // Evitar llamada infinita recursiva
@@ -722,6 +433,252 @@ private updateChartEnergiaConsumo() {
   }
 }
 
+
+
+
+private initializeChartEmisionesEvitadasAcumuladas() {
+  
+  if (
+    !this.periodoVeinteanalEmisionesGEIEvitadasOriginal ||
+    this.periodoVeinteanalEmisionesGEIEvitadasOriginal.length === 0
+  ) {
+    console.error(
+      'periodoVeinteanalEmisionesGEIEvitadasOriginal no está definido o está vacío'
+    );
+    return;
+  }
+
+  // Añadir el punto inicial en 0 para el primer año
+  const modifiedData = [
+    { year: 2024, emisionesTonCO2: 0 },
+    ...this.periodoVeinteanalEmisionesGEIEvitadasOriginal,
+  ];
+
+  // Calcula las diferencias y simula la degradación
+  const seriesData = modifiedData
+    .map((item, index, array) => {
+      let prevItem;
+      index===0? prevItem = array[index]: prevItem = array[index - 1];
+      const degradacion = 0.004; 
+      const emisionesReducidas =
+        prevItem.emisionesTonCO2 - (prevItem.emisionesTonCO2 * degradacion);
+      return {
+        year: item.year,
+        diferencia: emisionesReducidas,
+      };
+    })
+    .filter(
+      (item): item is { year: number; diferencia: number } => item !== null
+    );
+
+  // Inicializa el acumulado con el valor de emisiones del primer año
+  let acumulado = 0; // Comienza en cero
+
+  // Calcula el acumulado sumando las diferencias
+  const acumuladoData = seriesData.map((item) => {
+    acumulado += item.diferencia;
+    return {
+      year: item.year,
+      acumulado: acumulado,
+    };
+  });
+
+  // Extrae los años y el acumulado para el gráfico
+  const categories = acumuladoData
+    .filter((d) => d && typeof d.year !== 'undefined')
+    .map((d) => d.year.toString());
+  const data = modifiedData.map((d) => d.emisionesTonCO2);
+
+  // Configura el gráfico
+  const options = {
+    series: [
+      {
+        name: 'Emisiones CO₂ Acumuladas',
+        data: data,
+        color:'#96c0b2',
+      },
+    ],
+    chart: {
+      height: 350,
+      width: 470, 
+      type: 'area',
+      toolbar: {
+        show: false, // Oculta la barra de herramientas
+      },
+      zoom: {
+        enabled: false, // Desactiva el zoom
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: 'smooth',
+      colors: ['#96c0b2'], // Color de la línea
+      width: 3, // Hacer la línea un poco más gruesa
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shade: 'dark',
+        gradientToColors: ['#e4c58d'],// Color final del degradado (amarillo)
+        shadeIntensity: 0.8,
+        type: 'vertical',
+        opacityFrom: 0.8,
+        opacityTo: 0.3,
+        stops: [0, 100, 100, 100],
+      },
+    },
+    markers: {
+      size: 0,
+      colors: ['#96c0b2'],
+      strokeColors: '#fff',
+      strokeWidth: 2,
+      hover: {
+        size: 7,
+      },
+    },
+    xaxis: {
+      categories: categories,
+      title: {
+        text: 'Año', // Título del eje X
+        style: {
+          fontSize: '12px',
+          fontFamily: 'sodo sans, sans-serif',
+        },
+        offsetY: -25, // Ajusta el valor para acercar el título al gráfico
+      },
+    },
+    yaxis: {
+      labels: {
+        formatter: (val: number): string => {
+          return val.toLocaleString('de-DE');
+        },
+      },
+      title: {
+        text: 'Ton CO₂', // Título del eje Y
+        style: {
+          fontSize: '12px',
+          fontFamily: 'sodo sans, sans-serif',
+        },
+      },
+    },
+    tooltip: {
+      enabled: true, // Habilita el tooltip
+      theme: 'light', // Tema del tooltip (dark o light)
+      x: {
+        format: 'yyyy',
+      },
+      y: {
+        formatter: (value: number) => {
+          return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} tCO₂/año`;
+        },
+      },
+      marker: {
+        show: false, // Muestra el marcador en el tooltip
+      },
+      style: {
+        fontSize: '12px', // Tamaño de fuente del texto del tooltip
+        fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
+      },
+    },
+  };
+
+  // Inicializa y renderiza el gráfico
+  this.emisionesChart = new ApexCharts(
+    document.querySelector('#emisionesChartRef') as HTMLElement,
+    options
+  );
+
+  this.emisionesChart.render();
+}
+
+private calculateEmisionesEvitadasConNuevoValor(nuevoCarbonOffSet: number): void {
+  if (
+    !this.periodoVeinteanalEmisionesGEIEvitadasOriginal ||
+    this.periodoVeinteanalEmisionesGEIEvitadasOriginal.length === 0
+  ) {
+    console.error(
+      'periodoVeinteanalEmisionesGEIEvitadasOriginal no está definido o está vacío'
+    );
+    return;
+  }
+
+  // Factor de ajuste en base al nuevo valor de CarbonOffSetTnAnual
+  const factorDeAjuste =
+    nuevoCarbonOffSet / this.carbonOffSetInicialTon;
+
+  // Recalcula el array de emisiones evitadas con el nuevo valor
+  this.periodoVeinteanalEmisionesGEIEvitadasOriginal = this.periodoVeinteanalEmisionesGEIEvitadasOriginal.map(
+    (item) => {
+      return {
+        ...item,
+        emisionesTonCO2: item.emisionesTonCO2 * factorDeAjuste,
+      };
+    }
+  );
+
+  console.log('Array recalculado:', this.periodoVeinteanalEmisionesGEIEvitadasOriginal);
+}
+
+
+private updateChartEmisionesEvitadasAcumuladas(): void {
+  // Añadir el punto inicial en 0 para el primer año
+  const modifiedData = [
+    { year: 2024, emisionesTonCO2: 0 },
+    ...this.periodoVeinteanalEmisionesGEIEvitadasOriginal,
+  ];
+
+  // Calcula las diferencias y simula la degradación
+  const seriesData = modifiedData
+    .map((item, index, array) => {
+      let prevItem;
+      index === 0 ? (prevItem = array[index]) : (prevItem = array[index - 1]);
+      const degradacion = 0.004; // Simula la degradación anual
+      const emisionesReducidas =
+        prevItem.emisionesTonCO2 - prevItem.emisionesTonCO2 * degradacion;
+      return {
+        year: item.year,
+        diferencia: emisionesReducidas,
+      };
+    })
+    .filter(
+      (item): item is { year: number; diferencia: number } => item !== null
+    );
+
+  // Inicializa el acumulado con el valor de emisiones del primer año
+  let acumulado = 0; // Comienza en cero
+
+  // Calcula el acumulado sumando las diferencias
+  const acumuladoData = seriesData.map((item) => {
+    acumulado += item.diferencia;
+    return {
+      year: item.year,
+      acumulado: acumulado,
+    };
+  });
+
+  // Extrae los años y el acumulado para el gráfico
+  const categories = acumuladoData
+    .filter((d) => d && typeof d.year !== 'undefined')
+    .map((d) => d.year.toString());
+
+  const data = modifiedData.map((d) => d.emisionesTonCO2);
+
+  // Actualiza el gráfico con los nuevos datos
+  this.emisionesChart.updateOptions({
+    series: [
+      {
+        name: 'Emisiones CO₂ Acumuladas',
+        data: data,
+        color: '#96c0b2',
+      },
+    ],
+    xaxis: {
+      categories: categories,
+    },
+  });
+}
 
 
 
