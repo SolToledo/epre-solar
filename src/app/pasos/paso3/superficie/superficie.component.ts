@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
@@ -11,25 +11,35 @@ import { SharedService } from 'src/app/services/shared.service';
 export class SuperficieComponent implements OnInit, OnDestroy {
   selectedAreaM2!: number;
   areaPanelsSelected!: number;
-  private areaSubscription!: Subscription;
+  private subscriptions: Subscription = new Subscription(); 
   
-  constructor(private mapService: MapService, private sharedService: SharedService) {
+  constructor(private mapService: MapService, private sharedService: SharedService, private cdr: ChangeDetectorRef) {
   }
   
   ngOnInit() {
-    this.areaSubscription = this.mapService.area$.subscribe({
-      next: (value) => this.selectedAreaM2 = value
-    });
+    this.subscriptions.add(
+      this.mapService.area$.subscribe({
+        next: (value) => {
+          this.selectedAreaM2 = value;
+          this.cdr.detectChanges();
+        }
+      })
+    );
 
-    this.sharedService.areaPanelsSelected$.subscribe({
-      next: area => this.areaPanelsSelected = area
-    })
-    
+    this.subscriptions.add(
+      this.sharedService.areaPanelsSelected$.subscribe({
+        next: (area) => {
+          this.areaPanelsSelected = area;
+          this.cdr.detectChanges();
+        }
+      })
+    );
   }
 
   ngOnDestroy() {
-    if (this.areaSubscription) {
-      this.areaSubscription.unsubscribe();
+    // Desuscribirse de todas las suscripciones
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
     }
   }
 }

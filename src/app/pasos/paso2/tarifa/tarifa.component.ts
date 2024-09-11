@@ -88,7 +88,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private decimalPipe: DecimalPipe
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.tarifaContratada = this.sharedService.getTarifaContratada() ?? '';
@@ -100,7 +100,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   isOptionSelected(): boolean {
     return this.tarifaContratada !== '';
@@ -156,8 +156,14 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       data: {
         message: `
   La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, 
-  con una potencia total de la instalación de ${this.decimalPipe.transform(this.sharedService.getPotenciaInstalacionW() / 1000, '1.2-2')} kW, 
-  superando la potencia máxima de ${this.decimalPipe.transform(this.potenciaMaxAsignadakW, '1.0-0')} kW 
+  con una potencia total de la instalación de ${this.decimalPipe.transform(
+    this.sharedService.getPotenciaInstalacionW() / 1000,
+    '1.2-2'
+  )} kW, 
+  superando la potencia máxima de ${this.decimalPipe.transform(
+    this.potenciaMaxAsignadakW,
+    '1.0-0'
+  )} kW 
   asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar 
   para volver al paso anterior y elegir otra superficie.`,
       },
@@ -276,11 +282,11 @@ export class TarifaComponent implements OnInit, AfterViewInit {
   getPotenciaMaximakW(): number | null {
     switch (this.tarifaContratada) {
       case 'T2-CMP':
-      return 50; 
+        return 50;
       case 'T3-BT':
       case 'T3-MT13.2R':
       case 'TRA-SD':
-        return 2000; 
+        return 2000;
       default:
         return null;
     }
