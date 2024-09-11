@@ -580,7 +580,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
-          offsetY: -25, // Ajusta el valor para acercar el título al gráfico
+          offsetY: -15, // Ajusta el valor para acercar el título al gráfico
         },
       },
       yaxis: {
@@ -619,6 +619,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
         },
       },
+      
     };
 
     // Inicializa y renderiza el gráfico
