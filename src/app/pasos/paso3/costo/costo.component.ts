@@ -27,11 +27,11 @@ export class CostoComponent implements OnInit, OnDestroy {
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Inicializamos valores iniciales
-    
+
   }
 
   ngAfterViewInit(): void {
@@ -51,7 +51,7 @@ export class CostoComponent implements OnInit, OnDestroy {
       });
 
     // Suscripción a la potencia de instalación
-    this.sharedService.potenciaInstalacion$
+    this.sharedService.potenciaInstalacionW$
       .pipe(takeUntil(this.destroy$)) // Desuscribimos cuando el componente se destruye
       .subscribe({
         next: (newPotenciaInstalacion) => {

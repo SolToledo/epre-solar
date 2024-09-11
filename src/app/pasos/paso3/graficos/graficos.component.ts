@@ -60,10 +60,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.sharedService.yearlyEnergyAcKwh$.subscribe({
+    this.sharedService.yearlyEnergyAckWh$.subscribe({
       next: (yearlyEnergy) => {
         this.yearlyEnergy = yearlyEnergy;
         if (this.chartSolLuna) this.updateChartEnergiaConsumo();
@@ -619,7 +619,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
         },
       },
-      
+
     };
 
     // Inicializa y renderiza el gráfico
