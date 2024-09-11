@@ -53,6 +53,7 @@ export class Paso3Component implements OnInit {
   consumoTotalAnual: number = 0;
   paso2!: Paso2Component;
   isDownloading: boolean = false;
+  periodoVeinteanalCasoConCapitalPropioInitial!: any[];
 
   constructor(
     private router: Router,
@@ -116,6 +117,7 @@ export class Paso3Component implements OnInit {
       this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
     );
     this.yearlyEnergyInitial = this.yearlyEnergyAcKwh;
+    this.periodoVeinteanalCasoConCapitalPropioInitial = this.resultadosFront.resultadosFinancieros.casoConCapitalPropio;
     this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAcKwh);
     this.sharedService.setPlazoInversion(
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
@@ -164,7 +166,6 @@ export class Paso3Component implements OnInit {
     this.costoInstalacion =
       this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
     this.sharedService.setCostoInstalacion(this.costoInstalacion);
-    console.log("this.costoInstalacion ", this.costoInstalacion)
     this.consumoService.totalConsumo$.subscribe({
       next: (value) => (this.consumoTotalAnual = value),
     });
