@@ -159,7 +159,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       xaxis: {
         categories: categories,
         title: {
-          text: 'Años',
+          text: 'Año',
           style: {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
@@ -168,6 +168,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       yaxis: {
+        min: 0, // Asegura que el eje Y comience desde 0
         labels: {
           formatter: (val: number): string => {
             return val.toLocaleString('de-DE');
@@ -294,6 +295,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         width: 3, // Grosor de las líneas
       },
       yaxis: {
+        min: 0, // Asegura que el eje Y comience desde 0
         labels: {
           formatter: (val: number): string => {
             return val.toLocaleString('de-DE');
@@ -360,6 +362,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       yaxis: {
+        min: 0, // Asegura que el eje Y comience desde 0
         title: {
           text: 'kWh', // Mostrar "kWh" como título del eje Y
           style: {
@@ -557,6 +560,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       yaxis: {
+        min:0,
         labels: {
           formatter: (val: number): string => {
             return val.toLocaleString('de-DE');
