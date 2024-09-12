@@ -8,8 +8,10 @@ import { YearlysAnualConfigurationFront } from '../interfaces/yearlys-anual-conf
   providedIn: 'root',
 })
 export class SharedService {
+  private inversionUsdSubject = new BehaviorSubject<number>(0);
+  inversionUsd$ = this.inversionUsdSubject.asObservable();
 
-  private dimensionPanel!: { height: number; width: number; };
+  private dimensionPanel!: { height: number; width: number };
   private areaPanelsSelectedSubject = new BehaviorSubject<number>(0);
   areaPanelsSelected$ = this.areaPanelsSelectedSubject.asObservable();
 
@@ -20,7 +22,8 @@ export class SharedService {
   tarifaContratada$ = this.tarifaContratadaSubject.asObservable();
 
   private yearlysAnualConfigurationSubject: any = new BehaviorSubject<any>([]);
-  YearlyAnualConfigurations$ = this.yearlysAnualConfigurationSubject.asObservable()
+  YearlyAnualConfigurations$ =
+    this.yearlysAnualConfigurationSubject.asObservable();
 
   private tutorialShownSubject = new BehaviorSubject<boolean>(false);
   tutorialShown$ = this.tutorialShownSubject.asObservable();
@@ -50,7 +53,9 @@ export class SharedService {
   private potenciaInstalacionWSubject = new BehaviorSubject<number>(0);
   potenciaInstalacionW$ = this.potenciaInstalacionWSubject.asObservable();
 
-  private resultadosFrontSubject = new BehaviorSubject<Partial<ResultadosFrontDTO>>({});
+  private resultadosFrontSubject = new BehaviorSubject<
+    Partial<ResultadosFrontDTO>
+  >({});
 
   resultadosFront$ = this.resultadosFrontSubject.asObservable();
   private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
@@ -95,7 +100,7 @@ export class SharedService {
   setPanelsCountSelected(value: number): void {
     if (value < 4) {
       this.panelsCountSelectedSubject.next(4);
-      return
+      return;
     }
     this.panelsCountSelectedSubject.next(value);
   }
@@ -151,8 +156,8 @@ export class SharedService {
   setPotenciaInstalacionW(instalacionPotencia: number) {
     if (instalacionPotencia > this.getPotenciaMaxAsignadaValue()) {
       this.setIsStopCalculate(true);
-
-    } {
+    }
+    {
       this.setIsStopCalculate(false);
     }
     this.potenciaInstalacionWSubject.next(instalacionPotencia);
@@ -171,7 +176,7 @@ export class SharedService {
   }
 
   setMaxPanelsPerSuperface(maxPanels: number) {
-    this.setPotenciaInstalacionW(maxPanels * this.getPanelCapacityW())
+    this.setPotenciaInstalacionW(maxPanels * this.getPanelCapacityW());
     this.maxPanelsPerSuperfaceSubject.next(maxPanels);
   }
 
@@ -220,11 +225,11 @@ export class SharedService {
 
   calculateAreaPanelsSelected(totalPanels: number): number {
     if (totalPanels >= 4) {
-      const areaPanelsSelected = this.calculateAreaPanels(totalPanels)
+      const areaPanelsSelected = this.calculateAreaPanels(totalPanels);
       this.setAreaPanelsSelected(areaPanelsSelected);
       return areaPanelsSelected;
     }
-    return 0
+    return 0;
   }
   calculateAreaPanels(panelsCount: number): number {
     const dimensionPanel: DimensionPanel = this.getDimensionPanel();
@@ -239,16 +244,20 @@ export class SharedService {
     return this.areaPanelsSelectedSubject.getValue();
   }
   getDimensionPanel(): DimensionPanel {
-    return this.dimensionPanel || {
-      height: 1.879,
-      width: 1.045
-    }
+    return (
+      this.dimensionPanel || {
+        height: 1.879,
+        width: 1.045,
+      }
+    );
   }
   setDimensionPanels(dimensionPanel: DimensionPanel) {
     this.dimensionPanel = dimensionPanel;
   }
 
-  setYearlysAnualConfigurations(yearlyAnualConfigurations: YearlysAnualConfigurationFront | never[]) {
+  setYearlysAnualConfigurations(
+    yearlyAnualConfigurations: YearlysAnualConfigurationFront | never[]
+  ) {
     this.yearlysAnualConfigurationSubject.next(yearlyAnualConfigurations);
   }
 
@@ -256,5 +265,11 @@ export class SharedService {
     return this.yearlysAnualConfigurationSubject.getValue();
   }
 
+  getInversionUsd(): number {
+    return this.inversionUsdSubject.getValue();
+  }
 
+  setInversionUsd(inversion: number) {
+    this.inversionUsdSubject.next(inversion);
+  }
 }

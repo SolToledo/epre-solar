@@ -12,11 +12,14 @@ export class ResultadoService {
   constructor(
     private gmailService: GmailService,
     private sharedService: SharedService
-  ) { }
+  ) {}
 
   generarResultados(response: any): ResultadosFrontDTO {
     console.log('response para generar resultados', response);
     this.checkUpdatePanelCapacity(response.solarData.panels.panelCapacityW);
+    const inversionInitial =
+      response.resultadosFinancieros.casoConCapitalPropio.inversiones;
+    this.sharedService.setInversionUsd(inversionInitial);
 
     return (this.resultados = {
       solarData: response.solarData,
