@@ -68,7 +68,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.yearlyEnergy = yearlyEnergy;
         if (this.chartSolLuna) this.updateChartEnergiaConsumo();
         if (this.chartAhorroRecupero) this.updateChartAhorroRecupero();
-        if (this.chartAhorroRecupero) this.updateChartAhorroRecupero();
+        if (this.emisionesChart) this.updateChartEmisionesEvitadasAcumuladas();
       },
     });
   }
@@ -332,6 +332,78 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /* Metodo para inicializar el grafico Sol-Luna */
   private initializeGraficoSolLuna() {
+  /*  const options = {
+      chart: {
+        type: 'bar',
+        height: 350,
+        width: 470,
+        endingShape: 'rounded',
+        background: 'transparent',
+        toolbar: {
+          show: false, 
+        },
+      },
+      series: [
+        {
+          data: [this.consumoTotalAnual, this.yearlyEnergy],
+          name: 'Valores',
+        },
+      ],
+      colors: ['#96c0b2', '#e4c58d'], 
+      plotOptions: {
+        bar: {
+          columnWidth: '50%',
+          distributed: true, 
+          colors: {
+            backgroundBarOpacity: 0.3, 
+          },
+        },
+      },
+      xaxis: {
+        categories: ['Consumo total anual', 'Generación Anual'],
+        labels: {
+          show: true,
+          style: {
+            colors: ['#6d6b6b'], 
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'kWh', 
+          style: {
+            fontSize: '14px',
+            fontFamily: 'sodo sans, sans-serif',
+            color: '#6d6b6b',
+          },
+        },
+        labels: {
+          formatter: (val: number): string => {
+            return val.toLocaleString('de-DE'); 
+          },
+          style: {
+            colors: ['#6d6b6b'],
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      tooltip: {
+        enabled: true,
+        theme: 'light',
+        y: {
+          formatter: (val: number) => {
+            return `${val.toLocaleString('de-DE')} kWh`; 
+          },
+        },
+      },
+      grid: {
+        borderColor: '#f1f1f1',
+      },
+    };*/
+
     const options = {
       chart: {
         type: 'bar',
@@ -362,7 +434,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       xaxis: {
         categories: ['Consumo total anual', 'Generación Anual'], // Etiquetas en el eje X
         labels: {
-          show: true, // Mostrar etiquetas del eje X
+          show: true,
           style: {
             colors: ['#6d6b6b'], // Color para las etiquetas del eje X
             fontSize: '12px',
@@ -371,22 +443,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       yaxis: {
-        title: {
-          text: 'kWh', // Cambiar el texto del título del eje Y a "kWh"
-          style: {
-            fontSize: '14px',
-            fontFamily: 'sodo sans, sans-serif',
-            color: '#6d6b6b',
-          },
-        },
         labels: {
           formatter: (val: number): string => {
-            return val.toLocaleString('de-DE'); // Formato para valores en el eje Y (kWh)
-          },
-          style: {
-            colors: ['#6d6b6b'],
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
+            return val.toLocaleString('de-DE'); // Formato para valores en el eje Y
           },
         },
       },
@@ -395,7 +454,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         theme: 'light',
         y: {
           formatter: (val: number) => {
-            return `${val.toLocaleString('de-DE')} kWh`; // Formato del valor en el tooltip
+            return `${val.toLocaleString('de-DE')}`; // Formato del valor en el tooltip
           },
         },
       },
@@ -403,6 +462,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         borderColor: '#f1f1f1',
       },
     };
+    
+    
 
     // Renderizar el gráfico Sol-Luna
     this.chartSolLuna = new ApexCharts(
