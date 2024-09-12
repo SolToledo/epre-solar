@@ -390,7 +390,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         theme: 'light',
         y: {
           formatter: (val: number) => {
-            return `${val.toLocaleString('de-DE')}`; // Formato del valor en el tooltip
+            // Formatear el valor para mostrar con puntos de miles y sin decimales
+            return val.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
           },
         },
       },
