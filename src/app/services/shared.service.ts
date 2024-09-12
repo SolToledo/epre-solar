@@ -38,17 +38,20 @@ export class SharedService {
   expandStep3$ = this.expandStep3Subject.asObservable();
   private panelCapacityWSubject = new BehaviorSubject<number>(400);
   panelCapacityW$ = this.panelCapacityWSubject.asObservable();
-  private yearlyEnergyAcKwhSubject = new BehaviorSubject<number>(0);
-  yearlyEnergyAcKwh$ = this.yearlyEnergyAcKwhSubject.asObservable();
+  private yearlyEnergyAckWhSubject = new BehaviorSubject<number>(0);
+  yearlyEnergyAckWh$ = this.yearlyEnergyAckWhSubject.asObservable();
 
   private ahorroAnualUsdSubject = new BehaviorSubject<number>(0);
   ahorroAnualUsd$ = this.ahorroAnualUsdSubject.asObservable();
 
   private potenciaMaxAsignadaSubject = new BehaviorSubject<number>(0);
   potenciaMaxAsignadaW$ = this.potenciaMaxAsignadaSubject.asObservable();
-  private potenciaInstalacionSubject = new BehaviorSubject<number>(0);
-  potenciaInstalacion$ = this.potenciaInstalacionSubject.asObservable();
+
+  private potenciaInstalacionWSubject = new BehaviorSubject<number>(0);
+  potenciaInstalacionW$ = this.potenciaInstalacionWSubject.asObservable();
+
   private resultadosFrontSubject = new BehaviorSubject<Partial<ResultadosFrontDTO>>({});
+
   resultadosFront$ = this.resultadosFrontSubject.asObservable();
   private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
   maxPanelsPerSuperface$ = this.maxPanelsPerSuperfaceSubject.asObservable();
@@ -121,12 +124,12 @@ export class SharedService {
     return this.panelCapacityWSubject.getValue();
   }
 
-  setYearlyEnergyAcKwh(value: number): void {
-    this.yearlyEnergyAcKwhSubject.next(value);
+  setYearlyEnergyAckWh(value: number): void {
+    this.yearlyEnergyAckWhSubject.next(value);
   }
 
-  getYearlyEnergyAcKwh(): number {
-    return this.yearlyEnergyAcKwhSubject.getValue();
+  getYearlyEnergyAckWh(): number {
+    return this.yearlyEnergyAckWhSubject.getValue();
   }
 
   setAhorroAnualUsd(ahorroElectricidadInyeccion: number) {
@@ -152,11 +155,11 @@ export class SharedService {
     } {
       this.setIsStopCalculate(false);
     }
-    this.potenciaInstalacionSubject.next(instalacionPotencia);
+    this.potenciaInstalacionWSubject.next(instalacionPotencia);
   }
 
   getPotenciaInstalacionW() {
-    return this.potenciaInstalacionSubject.getValue();
+    return this.potenciaInstalacionWSubject.getValue();
   }
 
   setResultadosFrontNearby(resultadosFrontNearby: ResultadosFrontDTO) {
@@ -249,7 +252,7 @@ export class SharedService {
     this.yearlysAnualConfigurationSubject.next(yearlyAnualConfigurations);
   }
 
-  getYearlysAnualConfigurations() {
+  getYearlysAnualConfigurations(): YearlysAnualConfigurationFront[] {
     return this.yearlysAnualConfigurationSubject.getValue();
   }
 

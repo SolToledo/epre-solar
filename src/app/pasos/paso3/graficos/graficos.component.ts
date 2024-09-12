@@ -60,10 +60,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.sharedService.yearlyEnergyAcKwh$.subscribe({
+    this.sharedService.yearlyEnergyAckWh$.subscribe({
       next: (yearlyEnergy) => {
         this.yearlyEnergy = yearlyEnergy;
         if (this.chartSolLuna) this.updateChartEnergiaConsumo();

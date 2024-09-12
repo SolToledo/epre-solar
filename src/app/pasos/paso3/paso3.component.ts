@@ -128,7 +128,7 @@ export class Paso3Component implements OnInit {
     this.yearlyEnergyInitial = this.yearlyEnergyAckWhDefault;
     this.periodoVeinteanalCasoConCapitalPropioInitial =
       this.resultadosFront.resultadosFinancieros.casoConCapitalPropio;
-    this.sharedService.setYearlyEnergyAcKwh(this.yearlyEnergyAckWhDefault);
+    this.sharedService.setYearlyEnergyAckWh(this.yearlyEnergyAckWhDefault);
     this.sharedService.setPlazoInversion(
       this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
         .payBackMonths
@@ -189,8 +189,8 @@ export class Paso3Component implements OnInit {
       this.isDownloading = true;
       this.pdfService
         .generatePDF()
-        .then(() => {})
-        .catch(() => {})
+        .then(() => { })
+        .catch(() => { })
         .finally(() => (this.isDownloading = false));
     }
   }

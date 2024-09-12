@@ -31,13 +31,13 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
   ) {
-    
+
     this.plazoRecuperoInversionInicial =
       this.sharedService.getPlazoInversionValue();
     this.plazoRecuperoInversion = this.plazoRecuperoInversionInicial;
-    this.yearlyEnergyAcKwhInitial = this.sharedService.getYearlyEnergyAcKwh();
+    this.yearlyEnergyAcKwhInitial = this.sharedService.getYearlyEnergyAckWh();
     this.inversionInicial = this.sharedService.getCostoInstalacion();
-    
+
   }
 
   ngOnInit(): void {
@@ -47,15 +47,15 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.plazoRecuperoInversion = plazoRecupero;
       }
     });
-    
+
     // Subscripción a los cambios en yearlyEnergyAcKwh$
-    this.yearlyEnergyAcKwhSubscription = this.sharedService.yearlyEnergyAcKwh$.subscribe({
+    this.yearlyEnergyAcKwhSubscription = this.sharedService.yearlyEnergyAckWh$.subscribe({
       next: (newYearlyEnergyAcKwh) => {
         this.updatePlazoRecuperoInversion(newYearlyEnergyAcKwh);
       }
     });
 
-    this.panelsCountSelected =  this.sharedService.getPanelsSelected();
+    this.panelsCountSelected = this.sharedService.getPanelsSelected();
     this.cdr.detectChanges();
   }
 
@@ -78,33 +78,33 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
       const inversionInicial = this.inversionInicial;
       const inversionActual = this.sharedService.getCostoInstalacion();
       this.plazoRecuperoInversion = this.recalculateCaso(casoConCapitalPropioInitial, this.yearlyEnergyAcKwhInitial, newYearlyEnergyAcKwh, inversionInicial, inversionActual);
-      
+
       this.sharedService.setPlazoInversion(this.plazoRecuperoInversion);
     } else {
       this.plazoRecuperoInversion = this.plazoRecuperoInversionInicial;
     }
-    this.cdr.detectChanges(); 
+    this.cdr.detectChanges();
   }
   private recalculateCaso(
-    casoConCapitalPropioInitial: any[], 
-    yearlyEnergyAcKwhInitial: number, 
-    newYearlyEnergyAcKwh: number, 
-    inversionInicial: any, 
+    casoConCapitalPropioInitial: any[],
+    yearlyEnergyAcKwhInitial: number,
+    newYearlyEnergyAcKwh: number,
+    inversionInicial: any,
     inversionActual: number
   ): number {
-  
+
     const factorAjuste = newYearlyEnergyAcKwh / yearlyEnergyAcKwhInitial;
-  
+
     // Clonar el array inicial para no modificar el original directamente
     const casoAjustado = JSON.parse(JSON.stringify(casoConCapitalPropioInitial));
-  
+
     // Recalcular los valores proporcionales
     for (const yearData of casoAjustado) {
       yearData.flujoIngresos *= factorAjuste;
       yearData.flujoFondos = yearData.flujoIngresos - yearData.flujoEgresos;
       yearData.flujoAcumulado = (yearData.inversiones > 0 ? -yearData.inversiones : yearData.flujoAcumulado) + yearData.flujoFondos;
     }
-  
+
     // Encontrar el primer año en que el flujo acumulado es positivo o cero
     let totalMeses = 0;
     for (let i = 0; i < casoAjustado.length; i++) {
@@ -118,7 +118,7 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         totalMeses += 12; // Agregar 12 meses por cada año en negativo
       }
     }
-  
+
     return totalMeses;
   }
 }

@@ -26,7 +26,7 @@ export class EmisionesComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.subscription = this.sharedService.yearlyEnergyAcKwh$.subscribe(
+    this.subscription = this.sharedService.yearlyEnergyAckWh$.subscribe(
       (value) => {
         this.yearlyEnergyAcKwh = value;
         this.calculateCarbonOffset();
