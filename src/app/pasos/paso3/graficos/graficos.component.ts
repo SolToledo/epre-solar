@@ -500,12 +500,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           data: data,
           color: '#96c0b2',
         },
-        {
-          name: '',
-          data: [''],
-          color: '',
-          showInLegend: false,
-        }
       ],
       chart: {
         height: 350,
@@ -574,9 +568,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       },
-      legend: {
-        offsetY: -10, // Ajusta la distancia entre la leyenda y el gráfico
-      },
+      
       tooltip: {
         enabled: true, 
         theme: 'light', 

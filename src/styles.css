@@ -605,13 +605,6 @@ input[type=number] {
   display: none !important;
 }
 
-/*********************************/
-/*leyenda de los graficos*/
-/* Ocultar el círculo de color de la serie 2 en la leyenda */
-#emisionesChartRef .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
-  display: none !important; /* Oculta el círculo de la serie 2 */
-}
-
 
 
 /*****************************************************************************/
