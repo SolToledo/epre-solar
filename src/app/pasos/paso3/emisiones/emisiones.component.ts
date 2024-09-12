@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Input,
@@ -13,7 +14,7 @@ import { SharedService } from 'src/app/services/shared.service';
   templateUrl: './emisiones.component.html',
   styleUrls: ['./emisiones.component.css'],
 })
-export class EmisionesComponent implements OnInit, OnDestroy {
+export class EmisionesComponent implements OnInit,AfterViewInit, OnDestroy {
   @Input()
   carbonOffsetFactorTnPerMWh!: number;
   yearlyEnergyAcKwh: number = 0;
@@ -26,10 +27,15 @@ export class EmisionesComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    
+  }
+
+  ngAfterViewInit(): void {
     this.subscription = this.sharedService.yearlyEnergyAckWh$.subscribe(
       (value) => {
         this.yearlyEnergyAcKwh = value;
         this.calculateCarbonOffset();
+        this.cdr.detectChanges(); // Asegura que los cambios se detecten después de la actualización
       }
     );
   }

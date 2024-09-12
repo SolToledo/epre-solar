@@ -70,6 +70,10 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.plazoRecuperoInversionInitial =
         this.sharedService.getAhorroAnualUsd();
     }
+
+    setTimeout(() => {
+      this.checkValuesAndUpdate();
+    });
   }
 
   ngOnDestroy(): void {
@@ -83,7 +87,10 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.plazoRecuperoInversionInitial > 0 &&
       this.periodoVeinteanalCasoConCapitalPropioInitial
     ) {
-      this.updatePlazoRecuperoInversion();
+      // Usar setTimeout para evitar el error de cambio de expresión
+      setTimeout(() => {
+        this.updatePlazoRecuperoInversion();
+      });
     }
   }
 
@@ -115,6 +122,7 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {
       this.sharedService.setPlazoInversion(this.plazoRecuperoInversion);
     }
+    this.cdr.detectChanges();
   }
 
   private recalculateCaso(

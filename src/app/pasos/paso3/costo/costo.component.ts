@@ -34,7 +34,10 @@ export class CostoComponent implements OnInit, OnDestroy {
     this.yearlyEnergykWhSubscription = this.sharedService.yearlyEnergyAckWh$.subscribe({
       next: (yearlyValue) => {
         this.yearlyEnergykWh = yearlyValue;
-        this.updateCostoInstalacion(); 
+        // Utilizamos setTimeout para evitar problemas de cambio de expresión
+        setTimeout(() => {
+          this.updateCostoInstalacion();
+        });
       },
       error: (err) => console.error('Error al obtener yearlyEnergykWh:', err)
     });
@@ -68,7 +71,9 @@ export class CostoComponent implements OnInit, OnDestroy {
       this.sharedService.setCostoInstalacion(this.costoInstalacionUsd);
 
       // Aplicamos ChangeDetectorRef para actualizar la vista
-      this.cdr.markForCheck();
+      setTimeout(() => {
+        this.cdr.detectChanges();
+      });
     } else {
       console.error('Error: No se pudo actualizar el costo de instalación. Valores indefinidos.');
     }
