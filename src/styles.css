@@ -590,6 +590,30 @@ input[type=number] {
   appearance: none;
 }
 
+/* ****** estilos para los puntos de seleccion del poligono */
+.gm-style div[style*="background-color"] {
+  width: 10px !important;
+  height: 10px !important;
+  background-color: transparent !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><line x1='0' y1='25' x2='50' y2='25' stroke='black' stroke-width='5'/><line x1='25' y1='0' x2='25' y2='50' stroke='black' stroke-width='5'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#map > div > div.gm-style > div:nth-child(1) > div:nth-child(2) > div > div:nth-child(4) > button > span > div > img {
+  display: none !important;
+}
+
+/*********************************/
+/*leyenda de los graficos*/
+/* Ocultar el círculo de color de la serie 2 en la leyenda */
+#emisionesChartRef .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+  display: none !important; /* Oculta el círculo de la serie 2 */
+}
+
+
+
 /*****************************************************************************/
 /* Estilos para resoluciones mayores a 1366px */
 @media only screen and (min-width: 1400px) {
@@ -629,19 +653,4 @@ input[type=number] {
   .driver-active .driver-overlay {
     display: none !important;
   }
-}
-
-/* ****** estilos para los puntos de seleccion del poligono */
-.gm-style div[style*="background-color"] {
-  width: 10px !important;
-  height: 10px !important;
-  background-color: transparent !important;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><line x1='0' y1='25' x2='50' y2='25' stroke='black' stroke-width='5'/><line x1='25' y1='0' x2='25' y2='50' stroke='black' stroke-width='5'/></svg>");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-#map > div > div.gm-style > div:nth-child(1) > div:nth-child(2) > div > div:nth-child(4) > button > span > div > img {
-  display: none !important;
 }

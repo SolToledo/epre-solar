@@ -276,33 +276,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         {
           name: 'Punto de recupero',
-          data: [0], // Solo un punto para mostrar en la leyenda
-          color: '#008ae3', // Color del punto en la leyenda
-          showInLegend: true,
-          type: 'line', // Tipo de línea
-          stroke: {
-            width: 0, // No trazar ninguna línea
-          },
-
-          tooltip: {
-            enabled: true,
-            theme: 'light',
-            y: {
-              formatter: (val: number) => {
-                const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
-                return valorTruncado.toLocaleString('de-DE'); // Formatear con puntos de miles
-              },
-            },
-          },
-          plotOptions: {
-            line: {
-              colors: ['transparent'], // Línea invisible
-            },
-          },
-        },
+          data: [''], 
+          color: '#008ae3', 
+        }
       ],
       chart: {
-        height: 300,
+        height: 350,
         width: 470,
         type: 'line', // Tipo de gráfico general
         toolbar: {
@@ -353,6 +332,78 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /* Metodo para inicializar el grafico Sol-Luna */
   private initializeGraficoSolLuna() {
+  /*  const options = {
+      chart: {
+        type: 'bar',
+        height: 350,
+        width: 470,
+        endingShape: 'rounded',
+        background: 'transparent',
+        toolbar: {
+          show: false, 
+        },
+      },
+      series: [
+        {
+          data: [this.consumoTotalAnual, this.yearlyEnergy],
+          name: 'Valores',
+        },
+      ],
+      colors: ['#96c0b2', '#e4c58d'], 
+      plotOptions: {
+        bar: {
+          columnWidth: '50%',
+          distributed: true, 
+          colors: {
+            backgroundBarOpacity: 0.3, 
+          },
+        },
+      },
+      xaxis: {
+        categories: ['Consumo total anual', 'Generación Anual'],
+        labels: {
+          show: true,
+          style: {
+            colors: ['#6d6b6b'], 
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'kWh', 
+          style: {
+            fontSize: '14px',
+            fontFamily: 'sodo sans, sans-serif',
+            color: '#6d6b6b',
+          },
+        },
+        labels: {
+          formatter: (val: number): string => {
+            return val.toLocaleString('de-DE'); 
+          },
+          style: {
+            colors: ['#6d6b6b'],
+            fontSize: '12px',
+            fontFamily: 'sodo sans, sans-serif',
+          },
+        },
+      },
+      tooltip: {
+        enabled: true,
+        theme: 'light',
+        y: {
+          formatter: (val: number) => {
+            return `${val.toLocaleString('de-DE')} kWh`; 
+          },
+        },
+      },
+      grid: {
+        borderColor: '#f1f1f1',
+      },
+    };*/
+
     const options = {
       chart: {
         type: 'bar',
@@ -383,7 +434,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       xaxis: {
         categories: ['Consumo total anual', 'Generación Anual'], // Etiquetas en el eje X
         labels: {
-          show: true, // Mostrar etiquetas del eje X
+          show: true,
           style: {
             colors: ['#6d6b6b'], // Color para las etiquetas del eje X
             fontSize: '12px',
@@ -392,22 +443,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       yaxis: {
-        title: {
-          text: 'kWh', // Cambiar el texto del título del eje Y a "kWh"
-          style: {
-            fontSize: '14px',
-            fontFamily: 'sodo sans, sans-serif',
-            color: '#6d6b6b',
-          },
-        },
         labels: {
           formatter: (val: number): string => {
-            return val.toLocaleString('de-DE'); // Formato para valores en el eje Y (kWh)
-          },
-          style: {
-            colors: ['#6d6b6b'],
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
+            return val.toLocaleString('de-DE'); // Formato para valores en el eje Y
           },
         },
       },
@@ -416,7 +454,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         theme: 'light',
         y: {
           formatter: (val: number) => {
-            return `${val.toLocaleString('de-DE')} kWh`; // Formato del valor en el tooltip
+            return `${val.toLocaleString('de-DE')}`; // Formato del valor en el tooltip
           },
         },
       },
@@ -424,6 +462,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         borderColor: '#f1f1f1',
       },
     };
+    
+    
 
     // Renderizar el gráfico Sol-Luna
     this.chartSolLuna = new ApexCharts(
@@ -512,41 +552,38 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           data: data,
           color: '#96c0b2',
         },
+        {
+          name: '',
+          data: [''],
+          color: '',
+          showInLegend: false,
+        }
       ],
       chart: {
         height: 350,
         width: 470,
         type: 'area',
+        className: 'chart-specific-1',
         toolbar: {
-          show: false, // Oculta la barra de herramientas
+          show: false, 
         },
         zoom: {
-          enabled: false, // Desactiva el zoom
+          enabled: false, 
         },
       },
-      legend: {
-        show: true, // Mostrar la leyenda
-        position: 'top', // Puedes cambiar la posición ('top', 'bottom', 'left', 'right')
-        horizontalAlign: 'left', // Alinear la leyenda horizontalmente
-        fontSize: '14px', // Tamaño del texto de la leyenda
-        labels: {
-          useSeriesColors: true, // Usa el color de la serie en la leyenda
-        },
-      },
-
       dataLabels: {
         enabled: false,
       },
       stroke: {
         curve: 'smooth',
-        colors: ['#96c0b2'], // Color de la línea
-        width: 3, // Hacer la línea un poco más gruesa
+        colors: ['#96c0b2'], 
+        width: 3, 
       },
       fill: {
         type: 'gradient',
         gradient: {
           shade: 'dark',
-          gradientToColors: ['#e4c58d'], // Color final del degradado (amarillo)
+          gradientToColors: ['#e4c58d'], 
           shadeIntensity: 0.8,
           type: 'vertical',
           opacityFrom: 0.8,
@@ -566,12 +603,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       xaxis: {
         categories: categories,
         title: {
-          text: 'Año', // Título del eje X
+          text: 'Año', 
           style: {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
-          offsetY: -15, // Ajusta el valor para acercar el título al gráfico
+          offsetY: -25, // Ajusta la distancia entre el texto "Año" y el gráfico
         },
       },
       yaxis: {
@@ -581,16 +618,19 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
         title: {
-          text: 'Ton CO₂', // Título del eje Y
+          text: 'Ton CO₂', 
           style: {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
         },
       },
+      legend: {
+        offsetY: -10, // Ajusta la distancia entre la leyenda y el gráfico
+      },
       tooltip: {
-        enabled: true, // Habilita el tooltip
-        theme: 'light', // Tema del tooltip (dark o light)
+        enabled: true, 
+        theme: 'light', 
         x: {
           format: 'yyyy',
         },
@@ -603,17 +643,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
         marker: {
-          show: false, // Muestra el marcador en el tooltip
+          show: false, 
         },
         style: {
-          fontSize: '12px', // Tamaño de fuente del texto del tooltip
-          fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
+          fontSize: '12px', 
+          fontFamily: 'sodo sans, sans-serif', 
         },
       },
-
-      
-      
     };
+    
 
     // Inicializa y renderiza el gráfico
     this.emisionesChart = new ApexCharts(
