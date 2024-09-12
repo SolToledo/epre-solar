@@ -276,33 +276,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         {
           name: 'Punto de recupero',
-          data: [0], // Solo un punto para mostrar en la leyenda
-          color: '#008ae3', // Color del punto en la leyenda
-          showInLegend: true,
-          type: 'line', // Tipo de línea
-          stroke: {
-            width: 0, // No trazar ninguna línea
-          },
-
-          tooltip: {
-            enabled: true,
-            theme: 'light',
-            y: {
-              formatter: (val: number) => {
-                const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
-                return valorTruncado.toLocaleString('de-DE'); // Formatear con puntos de miles
-              },
-            },
-          },
-          plotOptions: {
-            line: {
-              colors: ['transparent'], // Línea invisible
-            },
-          },
-        },
+          data: [''], 
+          color: '#008ae3', 
+        }
       ],
       chart: {
-        height: 300,
+        height: 350,
         width: 470,
         type: 'line', // Tipo de gráfico general
         toolbar: {
@@ -512,41 +491,38 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           data: data,
           color: '#96c0b2',
         },
+        {
+          name: '',
+          data: [''],
+          color: '',
+          showInLegend: false,
+        }
       ],
       chart: {
         height: 350,
         width: 470,
         type: 'area',
+        className: 'chart-specific-1',
         toolbar: {
-          show: false, // Oculta la barra de herramientas
+          show: false, 
         },
         zoom: {
-          enabled: false, // Desactiva el zoom
+          enabled: false, 
         },
       },
-      legend: {
-        show: true, // Mostrar la leyenda
-        position: 'top', // Puedes cambiar la posición ('top', 'bottom', 'left', 'right')
-        horizontalAlign: 'left', // Alinear la leyenda horizontalmente
-        fontSize: '14px', // Tamaño del texto de la leyenda
-        labels: {
-          useSeriesColors: true, // Usa el color de la serie en la leyenda
-        },
-      },
-
       dataLabels: {
         enabled: false,
       },
       stroke: {
         curve: 'smooth',
-        colors: ['#96c0b2'], // Color de la línea
-        width: 3, // Hacer la línea un poco más gruesa
+        colors: ['#96c0b2'], 
+        width: 3, 
       },
       fill: {
         type: 'gradient',
         gradient: {
           shade: 'dark',
-          gradientToColors: ['#e4c58d'], // Color final del degradado (amarillo)
+          gradientToColors: ['#e4c58d'], 
           shadeIntensity: 0.8,
           type: 'vertical',
           opacityFrom: 0.8,
@@ -566,12 +542,12 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       xaxis: {
         categories: categories,
         title: {
-          text: 'Año', // Título del eje X
+          text: 'Año', 
           style: {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
-          offsetY: -15, // Ajusta el valor para acercar el título al gráfico
+          offsetY: -25, // Ajusta la distancia entre el texto "Año" y el gráfico
         },
       },
       yaxis: {
@@ -581,16 +557,19 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
         title: {
-          text: 'Ton CO₂', // Título del eje Y
+          text: 'Ton CO₂', 
           style: {
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
         },
       },
+      legend: {
+        offsetY: -10, // Ajusta la distancia entre la leyenda y el gráfico
+      },
       tooltip: {
-        enabled: true, // Habilita el tooltip
-        theme: 'light', // Tema del tooltip (dark o light)
+        enabled: true, 
+        theme: 'light', 
         x: {
           format: 'yyyy',
         },
@@ -603,17 +582,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
         marker: {
-          show: false, // Muestra el marcador en el tooltip
+          show: false, 
         },
         style: {
-          fontSize: '12px', // Tamaño de fuente del texto del tooltip
-          fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
+          fontSize: '12px', 
+          fontFamily: 'sodo sans, sans-serif', 
         },
       },
-
-      
-      
     };
+    
 
     // Inicializa y renderiza el gráfico
     this.emisionesChart = new ApexCharts(
