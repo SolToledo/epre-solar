@@ -62,13 +62,13 @@ export class CostoComponent implements OnInit, OnDestroy {
       const nuevoCostoInstalacion = this.costoInstalacionInitial * factorDeAjuste;
 
       // Redondeamos el valor a dos decimales
-      this.costoInstalacionUsd = Math.round(nuevoCostoInstalacion);
+      this.costoInstalacionUsd = Number(nuevoCostoInstalacion.toFixed(2));
 
       // Emitimos el nuevo valor de costo de instalación al SharedService
       this.sharedService.setCostoInstalacion(this.costoInstalacionUsd);
 
       // Aplicamos ChangeDetectorRef para actualizar la vista
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     } else {
       console.error('Error: No se pudo actualizar el costo de instalación. Valores indefinidos.');
     }
