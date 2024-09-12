@@ -64,8 +64,8 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       potenciaMaxMinima: 50,
     },
     {
-      value: 'T3-MT13.2R',
-      viewValue: 'Grande Demanda en Media Tensión (T3-MT13,2 kV, T3-MT 33 kV)',
+      value: 'T3-MT 13.2R',
+      viewValue: 'Grande Demanda en Media Tensión (T3-MT 13,2 kV, T3-MT 33 kV)',
       potenciaMaxSugerida: 155,
       potenciaMaxAsignadakW: 50,
       potenciaMaxMinima: 50,
@@ -131,7 +131,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
   }
 
   getMaxPotenciaPermitida(): number {
-    if (['T3-BT', 'T3-MT13.2R', 'TRA-SD'].includes(this.tarifaContratada)) {
+    if (['T3-BT', 'T3-MT 13.2R', 'TRA-SD'].includes(this.tarifaContratada)) {
       return 2000; // 2000 kW
     }
     return this.sharedService.getPotenciaMaxAsignadaValue();
@@ -235,7 +235,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
         Math.min(this.potenciaMaxAsignadakW, 50)
       );
     } else if (
-      ['T3-BT', 'T3-MT13.2R', 'TRA-SD'].includes(this.tarifaContratada)
+      ['T3-BT', 'T3-MT 13.2R', 'TRA-SD'].includes(this.tarifaContratada)
     ) {
       if (
         this.potenciaMaxAsignadakW < 50 &&
@@ -256,7 +256,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       case 'T2-CMP':
         return 'Ingrese un valor entre 20 kW y 50 kW';
       case 'T3-BT':
-      case 'T3-MT13.2R':
+      case 'T3-MT 13.2R':
         return 'Ingrese un valor mayor a 50 kW';
       case 'TRA-SD':
         return 'Ingrese un valor mayor a 10 kW';
@@ -270,7 +270,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       case 'T2-CMP':
         return 20;
       case 'T3-BT':
-      case 'T3-MT13.2R':
+      case 'T3-MT 13.2R':
         return 50;
       case 'TRA-SD':
         return 10;
@@ -284,7 +284,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       case 'T2-CMP':
         return 50;
       case 'T3-BT':
-      case 'T3-MT13.2R':
+      case 'T3-MT 13.2R':
       case 'TRA-SD':
         return 2000;
       default:
