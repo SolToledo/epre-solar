@@ -136,30 +136,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         {
           name: 'Punto de recupero',
-          data: [0], // Solo un punto para mostrar en la leyenda
-          color: '#008ae3', // Color del punto en la leyenda
-          showInLegend: true,
-          type: 'line', // Tipo de línea
-          stroke: {
-            width: 0, // No trazar ninguna línea
-          },
-
-          tooltip: {
-            enabled: true,
-            theme: 'light',
-            y: {
-              formatter: (val: number) => {
-                const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
-                return valorTruncado.toLocaleString('de-DE'); // Formatear con puntos de miles
-              },
-            },
-          },
-          plotOptions: {
-            line: {
-              colors: ['transparent'], // Línea invisible
-            },
-          },
-        },
+          data: [''], 
+          color: '#008ae3', 
+        }
       ],
       chart: {
         height: 350,
@@ -223,7 +202,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             strokeDashArray: 5, // Estilo de línea de puntos (valor mayor para más puntos)
             borderColor: '#008ae3', // Color celeste oscuro
             borderWidth: 2, // Aumenta el espesor de la línea
+            showInLegend: true,
           },
+          
         ],
       },
     };
@@ -543,6 +524,16 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           enabled: false, // Desactiva el zoom
         },
       },
+      legend: {
+        show: true, // Mostrar la leyenda
+        position: 'top', // Puedes cambiar la posición ('top', 'bottom', 'left', 'right')
+        horizontalAlign: 'left', // Alinear la leyenda horizontalmente
+        fontSize: '14px', // Tamaño del texto de la leyenda
+        labels: {
+          useSeriesColors: true, // Usa el color de la serie en la leyenda
+        },
+      },
+
       dataLabels: {
         enabled: false,
       },
@@ -619,6 +610,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           fontFamily: 'sodo sans, sans-serif', // Tipografía del texto del tooltip
         },
       },
+
+      
       
     };
 

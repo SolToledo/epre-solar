@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { DimensionPanel } from '../interfaces/dimension-panel';
 import { YearlysAnualConfigurationFront } from '../interfaces/yearlys-anual-configuration-front';
-import { YearlyAnualConfigurations } from '../../../../../solar-app-backend/dist/interfaces/yearly-anual-configurations/yearly-anual-configurations.interface';
 
 @Injectable({
   providedIn: 'root',

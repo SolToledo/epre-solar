@@ -14,7 +14,6 @@ import { NearbyLocationService } from 'src/app/services/nearby-location.service'
 import { Paso2Component } from '../paso2/paso2.component';
 import { PdfService } from 'src/app/services/pdf.service';
 import { ParametrosFront } from 'src/app/interfaces/parametros-front';
-import { YearlyAnualConfigurations } from '../../../../../../solar-app-backend/src/interfaces/yearly-anual-configurations/yearly-anual-configurations.interface';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
