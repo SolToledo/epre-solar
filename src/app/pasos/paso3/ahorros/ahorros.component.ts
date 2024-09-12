@@ -26,14 +26,12 @@ export class AhorrosComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe({
         next: (ahorroValue) => {
-          if (this.ahorrosUsdInitial === 0) {
+          // Asignamos el valor inicial si aún no está definido
+          if (!this.ahorrosUsdInitial) {
             this.ahorrosUsdInitial = ahorroValue;
-            this.ahorrosUsd = ahorroValue;
-          } else {
-            this.ahorrosUsd = ahorroValue;
           }
-          this.updateAhorro();
-          this.cdr.detectChanges();
+          this.ahorrosUsd = ahorroValue;
+          this.checkValuesAndUpdate();
         },
       });
 
@@ -41,20 +39,24 @@ export class AhorrosComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe({
         next: (yearlyValue) => {
-          if (this.yearlyAnualInitial === 0) {
+          // Asignamos el valor inicial si aún no está definido
+          if (!this.yearlyAnualInitial) {
             this.yearlyAnualInitial = yearlyValue;
-            this.yearlyAnualkW = yearlyValue;
-          } else {
-            this.yearlyAnualkW = yearlyValue;
           }
-          this.updateAhorro();
-          this.cdr.detectChanges();
+          this.yearlyAnualkW = yearlyValue;
+          this.checkValuesAndUpdate();
         },
       });
   }
 
   ngAfterViewInit(): void {
-    this.yearlyAnualInitial = this.sharedService.getYearlyEnergyAckWh();
+     // Verifica si yearlyAnualInitial está definido después de la vista cargada
+     if (!this.yearlyAnualInitial) {
+      this.yearlyAnualInitial = this.sharedService.getYearlyEnergyAckWh();
+    }
+    if (!this.ahorrosUsdInitial) {
+      this.ahorrosUsdInitial = this.sharedService.getAhorroAnualUsd();
+    }
 
   }
 
@@ -64,17 +66,25 @@ export class AhorrosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateAhorro() {
-    if (this.yearlyAnualInitial > 0) {
+    if (this.yearlyAnualInitial > 0 && this.ahorrosUsdInitial > 0) {
       const newAhorroValue = (this.yearlyAnualkW * this.ahorrosUsdInitial) / this.yearlyAnualInitial;
 
-      const roundedAhorroValue = parseInt(newAhorroValue.toFixed(0));
+      const roundedAhorroValue = Math.round(newAhorroValue);
 
+      // Solo actualizamos si el valor ha cambiado
       if (roundedAhorroValue !== this.sharedService.getAhorroAnualUsd()) {
         this.sharedService.setAhorroAnualUsd(roundedAhorroValue);
       }
     } else {
-      console.error('Error: Los valores iniciales de ahorro o energía anual no pueden ser 0.');
+      console.error('Error: Los valores iniciales de ahorro o energía anual no pueden ser 0 o indefinidos.');
     }
 
+  }
+
+  private checkValuesAndUpdate(): void {
+    // Solo realiza el cálculo si los valores iniciales son válidos
+    if (this.yearlyAnualInitial > 0 && this.ahorrosUsdInitial > 0) {
+      this.updateAhorro();
+    }
   }
 }
