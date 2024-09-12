@@ -68,7 +68,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.yearlyEnergy = yearlyEnergy;
         if (this.chartSolLuna) this.updateChartEnergiaConsumo();
         if (this.chartAhorroRecupero) this.updateChartAhorroRecupero();
-        if (this.emisionesChart) this.updateChartEmisionesEvitadasAcumuladas();
+        // if (this.chartAhorroRecupero) this.updateChartAhorroRecupero();
       },
     });
   }
