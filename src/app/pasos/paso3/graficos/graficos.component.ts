@@ -136,10 +136,10 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         {
           name: 'Punto de recupero',
-          data: [0], // Solo un punto para mostrar en la leyenda
+          data: [''], // Solo un punto para mostrar en la leyenda
           color: '#008ae3', // Color del punto en la leyenda
           showInLegend: true,
-          type: 'line', // Tipo de línea
+          type: '', // Tipo de línea
           stroke: {
             width: 0, // No trazar ninguna línea
           },
