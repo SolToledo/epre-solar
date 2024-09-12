@@ -181,9 +181,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
       },
-      grid: {
-        borderColor: '#f1f1f1',
-      },
       tooltip: {
         enabled: true,
         theme: 'light',
@@ -332,78 +329,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /* Metodo para inicializar el grafico Sol-Luna */
   private initializeGraficoSolLuna() {
-  /*  const options = {
-      chart: {
-        type: 'bar',
-        height: 350,
-        width: 470,
-        endingShape: 'rounded',
-        background: 'transparent',
-        toolbar: {
-          show: false, 
-        },
-      },
-      series: [
-        {
-          data: [this.consumoTotalAnual, this.yearlyEnergy],
-          name: 'Valores',
-        },
-      ],
-      colors: ['#96c0b2', '#e4c58d'], 
-      plotOptions: {
-        bar: {
-          columnWidth: '50%',
-          distributed: true, 
-          colors: {
-            backgroundBarOpacity: 0.3, 
-          },
-        },
-      },
-      xaxis: {
-        categories: ['Consumo total anual', 'Generación Anual'],
-        labels: {
-          show: true,
-          style: {
-            colors: ['#6d6b6b'], 
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      yaxis: {
-        title: {
-          text: 'kWh', 
-          style: {
-            fontSize: '14px',
-            fontFamily: 'sodo sans, sans-serif',
-            color: '#6d6b6b',
-          },
-        },
-        labels: {
-          formatter: (val: number): string => {
-            return val.toLocaleString('de-DE'); 
-          },
-          style: {
-            colors: ['#6d6b6b'],
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      tooltip: {
-        enabled: true,
-        theme: 'light',
-        y: {
-          formatter: (val: number) => {
-            return `${val.toLocaleString('de-DE')} kWh`; 
-          },
-        },
-      },
-      grid: {
-        borderColor: '#f1f1f1',
-      },
-    };*/
-
     const options = {
       chart: {
         type: 'bar',
@@ -426,27 +351,38 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         bar: {
           columnWidth: '50%',
           distributed: true, // Diferenciar colores entre las barras
-          colors: {
-            backgroundBarOpacity: 0.3, // Ajustar la opacidad del fondo de las barras
-          },
         },
       },
       xaxis: {
         categories: ['Consumo total anual', 'Generación Anual'], // Etiquetas en el eje X
         labels: {
-          show: true,
+          show: false, // Ocultar las etiquetas del eje X
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'kWh', // Mostrar "kWh" como título del eje Y
           style: {
-            colors: ['#6d6b6b'], // Color para las etiquetas del eje X
             fontSize: '12px',
             fontFamily: 'sodo sans, sans-serif',
           },
         },
-      },
-      yaxis: {
         labels: {
           formatter: (val: number): string => {
             return val.toLocaleString('de-DE'); // Formato para valores en el eje Y
           },
+        },
+      },
+      dataLabels: {
+        enabled: true, // Habilitar los datos dentro de las columnas
+        style: {
+          colors: ['#6d6b6b'], // Cambiar el color del texto a gris
+          fontSize: '10px', // Tamaño de letra más pequeño que el predeterminado
+          fontFamily: 'inherit', // Mantener la fuente predeterminada
+        },
+        formatter: (val: number): string => {
+          // Formatear el valor para mostrar con puntos de miles y sin decimales
+          return val.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
         },
       },
       tooltip: {
@@ -454,17 +390,26 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         theme: 'light',
         y: {
           formatter: (val: number) => {
-            return `${val.toLocaleString('de-DE')}`; // Formato del valor en el tooltip
+            // Formatear el valor para mostrar con puntos de miles y sin decimales
+            return val.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
           },
         },
       },
-      grid: {
-        borderColor: '#f1f1f1',
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shade: 'dark',
+          gradientToColors: ['#96c0b2', '#e4c58d'], // Colores de gradiente para cada columna
+          shadeIntensity: 1,
+          type: 'vertical', // Orientación vertical del gradiente
+          opacityFrom: 1, // Opacidad completa en la parte superior
+          opacityTo: 0.5, // Opacidad parcial (transparente) en la parte inferior
+          stops: [0, 100], // Inicio y fin del gradiente
+        },
       },
     };
     
-    
-
+  
     // Renderizar el gráfico Sol-Luna
     this.chartSolLuna = new ApexCharts(
       document.querySelector('#chartSolLunaRef') as HTMLElement,
