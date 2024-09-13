@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, Subscription, takeUntil } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
@@ -15,9 +15,8 @@ import { SharedService } from 'src/app/services/shared.service';
 export class CostoComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  costoInstalacionInitial: number;
-  costoInstalacionUsd: number;
-  private yearlyEnergykWhSubscription!: Subscription;
+  costoInstalacionInitial: number = 0;
+  costoInstalacionUsd: number = 0;
   yarlyEnergykWhInitial!: number;
   yearlyEnergykWh!: number;
 
@@ -25,46 +24,81 @@ export class CostoComponent implements OnInit, OnDestroy {
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
   ) {
-    this.costoInstalacionInitial = this.sharedService.getCostoInstalacion();
-    this.costoInstalacionUsd = this.costoInstalacionInitial;
-    this.yarlyEnergykWhInitial = this.sharedService.getYearlyEnergyAckWh(); 
+    
    }
 
   ngOnInit(): void {
-    this.yearlyEnergykWhSubscription = this.sharedService.yearlyEnergyAckWh$.subscribe({
-      next: (yearlyValue) => {
-        this.yearlyEnergykWh = yearlyValue;
-        if(this.costoInstalacionInitial !== this.costoInstalacionUsd){
-          this.updateCostoInstalacion();
-        }
-      },
-      error: (err) => console.error('Error al obtener yearlyEnergykWh:', err)
+    this.sharedService.costoInstalacion$
+    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .subscribe((newCostoInstalacion) => {
+      if (this.costoInstalacionInitial === 0) {
+        this.costoInstalacionInitial = newCostoInstalacion;
+      }
+      this.costoInstalacionUsd = newCostoInstalacion;
+      this.checkValuesAndUpdate();
     });
 
+    this.sharedService.yearlyEnergyAckWh$
+    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .subscribe((yearlyValue) => {
+      if (this.yarlyEnergykWhInitial === 0) {
+        this.yarlyEnergykWhInitial = yearlyValue;
+      }
+      this.yearlyEnergykWh = yearlyValue;
+      this.checkValuesAndUpdate();
+    });
   }
 
   ngAfterViewInit(): void {
-    
+    if (!this.yarlyEnergykWhInitial) {
+      this.yarlyEnergykWhInitial = this.sharedService.getYearlyEnergyAckWh();
+    }
+    if (!this.costoInstalacionInitial) {
+      this.costoInstalacionInitial = this.sharedService.getAhorroAnualUsd();
+    }
   }
 
   ngOnDestroy(): void {
-    if (this.yearlyEnergykWhSubscription) {
-      this.yearlyEnergykWhSubscription.unsubscribe();
-    }
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  private checkValuesAndUpdate(): void {
+    if (this.yarlyEnergykWhInitial > 0 && this.costoInstalacionInitial > 0) {
+      this.updateCostoInstalacion();
+    }
+  }
+
+  /* private updateCostoInstalacion() {
+    if (this.yarlyEnergykWhInitial > 0 && this.costoInstalacionInitial > 0) {
+      setTimeout(() => {
+        const newCostoInstalacion =
+          (this.yearlyEnergykWh * this.costoInstalacionInitial) / this.yarlyEnergykWhInitial;
+  
+        const roundedCostoInstalacionValue = Math.round(newCostoInstalacion);
+  
+        // Solo actualizamos si el valor ha cambiado
+        if (roundedCostoInstalacionValue !== this.sharedService.getCostoInstalacion()) {
+          this.sharedService.setCostoInstalacion(roundedCostoInstalacionValue);
+        }
+      });
+    } else {
+      console.error(
+        'Error: Los valores iniciales de ahorro o energía anual no pueden ser 0 o indefinidos.'
+      );
+    }
+  } */
   private updateCostoInstalacion() {
-    if (this.yearlyEnergykWh && this.yarlyEnergykWhInitial) {
+    if (this.yarlyEnergykWhInitial > 0 && this.costoInstalacionInitial > 0) {
 
       const costoUsdWp = this.sharedService.getCostoUsdWp();
       const instalacionPotenciaW = this.sharedService.getPanelCapacityW() * this.sharedService.getPanelsSelected();
       const costoEquipoDeMedicionUsd = this.sharedService.getCostoEquipoDeMedicion();
-      const costoInstalacionUsd = instalacionPotenciaW * costoUsdWp + costoEquipoDeMedicionUsd;
-      this.costoInstalacionUsd = costoInstalacionUsd;
-      
-      this.cdr.detectChanges();
+     
+      this.costoInstalacionUsd =  instalacionPotenciaW * costoUsdWp + costoEquipoDeMedicionUsd;
+      if (this.costoInstalacionUsd !== this.sharedService.getCostoInstalacion()) {
+        this.sharedService.setCostoInstalacion(this.costoInstalacionUsd);
+      }
     } else {
       console.error('Error: No se pudo actualizar el costo de instalación. Valores indefinidos.');
     }
