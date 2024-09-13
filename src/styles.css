@@ -605,15 +605,22 @@ input[type=number] {
   display: none !important;
 }
 
-/*********************************/
-/*leyenda de los graficos*/
-/* Ocultar el círculo de color de la serie 2 en la leyenda */
-#emisionesChartRef .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
-  display: none !important; /* Oculta el círculo de la serie 2 */
+
+/*******************************************************************/
+/* Aplica el estilo solo al gráfico con el ID #chartAhorroRecuperoRef */
+#chartAhorroRecuperoRef .apexcharts-legend-series:nth-child(3) .apexcharts-legend-marker {
+ display: none !important;
 }
 
+#chartAhorroRecuperoRef .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+  display: none !important;
+ }
 
+ #chartAhorroRecuperoRef .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+  display: none !important;
+ }
 
+ 
 /*****************************************************************************/
 /* Estilos para resoluciones mayores a 1366px */
 @media only screen and (min-width: 1400px) {
