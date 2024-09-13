@@ -119,9 +119,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       (item) => item.year.toString()
     );
 
-    console.log('ahorroData:', ahorroData);
-    console.log('ingresoData:', ingresoData);
-    console.log('categories:', categories);
+    
     const options = {
       series: [
         {
@@ -632,10 +630,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         };
       });
 
-    console.log(
-      'Array recalculado:',
-      this.periodoVeinteanalEmisionesGEIEvitadasCopia
-    );
+    
   }
 
   private updateChartEmisionesEvitadasAcumuladas(): void {

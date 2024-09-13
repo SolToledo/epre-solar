@@ -8,6 +8,12 @@ import { YearlysAnualConfigurationFront } from '../interfaces/yearlys-anual-conf
   providedIn: 'root',
 })
 export class SharedService {
+  getCostoEquipoDeMedicion() {
+    return 646.53;
+  }
+  getCostoUsdWp() {
+    return 1.23;
+  }
   private inversionUsdSubject = new BehaviorSubject<number>(0);
   inversionUsd$ = this.inversionUsdSubject.asObservable();
 

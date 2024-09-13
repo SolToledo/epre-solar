@@ -34,10 +34,9 @@ export class CostoComponent implements OnInit, OnDestroy {
     this.yearlyEnergykWhSubscription = this.sharedService.yearlyEnergyAckWh$.subscribe({
       next: (yearlyValue) => {
         this.yearlyEnergykWh = yearlyValue;
-        // Utilizamos setTimeout para evitar problemas de cambio de expresión
-        setTimeout(() => {
+        if(this.costoInstalacionInitial !== this.costoInstalacionUsd){
           this.updateCostoInstalacion();
-        });
+        }
       },
       error: (err) => console.error('Error al obtener yearlyEnergykWh:', err)
     });
@@ -59,21 +58,13 @@ export class CostoComponent implements OnInit, OnDestroy {
   private updateCostoInstalacion() {
     if (this.yearlyEnergykWh && this.yarlyEnergykWhInitial) {
 
-      const factorDeAjuste = this.yearlyEnergykWh / this.yarlyEnergykWhInitial;
+      const costoUsdWp = this.sharedService.getCostoUsdWp();
+      const instalacionPotenciaW = this.sharedService.getPanelCapacityW() * this.sharedService.getPanelsSelected();
+      const costoEquipoDeMedicionUsd = this.sharedService.getCostoEquipoDeMedicion();
+      const costoInstalacionUsd = instalacionPotenciaW * costoUsdWp + costoEquipoDeMedicionUsd;
+      this.costoInstalacionUsd = costoInstalacionUsd;
       
-      // Calculamos el nuevo costo de instalación basado en el factor
-      const nuevoCostoInstalacion = this.costoInstalacionInitial * factorDeAjuste;
-
-      // Redondeamos el valor a dos decimales
-      this.costoInstalacionUsd = Number(nuevoCostoInstalacion.toFixed(2));
-
-      // Emitimos el nuevo valor de costo de instalación al SharedService
-      this.sharedService.setCostoInstalacion(this.costoInstalacionUsd);
-
-      // Aplicamos ChangeDetectorRef para actualizar la vista
-      setTimeout(() => {
-        this.cdr.detectChanges();
-      });
+      this.cdr.detectChanges();
     } else {
       console.error('Error: No se pudo actualizar el costo de instalación. Valores indefinidos.');
     }
