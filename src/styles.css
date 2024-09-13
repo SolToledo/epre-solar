@@ -606,7 +606,21 @@ input[type=number] {
 }
 
 
+/*******************************************************************/
+/* Aplica el estilo solo al gráfico con el ID #chartAhorroRecuperoRef */
+#chartAhorroRecuperoRef .apexcharts-legend-series:nth-child(3) .apexcharts-legend-marker {
+ display: none !important;
+}
 
+#chartAhorroRecuperoRef .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+  display: none !important;
+ }
+
+ #chartAhorroRecuperoRef .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+  display: none !important;
+ }
+
+ 
 /*****************************************************************************/
 /* Estilos para resoluciones mayores a 1366px */
 @media only screen and (min-width: 1400px) {

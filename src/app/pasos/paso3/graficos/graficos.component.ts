@@ -122,90 +122,108 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('ahorroData:', ahorroData);
     console.log('ingresoData:', ingresoData);
     console.log('categories:', categories);
-    const options = {
-      series: [
-        {
-          name: 'Ahorro por autoconsumo de energía',
-          data: ahorroData,
-          color: '#96c0b2',
-        },
-        {
-          name: 'Ingreso por excedente de energía',
-          data: ingresoData,
-          color: '#e4c58d',
-        },
-        {
-          name: 'Punto de recupero',
-          data: [''], 
-          color: '#008ae3', 
-        }
-      ],
-      chart: {
-        height: 350,
-        width: 470,
-        type: 'line', // Tipo de gráfico general
-        toolbar: {
-          show: false,
-        },
-        zoom: {
-          enabled: false,
-        },
-      },
-      stroke: {
-        curve: 'smooth',
-        colors: ['#96c0b2', '#e4c58d'], // Colores de las líneas reales
-        width: 3, // Grosor de las líneas
-      },
-      xaxis: {
-        categories: categories,
-        title: {
-          text: 'Año',
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-          offsetY: -25,
-        },
-      },
-      yaxis: {
-        min: 0, // Asegura que el eje Y comience desde 0
-        labels: {
-          formatter: (val: number): string => {
-            return val.toLocaleString('de-DE');
-          },
-        },
-        title: {
-          text: 'USD',
-          style: {
-            fontSize: '12px',
-            fontFamily: 'sodo sans, sans-serif',
-          },
-        },
-      },
-      tooltip: {
-        enabled: true,
-        theme: 'light',
-        y: {
-          formatter: (val: number) => {
-            const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
-            return `${valorTruncado.toLocaleString('de-DE')} USD/año`; // Formatear con puntos de miles y agregar el texto
-          },
-        },
-      },
 
-      annotations: {
-        xaxis: [
-          {
-            x: anoRecuperoInversion.toString(),
-            strokeDashArray: 5, // Estilo de línea de puntos (valor mayor para más puntos)
-            borderColor: '#008ae3', // Color celeste oscuro
-            borderWidth: 2, // Aumenta el espesor de la línea
-            showInLegend: true,
-          },
-          
-        ],
+
+const options = {
+  series: [
+    {
+      name: 'Ahorro por autoconsumo de energía',
+      data: ahorroData,
+      color: '#96c0b2',
+    },
+    {
+      name: 'Ingreso por excedente de energía',
+      data: ingresoData,
+      color: '#e4c58d',
+    },
+    {
+      name: 'Punto de recupero',
+      data: [''], 
+      color: '#008ae3',
+    }
+  ],
+  chart: {
+    height: 350,
+    width: 470,
+    type: 'line',
+    toolbar: {
+      show: false,
+    },
+    zoom: {
+      enabled: false,
+    },
+  },
+  stroke: {
+    curve: 'smooth',
+    colors: ['#96c0b2', '#e4c58d', '#008ae3'],
+    width: 3,
+  },
+  xaxis: {
+    categories: categories,
+    title: {
+      text: 'Año',
+      style: {
+        fontSize: '12px',
+        fontFamily: 'sodo sans, sans-serif',
       },
-    };
+      offsetY: -25,
+    },
+  },
+  yaxis: {
+    min: 0,
+    labels: {
+      formatter: (val: number): string => {
+        return val.toLocaleString('de-DE');
+      },
+    },
+    title: {
+      text: 'USD',
+      style: {
+        fontSize: '12px',
+        fontFamily: 'sodo sans, sans-serif',
+      },
+    },
+  },
+  tooltip: {
+    enabled: true,
+    theme: 'light',
+    y: {
+      formatter: (val: number) => {
+        const valorTruncado = Math.floor(val);
+        return `${valorTruncado.toLocaleString('de-DE')} USD/año`;
+      },
+    },
+  },
+  annotations: {
+    xaxis: [
+      {
+        x: anoRecuperoInversion.toString(),
+        strokeDashArray: 5,
+        borderColor: '#008ae3',
+        borderWidth: 2,
+        showInLegend: true,
+      },
+    ],
+  },
+  legend: {
+    markers: {
+      width: 30,
+      height: 3,
+      strokeWidth: 3,
+      shape: 'line',
+      radius: 0,
+    },
+    position: 'bottom',
+    formatter: (seriesName: string, opts: any) => {
+      // Personaliza la leyenda con margen de 4px entre la línea y el texto
+      if (seriesName === 'Punto de recupero') {
+        return `<span style="display: inline-block; width: 30px; height: 3px; border-top: 2px dashed #008ae3; margin-right: 4px;"></span>${seriesName}`;
+      }
+      return `<span style="display: inline-block; width: 30px; height: 3px; background-color: ${opts.w.globals.colors[opts.seriesIndex]}; margin-right: 4px;"></span>${seriesName}`;
+    }
+  },
+};
+
 
     // Renderiza el gráfico
     this.chartAhorroRecupero = new ApexCharts(
