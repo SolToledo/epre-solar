@@ -7,12 +7,13 @@ import html2canvas from 'html2canvas';
 })
 export class PdfService {
   private doc: jsPDF;
+  uniqueID: string = this.generateShortUUID();
 
   constructor() {
     this.doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
-      format: [216, 356],
+      format: [210, 297],
     });
   }
 
@@ -24,7 +25,7 @@ export class PdfService {
     await this.resultadosGenerate(doc);
     this.footerGenerate(doc);
     // Save the PDF
-    doc.save('resultado-id.pdf');
+    doc.save(`resultado-id-${this.uniqueID}.pdf`);
   }
   private footerGenerate(doc: jsPDF) {
     const pdfWidth = doc.internal.pageSize.getWidth();
@@ -51,21 +52,21 @@ export class PdfService {
       'appPanelesId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      60
+      50
     );
     await this.insertarCapturaPantalla(
       doc,
       'ahorrosId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      100
+      85
     );
     await this.insertarCapturaPantalla(
       doc,
       'hipotesisId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      195
+      175
     );
   }
   private async insertarCapturaPantalla(
@@ -76,7 +77,7 @@ export class PdfService {
     y: number
   ) {
     const resultadosElement = document.getElementById(idElement);
-
+  
     if (resultadosElement) {
       // Configura las opciones de html2canvas para reducir la resolución
       const canvas = await html2canvas(resultadosElement, {
@@ -84,28 +85,35 @@ export class PdfService {
         useCORS: true, // Permitir cargar imágenes de orígenes cruzados
         logging: false, // Desactiva el logging
       });
-
+  
       // Convertir el canvas a formato JPEG y reducir la calidad
-      const imgData = canvas.toDataURL('image/jpeg', 0.7); // Calidad de 0.7 para reducir el tamaño
-
+      let imgData = canvas.toDataURL('image/jpeg', 0.7); // Calidad de 0.7 para reducir el tamaño
+  
       // Calcular la altura de la imagen manteniendo la relación de aspecto
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      // Insertar la imagen en el PDF
-      doc.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight);
+  
+      // Obtener el tamaño del PDF en mm
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = doc.internal.pageSize.getHeight();
+  
+      // Calcular las coordenadas para centrar la imagen
+      const xOffset = (pdfWidth - (imgWidth / 1.5)) / 2;
+  
+      // Insertar la imagen en el PDF centrada
+      doc.addImage(imgData, 'JPEG', xOffset, y, imgWidth / 1.5, imgHeight / 1.5);
     } else {
       console.error('No se pudo encontrar el elemento de resultados.');
     }
   }
+  
 
   private async encabezadoGenerate(doc: jsPDF) {
     const logoImage = '/assets/img/a4_header_img.jpg'; // Ruta de la imagen con todos los logos
     const pdfWidth = doc.internal.pageSize.getWidth();
-    // Generar el UUID
-    const uniqueID = this.generateShortUUID();
+    
     // Añadir el ID en el PDF (puede ser en la parte superior o inferior)
     doc.setFontSize(10);
-    doc.text(`ID: ${uniqueID}`, pdfWidth - 38, 8); // Esquina superior derecha
+    doc.text(`ID: ${this.uniqueID}`, pdfWidth - 38, 8); // Esquina superior derecha
     // Dimensiones originales de la imagen (en píxeles)
     const originalImageWidth = 753;
     const originalImageHeight = 80;
@@ -130,7 +138,7 @@ export class PdfService {
     // Título después de los logos
     doc.setFontSize(22);
     doc.setFont('Arial', 'bold');
-    doc.text('RESULTADOS ESTIMADOS', pdfWidth / 2, 50, { align: 'center' });
+    doc.text('RESULTADOS ESTIMADOS', pdfWidth / 2, 45, { align: 'center' });
   }
 
   private async addImageToPDF(
