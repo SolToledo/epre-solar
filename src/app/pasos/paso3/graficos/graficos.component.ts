@@ -74,6 +74,11 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    if(!this.yearlyEnergyInitial){
+      this.yearlyEnergyInitial=this.sharedService.getYearlyEnergyAckWh();
+    }
+    this.yearlyEnergy=this.yearlyEnergyInitial;
+
     this.initializeGraficoSolLuna();
     this.initializeChartAhorroRecupero();
     this.initializeChartEmisionesEvitadasAcumuladas();
