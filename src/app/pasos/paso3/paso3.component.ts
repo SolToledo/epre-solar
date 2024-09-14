@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import html2canvas from 'html2canvas';
 import { GmailService } from 'src/app/services/gmail.service';
@@ -14,16 +14,17 @@ import { NearbyLocationService } from 'src/app/services/nearby-location.service'
 import { Paso2Component } from '../paso2/paso2.component';
 import { PdfService } from 'src/app/services/pdf.service';
 import { ParametrosFront } from 'src/app/interfaces/parametros-front';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
   styleUrls: ['./paso3.component.css'],
 })
-export class Paso3Component implements OnInit {
+export class Paso3Component implements OnInit, OnDestroy {
   isModalOpen = false;
   email: string = '';
   costoInstalacion!: number;
-
+  private destroy$ = new Subject<void>();
   timestamp: string = '';
   potenciaPanelHip!: number;
   eficienciaInstalacion!: number;
@@ -67,7 +68,7 @@ export class Paso3Component implements OnInit {
     private nearbyService: NearbyLocationService,
     private pdfService: PdfService
   ) {
-    this.sharedService.isLoading$.subscribe({
+    this.sharedService.isLoading$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (value) => (this.isLoading = value),
     });
     this.actualizarFecha();
@@ -112,6 +113,11 @@ export class Paso3Component implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private initialLoadFields(): void {
     const yearlyAnualConfigurations =
       this.resultadosFront.solarData.panels.yearlysAnualConfigurations ?? [];
@@ -121,44 +127,49 @@ export class Paso3Component implements OnInit {
         yearlyAnualConfigurations
       );
     }
-
     this.yearlyEnergyAckWhDefault = parseFloat(
       this.resultadosFront.solarData.yearlyEnergyAcKwh.toFixed(0)
     );
     this.yearlyEnergyInitial = this.yearlyEnergyAckWhDefault;
-    this.periodoVeinteanalCasoConCapitalPropioInitial =
-      this.resultadosFront.resultadosFinancieros.casoConCapitalPropio;
-    this.sharedService.setYearlyEnergyAckWh(this.yearlyEnergyAckWhDefault);
-    this.sharedService.setPlazoInversion(
-      this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
-        .payBackMonths
-    );
-
+    this.sharedService.setYearlyEnergyAckWh(this.yearlyEnergyInitial);
     this.panelesCantidad =
       this.resultadosFront.solarData.panels.panelsSelected ??
       this.resultadosFront.solarData.panels.panelsCountApi;
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
+    this.sharedService.setPanelsCountSelected(this.panelesCantidad);
     this.sharedService.setDimensionPanels(this.dimensionPanel);
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
+    this.sharedService.setPanelCapacityW(this.panelCapacityW);
+
+    this.sharedService.panelCapacityW$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (capacity) => (this.potenciaPanelHip = capacity),
+      });
+    this.costoInstalacion =
+      this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
+    this.sharedService.setCostoInstalacion(this.costoInstalacion);
+    this.sharedService.setPlazoInversion(
+      this.resultadosFront.resultadosFinancieros.indicadoresFinancieros
+        .payBackMonths
+    );
+    this.periodoVeinteanalCasoConCapitalPropioInitial =
+      this.resultadosFront.resultadosFinancieros.casoConCapitalPropio;
 
     const cargos = this.resultadosFront.periodoVeinteanalProyeccionTarifas[0];
+
     this.sharedService.setTarifaIntercambioUsdkWh(
       cargos.cargoVariableConsumoUsdkWh
     );
 
-    this.sharedService.setPanelCapacityW(this.panelCapacityW);
-    this.sharedService.setPanelsCountSelected(this.panelesCantidad);
     this.carbonOffsetFactorTnPerMWh = parseFloat(
       (
         this.resultadosFront.solarData.carbonOffsetFactorKgPerMWh / 1000
       ).toFixed(3)
     );
     const parametros: ParametrosFront = this.resultadosFront.parametros!;
-    console.log(parametros);
+    console.log('parametros ', parametros);
 
-    this.sharedService.panelCapacityW$.subscribe({
-      next: (capacity) => (this.potenciaPanelHip = capacity),
-    });
     this.eficienciaInstalacion =
       parametros.caracteristicasSistema.eficienciaInstalacion;
     this.degradacionAnualPanel =
@@ -173,15 +184,15 @@ export class Paso3Component implements OnInit {
       parametros.inversionCostos.costoDeMantenimientoInicialUsd;
     this.tasaInflacionUsd = parametros.economicas.tasaInflacionUsd;
 
-    this.costoInstalacion =
-      this.resultadosFront.resultadosFinancieros.casoConCapitalPropio[0].inversiones;
-    this.sharedService.setCostoInstalacion(this.costoInstalacion);
-    this.consumoService.totalConsumo$.subscribe({
+    this.consumoService.totalConsumo$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (value) => (this.consumoTotalAnual = value),
     });
-    this.sharedService.tarifaContratada$.subscribe({
-      next: (tarifa) => (this.categoriaTarifa = tarifa),
-    });
+
+    this.sharedService.tarifaContratada$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (tarifa) => (this.categoriaTarifa = tarifa),
+      });
   }
 
   downloadPDF(): void {
@@ -189,8 +200,8 @@ export class Paso3Component implements OnInit {
       this.isDownloading = true;
       this.pdfService
         .generatePDF()
-        .then(() => { })
-        .catch(() => { })
+        .then(() => {})
+        .catch(() => {})
         .finally(() => (this.isDownloading = false));
     }
   }

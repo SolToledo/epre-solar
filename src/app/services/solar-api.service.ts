@@ -1,6 +1,6 @@
 import { Injectable, Injector, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { lastValueFrom, Subject, Subscription, takeUntil } from 'rxjs';
 import { ResultadoService } from './resultado.service';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { ConsumoService } from './consumo.service';
@@ -14,8 +14,8 @@ import { SolarDataFront } from '../interfaces/solar-data-front';
   providedIn: 'root',
 })
 export class SolarApiService implements OnDestroy {
-  //  private readonly apiUrl: string = 'http://localhost:3000';
-  private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
+   private readonly apiUrl: string = 'http://localhost:3000';
+  // private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
   private _resultados!: ResultadosFrontDTO;
   annualConsumption: number = 0;
   panelsSupported: number = 0;
@@ -24,7 +24,8 @@ export class SolarApiService implements OnDestroy {
   private panelsSupportedSubscription!: Subscription;
   private consumoSubscription!: Subscription;
   private potenciaMaxAsignadaSubscription!: Subscription;
-
+  private destroy$ = new Subject<void>(); // Subject para destruir observables
+  
   constructor(
     private http: HttpClient,
     private injector: Injector,
@@ -37,7 +38,7 @@ export class SolarApiService implements OnDestroy {
 
   ngOnDestroy() {
     // Desuscripción manual para evitar fugas de memoria
-    if (this.consumoSubscription) {
+    /* if (this.consumoSubscription) {
       this.consumoSubscription.unsubscribe();
     }
     if (this.panelsSupportedSubscription) {
@@ -45,7 +46,9 @@ export class SolarApiService implements OnDestroy {
     }
     if (this.potenciaMaxAsignadaSubscription) {
       this.potenciaMaxAsignadaSubscription.unsubscribe();
-    }
+    } */
+      this.destroy$.next();
+      this.destroy$.complete();
   }
 
   private getMapService(): MapService {
@@ -63,15 +66,21 @@ export class SolarApiService implements OnDestroy {
       const polygonArea = mapService.getPolygonArea();
       const categoriaSeleccionada = this.sharedService.getTarifaContratada();
 
-      this.consumoSubscription = this.consumoService.totalConsumo$.subscribe({
+      this.consumoService.totalConsumo$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (value) => (this.annualConsumption = value),
       });
 
-      this.panelsSupportedSubscription = this.sharedService.maxPanelsPerSuperface$.subscribe({
+    this.sharedService.maxPanelsPerSuperface$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (value) => (this.panelsSupported = value),
       });
 
-      this.potenciaMaxAsignadaSubscription = this.sharedService.potenciaMaxAsignadaW$.subscribe({
+    this.sharedService.potenciaMaxAsignadaW$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (value) => (this.potenciaMaxAsignada = value),
       });
 
