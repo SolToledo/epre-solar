@@ -17,6 +17,7 @@ import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { TarifaDialogComponent } from './tarifa-dialog/tarifa-dialog.component';
 import { DecimalPipe } from '@angular/common';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-tarifa',
@@ -27,7 +28,7 @@ import { DecimalPipe } from '@angular/common';
 export class TarifaComponent implements OnInit, AfterViewInit {
   tarifaContratada: string = '';
   consumosMensuales: number[] = [];
-  potenciaMaxAsignadakW: number = 0;
+  potenciaMaxAsignadakW!: number;
   inputPotenciaContratada: number | null = null;
 
   @Output() isCategorySelected = new EventEmitter<boolean>(false);
@@ -79,6 +80,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     },
   ];
   formattedValue: string = '';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private sharedService: SharedService,
@@ -93,9 +95,13 @@ export class TarifaComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.tarifaContratada = this.sharedService.getTarifaContratada() ?? '';
 
-    this.sharedService.potenciaMaxAsignadaW$.subscribe({
+    this.sharedService.potenciaMaxAsignadaW$
+    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .subscribe({
       next: (newPotenciaMax) => {
-        this.potenciaMaxAsignadakW = newPotenciaMax / 1000;
+        if(!this.potenciaMaxAsignadakW) {
+          this.potenciaMaxAsignadakW = newPotenciaMax / 1000;
+        }
       },
     });
   }
@@ -188,17 +194,11 @@ export class TarifaComponent implements OnInit, AfterViewInit {
   }
   private calcularMaxPanelsPerMaxPotencia() {
     const panelCapacity = this.sharedService.getPanelCapacityW();
-    this.sharedService.setPotenciaMaxAsignadaW(
-      this.potenciaMaxAsignadakW * 1000
-    );
     const maxPotenciaContratada =
       this.sharedService.getPotenciaMaxAsignadaValue();
     const maxPanelsPerMaxPotencia = maxPotenciaContratada / panelCapacity;
-    this.sharedService.setPotenciaInstalacionW(
-      maxPanelsPerMaxPotencia * panelCapacity
-    );
     if (
-      maxPanelsPerMaxPotencia > this.sharedService.getMaxPanelsPerSuperface()
+      maxPanelsPerMaxPotencia >= this.sharedService.getMaxPanelsPerSuperface()
     ) {
       this.sharedService.setPanelsCountSelected(
         this.sharedService.getMaxPanelsPerSuperface()

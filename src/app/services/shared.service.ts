@@ -188,7 +188,6 @@ export class SharedService {
   }
 
   setMaxPanelsPerSuperface(maxPanels: number) {
-    this.setPotenciaInstalacionW(maxPanels * this.getPanelCapacityW());
     this.maxPanelsPerSuperfaceSubject.next(maxPanels);
   }
 
@@ -292,7 +291,7 @@ export class SharedService {
   }
   getCostoUsdWp() {
     const resultados = this.getResultadosFront();
-    if(resultados) return resultados.parametros?.inversionCostos.costoUsdWpAplicado; //todo: ver si es necesario devolver con o sin iva
+    if(resultados) return resultados.parametros?.inversionCostos.costoUsdWpAplicado; 
     return 1.24;
   }
 }

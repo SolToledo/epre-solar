@@ -21,9 +21,6 @@ export class SolarApiService implements OnDestroy {
   panelsSupported: number = 0;
   private mapService!: MapService;
   potenciaMaxAsignada!: number;
-  private panelsSupportedSubscription!: Subscription;
-  private consumoSubscription!: Subscription;
-  private potenciaMaxAsignadaSubscription!: Subscription;
   private destroy$ = new Subject<void>(); // Subject para destruir observables
   
   constructor(
@@ -37,16 +34,6 @@ export class SolarApiService implements OnDestroy {
   ) { }
 
   ngOnDestroy() {
-    // Desuscripción manual para evitar fugas de memoria
-    /* if (this.consumoSubscription) {
-      this.consumoSubscription.unsubscribe();
-    }
-    if (this.panelsSupportedSubscription) {
-      this.panelsSupportedSubscription.unsubscribe();
-    }
-    if (this.potenciaMaxAsignadaSubscription) {
-      this.potenciaMaxAsignadaSubscription.unsubscribe();
-    } */
       this.destroy$.next();
       this.destroy$.complete();
   }

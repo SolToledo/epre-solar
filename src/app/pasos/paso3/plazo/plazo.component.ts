@@ -65,14 +65,6 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         
     }
   
-    // Añadir logs para ver si los valores iniciales se están asignando
-    /* console.log('Valores iniciales asignados:', {
-      yearlyEnergykWhInitial: this.yearlyEnergykWhInitial,
-      plazoRecuperoInitial: this.plazoRecuperoInitial,
-      potenciaInstalacionInitialkW: this.potenciaInstalacionInitialkW,
-      installationCostInitial: this.installationCostInitial,
-    }); */
-  
       this.checkValuesAndUpdate();
       
   }

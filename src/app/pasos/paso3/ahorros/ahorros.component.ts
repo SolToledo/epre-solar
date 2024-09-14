@@ -29,24 +29,24 @@ export class AhorrosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.sharedService.ahorroAnualUsd$
-    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
-    .subscribe((ahorroValue) => {
-      if (this.ahorrosUsdInitial === 0) {
-        this.ahorrosUsdInitial = ahorroValue;
-      }
-      this.ahorrosUsd = ahorroValue;
-      this.checkValuesAndUpdate();
-    });
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe((ahorroValue) => {
+        if (this.ahorrosUsdInitial === 0) {
+          this.ahorrosUsdInitial = ahorroValue;
+        }
+        this.ahorrosUsd = ahorroValue;
+        this.checkValuesAndUpdate();
+      });
 
-  this.sharedService.yearlyEnergyAckWh$
-    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
-    .subscribe((yearlyValue) => {
-      if (this.yearlyAnualInitial === 0) {
-        this.yearlyAnualInitial = yearlyValue;
-      }
-      this.yearlyAnualkW = yearlyValue;
-      this.checkValuesAndUpdate();
-    });
+    this.sharedService.yearlyEnergyAckWh$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe((yearlyValue) => {
+        if (this.yearlyAnualInitial === 0) {
+          this.yearlyAnualInitial = yearlyValue;
+        }
+        this.yearlyAnualkW = yearlyValue;
+        this.checkValuesAndUpdate();
+      });
   }
 
   ngAfterViewInit(): void {
@@ -67,11 +67,21 @@ export class AhorrosComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateAhorro() {
     if (this.yearlyAnualInitial > 0 && this.ahorrosUsdInitial > 0) {
       setTimeout(() => {
-        const newAhorroValue =
-          (this.yearlyAnualkW * this.ahorrosUsdInitial) / this.yearlyAnualInitial;
-  
+        const categoria = this.sharedService.getTarifaContratada();
+        const isT1 = categoria.includes('T1');
+        let ahorrosUsd = this.ahorrosUsdInitial;
+
+        /* if (isT1) {
+          const iva = 0.21;
+          ahorrosUsd = this.ahorrosUsdInitial * (1 + iva);
+        } */
+
+        let newAhorroValue =
+          (this.yearlyAnualkW * ahorrosUsd) /
+          this.yearlyAnualInitial;
+
         const roundedAhorroValue = Math.round(newAhorroValue);
-  
+
         // Solo actualizamos si el valor ha cambiado
         if (roundedAhorroValue !== this.sharedService.getAhorroAnualUsd()) {
           this.sharedService.setAhorroAnualUsd(roundedAhorroValue);
@@ -83,7 +93,6 @@ export class AhorrosComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
   }
-  
 
   private checkValuesAndUpdate(): void {
     if (this.yearlyAnualInitial > 0 && this.ahorrosUsdInitial > 0) {
