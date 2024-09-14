@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { DimensionPanel } from '../interfaces/dimension-panel';
 import { YearlysAnualConfigurationFront } from '../interfaces/yearlys-anual-configuration-front';
@@ -8,12 +8,9 @@ import { YearlysAnualConfigurationFront } from '../interfaces/yearlys-anual-conf
   providedIn: 'root',
 })
 export class SharedService {
-  getCostoEquipoDeMedicion() {
-    return 646.53;
-  }
-  getCostoUsdWp() {
-    return 1.23;
-  }
+  
+  
+  
   private inversionUsdSubject = new BehaviorSubject<number>(0);
   inversionUsd$ = this.inversionUsdSubject.asObservable();
 
@@ -64,6 +61,7 @@ export class SharedService {
   >({});
 
   resultadosFront$ = this.resultadosFrontSubject.asObservable();
+
   private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
   maxPanelsPerSuperface$ = this.maxPanelsPerSuperfaceSubject.asObservable();
   private CarbonOffSetTnAnualSubject = new BehaviorSubject<number>(0);
@@ -177,7 +175,15 @@ export class SharedService {
     this.resultadosFrontSubject.next(resultadosFrontNearby);
   }
 
-  getResultadosFrontNearby() {
+  getResultadosFrontNearby(): Partial<ResultadosFrontDTO> {
+    return this.resultadosFrontSubject.getValue();
+  }
+
+  setResultadosFront(resultadosFront: ResultadosFrontDTO) {
+    this.resultadosFrontSubject.next(resultadosFront);
+  }
+
+  getResultadosFront(): Partial<ResultadosFrontDTO> {
     return this.resultadosFrontSubject.getValue();
   }
 
@@ -277,5 +283,16 @@ export class SharedService {
 
   setInversionUsd(inversion: number) {
     this.inversionUsdSubject.next(inversion);
+  }
+
+  getCostoEquipoDeMedicion() {
+    const resultados = this.getResultadosFront();
+    if(resultados) return resultados.parametros?.inversionCostos.equipoDeMedicionUsdAplicado;
+    return 646.53;
+  }
+  getCostoUsdWp() {
+    const resultados = this.getResultadosFront();
+    if(resultados) return resultados.parametros?.inversionCostos.costoUsdWpAplicado; //todo: ver si es necesario devolver con o sin iva
+    return 1.24;
   }
 }

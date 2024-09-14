@@ -66,12 +66,12 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   
     // Añadir logs para ver si los valores iniciales se están asignando
-    console.log('Valores iniciales asignados:', {
+    /* console.log('Valores iniciales asignados:', {
       yearlyEnergykWhInitial: this.yearlyEnergykWhInitial,
       plazoRecuperoInitial: this.plazoRecuperoInitial,
       potenciaInstalacionInitialkW: this.potenciaInstalacionInitialkW,
       installationCostInitial: this.installationCostInitial,
-    });
+    }); */
   
       this.checkValuesAndUpdate();
       
@@ -92,7 +92,7 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sharedService.getPotenciaInstalacionW() > 0 &&  // Aseguramos que todos los valores estén presentes
       this.sharedService.getCostoInstalacion() > 0
     ) {
-      console.log(
+      /* console.log(
         'Cálculo:',
         'yearlyEnergykWh:',
         this.yearlyEnergykWh,
@@ -108,7 +108,7 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.installationCostInitial,
         'installationCostCurrent:',
         this.sharedService.getCostoInstalacion(),
-      );
+      ); */
   
       this.updatePlazoRecupero();
     } else {
@@ -142,7 +142,7 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
           ( potenciaAdjustment) *
           installationCostAdjustment;
 
-        console.log(
+        /* console.log(
           'Cálculo:',
           'yearlyEnergykWh:',
           this.yearlyEnergykWh,
@@ -160,7 +160,7 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.sharedService.getCostoInstalacion(),
           'newPlazoRecuperoValue:',
           newPlazoRecuperoValue
-        );
+        ); */
 
         const roundedPlazoRecuperoValue = Math.round(newPlazoRecuperoValue);
 
