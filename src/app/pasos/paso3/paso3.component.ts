@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import html2canvas from 'html2canvas';
 import { GmailService } from 'src/app/services/gmail.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SolarApiService } from 'src/app/services/solar-api.service';
@@ -55,7 +54,7 @@ export class Paso3Component implements OnInit, OnDestroy {
   paso2!: Paso2Component;
   isDownloading: boolean = false;
   periodoVeinteanalCasoConCapitalPropioInitial!: any[];
-
+  potenciaContratadaHip!: number;
   constructor(
     private router: Router,
     private readonly gmailService: GmailService,
@@ -183,7 +182,7 @@ export class Paso3Component implements OnInit, OnDestroy {
     this.costoMantenimiento =
       parametros.inversionCostos.costoDeMantenimientoInicialUsd;
     this.tasaInflacionUsd = parametros.economicas.tasaInflacionUsd;
-
+    this.potenciaContratadaHip = this.sharedService.getPotenciaMaxAsignadaValue();
     this.consumoService.totalConsumo$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (value) => (this.consumoTotalAnual = value),
     });
