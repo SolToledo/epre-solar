@@ -199,7 +199,7 @@ export class Paso3Component implements OnInit, OnDestroy {
     if (!this.isDownloading) {
       this.isDownloading = true;
       this.pdfService
-        .generatePDF()
+        .generatePDF(true)
         .then(() => { })
         .catch(() => { })
         .finally(() => (this.isDownloading = false));
