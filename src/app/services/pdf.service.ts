@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -34,7 +33,8 @@ export class PdfService {
   
     // Configurar el tamaño y fuente del texto
     doc.setFontSize(10);
-    doc.setFont('Arial', 'normal');
+    doc.setFont('Roboto');
+    // doc.setFont('Arial', 'normal');
   
     // Posicionar el texto en la parte inferior derecha
     const textWidth = doc.getTextWidth(footerText); // Obtener el ancho del texto
@@ -52,21 +52,24 @@ export class PdfService {
       'appPanelesId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      50
+      50,
+      1.5
     );
     await this.insertarCapturaPantalla(
       doc,
       'ahorrosId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      85
+      85,
+      1.5
     );
     await this.insertarCapturaPantalla(
       doc,
       'hipotesisId',
       doc.internal.pageSize.getWidth() - 20,
       10,
-      175
+      175,
+      1.7
     );
   }
   private async insertarCapturaPantalla(
@@ -74,7 +77,8 @@ export class PdfService {
     idElement: string,
     imgWidth: number,
     x: number = 10,
-    y: number
+    y: number,
+    scale: number
   ) {
     const resultadosElement = document.getElementById(idElement);
   
@@ -97,10 +101,10 @@ export class PdfService {
       const pdfHeight = doc.internal.pageSize.getHeight();
   
       // Calcular las coordenadas para centrar la imagen
-      const xOffset = (pdfWidth - (imgWidth / 1.5)) / 2;
+      const xOffset = (pdfWidth - (imgWidth / scale)) / 2;
   
       // Insertar la imagen en el PDF centrada
-      doc.addImage(imgData, 'JPEG', xOffset, y, imgWidth / 1.5, imgHeight / 1.5);
+      doc.addImage(imgData, 'JPEG', xOffset, y, imgWidth / scale, imgHeight / scale);
     } else {
       console.error('No se pudo encontrar el elemento de resultados.');
     }
