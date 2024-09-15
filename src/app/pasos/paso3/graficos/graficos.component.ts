@@ -46,17 +46,18 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   recuperoInversionMeses!: number;
   carbonOffSet!: number;
+  carbonOffSetInicialTon!: number;
   yearlyEnergy!: number;
   @Input() yearlyEnergyInitial!: number;
   porcentajeCubierto: number = 0;
-  carbonOffSetInicialTon!: number;
   chartEnergia!: ApexCharts;
   chartSolLuna!: ApexCharts;
-  emisionesChart!: ApexCharts;
+  chartEmisiones!: ApexCharts;
   chartAhorroRecupero!: ApexCharts;
   mesesRecupero!: number;
   private destroy$ = new Subject<void>(); // Subject para manejar desuscripciones
   ahorrosAnualesIniciales!: number;
+  
 
   constructor(
     private sharedService: SharedService,
@@ -68,7 +69,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.yearlyEnergyInitial = this.sharedService.getYearlyEnergyAckWh();
     }
     this.yearlyEnergy = this.yearlyEnergyInitial;
-    this.initializeGraficoSolLuna();
+    this.initializeChartEnergiaConsumo();
 
     if (!this.recuperoInversionMeses) {
       this.recuperoInversionMeses = this.sharedService.getPlazoInversionValue();
@@ -87,6 +88,9 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         console.warn('No se encontraron datos de FlujoIngresosMonetarios.');
       }
     }
+    if (!this.carbonOffSetInicialTon){
+      this.carbonOffSetInicialTon = this.sharedService.getCarbonOffSetTnAnual();
+    }
 
     this.sharedService.yearlyEnergyAckWh$
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
@@ -95,7 +99,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           this.yearlyEnergy = yearlyEnergy;
           if (this.chartSolLuna) this.updateChartEnergiaConsumo();
           if (this.chartAhorroRecupero) this.updateChartAhorroRecupero();
-          if (this.chartAhorroRecupero)
+          if (this.chartEmisiones)
             this.updateChartEmisionesEvitadasAcumuladas();
         },
       });
@@ -111,13 +115,25 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.chartAhorroRecupero) this.updateChartAhorroRecupero();
         },
       });
+      
+    this.sharedService.carbonOffSetTnAnual$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe({
+        next: (newEmisionesGeiEvitadas) => {
+          this.carbonOffSet = newEmisionesGeiEvitadas;
+          if (this.chartEmisiones)
+            this.updateChartEmisionesEvitadasAcumuladas();
+        },
+      });
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
+    this.carbonOffSetInicialTon = this.sharedService.getCarbonOffSetTnAnual();
+    console.log("this.carbonOffSetInicialTon ", this.carbonOffSetInicialTon);
+    
       this.initializeChartAhorroRecupero();
       this.initializeChartEmisionesEvitadasAcumuladas();
-    }, 100);
+   
   }
 
   ngOnDestroy(): void {
@@ -138,20 +154,19 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const cantPeriodos =
       this.periodoVeinteanalFlujoIngresosMonetariosCopia.length;
-      
+
     const factor =
       this.sharedService.getAhorroAnualUsd() / this.ahorrosAnualesIniciales;
     const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => {
-        return item.ahorroEnElectricidadTotalUsd *= factor;
+        return (item.ahorroEnElectricidadTotalUsd *= factor);
       }
     );
     const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => {
-        return item.ingresoPorInyeccionElectricaUsd *= factor;
+        return (item.ingresoPorInyeccionElectricaUsd *= factor);
       }
     );
-    
 
     const categories = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => item.year.toString()
@@ -296,15 +311,14 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => {
-        return item.ahorroEnElectricidadTotalUsd *= factor;
+        return (item.ahorroEnElectricidadTotalUsd *= factor);
       }
     );
     const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => {
-        return item.ingresoPorInyeccionElectricaUsd *= factor;
+        return (item.ingresoPorInyeccionElectricaUsd *= factor);
       }
     );
-
 
     // Actualizar los datos y las anotaciones en el gráfico
     this.chartAhorroRecupero.updateOptions({
@@ -377,7 +391,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /* Metodo para inicializar el grafico Sol-Luna */
-  private initializeGraficoSolLuna() {
+  private initializeChartEnergiaConsumo() {
     const options = {
       chart: {
         type: 'bar',
@@ -505,45 +519,39 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Añadir el punto inicial en 0 para el primer año
     const modifiedData = [
-      { year: 2024, emisionesTonCO2: 0 },
+      {year: 2024, emisionesTonCO2: 0},
       ...this.periodoVeinteanalEmisionesGEIEvitadasOriginal,
     ];
 
     // Calcula las diferencias y simula la degradación
-    const seriesData = modifiedData
-      .map((item, index, array) => {
-        let prevItem;
-        index === 0 ? (prevItem = array[index]) : (prevItem = array[index - 1]);
-        const degradacion = 0.004;
-        const emisionesReducidas =
-          prevItem.emisionesTonCO2 - prevItem.emisionesTonCO2 * degradacion;
+    const seriesData = modifiedData.map((item, index, array) => {
+      if (index === 0) {
         return {
           year: item.year,
-          diferencia: emisionesReducidas,
+          diferencia: 0, // Sin degradación en el primer año
         };
-      })
-      .filter(
-        (item): item is { year: number; diferencia: number } => item !== null
-      );
-
-    // Inicializa el acumulado con el valor de emisiones del primer año
-    let acumulado = 0; // Comienza en cero
-
-    // Calcula el acumulado sumando las diferencias
-    const acumuladoData = seriesData.map((item) => {
-      acumulado += item.diferencia;
+      }
+      if ( index === 1){
+        return {
+          year: item.year,
+          diferencia: this.sharedService.getCarbonOffSetTnAnual()
+        }
+      }
+      const prevItem = array[index - 1];
+      const degradacion = 0.004;
+      const emisionesReducidas =
+        Math.abs(prevItem.emisionesTonCO2 - item.emisionesTonCO2 * degradacion);
       return {
         year: item.year,
-        acumulado: acumulado,
+        diferencia: emisionesReducidas,
       };
     });
 
     // Extrae los años y el acumulado para el gráfico
-    const categories = acumuladoData
-      .filter((d) => d && typeof d.year !== 'undefined')
-      .map((d) => d.year.toString());
-    const data = modifiedData.map((d) => d.emisionesTonCO2);
-
+    const categories = seriesData.map((d) => d.year.toString());
+    
+    const data = seriesData.map((d) => d.diferencia);
+    console.log('data en chart emisiones init ', data);
     // Configura el gráfico
     const options = {
       series: [
@@ -646,85 +654,50 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     // Inicializa y renderiza el gráfico
-    this.emisionesChart = new ApexCharts(
+    this.chartEmisiones = new ApexCharts(
       document.querySelector('#emisionesChartRef') as HTMLElement,
       options
     );
 
-    this.emisionesChart.render();
-  }
-
-  private calculateEmisionesEvitadasConNuevoValor(
-    nuevoCarbonOffSet: number
-  ): void {
-    if (
-      !this.periodoVeinteanalEmisionesGEIEvitadasOriginal ||
-      this.periodoVeinteanalEmisionesGEIEvitadasOriginal.length === 0
-    ) {
-      console.error(
-        'periodoVeinteanalEmisionesGEIEvitadasOriginal no está definido o está vacío'
-      );
-      return;
-    }
-
-    // Factor de ajuste en base al nuevo valor de CarbonOffSetTnAnual
-    const factorDeAjuste = nuevoCarbonOffSet / this.carbonOffSetInicialTon;
-
-    // Recalcula el array de emisiones evitadas con el nuevo valor
-    this.periodoVeinteanalEmisionesGEIEvitadasCopia =
-      this.periodoVeinteanalEmisionesGEIEvitadasOriginal.map((item) => {
-        return {
-          ...item,
-          emisionesTonCO2: item.emisionesTonCO2 * factorDeAjuste,
-        };
-      });
+    this.chartEmisiones.render();
   }
 
   private updateChartEmisionesEvitadasAcumuladas(): void {
-    // Añadir el punto inicial en 0 para el primer año
-    const modifiedData = [
-      { year: 2024, emisionesTonCO2: 0 },
-      ...this.periodoVeinteanalEmisionesGEIEvitadasCopia,
-    ];
+    // Copiar los datos originales para trabajar con ellos sin mutar el original
+  this.periodoVeinteanalEmisionesGEIEvitadasCopia = JSON.parse(
+    JSON.stringify(this.periodoVeinteanalEmisionesGEIEvitadasOriginal)
+  );
 
-    // Calcula las diferencias y simula la degradación
-    const seriesData = modifiedData
-      .map((item, index, array) => {
-        let prevItem;
-        index === 0 ? (prevItem = array[index]) : (prevItem = array[index - 1]);
-        const degradacion = 0.004; // Simula la degradación anual
-        const emisionesReducidas =
-          prevItem.emisionesTonCO2 - prevItem.emisionesTonCO2 * degradacion;
+  // Calcular el factor de proporcionalidad basado en el nuevo valor de carbon offset
+  const factor =
+    this.sharedService.getCarbonOffSetTnAnual() / this.carbonOffSetInicialTon;
+  console.log(this.carbonOffSetInicialTon);
+  
+  // Aplicar el factor a las emisiones para recalcularlas proporcionalmente
+  const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
+    (item, index) => {
+      if(index === 0) {
         return {
           year: item.year,
-          diferencia: emisionesReducidas,
-        };
-      })
-      .filter(
-        (item): item is { year: number; diferencia: number } => item !== null
-      );
-
-    // Inicializa el acumulado con el valor de emisiones del primer año
-    let acumulado = 0; // Comienza en cero
-
-    // Calcula el acumulado sumando las diferencias
-    const acumuladoData = seriesData.map((item) => {
-      acumulado += item.diferencia;
+          emisionesTonCO2: 0
+        }
+      }
       return {
         year: item.year,
-        acumulado: acumulado,
+        emisionesTonCO2: item.emisionesTonCO2 * factor, // Aplica el factor al valor original
       };
-    });
+    }
+  );
 
-    // Extrae los años y el acumulado para el gráfico
-    const categories = acumuladoData
-      .filter((d) => d && typeof d.year !== 'undefined')
-      .map((d) => d.year.toString());
+  // Extraer los años y los valores recalculados para el gráfico
+  const categories = seriesData.map((d) => d.year.toString());
+  const data = seriesData.map((d) => d.emisionesTonCO2);
 
-    const data = modifiedData.map((d) => d.emisionesTonCO2);
+  // Mostrar los datos recalculados en la consola para verificar
+  console.log('Datos recalculados de emisiones:', data);
 
     // Actualiza el gráfico con los nuevos datos
-    this.emisionesChart.updateOptions({
+    this.chartEmisiones.updateOptions({
       series: [
         {
           name: 'Emisiones CO₂ Acumuladas',

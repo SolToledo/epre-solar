@@ -139,7 +139,8 @@ export class Paso3Component implements OnInit, OnDestroy {
     this.sharedService.setDimensionPanels(this.dimensionPanel);
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
     this.sharedService.setPanelCapacityW(this.panelCapacityW);
-
+    const eficienciaInstalacion = this.resultadosFront.parametros?.caracteristicasSistema.eficienciaInstalacion || 0.95;
+    this.sharedService.setEficienciaInstalacion(eficienciaInstalacion);
     this.sharedService.panelCapacityW$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -199,8 +200,8 @@ export class Paso3Component implements OnInit, OnDestroy {
       this.isDownloading = true;
       this.pdfService
         .generatePDF()
-        .then(() => {})
-        .catch(() => {})
+        .then(() => { })
+        .catch(() => { })
         .finally(() => (this.isDownloading = false));
     }
   }

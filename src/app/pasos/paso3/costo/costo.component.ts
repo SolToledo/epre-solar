@@ -40,6 +40,13 @@ export class CostoComponent implements OnInit, OnDestroy {
         this.yearlyEnergykWh = yearlyValue;
         this.checkValuesAndUpdate();
       });
+      this.sharedService.update$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe({
+        next: (isUpdate) => {
+          if (isUpdate) this.updateCostoInstalacion();
+        },
+      });
   }
 
   ngAfterViewInit(): void {

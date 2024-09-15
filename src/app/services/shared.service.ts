@@ -8,9 +8,12 @@ import { YearlysAnualConfigurationFront } from '../interfaces/yearlys-anual-conf
   providedIn: 'root',
 })
 export class SharedService {
-  
-  
-  
+  private updateSubject = new BehaviorSubject<boolean>(false);
+  update$ = this.updateSubject.asObservable();
+
+  private eficienciaInstalacionSubject = new BehaviorSubject<number>(0);
+  eficienciaInstalacion$ = this.eficienciaInstalacionSubject.asObservable();
+
   private inversionUsdSubject = new BehaviorSubject<number>(0);
   inversionUsd$ = this.inversionUsdSubject.asObservable();
 
@@ -64,8 +67,8 @@ export class SharedService {
 
   private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
   maxPanelsPerSuperface$ = this.maxPanelsPerSuperfaceSubject.asObservable();
-  private CarbonOffSetTnAnualSubject = new BehaviorSubject<number>(0);
-  CarbonOffSetTnAnual$ = this.CarbonOffSetTnAnualSubject.asObservable();
+  private carbonOffSetTnAnualSubject = new BehaviorSubject<number>(0);
+  carbonOffSetTnAnual$ = this.carbonOffSetTnAnualSubject.asObservable();
   private isStopCalculateSubject = new BehaviorSubject<boolean>(false);
   isStopCalculate$ = this.isStopCalculateSubject.asObservable();
   private consumosMensualesSubject = new BehaviorSubject<number[]>([]);
@@ -196,11 +199,11 @@ export class SharedService {
   }
 
   setCarbonOffSetTnAnual(carbonOffSet: number) {
-    this.CarbonOffSetTnAnualSubject.next(carbonOffSet);
+    this.carbonOffSetTnAnualSubject.next(carbonOffSet);
   }
 
   getCarbonOffSetTnAnual() {
-    return this.CarbonOffSetTnAnualSubject.getValue();
+    return this.carbonOffSetTnAnualSubject.getValue();
   }
 
   setIsStopCalculate(isStop: boolean) {
@@ -286,12 +289,30 @@ export class SharedService {
 
   getCostoEquipoDeMedicion() {
     const resultados = this.getResultadosFront();
-    if(resultados) return resultados.parametros?.inversionCostos.equipoDeMedicionUsdAplicado;
+    if (resultados) return resultados.parametros?.inversionCostos.equipoDeMedicionUsdAplicado;
     return 646.53;
   }
   getCostoUsdWp() {
     const resultados = this.getResultadosFront();
-    if(resultados) return resultados.parametros?.inversionCostos.costoUsdWpAplicado; 
+    if (resultados) return resultados.parametros?.inversionCostos.costoUsdWpAplicado;
     return 1.24;
   }
+
+  getEficienciaInstalacion(): number {
+    return this.eficienciaInstalacionSubject.getValue();
+  }
+
+  setEficienciaInstalacion(value: number) {
+    this.eficienciaInstalacionSubject.next(value);
+  }
+
+  update() {
+    this.updateSubject.next(true)
+  }
+
+
+
+
+
+
 }
