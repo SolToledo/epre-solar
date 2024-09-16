@@ -1,5 +1,5 @@
 import { Injectable, Injector, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom, Subject, Subscription, takeUntil } from 'rxjs';
 import { ResultadoService } from './resultado.service';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
@@ -14,7 +14,7 @@ import { SolarDataFront } from '../interfaces/solar-data-front';
   providedIn: 'root',
 })
 export class SolarApiService implements OnDestroy {
-   private readonly apiUrl: string = 'http://localhost:3000';
+  private readonly apiUrl: string = 'http://localhost:3000';
   // private readonly apiUrl: string = 'https://0l5cvs6h-3000.brs.devtunnels.ms';
   private _resultados!: ResultadosFrontDTO;
   annualConsumption: number = 0;
@@ -22,7 +22,7 @@ export class SolarApiService implements OnDestroy {
   private mapService!: MapService;
   potenciaMaxAsignada!: number;
   private destroy$ = new Subject<void>(); // Subject para destruir observables
-  
+
   constructor(
     private http: HttpClient,
     private injector: Injector,
@@ -31,11 +31,11 @@ export class SolarApiService implements OnDestroy {
     private sharedService: SharedService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
 
   ngOnDestroy() {
-      this.destroy$.next();
-      this.destroy$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private getMapService(): MapService {
@@ -54,22 +54,22 @@ export class SolarApiService implements OnDestroy {
       const categoriaSeleccionada = this.sharedService.getTarifaContratada();
 
       this.consumoService.totalConsumo$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (value) => (this.annualConsumption = value),
-      });
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (value) => (this.annualConsumption = value),
+        });
 
-    this.sharedService.maxPanelsPerSuperface$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (value) => (this.panelsSupported = value),
-      });
+      this.sharedService.maxPanelsPerSuperface$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (value) => (this.panelsSupported = value),
+        });
 
-    this.sharedService.potenciaMaxAsignadaW$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (value) => (this.potenciaMaxAsignada = value),
-      });
+      this.sharedService.potenciaMaxAsignadaW$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (value) => (this.potenciaMaxAsignada = value),
+        });
 
       // Verifica los datos y muestra mensajes específicos
       const missingFields = [];
@@ -110,24 +110,53 @@ export class SolarApiService implements OnDestroy {
         panelsSelected: this.sharedService.getPanelsSelected(),
         potenciaMaxAsignada: this.potenciaMaxAsignada,
       };
-      console.log("Datos que se envian al endpoint : ", datosCalculo);
+      console.log('Datos que se envian al endpoint : ', datosCalculo);
 
       // Esperar la respuesta de la solicitud HTTP
-      const response = await lastValueFrom(
-        this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
-      );
-      console.log("Datos que devuelve el endpoint : ", response);
+      
+
+      /* try {
+        this._resultados = await lastValueFrom(
+          this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
+        );
+        console.log('Response:', this._resultados);
+      } catch (error) {
+        console.error('Error during solar calculation:', error);
+      } */
+        try {
+          const response = await fetch(`${this.apiUrl}/solar/calculate`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json', 
+            },
+            body: JSON.stringify(datosCalculo), // Convierte los datos de cálculo a JSON
+            cache: 'no-store', // Para evitar el cacheo de la respuesta
+          });
+      
+          // Verifica si la respuesta es exitosa
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+      
+          // Procesa la respuesta como JSON
+          const resultados = await response.json();
+          this._resultados = resultados; // Asigna los resultados obtenidos
+      
+          console.log('Response:', this._resultados);
+        } catch (error) {
+          console.error('Error during solar calculation:', error);
+        }
+
       // Procesar la respuesta
-      this._resultados = this.resultadoService.generarResultados(response);
-      console.log("RESULTADOS ", this._resultados)
+      this._resultados = this.resultadoService.generarResultados(
+        this._resultados
+      );
+      console.log('RESULTADOS ', this._resultados);
       return this.getResultados;
     } catch (error) {
       this.sharedService.setIsLoading(false);
-
-
     }
   }
-
 
   get getResultados(): ResultadosFrontDTO {
     return this._resultados;

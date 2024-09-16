@@ -291,17 +291,17 @@ export class SharedService {
 
   getCostoEquipoDeMedicion() {
     const resultados = this.getResultadosFront();
-    if(this.getTarifaContratada().includes("T1")) {
-      return resultados.parametros?.inversionCostos.equipoDeMedicionUsdAplicado;
+    if(this.getTarifaContratada().includes("T1-R")) {
+      return 782.30;
     }
-    return resultados.parametros?.inversionCostos.equipoDeMedicionArsSinIva;
+    return 646.53;
   }
   getCostoUsdWp() {
     const resultados = this.getResultadosFront();
-    if(this.getTarifaContratada().includes("T1")) {
-      return resultados.parametros?.inversionCostos.costoUsdWpAplicado;
+    if(this.getTarifaContratada().includes("T1-R")) {
+      return 1.5;
     }
-    return resultados.parametros?.inversionCostos.equipoDeMedicionArsSinIva;
+    return 1.24;
   }
 
   getEficienciaInstalacion(): number {
