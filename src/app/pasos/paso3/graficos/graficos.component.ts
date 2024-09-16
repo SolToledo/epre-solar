@@ -707,9 +707,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             emisionesTonCO2: 0,
           };
         }
+        if (index === 1) {
+          return {
+            year: item.year,
+            emisionesTonCO2: this.sharedService.getCarbonOffSetTnAnual(),
+          };
+        }
         return {
           year: item.year,
-          emisionesTonCO2: item.emisionesTonCO2 * factor, // Aplica el factor al valor original
+          emisionesTonCO2: item.emisionesTonCO2 * factor, 
         };
       }
     );
