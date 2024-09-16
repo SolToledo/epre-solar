@@ -14,10 +14,11 @@ export class GmailService {
     // Generar el PDF como Blob
     const pdf = await this.pdfService.generatePDF(false);
     const pdfBlob = pdf.output('blob');
+    const uniqueID = this.pdfService.uniqueID;
     // Crear un objeto FormData para adjuntar el archivo
     const formData = new FormData();
     formData.append('email', email);
-    formData.append('file', pdfBlob, 'resultados.pdf');
+    formData.append('file', pdfBlob, `resultado-id-${uniqueID}.pdf`);
 
     // Enviar la solicitud HTTP con el archivo adjunto
     this.http.post(`${this.apiUrl}/gmail/send-email`, formData).subscribe({

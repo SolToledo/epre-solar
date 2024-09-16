@@ -67,14 +67,7 @@ export class AhorrosComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateAhorro() {
     if (this.yearlyAnualInitial > 0 && this.ahorrosUsdInitial > 0) {
       setTimeout(() => {
-        const categoria = this.sharedService.getTarifaContratada();
-        const isT1 = categoria.includes('T1');
         let ahorrosUsd = this.ahorrosUsdInitial;
-
-        /* if (isT1) {
-          const iva = 0.21;
-          ahorrosUsd = this.ahorrosUsdInitial * (1 + iva);
-        } */
 
         let newAhorroValue =
           (this.yearlyAnualkW * ahorrosUsd) /

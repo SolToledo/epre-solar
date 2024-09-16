@@ -120,7 +120,7 @@ export class Paso3Component implements OnInit, OnDestroy {
   private initialLoadFields(): void {
     const yearlyAnualConfigurations =
       this.resultadosFront.solarData.panels.yearlysAnualConfigurations ?? [];
-
+    this.sharedService.setResultadosFront(this.resultadosFront);
     if (yearlyAnualConfigurations) {
       this.sharedService.setYearlysAnualConfigurations(
         yearlyAnualConfigurations
@@ -168,7 +168,6 @@ export class Paso3Component implements OnInit, OnDestroy {
       ).toFixed(3)
     );
     const parametros: ParametrosFront = this.resultadosFront.parametros!;
-    console.log('parametros ', parametros);
 
     this.eficienciaInstalacion =
       parametros.caracteristicasSistema.eficienciaInstalacion;
@@ -179,7 +178,7 @@ export class Paso3Component implements OnInit, OnDestroy {
     this.proporcionInyectada =
       parametros.caracteristicasSistema.proporcionInyeccion;
     this.costoEquipoMedicion =
-      parametros.inversionCostos.equipoDeMedicionUsdAplicado;
+      this.sharedService.getCostoEquipoDeMedicion()!;
     this.costoMantenimiento =
       parametros.inversionCostos.costoDeMantenimientoInicialUsd;
     this.tasaInflacionUsd = parametros.economicas.tasaInflacionUsd;

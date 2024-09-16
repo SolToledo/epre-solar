@@ -59,14 +59,14 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (!this.yearlyEnergyInitial) {
       this.yearlyEnergyInitial = this.sharedService.getYearlyEnergyAckWh();
     }
     this.yearlyEnergy = this.yearlyEnergyInitial;
-   
+
 
     if (!this.recuperoInversionMeses) {
       this.recuperoInversionMeses = this.sharedService.getPlazoInversionValue();
@@ -126,6 +126,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.carbonOffSetInicialTon = this.sharedService.getCarbonOffSetTnAnual();
+
     this.initializeChartEnergiaConsumo();
     this.initializeChartAhorroRecupero();
     this.initializeChartEmisionesEvitadasAcumuladas();
@@ -157,28 +158,28 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Crear arrays con el valor constante del primer año para todo el periodo
     const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
-      (item,index,array) => {
-        if(index===0) {
+      (item, index, array) => {
+        if (index === 0) {
           item.ahorroEnElectricidadTotalUsd = primerAhorro
           return item.ahorroEnElectricidadTotalUsd
         }
-        const prevItem = array[index-1].ahorroEnElectricidadTotalUsd
-        array[index].ahorroEnElectricidadTotalUsd = prevItem * 0.95
+        const prevItem = array[index - 1].ahorroEnElectricidadTotalUsd
+        array[index].ahorroEnElectricidadTotalUsd = prevItem * (1 - this.sharedService.getDegradacionPanel());
         return array[index].ahorroEnElectricidadTotalUsd
       }
     );
     const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
-      (item,index,array) => {
-        if(index===0) {
+      (item, index, array) => {
+        if (index === 0) {
           item.ingresoPorInyeccionElectricaUsd = primerIngreso
           return item.ingresoPorInyeccionElectricaUsd
         }
-        const prevItem = array[index-1].ingresoPorInyeccionElectricaUsd
-        array[index].ingresoPorInyeccionElectricaUsd = prevItem * 0.95
-        return array[index].ingresoPorInyeccionElectricaUsd 
+        const prevItem = array[index - 1].ingresoPorInyeccionElectricaUsd
+        array[index].ingresoPorInyeccionElectricaUsd = prevItem * (1 - this.sharedService.getDegradacionPanel());
+        return array[index].ingresoPorInyeccionElectricaUsd
       }
     );
-    
+
     // Extraer los años para la gráfica
     const categories = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
       (item) => item.year.toString()
@@ -279,9 +280,8 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
           if (seriesName === 'Punto de recupero') {
             return `<span style="display: inline-block; width: 30px; height: 3px; border-top: 2px dashed #008ae3; margin-right: 4px;"></span>${seriesName}`;
           }
-          return `<span style="display: inline-block; width: 30px; height: 3px; background-color: ${
-            opts.w.globals.colors[opts.seriesIndex]
-          }; margin-right: 4px;"></span>${seriesName}`;
+          return `<span style="display: inline-block; width: 30px; height: 3px; background-color: ${opts.w.globals.colors[opts.seriesIndex]
+            }; margin-right: 4px;"></span>${seriesName}`;
         },
       },
     };
@@ -322,29 +322,29 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     const primerAhorro =
       this.sharedService.getAhorroAnualUsd() * 0.80;
     const primerIngreso =
-    this.sharedService.getAhorroAnualUsd() * 0.20;
+      this.sharedService.getAhorroAnualUsd() * 0.20;
 
     // Crear arrays con el valor constante del primer año para todo el periodo
     const ahorroData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
-      (item,index,array) => {
-        if(index===0) {
+      (item, index, array) => {
+        if (index === 0) {
           item.ahorroEnElectricidadTotalUsd = primerAhorro
           return item.ahorroEnElectricidadTotalUsd
         }
-        const prevItem = array[index-1].ahorroEnElectricidadTotalUsd
-        array[index].ahorroEnElectricidadTotalUsd = prevItem * 0.95
-        return array[index].ahorroEnElectricidadTotalUsd 
+        const prevItem = array[index - 1].ahorroEnElectricidadTotalUsd
+        array[index].ahorroEnElectricidadTotalUsd = prevItem * (1 - this.sharedService.getDegradacionPanel());
+        return array[index].ahorroEnElectricidadTotalUsd
       }
     );
     const ingresoData = this.periodoVeinteanalFlujoIngresosMonetariosCopia.map(
-      (item,index,array) => {
-        if(index===0) {
+      (item, index, array) => {
+        if (index === 0) {
           item.ingresoPorInyeccionElectricaUsd = primerIngreso
           return item.ingresoPorInyeccionElectricaUsd
         }
-        const prevItem = array[index-1].ingresoPorInyeccionElectricaUsd
-        array[index].ingresoPorInyeccionElectricaUsd = prevItem * 0.95
-        return array[index].ingresoPorInyeccionElectricaUsd 
+        const prevItem = array[index - 1].ingresoPorInyeccionElectricaUsd
+        array[index].ingresoPorInyeccionElectricaUsd = prevItem * (1 - this.sharedService.getDegradacionPanel());
+        return array[index].ingresoPorInyeccionElectricaUsd
       }
     );
     // Actualizar los datos y las anotaciones en el gráfico
@@ -564,7 +564,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         };
       }
       const prevItem = array[index - 1];
-      const degradacion = 0.004;
+      const degradacion = this.sharedService.getDegradacionPanel();
       const emisionesReducidas = Math.abs(
         prevItem.emisionesTonCO2 - item.emisionesTonCO2 * degradacion
       );
@@ -717,7 +717,6 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
     // Extraer los años y los valores recalculados para el gráfico
     const categories = seriesData.map((d) => d.year.toString());
     const data = seriesData.map((d) => d.emisionesTonCO2);
-
     // Actualiza el gráfico con los nuevos datos
     this.chartEmisiones.updateOptions({
       series: [

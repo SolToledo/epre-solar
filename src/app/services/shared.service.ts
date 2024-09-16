@@ -3,11 +3,13 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { DimensionPanel } from '../interfaces/dimension-panel';
 import { YearlysAnualConfigurationFront } from '../interfaces/yearlys-anual-configuration-front';
+import { ParametrosFront } from '../interfaces/parametros-front';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
+
   private updateSubject = new BehaviorSubject<boolean>(false);
   update$ = this.updateSubject.asObservable();
 
@@ -289,13 +291,17 @@ export class SharedService {
 
   getCostoEquipoDeMedicion() {
     const resultados = this.getResultadosFront();
-    if (resultados) return resultados.parametros?.inversionCostos.equipoDeMedicionUsdAplicado;
-    return 646.53;
+    if(this.getTarifaContratada().includes("T1")) {
+      return resultados.parametros?.inversionCostos.equipoDeMedicionUsdAplicado;
+    }
+    return resultados.parametros?.inversionCostos.equipoDeMedicionArsSinIva;
   }
   getCostoUsdWp() {
     const resultados = this.getResultadosFront();
-    if (resultados) return resultados.parametros?.inversionCostos.costoUsdWpAplicado;
-    return 1.24;
+    if(this.getTarifaContratada().includes("T1")) {
+      return resultados.parametros?.inversionCostos.costoUsdWpAplicado;
+    }
+    return resultados.parametros?.inversionCostos.equipoDeMedicionArsSinIva;
   }
 
   getEficienciaInstalacion(): number {
@@ -310,9 +316,10 @@ export class SharedService {
     this.updateSubject.next(true)
   }
 
-
-
-
-
+  getDegradacionPanel(): number {
+    const resultados = this.getResultadosFront();
+    const parametros: ParametrosFront = resultados.parametros!;
+    return parametros.caracteristicasSistema.degradacionAnualPanel;
+  }
 
 }

@@ -71,17 +71,9 @@ export class CostoComponent implements OnInit, OnDestroy {
 
   private updateCostoInstalacion() {
     if (this.yarlyEnergykWhInitial > 0 && this.costoInstalacionInitial > 0) {
-      const categoria = this.sharedService.getTarifaContratada();
-      const isT1 = categoria.includes('T1');
-      let costoUsdWp = this.sharedService.getCostoUsdWp() || 1.24;
+      let costoUsdWp = this.sharedService.getCostoUsdWp()!;
       let costoEquipoDeMedicionUsd =
-        this.sharedService.getCostoEquipoDeMedicion() || 646.53; 
-      // Aplicar IVA (21%) si la tarifa contratada es T1
-      if (isT1) {
-        const iva = 0.21;
-        costoUsdWp *= 1 + iva; 
-        costoEquipoDeMedicionUsd *= 1 + iva; 
-      }
+        this.sharedService.getCostoEquipoDeMedicion()!; 
       
       const instalacionPotenciaW =
       this.sharedService.getPanelCapacityW() *

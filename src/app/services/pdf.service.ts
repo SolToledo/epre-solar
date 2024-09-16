@@ -6,7 +6,7 @@ import html2canvas from 'html2canvas';
 })
 export class PdfService {
   private doc: jsPDF;
-  uniqueID: string = this.generateShortUUID();
+  uniqueID!: string;
 
   constructor() {
     this.doc = new jsPDF({
@@ -14,6 +14,7 @@ export class PdfService {
       unit: 'mm',
       format: [210, 297],
     });
+    this.uniqueID = this.generateShortUUID();
   }
 
   async generatePDF(isDownload: boolean) {
@@ -29,6 +30,7 @@ export class PdfService {
     }
     return doc;
   }
+
   private footerGenerate(doc: jsPDF) {
     const pdfWidth = doc.internal.pageSize.getWidth();
     const pdfHeight = doc.internal.pageSize.getHeight();
