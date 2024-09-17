@@ -36,8 +36,6 @@ export class PdfService {
     return doc;
   }
   private async graficosGenerate(doc: jsPDF) {
-    const pdfWidth = doc.internal.pageSize.getWidth();
-    const pdfHeight = doc.internal.pageSize.getHeight();
     await this.encabezadoGenerate(doc, 'GRAFICAS');
     await this.insertarCapturaPantalla(
       doc,
@@ -57,7 +55,7 @@ export class PdfService {
 
     // Configurar el tamaño y fuente del texto
     doc.setFontSize(10);
-    doc.setFont('Roboto');
+    doc.setFont('Helvetica');
     // doc.setFont('Arial', 'normal');
 
     // Posicionar el texto en la parte inferior derecha
@@ -172,8 +170,8 @@ export class PdfService {
         imgHeight
       ).then(() => {
         // Título después de los logos
-        doc.setFontSize(22);
-        doc.setFont('Arial', 'bold');
+        doc.setFontSize(16);
+        doc.setFont('Helvetica', 'bold');
         doc.text(encabezadoText, pdfWidth / 2, 45, { align: 'center' });
         resolve();
       });
