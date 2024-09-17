@@ -55,6 +55,7 @@ export class Paso3Component implements OnInit, OnDestroy {
   isDownloading: boolean = false;
   periodoVeinteanalCasoConCapitalPropioInitial!: any[];
   potenciaContratadaHip!: number;
+  isSendingMail: boolean = false;
   constructor(
     private router: Router,
     private readonly gmailService: GmailService,
@@ -206,8 +207,11 @@ export class Paso3Component implements OnInit, OnDestroy {
   }
 
   sendEmail(): void {
+   
     if (this.email) {
+      this.isSendingMail = true;
       this.gmailService.sendEmailWithResults(this.email).then(() => {
+        this.isSendingMail = false;
         this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
           duration: 5000,
           panelClass: ['custom-snackbar'],
