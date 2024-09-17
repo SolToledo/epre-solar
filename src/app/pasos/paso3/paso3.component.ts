@@ -140,7 +140,9 @@ export class Paso3Component implements OnInit, OnDestroy {
     this.sharedService.setDimensionPanels(this.dimensionPanel);
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
     this.sharedService.setPanelCapacityW(this.panelCapacityW);
-    const eficienciaInstalacion = this.resultadosFront.parametros?.caracteristicasSistema.eficienciaInstalacion || 0.95;
+    const eficienciaInstalacion =
+      this.resultadosFront.parametros?.caracteristicasSistema
+        .eficienciaInstalacion || 0.95;
     this.sharedService.setEficienciaInstalacion(eficienciaInstalacion);
     this.sharedService.panelCapacityW$
       .pipe(takeUntil(this.destroy$))
@@ -178,12 +180,12 @@ export class Paso3Component implements OnInit, OnDestroy {
       parametros.caracteristicasSistema.proporcionAutoconsumo;
     this.proporcionInyectada =
       parametros.caracteristicasSistema.proporcionInyeccion;
-    this.costoEquipoMedicion =
-      this.sharedService.getCostoEquipoDeMedicion()!;
+    this.costoEquipoMedicion = this.sharedService.getCostoEquipoDeMedicion()!;
     this.costoMantenimiento =
       parametros.inversionCostos.costoDeMantenimientoInicialUsd;
     this.tasaInflacionUsd = parametros.economicas.tasaInflacionUsd;
-    this.potenciaContratadaHip = this.sharedService.getPotenciaMaxAsignadaValue();
+    this.potenciaContratadaHip =
+      this.sharedService.getPotenciaMaxAsignadaValue();
     this.consumoService.totalConsumo$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (value) => (this.consumoTotalAnual = value),
     });
@@ -200,26 +202,27 @@ export class Paso3Component implements OnInit, OnDestroy {
       this.isDownloading = true;
       this.pdfService
         .generatePDF(true)
-        .then(() => { })
-        .catch(() => { })
+        .then(() => {})
+        .catch(() => {})
         .finally(() => (this.isDownloading = false));
     }
   }
 
   sendEmail(): void {
-   
-    if (this.email) {
-      this.isSendingMail = true;
-      this.gmailService.sendEmailWithResults(this.email).then(() => {
-        this.isSendingMail = false;
-        this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
-          duration: 5000,
-          panelClass: ['custom-snackbar'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
+    if (!this.isSendingMail) {
+      if (this.email) {
+        this.isSendingMail = true;
+        this.gmailService.sendEmailWithResults(this.email).then(() => {
+          this.isSendingMail = false;
+          this.snackBar.open('El correo ha sido enviado exitosamente.', '', {
+            duration: 5000,
+            panelClass: ['custom-snackbar'],
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+          this.closeModal();
         });
-        this.closeModal();
-      });
+      }
     }
   }
 

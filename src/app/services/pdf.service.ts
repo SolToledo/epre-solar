@@ -21,20 +21,39 @@ export class PdfService {
     const doc = this.doc;
 
     // Encabezado
-    await this.encabezadoGenerate(doc);
+    await this.encabezadoGenerate(doc, 'RESULTADOS');
     await this.resultadosGenerate(doc);
     this.footerGenerate(doc);
+
+    // Agregar nueva página con gráficos
+    doc.addPage();
+    await this.graficosGenerate(doc);
+
     // Save the PDF
     if (isDownload) {
       doc.save(`resultado-id-${this.uniqueID}.pdf`);
     }
     return doc;
   }
+  private async graficosGenerate(doc: jsPDF) {
+    const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = doc.internal.pageSize.getHeight();
+    await this.encabezadoGenerate(doc, 'GRAFICAS');
+    await this.insertarCapturaPantalla(
+      doc,
+      'graficos',
+      doc.internal.pageSize.getWidth() - 20,
+      10,
+      50,
+      1.5
+    );
+    this.footerGenerate(doc);
+  }
 
   private footerGenerate(doc: jsPDF) {
     const pdfWidth = doc.internal.pageSize.getWidth();
     const pdfHeight = doc.internal.pageSize.getHeight();
-    const footerText = 'http://solar.epresanjuan.gob.ar';
+    const footerText = 'https://solar.epresanjuan.gob.ar';
 
     // Configurar el tamaño y fuente del texto
     doc.setFontSize(10);
@@ -74,7 +93,7 @@ export class PdfService {
       doc.internal.pageSize.getWidth() - 20,
       10,
       175,
-      1.7
+      1.5
     );
   }
   private async insertarCapturaPantalla(
@@ -122,13 +141,14 @@ export class PdfService {
     }
   }
 
-  private async encabezadoGenerate(doc: jsPDF) {
+  private async encabezadoGenerate(doc: jsPDF, encabezadoText: string) {
     const logoImage = '/assets/img/a4_header_img.jpg'; // Ruta de la imagen con todos los logos
     const pdfWidth = doc.internal.pageSize.getWidth();
 
     // Añadir el ID en el PDF (puede ser en la parte superior o inferior)
     doc.setFontSize(10);
     doc.text(`ID: ${this.uniqueID}`, pdfWidth - 38, 8); // Esquina superior derecha
+
     // Dimensiones originales de la imagen (en píxeles)
     const originalImageWidth = 753;
     const originalImageHeight = 80;
@@ -142,18 +162,22 @@ export class PdfService {
     const yPosition = 10; // Margen desde la parte superior
 
     // Dibujar la imagen en el PDF
-    await this.addImageToPDF(
-      doc,
-      logoImage,
-      xPosition,
-      yPosition,
-      imgWidth,
-      imgHeight
-    );
-    // Título después de los logos
-    doc.setFontSize(22);
-    doc.setFont('Arial', 'bold');
-    doc.text('RESULTADOS ESTIMADOS', pdfWidth / 2, 45, { align: 'center' });
+    return new Promise<void>((resolve) => {
+      this.addImageToPDF(
+        doc,
+        logoImage,
+        xPosition,
+        yPosition,
+        imgWidth,
+        imgHeight
+      ).then(() => {
+        // Título después de los logos
+        doc.setFontSize(22);
+        doc.setFont('Arial', 'bold');
+        doc.text(encabezadoText, pdfWidth / 2, 45, { align: 'center' });
+        resolve();
+      });
+    });
   }
 
   private async addImageToPDF(
@@ -163,24 +187,25 @@ export class PdfService {
     y: number,
     width: number,
     height: number
-  ) {
-    const img = new Image();
-    img.src = imageUrl;
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = imageUrl;
 
-    img.onload = () => {
-      // Puedes usar el método toDataURL para comprimir la imagen
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
 
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(img, 0, 0);
-        // Comprimir la imagen a formato JPEG y ajustar la calidad (0.7 = 70%)
-        const compressedImageData = canvas.toDataURL('image/jpeg', 0.7); // Cambia a 'image/jpeg' y ajusta la calidad
-        doc.addImage(compressedImageData, 'JPEG', x, y, width, height);
-      }
-    };
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          const compressedImageData = canvas.toDataURL('image/jpeg', 0.7);
+          doc.addImage(compressedImageData, 'JPEG', x, y, width, height);
+          resolve();
+        }
+      };
+    });
   }
 
   private generateShortUUID(): string {
