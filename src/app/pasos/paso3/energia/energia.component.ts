@@ -84,10 +84,18 @@ export class EnergiaComponent implements OnInit, AfterViewInit {
       // Ajustamos el cálculo según la capacidad de los paneles
       return config.yearlyEnergyDcKwh * (panelsCapacityW / 400) * this.eficienciaInstalacion;
     } else {
-      console.error('No se encontró configuración para el número de paneles seleccionados');
+      console.error('No se encontró configuración para el número de paneles seleccionados se utilizan los calculados');
+       // Si no encontramos una configuración exacta, interpolamos o extrapolamos
+    const lastConfig = yearlyAnualConfigurations[yearlyAnualConfigurations.length - 1];
+    const energyPerPanel = lastConfig.yearlyEnergyDcKwh / lastConfig.panelsCount;
+    
+    // Calculamos la energía para la cantidad de paneles seleccionados
+    const estimatedEnergy = energyPerPanel * panelsCountSelect;
+    
+    // Aplicamos los ajustes de capacidad y eficiencia
+    return estimatedEnergy * (panelsCapacityW / 400) * this.eficienciaInstalacion;
       
     }
-    return 0;
   }
 
 }

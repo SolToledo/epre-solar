@@ -112,22 +112,12 @@ export class SolarApiService implements OnDestroy {
       };
       console.log('Datos que se envian al endpoint : ', datosCalculo);
 
-      // Esperar la respuesta de la solicitud HTTP
       
-
-      /* try {
-        this._resultados = await lastValueFrom(
-          this.http.post<any>(`${this.apiUrl}/solar/calculate`, datosCalculo)
-        );
-        console.log('Response:', this._resultados);
-      } catch (error) {
-        console.error('Error during solar calculation:', error);
-      } */
         try {
           const response = await fetch(`${this.apiUrl}/solar/calculate`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json', 
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify(datosCalculo), // Convierte los datos de cálculo a JSON
             cache: 'no-store', // Para evitar el cacheo de la respuesta
