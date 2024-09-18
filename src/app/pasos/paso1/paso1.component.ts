@@ -35,6 +35,10 @@ export class Paso1Component implements OnInit {
 
     this.mapService.overlayComplete$().subscribe((value) => {
       this.areaMarked = value;
+      if (value) {
+        this.updateInstalledPower();
+        this.updateAreaAndPanelCount();
+      }
     });
 
     this.mapService.clearDrawing();
@@ -43,39 +47,37 @@ export class Paso1Component implements OnInit {
   }
 
   async ngAfterViewInit(): Promise<void> {
+    this.initializeMap()
+      .then(() => {
+        this.initializeAutocomplete();
+        this.mapService.initializeDrawingManager();
+        if (!this.tutorialShown) {
+          setTimeout(() => this.showTutorial(), 500);
+        }
+      })
+      .catch((error) => {
+        console.error('Error initializing map:', error);
+        this.snackBar.open(
+          'Error al cargar el mapa. Por favor, recargue la página.',
+          'Cerrar',
+          { duration: 5000 }
+        );
+      });
+  }
+
+  async initializeMap(): Promise<void> {
     const { AdvancedMarkerElement } = (await google.maps.importLibrary(
       'marker'
     )) as google.maps.MarkerLibrary;
     this.map = this.mapService.getMap();
-
     if (!this.map) {
-      /* this.router.navigate(['/']); */
-      this.map = this.mapService.getMap();
-      /* console.error('El mapa no está inicializado.');
-      return; */
+      throw new Error('El mapa no está inicializado.');
     }
     this.map.setZoom(23);
-    this.marker = new AdvancedMarkerElement({
-      map: this.map,
-    });
-
-    if (this.pacInput) {
-      this.initializeAutocomplete();
-    } else {
-      console.error('pacInput no está definido.');
-    }
-
-    if (!this.tutorialShown) {
-      setTimeout(() => {
-        this.showTutorial();
-      }, 500);
-    }
-
-    this.mapService.initializeDrawingManager();
+    this.marker = new AdvancedMarkerElement({ map: this.map });
   }
 
-
- showTutorial() {
+  showTutorial() {
     const driverObj = driver({
       showProgress: false,
       steps: [
@@ -146,10 +148,7 @@ export class Paso1Component implements OnInit {
       ],
     });
     driverObj.drive();
-
   }
-
-   
 
   showTooltip() {
     if (!this.areaMarked) {
@@ -178,7 +177,7 @@ export class Paso1Component implements OnInit {
     }
     try {
       console.log(value);
-      
+
       const location = await this.locationService.validateLocation(
         value,
         this.map,
@@ -223,11 +222,13 @@ export class Paso1Component implements OnInit {
       this.showTooltip();
       return; // No avanzar si no hay área marcada
     }
-    const polygons = this.mapService.getPolygons();
+    this.updateInstalledPower();
+    this.updateAreaAndPanelCount();
 
-    // Si todo está bien, avanzar al siguiente paso
+    const polygons = this.mapService.getPolygons();
     polygons[0].setEditable(false);
     this.mapService.setDrawingMode(null);
+
     this.sharedService.setTarifaContratada('');
     this.router.navigate(['/pasos/2']);
   }
@@ -290,5 +291,29 @@ export class Paso1Component implements OnInit {
 
   clearDrawing() {
     this.mapService.clearDrawing();
+  }
+
+  private calculateInstalledPower(): number {
+    const panelCapacityW = this.sharedService.getPanelCapacityW();
+    console.log("panel capacityW en paso 1 ", panelCapacityW)
+    const panelsSelectCount = this.sharedService.getPanelsSelected();
+    console.log("numero de paneles seleccionados en paso 1 ", panelsSelectCount)
+    return Math.floor(panelCapacityW * panelsSelectCount);
+  }
+
+  private updateInstalledPower(): void {
+      const installedPower = this.calculateInstalledPower();
+      this.sharedService.setPotenciaInstalacionW(installedPower);
+  }
+
+  private updateAreaAndPanelCount(): void {
+    const polygons = this.mapService.getPolygons();
+    if (polygons.length > 0) {
+      const panelArea =
+        this.sharedService.getDimensionPanel().width *
+        this.sharedService.getDimensionPanel().height;
+      const panelsSelectCount = this.sharedService.getPanelsSelected();
+      this.sharedService.setAreaPanelsSelected(panelArea * panelsSelectCount);
+    }
   }
 }

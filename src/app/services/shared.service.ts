@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { DimensionPanel } from '../interfaces/dimension-panel';
@@ -64,7 +64,6 @@ export class SharedService {
   private resultadosFrontSubject = new BehaviorSubject<
     Partial<ResultadosFrontDTO>
   >({});
-
   resultadosFront$ = this.resultadosFrontSubject.asObservable();
 
   private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
@@ -77,6 +76,8 @@ export class SharedService {
   consumosMensuales$ = this.consumosMensualesSubject.asObservable();
   private tarifaIntercambioUsdkWhSubject = new BehaviorSubject<number>(0);
   tarifaIntercambioUsdkWh$ = this.tarifaIntercambioUsdkWhSubject.asObservable();
+
+  constructor() {}
 
   setTarifaContratada(tarifaContratada: string) {
     this.tarifaContratadaSubject.next(tarifaContratada);
@@ -107,6 +108,7 @@ export class SharedService {
   }
 
   setPanelsCountSelected(value: number): void {
+    console.log("Cantidad de paneles seleccionados: ", value)
     if (value < 4) {
       this.panelsCountSelectedSubject.next(4);
       return;
@@ -163,12 +165,7 @@ export class SharedService {
   }
 
   setPotenciaInstalacionW(instalacionPotencia: number) {
-    if (instalacionPotencia > this.getPotenciaMaxAsignadaValue()) {
-      this.setIsStopCalculate(true);
-    }
-    {
-      this.setIsStopCalculate(false);
-    }
+    console.log('Actualizando potencia instalada:', instalacionPotencia);
     this.potenciaInstalacionWSubject.next(instalacionPotencia);
   }
 
@@ -320,6 +317,20 @@ export class SharedService {
     const resultados = this.getResultadosFront();
     const parametros: ParametrosFront = resultados.parametros!;
     return parametros.caracteristicasSistema.degradacionAnualPanel;
+  }
+
+  resetAll() {
+    this.setTarifaContratada('');
+    this.setYearlysAnualConfigurations([]);
+    this.setYearlyEnergyAckWh(0);
+    this.setPanelsCountSelected(4);
+    this.setDimensionPanels({ height: 0, width: 0 });
+    this.setPanelCapacityW(400);
+    this.setEficienciaInstalacion(0);
+    this.setCostoInstalacion(0);
+    this.setPlazoInversion(0);
+    this.setTarifaIntercambioUsdkWh(0);
+    this.setPotenciaMaxAsignadaW(0);
   }
 
 }

@@ -20,7 +20,7 @@
           <div class="titulo-inicio-advertencia">
             <h2>TARIFA CONTRATADA</h2>
             <div class="advertencia">
-                <span id="span-general" (click)="showInstructions()">Ayuda</span>
+              <span id="span-general" (click)="showInstructions()">Ayuda</span>
             </div>
           </div>
         </div>
@@ -48,12 +48,14 @@
           </div>
 
           <div class="slide">
-            <mat-slide-toggle #manualToggle [disabled]="!allFieldsFilled && !isEditable"
+            <mat-slide-toggle
+              #manualToggle
+              [disabled]="!allFieldsFilled && !isEditable"
               ><p>Carga manual</p></mat-slide-toggle
             >
           </div>
         </div>
-      
+
         <div class="info-cargar-consumo" #consumoContainer>
           <app-consumo
             (allFieldsCompleted)="onAllFieldsCompleted($event)"
@@ -77,25 +79,20 @@
             id="boton-siguiente"
             #botonSiguiente
             (click)="goToPaso3()"
-            [disabled]="!isCategorySelected || !allFieldsFilled || isStopCalculate"
+            [disabled]="
+              !isCategorySelected || !allFieldsFilled 
+            "
             (mouseenter)="showTooltip()"
           >
             Realizar Cálculo <span class="material-icons">chevron_right</span>
           </button>
         </div>
       </div>
-      
     </div>
-    
   </div>
-  
+
   <app-instrucciones
-  [isVisible]="showInstructionsModal"
-  (closed)="handleInstructionsClosed()"
+    [isVisible]="showInstructionsModal"
+    (closed)="handleInstructionsClosed()"
   ></app-instrucciones>
-  
 </div>
-
-
-
-

@@ -1,5 +1,13 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { MesesConsumo } from 'src/app/interfaces/mesesConsumo';
 import { ResultadoCalculo } from 'src/app/interfaces/resultado-calculo';
 import { ConsumoService } from 'src/app/services/consumo.service';
@@ -11,6 +19,7 @@ import { SharedService } from 'src/app/services/shared.service';
   styleUrls: ['./consumo.component.css'],
 })
 export class ConsumoComponent implements OnInit {
+  private destroy$ = new Subject<void>();
   @Output() allFieldsCompleted = new EventEmitter<boolean>();
   allCompleted: boolean = false;
   @Input() isDisabled: boolean = true;
@@ -41,22 +50,21 @@ export class ConsumoComponent implements OnInit {
     private consumoService: ConsumoService,
     private sharedService: SharedService
   ) {
-    this.subscription = this.sharedService.consumosMensuales$.subscribe(
-      (consumos: number[]) => {
+    this.subscription = this.sharedService.consumosMensuales$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((consumos: number[]) => {
         this.updateConsumosMensuales(consumos);
-      }
-    );
+      });
   }
 
   ngOnInit(): void {
     this.resetMesesConsumo();
   }
 
-  ngAfterViewInit(): void {
-   
-  }
+  ngAfterViewInit(): void {}
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   focusFirstInput(): void {
@@ -137,7 +145,6 @@ export class ConsumoComponent implements OnInit {
     });
     this.allCompleted = false;
     this.allFieldsCompleted.emit(this.allCompleted);
-    
     this.calcularTotalConsumo();
   }
 

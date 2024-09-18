@@ -135,8 +135,10 @@ export class Paso3Component implements OnInit, OnDestroy {
     this.panelesCantidad =
       this.resultadosFront.solarData.panels.panelsSelected ??
       this.resultadosFront.solarData.panels.panelsCountApi;
+    console.log("cantidad de paneles iniciales en paso 3" , this.panelesCantidad)
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
+    
     this.sharedService.setDimensionPanels(this.dimensionPanel);
     this.panelCapacityW = this.resultadosFront.solarData.panels.panelCapacityW;
     this.sharedService.setPanelCapacityW(this.panelCapacityW);
@@ -236,13 +238,33 @@ export class Paso3Component implements OnInit, OnDestroy {
 
   confirmarSalir(): void {
     this.mostrarModal = false;
-    localStorage.clear();
-    this.sharedService.setTarifaContratada('');
+   
     this.mapService.hideDrawingControl();
     this.mapService.clearDrawing();
     this.consumoTarifaService.updateConsumosMensuales([]);
     this.consumoService.setTotalConsumo(0);
     this.sharedService.setTutorialShown(true);
+
+    // Reiniciar variables adicionales
+    this.sharedService.resetAll()
+
+    // Reiniciar variables locales
+    this.yearlyEnergyAckWhDefault = 0;
+    this.yearlyEnergyInitial = 0;
+    this.panelesCantidad = 0;
+    this.dimensionPanel = { height: 0, width: 0 };
+    this.panelCapacityW = 0;
+    this.costoInstalacion = 0;
+    this.potenciaPanelHip = 0;
+    this.eficienciaInstalacion = 0;
+    this.degradacionAnualPanel = 0;
+    this.proporcionInyectada = 0;
+    this.costoEquipoMedicion = 0;
+    this.costoMantenimiento = 0;
+    this.tasaInflacionUsd = 0;
+    this.potenciaContratadaHip = 0;
+    this.consumoTotalAnual = 0;
+
     this.router.navigate(['/pasos/1']);
   }
 

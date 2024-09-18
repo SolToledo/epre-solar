@@ -23,6 +23,8 @@ export class MapService {
   area$ = this.areaSubject.asObservable();
   private maxPanelsPerAreaSubject = new BehaviorSubject<number>(0);
   maxPanelsPerArea$ = this.maxPanelsPerAreaSubject.asObservable();
+  private panelsRedrawn = new Subject<number>();
+  panelsRedrawn$ = this.panelsRedrawn.asObservable();
 
   private panelWidthMeters = 1.045;
   private panelHeightMeters = 1.879;
@@ -293,22 +295,6 @@ export class MapService {
       this.clearPanels();
       return false;
     }
-    /* DESHABILITADA LA LIMITACION SUPERIOR */
-    /* if (area > maxArea) {
-      this.snackBar.open(
-        `La selección es demasiado grande. Por favor, reduzca la seleccion a un área menor a ${maxArea} m².`,
-        'Cerrar',
-        {
-          duration: 5000,
-          panelClass: ['custom-snackbar'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        }
-      );
-      this.overlayCompleteSubject.next(false);
-      this.setDrawingMode(null);
-      return false;
-    } */
     return true;
   }
 
@@ -413,10 +399,9 @@ export class MapService {
 
     if (!isReDraw) {
       this.sharedService.setMaxPanelsPerSuperface(totalPanels);
-      if (this.sharedService.getPanelsSelected() > totalPanels) {
-        this.sharedService.setPanelsCountSelected(totalPanels);
-      }
+      
     }
+    this.sharedService.setPanelsCountSelected(totalPanels);
     this.sharedService.calculateAreaPanelsSelected(totalPanels);
   }
 
@@ -426,6 +411,7 @@ export class MapService {
       return;
     }
     this.drawPanels(this.getPolygons()[0], panelesCantidad, true);
+    this.panelsRedrawn.next(panelesCantidad);
   }
 
   getPolygons() {

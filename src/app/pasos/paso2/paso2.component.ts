@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -10,17 +11,22 @@ import { TarifaComponent } from './tarifa/tarifa.component';
 import { MapService } from 'src/app/services/map.service';
 import { InstruccionesComponent } from 'src/app/instrucciones/instrucciones.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
+import {
+  MatSlideToggle,
+  MatSlideToggleChange,
+} from '@angular/material/slide-toggle';
 import { ConsumoComponent } from './consumo/consumo.component';
 import { driver } from 'driver.js';
 import { SharedService } from 'src/app/services/shared.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso2',
   templateUrl: './paso2.component.html',
   styleUrls: ['./paso2.component.css'],
 })
-export class Paso2Component implements OnInit {
+export class Paso2Component implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   currentStep: number = 2;
   allFieldsFilled: boolean = false;
   tarifaContratada: string = '';
@@ -29,8 +35,7 @@ export class Paso2Component implements OnInit {
   isEditable: boolean = false;
   driverObj: any;
   tutorialShown: boolean = false;
-  isStopCalculate: boolean = true;
-  showInstructionsModal: boolean = false;  
+  showInstructionsModal: boolean = false;
 
   @ViewChild('botonSiguiente') botonSiguiente!: ElementRef;
   @ViewChild(TarifaComponent) tarifaComponent!: TarifaComponent;
@@ -52,24 +57,27 @@ export class Paso2Component implements OnInit {
 
   ngOnInit(): void {
     this.mapService.hideDrawingControl();
-    this.sharedService.tutorialShown$.subscribe((shown) => {
-      this.tutorialShown = shown;
-    });
-
-    this.sharedService.isStopCalculate$.subscribe({
-      next: (newValue) => {
-        this.isStopCalculate = newValue;
-      }
-    })
-    
+    this.sharedService.tutorialShown$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((shown) => {
+        this.tutorialShown = shown;
+      });
   }
 
   ngAfterViewInit(): void {
-    const urlFromPaso1 = this.router.url === '/pasos/2' && this.router.getCurrentNavigation()?.previousNavigation?.finalUrl?.toString() === '/pasos/1';
-    const urlFromPaso3 = this.router.url === '/pasos/2' && this.router.getCurrentNavigation()?.previousNavigation?.finalUrl?.toString() === '/pasos/3'
+    const urlFromPaso1 =
+      this.router.url === '/pasos/2' &&
+      this.router
+        .getCurrentNavigation()
+        ?.previousNavigation?.finalUrl?.toString() === '/pasos/1';
+    const urlFromPaso3 =
+      this.router.url === '/pasos/2' &&
+      this.router
+        .getCurrentNavigation()
+        ?.previousNavigation?.finalUrl?.toString() === '/pasos/3';
     if (urlFromPaso1) {
-      this.consumoComponent.resetMesesConsumo();
-    }else if(urlFromPaso3) {
+      this.consumoComponent?.resetMesesConsumo();
+    } else if (urlFromPaso3) {
       this.allFieldsFilled = true;
       this.isCategorySelected = true;
     }
@@ -78,11 +86,10 @@ export class Paso2Component implements OnInit {
       showProgress: false,
       steps: [
         {
-          element: '#titulo', 
+          element: '#titulo',
           popover: {
             title: 'Consumo',
-            description:
-              'Aquí puede configurar su consumo energético.',
+            description: 'Aquí puede configurar su consumo energético.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -94,7 +101,8 @@ export class Paso2Component implements OnInit {
           element: this.categoriaSelect.nativeElement,
           popover: {
             title: 'Aquí seleccione su tarifa contratada',
-            description: 'Al seleccionar su tarifa, se establecerán consumos mensuales predeterminados.',
+            description:
+              'Al seleccionar su tarifa, se establecerán consumos mensuales predeterminados.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -106,7 +114,8 @@ export class Paso2Component implements OnInit {
           element: this.consumoContainer.nativeElement,
           popover: {
             title: 'Cuadro de consumos mensuales',
-            description: 'Estos valores se encuentran predefinidos. Podrá modificarlos habilitando la carga manual.',
+            description:
+              'Estos valores se encuentran predefinidos. Podrá modificarlos habilitando la carga manual.',
             side: 'left',
             align: 'start',
             nextBtnText: 'Siguiente',
@@ -141,18 +150,25 @@ export class Paso2Component implements OnInit {
         },
       ],
     });
-    
+
     // Escuchar cambios en el toggle de carga manual
-    this.manualToggle.change.subscribe((event) => {
-      this.onManualToggleChange(event.checked);
-    });
+    this.manualToggle.change
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        this.onManualToggleChange(event.checked);
+      });
 
     if (!this.tutorialShown) {
       setTimeout(() => {
         this.driverObjInit.drive();
-        this.sharedService.setTutorialShown(true); 
+        this.sharedService.setTutorialShown(true);
       }, 50);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onManualToggleChange(isManual: boolean): void {
@@ -183,7 +199,6 @@ export class Paso2Component implements OnInit {
   onCategorySelected(event: boolean): void {
     this.isCategorySelected = event;
     this.isFieldsDisabled = !event;
-    
   }
 
   showInstructions() {
@@ -193,8 +208,6 @@ export class Paso2Component implements OnInit {
   handleInstructionsClosed() {
     this.showInstructionsModal = false;
   }
-
-
 
   showTooltip() {
     setTimeout(() => {
@@ -223,5 +236,4 @@ export class Paso2Component implements OnInit {
     });
   }
 
-  
 }
