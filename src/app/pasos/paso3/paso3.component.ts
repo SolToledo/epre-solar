@@ -56,6 +56,8 @@ export class Paso3Component implements OnInit, OnDestroy {
   periodoVeinteanalCasoConCapitalPropioInitial!: any[];
   potenciaContratadaHip!: number;
   isSendingMail: boolean = false;
+  potenciaMaxAsignadaW!: number;
+  potenciaInstalacionW!: number;
   constructor(
     private router: Router,
     private readonly gmailService: GmailService,
@@ -75,6 +77,7 @@ export class Paso3Component implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.subscribeToSharedServiceData();
     this.sharedService.setIsLoading(true);
     setTimeout(() => {
       this.mapService.recenterMapToVisibleArea();
@@ -83,6 +86,7 @@ export class Paso3Component implements OnInit, OnDestroy {
     this.setTimestamp();
 
     if (!this.sharedService.getNearbyLocation()) {
+      
       this.solarService
         .calculate()
         .then((resultados) => (this.resultadosFront = resultados))
@@ -135,7 +139,6 @@ export class Paso3Component implements OnInit, OnDestroy {
     this.panelesCantidad =
       this.resultadosFront.solarData.panels.panelsSelected ??
       this.resultadosFront.solarData.panels.panelsCountApi;
-    console.log("cantidad de paneles iniciales en paso 3" , this.panelesCantidad)
     this.dimensionPanel = this.resultadosFront.solarData.panels.panelSize;
     this.sharedService.setPanelsCountSelected(this.panelesCantidad);
     
@@ -175,7 +178,7 @@ export class Paso3Component implements OnInit, OnDestroy {
     const parametros: ParametrosFront = this.resultadosFront.parametros!;
 
     this.eficienciaInstalacion =
-      parametros.caracteristicasSistema.eficienciaInstalacion;
+      parametros.caracteristicasSistema.eficienciaInstalacion || 0.95;
     this.degradacionAnualPanel =
       parametros.caracteristicasSistema.degradacionAnualPanel;
     this.proporcionAutoconsumo =
@@ -188,15 +191,6 @@ export class Paso3Component implements OnInit, OnDestroy {
     this.tasaInflacionUsd = parametros.economicas.tasaInflacionUsd;
     this.potenciaContratadaHip =
       this.sharedService.getPotenciaMaxAsignadaValue();
-    this.consumoService.totalConsumo$.pipe(takeUntil(this.destroy$)).subscribe({
-      next: (value) => (this.consumoTotalAnual = value),
-    });
-
-    this.sharedService.tarifaContratada$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (tarifa) => (this.categoriaTarifa = tarifa),
-      });
   }
 
   downloadPDF(): void {
@@ -401,5 +395,25 @@ export class Paso3Component implements OnInit, OnDestroy {
 
   closeModal(): void {
     this.isModalOpen = false;
+  }
+
+  private subscribeToSharedServiceData() {
+    this.sharedService.tarifaContratada$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (tarifa) => (this.categoriaTarifa = tarifa),
+      });
+    this.sharedService.potenciaMaxAsignadaW$.pipe(takeUntil(this.destroy$)).subscribe(
+      potencia => this.potenciaMaxAsignadaW = potencia
+    );
+    this.sharedService.panelsCountSelected$.pipe(takeUntil(this.destroy$)).subscribe(
+      panels => this.panelesCantidad = panels
+    );
+    this.sharedService.potenciaInstalacionW$.pipe(takeUntil(this.destroy$)).subscribe(
+      potencia => this.potenciaInstalacionW = potencia
+    );
+    this.consumoService.totalConsumo$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (value) => (this.consumoTotalAnual = value),
+    });
   }
 }

@@ -2,11 +2,10 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  Input,
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { distinctUntilChanged, Subject, Subscription, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
@@ -38,7 +37,7 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.plazoRecupero = newPlazoRecupero;
         this.checkValuesAndUpdate();
       });
-
+  
     this.sharedService.yearlyEnergyAckWh$
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe((yearlyValue) => {
@@ -48,8 +47,6 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.yearlyEnergykWh = yearlyValue;
         this.checkValuesAndUpdate();
       });
-
-    
   }
   ngAfterViewInit(): void {
     if (!this.yearlyEnergykWhInitial) {
@@ -63,21 +60,23 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sharedService.getPotenciaInstalacionW() / 1000;
     }
     if (!this.installationCostInitial) {
-      this.installationCostInitial = this.sharedService.getCostoInstalacion();
+        this.installationCostInitial = this.sharedService.getCostoInstalacion();
+        
     }
-    this.sharedService.update$
-    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
-    .subscribe({
-      next: (isUpdate) => {
-        if (isUpdate) this.checkValuesAndUpdate();
-      },
+  
+    // Añadir logs para ver si los valores iniciales se están asignando
+    console.log('Valores iniciales asignados:', {
+      yearlyEnergykWhInitial: this.yearlyEnergykWhInitial,
+      plazoRecuperoInitial: this.plazoRecuperoInitial,
+      potenciaInstalacionInitialkW: this.potenciaInstalacionInitialkW,
+      installationCostInitial: this.installationCostInitial,
     });
-    this.checkValuesAndUpdate();
+  
+      this.checkValuesAndUpdate();
+      
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   private checkValuesAndUpdate(): void {
@@ -87,10 +86,10 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.yearlyEnergykWh > 0 &&
       this.potenciaInstalacionInitialkW > 0 &&
       this.installationCostInitial > 0 &&
-      this.sharedService.getPotenciaInstalacionW() > 0 && // Aseguramos que todos los valores estén presentes
+      this.sharedService.getPotenciaInstalacionW() > 0 &&  // Aseguramos que todos los valores estén presentes
       this.sharedService.getCostoInstalacion() > 0
     ) {
-      /* console.log(
+      console.log(
         'Cálculo:',
         'yearlyEnergykWh:',
         this.yearlyEnergykWh,
@@ -106,10 +105,12 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.installationCostInitial,
         'installationCostCurrent:',
         this.sharedService.getCostoInstalacion(),
-      ); */
-
+      );
+  
       this.updatePlazoRecupero();
-    } 
+    } else {
+      console.warn('Valores no inicializados correctamente, no se puede calcular el plazo de recuperación.');
+    }
   }
 
   private updatePlazoRecupero() {
@@ -124,25 +125,17 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         // Calculamos la relación entre la producción anual actual y la inicial
         const energyRatio = 1;
         // const energyRatio = this.yearlyEnergykWh / this.yearlyEnergykWhInitial;
-
         // Calculamos la relación entre la potencia actual y la inicial
-        const potenciaAdjustment =
-          this.potenciaInstalacionInitialkW /
-          (this.sharedService.getPotenciaInstalacionW() / 1000);
-
+        const potenciaAdjustment =  this.potenciaInstalacionInitialkW / (this.sharedService.getPotenciaInstalacionW() / 1000);
         // Calculamos la relación entre el costo de instalación actual y el inicial
-        const installationCostAdjustment =
-          this.sharedService.getCostoInstalacion() /
-          this.installationCostInitial;
-
+        const installationCostAdjustment =  this.sharedService.getCostoInstalacion() / this.installationCostInitial;
         // Calculamos el nuevo plazo de recupero
-        const newPlazoRecuperoValue =
+        const newPlazoRecuperoValue = 
           this.plazoRecuperoInitial *
-          energyRatio *
-          potenciaAdjustment *
+          ( energyRatio) *
+          ( potenciaAdjustment) *
           installationCostAdjustment;
-
-        /* console.log(
+        console.log(
           'Cálculo:',
           'yearlyEnergykWh:',
           this.yearlyEnergykWh,
@@ -160,10 +153,8 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.sharedService.getCostoInstalacion(),
           'newPlazoRecuperoValue:',
           newPlazoRecuperoValue
-        ); */
-
+        );
         const roundedPlazoRecuperoValue = Math.round(newPlazoRecuperoValue);
-
         // Solo actualizamos si el valor ha cambiado
         if (
           roundedPlazoRecuperoValue !==

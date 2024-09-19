@@ -341,8 +341,8 @@ export class MapService {
     const adjustedBoundsWidth = boundsWidth * (1 - margin);
     const adjustedBoundsHeight = boundsHeight * (1 - margin);
 
-    const numPanelsX = Math.floor(adjustedBoundsWidth / panelWidthDegrees);
-    const numPanelsY = Math.floor(adjustedBoundsHeight / panelHeightDegrees);
+    const numPanelsX = Math.round(adjustedBoundsWidth / panelWidthDegrees);
+    const numPanelsY = Math.round(adjustedBoundsHeight / panelHeightDegrees);
 
     const offsetX = (boundsWidth - numPanelsX * panelWidthDegrees) / 2;
     const offsetY = (boundsHeight - numPanelsY * panelHeightDegrees) / 2;
@@ -350,7 +350,7 @@ export class MapService {
     // 9% reducción de área
     const areaReducida = this.getPolygonArea(polygon) * 0.9;
     this.areaSubject.next(areaReducida);
-    const maxPanelsEfectivos = Math.floor(areaReducida / this.panelArea);
+    const maxPanelsEfectivos = Math.round(areaReducida / this.panelArea);
 
     let totalPanels = 0;
     const max = isReDraw ? maxPanels : maxPanelsEfectivos;

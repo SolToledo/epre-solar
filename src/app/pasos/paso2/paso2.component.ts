@@ -29,7 +29,7 @@ export class Paso2Component implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   currentStep: number = 2;
   allFieldsFilled: boolean = false;
-  tarifaContratada: string = '';
+  tarifaContratada!: string;
   isCategorySelected: boolean = false;
   isFieldsDisabled: boolean = true;
   isEditable: boolean = false;
@@ -46,6 +46,10 @@ export class Paso2Component implements OnInit, OnDestroy {
 
   driverObjInit: any;
   driverObjConsumo: any;
+  potenciaMaxAsignada!: number;
+  panelsSelected!: number;
+  potenciaInstalacionW!: number;
+  consumoTotalkW!: number;
 
   constructor(
     private router: Router,
@@ -61,6 +65,49 @@ export class Paso2Component implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((shown) => {
         this.tutorialShown = shown;
+      });
+
+    // Suscripciones a propiedades del SharedService con console.log para depuración
+    this.sharedService.potenciaMaxAsignadaW$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((potenciaMax) => {
+        if (potenciaMax > 0) {
+          this.potenciaMaxAsignada = potenciaMax;
+        }
+        console.log(
+          'Potencia máxima asignada actualizada:',
+          this.potenciaMaxAsignada
+        );
+      });
+
+    this.sharedService.panelsCountSelected$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((panels) => {
+        this.panelsSelected = panels;
+        console.log(
+          'Cantidad de paneles seleccionados actualizada:',
+          this.panelsSelected
+        );
+      });
+
+    this.sharedService.potenciaInstalacionW$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((potenciaInstalacion) => {
+        this.potenciaInstalacionW = potenciaInstalacion;
+        console.log(
+          'Potencia de instalación actualizada:',
+          this.potenciaInstalacionW
+        );
+      });
+
+    this.sharedService.tarifaContratada$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((tarifa) => {
+        this.tarifaContratada = tarifa;
+        console.log(
+          'Tarifa contratada actualizada:',
+          this.tarifaContratada
+        );
       });
   }
 
@@ -156,6 +203,7 @@ export class Paso2Component implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((event) => {
         this.onManualToggleChange(event.checked);
+        console.log('Carga manual activada:', event.checked);
       });
 
     if (!this.tutorialShown) {
@@ -169,6 +217,7 @@ export class Paso2Component implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    console.log('Component Paso2 destruido');
   }
 
   onManualToggleChange(isManual: boolean): void {
@@ -188,17 +237,32 @@ export class Paso2Component implements OnInit, OnDestroy {
 
   goToPaso3() {
     if (this.allFieldsFilled && this.isCategorySelected) {
+      this.sharedService.setTarifaContratada(this.tarifaContratada);
+      this.sharedService.setPotenciaMaxAsignadaW(this.potenciaMaxAsignada);
+      this.sharedService.setPanelsCountSelected(this.panelsSelected);
+      this.sharedService.setPotenciaInstalacionW(this.potenciaInstalacionW);
+
       this.router.navigate(['pasos/3']);
+      console.log('Navegando a paso 3 con datos:', {
+        tarifaContratada: this.tarifaContratada,
+        potenciaMaxAsignada: this.potenciaMaxAsignada,
+        panelsSelected: this.panelsSelected,
+        potenciaInstalacionW: this.potenciaInstalacionW,
+      });
+    } else {
+      console.log('No se puede navegar a paso 3, faltan campos por completar');
     }
   }
 
   onAllFieldsCompleted(event: boolean): void {
     this.allFieldsFilled = event;
+    console.log('Todos los campos completados:', this.allFieldsFilled);
   }
 
   onCategorySelected(event: boolean): void {
     this.isCategorySelected = event;
     this.isFieldsDisabled = !event;
+    console.log('Categoría seleccionada:', this.isCategorySelected);
   }
 
   showInstructions() {
@@ -235,5 +299,4 @@ export class Paso2Component implements OnInit, OnDestroy {
       width: '500px',
     });
   }
-
 }
