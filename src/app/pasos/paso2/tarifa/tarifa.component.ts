@@ -225,12 +225,10 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       closeOnNavigation: false,
       data: {
         message: `
-  La superficie seleccionada admite ${this.sharedService.getMaxPanelsPerSuperface()} paneles, 
-  con una potencia total de la instalación de ${this.decimalPipe.transform(
+  La potencia de la instalación configurada de ${this.decimalPipe.transform(
     this.sharedService.getPotenciaInstalacionW() / 1000,
     '1.2-2'
-  )} kW, 
-  superando la potencia máxima de ${this.decimalPipe.transform(
+  )} kWh, supera la potencia máxima de ${this.decimalPipe.transform(
     this.potenciaMaxAsignadakW,
     '1.0-0'
   )} kW 
@@ -242,8 +240,9 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe((result) => {
       
       if (result) {
-        this.calcularMaxPanelsPerMaxPotencia();
         this.isDialogOpen = false;
+        this.calcularMaxPanelsPerMaxPotencia();
+        
         this.mapService.reDrawPanels(this.sharedService.getPanelsSelected());
       } else {
         this.sharedService.setTarifaContratada('');
