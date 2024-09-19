@@ -42,7 +42,7 @@ export class EnergiaComponent implements OnInit, OnDestroy {
   private updateYearlyEnergy(nuevaPotenciaW: number): void {
     if (nuevaPotenciaW > 0 && this.yearlyEnergyAckWhInitial > 0 && this.potenciaOriginalW > 0) {
       const ratio = nuevaPotenciaW / this.potenciaOriginalW;
-      this.yearlyEnergyAckWh = this.yearlyEnergyAckWhInitial * ratio * (this.sharedService.getPanelCapacityW() / 400) * 0.95;
+      this.yearlyEnergyAckWh = this.yearlyEnergyAckWhInitial * ratio;
       this.sharedService.setYearlyEnergyAckWh(this.yearlyEnergyAckWh);
     } else {
       console.error('Error: La potencia de instalación o la energía anual inicial no pueden ser 0.');
