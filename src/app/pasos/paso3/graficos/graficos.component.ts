@@ -250,7 +250,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         theme: 'light',
         y: {
           formatter: (val: number) => {
-            const valorTruncado = Math.floor(val);
+            const valorTruncado = Math.round(val);
             return `${valorTruncado.toLocaleString('de-DE')} USD/año`;
           },
         },
@@ -405,7 +405,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
         theme: 'light',
         y: {
           formatter: (val: number) => {
-            const valorTruncado = Math.floor(val); // Redondear hacia abajo para quitar los decimales
+            const valorTruncado = Math.round(val); // Redondear hacia abajo para quitar los decimales
             return `${valorTruncado.toLocaleString('de-DE')} USD/año`; // Formatear con puntos de miles y agregar el texto
           },
         },

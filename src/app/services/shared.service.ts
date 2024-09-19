@@ -77,39 +77,52 @@ export class SharedService {
   private tarifaIntercambioUsdkWhSubject = new BehaviorSubject<number>(0);
   tarifaIntercambioUsdkWh$ = this.tarifaIntercambioUsdkWhSubject.asObservable();
 
-  constructor() {}
+  constructor() {
+    console.log("Se instancia el shared service...");
+    
+  }
+
 
   setTarifaContratada(tarifaContratada: string) {
+    console.log('Seteando tarifa contratada: ', tarifaContratada);
     this.tarifaContratadaSubject.next(tarifaContratada);
   }
 
   getTarifaContratada(): string {
-    return this.tarifaContratadaSubject.getValue();
+    const tarifa = this.tarifaContratadaSubject.getValue();
+    console.log('Obteniendo tarifa contratada: ', tarifa);
+    return tarifa;
   }
 
   setTutorialShown(value: boolean): void {
+    console.log('Mostrando tutorial: ', value);
     this.tutorialShownSubject.next(value);
   }
 
   setPredefinedCoordinates(value: boolean): void {
+    console.log('Seteando coordenadas predefinidas: ', value);
     this.predefinedCoordinatesSubject.next(value);
   }
 
   setNearbyLocation(location: any) {
+    console.log('Seteando ubicación cercana: ', location);
     this.nearbyLocation = location;
   }
 
   getNearbyLocation() {
+    console.log('Obteniendo ubicación cercana: ', this.nearbyLocation);
     return this.nearbyLocation;
   }
 
   setIsLoading(value: boolean): void {
+    console.log('Seteando estado de carga: ', value);
     this.isLoadingSubject.next(value);
   }
 
   setPanelsCountSelected(value: number): void {
-    console.log("Cantidad de paneles seleccionados: ", value)
+    console.log('Cantidad de paneles seleccionados: ', value);
     if (value < 4) {
+      console.log('Valor menor que 4, se ajusta a 4');
       this.panelsCountSelectedSubject.next(4);
       return;
     }
@@ -117,209 +130,284 @@ export class SharedService {
   }
 
   getPanelsSelected() {
-    return this.panelsCountSelectedSubject.getValue();
+    const count = this.panelsCountSelectedSubject.getValue();
+    console.log('Obteniendo cantidad de paneles seleccionados: ', count);
+    return count;
   }
 
   setPlazoInversion(plazo: number): void {
+    console.log('Seteando plazo de inversión: ', plazo);
     this.plazoInversionSubject.next(plazo);
   }
 
   getPlazoInversionValue(): number {
-    return this.plazoInversionSubject.getValue();
+    const plazo = this.plazoInversionSubject.getValue();
+    console.log('Obteniendo plazo de inversión: ', plazo);
+    return plazo;
   }
 
   expandStep3(): void {
+    console.log('Expandiendo el paso 3');
     this.expandStep3Subject.next(false);
   }
 
   setPanelCapacityW(value: number) {
+    console.log('Seteando capacidad de panel en W: ', value);
     this.panelCapacityWSubject.next(value);
   }
 
   getPanelCapacityW(): number {
-    return this.panelCapacityWSubject.getValue();
+    const capacity = this.panelCapacityWSubject.getValue();
+    console.log('Obteniendo capacidad de panel en W: ', capacity);
+    return capacity;
   }
 
   setYearlyEnergyAckWh(value: number): void {
+    console.log('Estableciendo energía anual en kWh:', value);
     this.yearlyEnergyAckWhSubject.next(value);
   }
 
   getYearlyEnergyAckWh(): number {
-    return this.yearlyEnergyAckWhSubject.getValue();
+    const value = this.yearlyEnergyAckWhSubject.getValue();
+    console.log('Obteniendo energía anual en kWh:', value);
+    return value;
   }
 
   setAhorroAnualUsd(ahorroElectricidadInyeccion: number) {
+    console.log('Estableciendo ahorro anual en USD:', ahorroElectricidadInyeccion);
     this.ahorroAnualUsdSubject.next(ahorroElectricidadInyeccion);
   }
 
   getAhorroAnualUsd() {
-    return this.ahorroAnualUsdSubject.getValue();
+    const value = this.ahorroAnualUsdSubject.getValue();
+    console.log('Obteniendo ahorro anual en USD:', value);
+    return value;
   }
 
   setPotenciaMaxAsignadaW(potenciaMaxAsignada: number) {
+    console.log('Estableciendo potencia máxima asignada en W:', potenciaMaxAsignada);
     this.potenciaMaxAsignadaSubject.next(potenciaMaxAsignada);
   }
 
   getPotenciaMaxAsignadaValue(): number {
-    return this.potenciaMaxAsignadaSubject.getValue();
+    const value = this.potenciaMaxAsignadaSubject.getValue();
+    console.log('Obteniendo potencia máxima asignada en W:', value);
+    return value;
   }
 
   setPotenciaInstalacionW(instalacionPotencia: number) {
-    console.log('Actualizando potencia instalada:', instalacionPotencia);
+    console.log('Actualizando potencia instalada en W:', instalacionPotencia);
     this.potenciaInstalacionWSubject.next(instalacionPotencia);
   }
 
   getPotenciaInstalacionW() {
-    return this.potenciaInstalacionWSubject.getValue();
+    const value = this.potenciaInstalacionWSubject.getValue();
+    console.log('Obteniendo potencia instalada en W:', value);
+    return value;
   }
 
   setResultadosFrontNearby(resultadosFrontNearby: ResultadosFrontDTO) {
+    console.log('Estableciendo resultados front nearby:', resultadosFrontNearby);
     this.resultadosFrontSubject.next(resultadosFrontNearby);
   }
 
   getResultadosFrontNearby(): Partial<ResultadosFrontDTO> {
-    return this.resultadosFrontSubject.getValue();
+    const value = this.resultadosFrontSubject.getValue();
+    console.log('Obteniendo resultados front nearby:', value);
+    return value;
   }
 
   setResultadosFront(resultadosFront: ResultadosFrontDTO) {
+    console.log('Estableciendo resultados front:', resultadosFront);
     this.resultadosFrontSubject.next(resultadosFront);
   }
 
   getResultadosFront(): Partial<ResultadosFrontDTO> {
-    return this.resultadosFrontSubject.getValue();
+    const value = this.resultadosFrontSubject.getValue();
+    console.log('Obteniendo resultados front:', value);
+    return value;
   }
 
   setMaxPanelsPerSuperface(maxPanels: number) {
+    console.log('Estableciendo máximo de paneles por superficie:', maxPanels);
     this.maxPanelsPerSuperfaceSubject.next(maxPanels);
   }
 
   getMaxPanelsPerSuperface() {
-    return this.maxPanelsPerSuperfaceSubject.getValue();
+    const value = this.maxPanelsPerSuperfaceSubject.getValue();
+    console.log('Obteniendo máximo de paneles por superficie:', value);
+    return value;
   }
 
   setCarbonOffSetTnAnual(carbonOffSet: number) {
+    console.log('Estableciendo compensación de carbono anual en toneladas:', carbonOffSet);
     this.carbonOffSetTnAnualSubject.next(carbonOffSet);
   }
 
   getCarbonOffSetTnAnual() {
-    return this.carbonOffSetTnAnualSubject.getValue();
+    const value = this.carbonOffSetTnAnualSubject.getValue();
+    console.log('Obteniendo compensación de carbono anual en toneladas:', value);
+    return value;
   }
 
   setIsStopCalculate(isStop: boolean) {
+    console.log('Estableciendo estado de detención de cálculo:', isStop);
     this.isStopCalculateSubject.next(isStop);
   }
 
   getIsStopCalculate() {
-    return this.isStopCalculateSubject.getValue();
+    const value = this.isStopCalculateSubject.getValue();
+    console.log('Obteniendo estado de detención de cálculo:', value);
+    return value;
   }
 
   setConsumosMensuales(consumos: any) {
+    console.log('Estableciendo consumos mensuales:', consumos);
     this.consumosMensualesSubject.next(consumos);
   }
 
   getConsumosMensuales() {
-    return this.consumosMensualesSubject.getValue();
+    const value = this.consumosMensualesSubject.getValue();
+    console.log('Obteniendo consumos mensuales:', value);
+    return value;
   }
 
   getTarifaIntercambioUsdkWh() {
-    return this.tarifaIntercambioUsdkWhSubject.getValue();
+    const value = this.tarifaIntercambioUsdkWhSubject.getValue();
+    console.log('Obteniendo tarifa de intercambio en USD/kWh:', value);
+    return value;
   }
 
   setTarifaIntercambioUsdkWh(tarifaIntercambio: number) {
+    console.log('Estableciendo tarifa de intercambio en USD/kWh:', tarifaIntercambio);
     this.tarifaIntercambioUsdkWhSubject.next(tarifaIntercambio);
   }
 
   getCostoInstalacion() {
-    return this.costoInstalacionSubject.getValue();
+    const value = this.costoInstalacionSubject.getValue();
+    console.log('Obteniendo costo de instalación:', value);
+    return value;
   }
   setCostoInstalacion(costoInstalacion: number) {
-    this.costoInstalacionSubject.next(Math.floor(costoInstalacion));
+    const roundedCosto = Math.round(costoInstalacion);
+    console.log('Estableciendo costo de instalación:', roundedCosto);
+    this.costoInstalacionSubject.next(roundedCosto);
   }
 
   calculateAreaPanelsSelected(totalPanels: number): number {
+    console.log('Calculando área de paneles seleccionados para', totalPanels, 'paneles');
     if (totalPanels >= 4) {
       const areaPanelsSelected = this.calculateAreaPanels(totalPanels);
       this.setAreaPanelsSelected(areaPanelsSelected);
+      console.log('Área calculada:', areaPanelsSelected);
       return areaPanelsSelected;
     }
+    console.log('No se calculó el área, menos de 4 paneles');
     return 0;
   }
   calculateAreaPanels(panelsCount: number): number {
+    console.log('Calculando área para', panelsCount, 'paneles');
     const dimensionPanel: DimensionPanel = this.getDimensionPanel();
     const areaPanel = dimensionPanel.height * dimensionPanel.width;
     const areaPanels = areaPanel * panelsCount;
+    console.log('Área calculada:', areaPanels);
     return areaPanels;
   }
   setAreaPanelsSelected(areaPanelsSelected: number) {
+    console.log('Estableciendo área de paneles seleccionados:', areaPanelsSelected);
     this.areaPanelsSelectedSubject.next(areaPanelsSelected);
   }
   getAreaPanelsSelected() {
-    return this.areaPanelsSelectedSubject.getValue();
+    const value = this.areaPanelsSelectedSubject.getValue();
+    console.log('Obteniendo área de paneles seleccionados:', value);
+    return value;
   }
   getDimensionPanel(): DimensionPanel {
-    return (
-      this.dimensionPanel || {
-        height: 1.879,
-        width: 1.045,
-      }
-    );
+    const dimension = this.dimensionPanel || {
+      height: 1.879,
+      width: 1.045,
+    };
+    console.log('Obteniendo dimensiones del panel:', dimension);
+    return dimension;
   }
   setDimensionPanels(dimensionPanel: DimensionPanel) {
+    console.log('Estableciendo dimensiones del panel:', dimensionPanel);
     this.dimensionPanel = dimensionPanel;
   }
 
   setYearlysAnualConfigurations(
     yearlyAnualConfigurations: YearlysAnualConfigurationFront | never[]
   ) {
+    console.log('Estableciendo configuraciones anuales:', yearlyAnualConfigurations);
     this.yearlysAnualConfigurationSubject.next(yearlyAnualConfigurations);
   }
 
   getYearlysAnualConfigurations(): YearlysAnualConfigurationFront[] {
-    return this.yearlysAnualConfigurationSubject.getValue();
+    const value = this.yearlysAnualConfigurationSubject.getValue();
+    console.log('Obteniendo configuraciones anuales:', value);
+    return value;
   }
 
   getInversionUsd(): number {
-    return this.inversionUsdSubject.getValue();
+    const value = this.inversionUsdSubject.getValue();
+    console.log('Obteniendo inversión en USD:', value);
+    return value;
   }
 
   setInversionUsd(inversion: number) {
+    console.log('Estableciendo inversión en USD:', inversion);
     this.inversionUsdSubject.next(inversion);
   }
 
   getCostoEquipoDeMedicion() {
     const resultados = this.getResultadosFront();
+    let costo: number;
     if(this.getTarifaContratada().includes("T1-R")) {
-      return 782.30;
+      costo = 782.30;
+    } else {
+      costo = 646.53;
     }
-    return 646.53;
+    console.log('Obteniendo costo de equipo de medición:', costo);
+    return costo;
   }
   getCostoUsdWp() {
     const resultados = this.getResultadosFront();
+    let costo: number;
     if(this.getTarifaContratada().includes("T1-R")) {
-      return 1.5;
+      costo = 1.5;
+    } else {
+      costo = 1.24;
     }
-    return 1.24;
+    console.log('Obteniendo costo en USD/Wp:', costo);
+    return costo;
   }
 
   getEficienciaInstalacion(): number {
-    return this.eficienciaInstalacionSubject.getValue();
+    const value = this.eficienciaInstalacionSubject.getValue();
+    console.log('Obteniendo eficiencia de instalación:', value);
+    return value;
   }
 
   setEficienciaInstalacion(value: number) {
+    console.log('Estableciendo eficiencia de instalación:', value);
     this.eficienciaInstalacionSubject.next(value);
   }
 
   update() {
+    console.log('Actualizando...');
     this.updateSubject.next(true)
   }
 
   getDegradacionPanel(): number {
     const resultados = this.getResultadosFront();
     const parametros: ParametrosFront = resultados.parametros!;
-    return parametros.caracteristicasSistema.degradacionAnualPanel;
+    const degradacion = parametros.caracteristicasSistema.degradacionAnualPanel;
+    console.log('Obteniendo degradación anual del panel:', degradacion);
+    return degradacion;
   }
 
   resetAll() {
+    console.log('Reseteando todos los valores...');
     this.setTarifaContratada('');
     this.setYearlysAnualConfigurations([]);
     this.setYearlyEnergyAckWh(0);
@@ -331,6 +419,19 @@ export class SharedService {
     this.setPlazoInversion(0);
     this.setTarifaIntercambioUsdkWh(0);
     this.setPotenciaMaxAsignadaW(0);
+    console.log('Valores reseteados:', {
+      tarifaContratada: '',
+      yearlysAnualConfigurations: [],
+      yearlyEnergyAckWh: 0,
+      panelsCountSelected: 4,
+      dimensionPanels: { height: 0, width: 0 },
+      panelCapacityW: 400,
+      eficienciaInstalacion: 0,
+      costoInstalacion: 0,
+      plazoInversion: 0,
+      tarifaIntercambioUsdkWh: 0,
+      potenciaMaxAsignadaW: 0
+    });
   }
 
 }

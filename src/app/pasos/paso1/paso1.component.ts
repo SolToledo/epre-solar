@@ -1,17 +1,18 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
 import { LocationService } from 'src/app/services/location.service';
 import { MapService } from 'src/app/services/map.service';
 import { SharedService } from 'src/app/services/shared.service';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso1',
   templateUrl: './paso1.component.html',
   styleUrls: ['./paso1.component.css'],
 })
-export class Paso1Component implements OnInit {
+export class Paso1Component implements OnInit, OnDestroy {
   currentStep: number = 1;
   selectedArea: number = 0;
   tutorialShown: boolean = false;
@@ -19,6 +20,8 @@ export class Paso1Component implements OnInit {
   @ViewChild('pacInput', { static: false }) pacInput!: ElementRef;
   private marker!: google.maps.marker.AdvancedMarkerElement | null;
   private map!: google.maps.Map;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -29,21 +32,30 @@ export class Paso1Component implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.sharedService.tutorialShown$.subscribe((shown) => {
-      this.tutorialShown = shown;
-    });
+    this.sharedService.tutorialShown$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((shown) => {
+        this.tutorialShown = shown;
+      });
 
-    this.mapService.overlayComplete$().subscribe((value) => {
-      this.areaMarked = value;
-      if (value) {
-        this.updateInstalledPower();
-        this.updateAreaAndPanelCount();
-      }
-    });
+    this.mapService.overlayComplete$()
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe((value) => {
+        this.areaMarked = value;
+        if (value) {
+          this.updateInstalledPower();
+          this.updateAreaAndPanelCount();
+        }
+      });
 
     this.mapService.clearDrawing();
     this.areaMarked = false;
     this.mapService.hideDrawingControl();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -246,7 +258,7 @@ export class Paso1Component implements OnInit {
       searchBox.setBounds(this.map.getBounds() as google.maps.LatLngBounds);
     });
 
-    searchBox.addListener('places_changed', async () => {
+    const placesChangedListener = searchBox.addListener('places_changed', async () => {
       const places = searchBox.getPlaces();
 
       if (places && places.length > 0) {
@@ -282,6 +294,11 @@ export class Paso1Component implements OnInit {
       }
       input.value = '';
     });
+
+    // Asegurarse de eliminar el listener cuando el componente se destruya
+    this.destroy$.subscribe(() => {
+      google.maps.event.removeListener(placesChangedListener);
+    });
     input.value = '';
   }
 
@@ -298,7 +315,7 @@ export class Paso1Component implements OnInit {
     console.log("panel capacityW en paso 1 ", panelCapacityW)
     const panelsSelectCount = this.sharedService.getPanelsSelected();
     console.log("numero de paneles seleccionados en paso 1 ", panelsSelectCount)
-    return Math.floor(panelCapacityW * panelsSelectCount);
+    return Math.round(panelCapacityW * panelsSelectCount);
   }
 
   private updateInstalledPower(): void {

@@ -69,25 +69,6 @@ export class CostoComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* private updateCostoInstalacion() {
-    if (this.yarlyEnergykWhInitial > 0 && this.costoInstalacionInitial > 0) {
-      setTimeout(() => {
-        const newCostoInstalacion =
-          (this.yearlyEnergykWh * this.costoInstalacionInitial) / this.yarlyEnergykWhInitial;
-  
-        const roundedCostoInstalacionValue = Math.round(newCostoInstalacion);
-  
-        // Solo actualizamos si el valor ha cambiado
-        if (roundedCostoInstalacionValue !== this.sharedService.getCostoInstalacion()) {
-          this.sharedService.setCostoInstalacion(roundedCostoInstalacionValue);
-        }
-      });
-    } else {
-      console.error(
-        'Error: Los valores iniciales de ahorro o energía anual no pueden ser 0 o indefinidos.'
-      );
-    }
-  } */
   private updateCostoInstalacion() {
     if (this.yarlyEnergykWhInitial > 0 && this.costoInstalacionInitial > 0) {
 

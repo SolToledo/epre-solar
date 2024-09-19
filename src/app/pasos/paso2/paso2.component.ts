@@ -18,7 +18,7 @@ import {
 import { ConsumoComponent } from './consumo/consumo.component';
 import { driver } from 'driver.js';
 import { SharedService } from 'src/app/services/shared.service';
-import { Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso2',
@@ -69,15 +69,20 @@ export class Paso2Component implements OnInit, OnDestroy {
 
     // Suscripciones a propiedades del SharedService con console.log para depuración
     this.sharedService.potenciaMaxAsignadaW$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        distinctUntilChanged()
+      )
       .subscribe((potenciaMax) => {
         if (potenciaMax > 0) {
           this.potenciaMaxAsignada = potenciaMax;
+          console.log(
+            'Potencia máxima asignada actualizada:',
+            this.potenciaMaxAsignada
+          );
+        } else {
+          console.log("Todavía no hay una potencia máxima establecida");
         }
-        console.log(
-          'Potencia máxima asignada actualizada:',
-          this.potenciaMaxAsignada
-        );
       });
 
     this.sharedService.panelsCountSelected$
@@ -101,7 +106,7 @@ export class Paso2Component implements OnInit, OnDestroy {
       });
 
     this.sharedService.tarifaContratada$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe((tarifa) => {
         this.tarifaContratada = tarifa;
         console.log(
@@ -237,11 +242,6 @@ export class Paso2Component implements OnInit, OnDestroy {
 
   goToPaso3() {
     if (this.allFieldsFilled && this.isCategorySelected) {
-      this.sharedService.setTarifaContratada(this.tarifaContratada);
-      this.sharedService.setPotenciaMaxAsignadaW(this.potenciaMaxAsignada);
-      this.sharedService.setPanelsCountSelected(this.panelsSelected);
-      this.sharedService.setPotenciaInstalacionW(this.potenciaInstalacionW);
-
       this.router.navigate(['pasos/3']);
       console.log('Navegando a paso 3 con datos:', {
         tarifaContratada: this.tarifaContratada,

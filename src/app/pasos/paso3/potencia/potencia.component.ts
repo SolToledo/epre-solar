@@ -73,7 +73,7 @@ export class PotenciaComponent {
     
     if (potenciaTotal > this.potenciaMaxCategoriaSelectkW * 1000) {
       // Ajusta el número de paneles al máximo posible sin exceder la potencia máxima
-      const maxPanels = Math.floor(this.potenciaMaxCategoriaSelectkW * 1000 / this.panelCapacityW);
+      const maxPanels = Math.round(this.potenciaMaxCategoriaSelectkW * 1000 / this.panelCapacityW);
       this.panelsCountSelected = maxPanels;
       this.sharedService.setPanelsCountSelected(this.panelsCountSelected);
       

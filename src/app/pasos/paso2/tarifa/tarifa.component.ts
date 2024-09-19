@@ -94,32 +94,48 @@ export class TarifaComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('Iniciando ngOnInit en TarifaComponent');
+
     this.sharedService.tarifaContratada$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe((tarifa) => {
+        console.log('Nueva tarifa contratada recibida:', tarifa);
         this.tarifaContratada = tarifa;
         if (this.tarifaContratada && !this.isDialogOpen) {
+          console.log(
+            'Actualizando potencia máxima asignada y verificando potencia excedida'
+          );
           this.updatePotenciaMaxAsignada();
           this.checkPotenciaExcedida();
         }
       });
 
     this.sharedService.potenciaMaxAsignadaW$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe({
         next: (newPotenciaMax) => {
-            this.potenciaMaxAsignadakW = newPotenciaMax / 1000;
-            if(!this.isDialogOpen) {
-              this.checkPotenciaExcedida();
-            }
+          console.log(
+            'Nueva potencia máxima asignada recibida (W):',
+            newPotenciaMax
+          );
+          this.potenciaMaxAsignadakW = newPotenciaMax / 1000;
+          console.log(
+            'Potencia máxima asignada convertida a kW:',
+            this.potenciaMaxAsignadakW
+          );
+          if (!this.isDialogOpen && this.tarifaContratada) {
+            console.log('Verificando potencia excedida');
+            this.checkPotenciaExcedida();
+          }
         },
       });
 
     this.sharedService.potenciaInstalacionW$
       .pipe(takeUntil(this.destroy$))
       .subscribe((potencia) => {
-        console.log('Nueva potencia instalada:', potencia);
-        if(!this.isDialogOpen) {
+        console.log('Nueva potencia instalada recibida:', potencia);
+        if (!this.isDialogOpen) {
+          console.log('Verificando potencia excedida');
           this.checkPotenciaExcedida();
         }
       });
@@ -127,18 +143,24 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     this.mapService.panelsRedrawn$
       .pipe(takeUntil(this.destroy$))
       .subscribe((panelesCantidad) => {
+        console.log('Paneles redibujados, nueva cantidad:', panelesCantidad);
         this.sharedService.setPanelsCountSelected(panelesCantidad);
-        this.updateConsumosMensuales();
+        /* 
+        console.log('Actualizando consumos mensuales');
+        this.updateConsumosMensuales(); */
       });
 
     this.sharedService.panelsCountSelected$
       .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((count) => {
         console.log('Nuevo conteo de paneles recibido:', count);
-        if(!this.isDialogOpen) {
+        if (!this.isDialogOpen) {
+          console.log('Verificando potencia excedida');
           this.checkPotenciaExcedida();
         }
       });
+
+    console.log('Finalizando ngOnInit en TarifaComponent');
   }
 
   ngAfterViewInit(): void {}
@@ -184,7 +206,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       this.updateConsumosMensuales();
       console.log('Después de updateConsumosMensuales');
 
-      if(!this.isDialogOpen) {
+      if (!this.isDialogOpen) {
         this.checkPotenciaExcedida();
       }
       console.log('Después de checkPotenciaExcedida');
@@ -203,10 +225,18 @@ export class TarifaComponent implements OnInit, AfterViewInit {
   }
 
   openDialog(): void {
+    console.log('Iniciando openDialog');
     if (this.isDialogOpen) {
+      console.log('Diálogo ya abierto, saliendo');
       return; // Si ya hay un diálogo abierto, no abrir otro
     }
     this.isDialogOpen = true;
+    console.log('isDialogOpen establecido a true');
+
+    const potenciaInstalacion =
+      this.sharedService.getPotenciaInstalacionW() / 1000;
+    console.log('Potencia de instalación:', potenciaInstalacion, 'kWh');
+    console.log('Potencia máxima asignada:', this.potenciaMaxAsignadakW, 'kW');
 
     const dialogRef = this.dialog.open(TarifaDialogComponent, {
       /* width: '30%',*/
@@ -229,45 +259,75 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     this.sharedService.getPotenciaInstalacionW() / 1000,
     '1.2-2'
   )} kWh, supera la potencia máxima de ${this.decimalPipe.transform(
-    this.potenciaMaxAsignadakW,
-    '1.0-0'
-  )} kW 
+          this.potenciaMaxAsignadakW,
+          '1.0-0'
+        )} kW 
   asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar 
   para volver al paso anterior y elegir otra superficie.`,
       },
     });
+    console.log('Diálogo abierto');
 
     dialogRef.afterClosed().subscribe((result) => {
-      
+      console.log('Diálogo cerrado, resultado:', result);
+
       if (result) {
         this.isDialogOpen = false;
+        console.log('isDialogOpen establecido a false');
         this.calcularMaxPanelsPerMaxPotencia();
-        
-        this.mapService.reDrawPanels(this.sharedService.getPanelsSelected());
+        console.log('Recalculando máximo de paneles');
+
+        const panelsSelected = this.sharedService.getPanelsSelected();
+        console.log('Redibujando paneles, cantidad:', panelsSelected);
+        this.mapService.reDrawPanels(panelsSelected);
       } else {
+        console.log('Reiniciando configuración');
         this.sharedService.setTarifaContratada('');
         this.sharedService.setTutorialShown(true);
         this.mapService.clearDrawing();
         this.sharedService.resetAll();
         this.isDialogOpen = false;
+        console.log('Navegando a paso 1');
         this.router.navigate(['pasos/1']);
       }
     });
   }
   private calcularMaxPanelsPerMaxPotencia() {
+    console.log('Iniciando calcularMaxPanelsPerMaxPotencia');
+
     const panelCapacity = this.sharedService.getPanelCapacityW();
+    console.log('Capacidad del panel:', panelCapacity, 'W');
+
     const maxPotenciaContratada =
       this.sharedService.getPotenciaMaxAsignadaValue();
+    console.log('Potencia máxima contratada:', maxPotenciaContratada, 'W');
+
     const maxPanelsPerMaxPotencia = maxPotenciaContratada / panelCapacity;
-    if (
-      maxPanelsPerMaxPotencia >= this.sharedService.getMaxPanelsPerSuperface()
-    ) {
-      this.sharedService.setPanelsCountSelected(
-        this.sharedService.getMaxPanelsPerSuperface()
+    console.log(
+      'Máximo de paneles por potencia máxima:',
+      maxPanelsPerMaxPotencia
+    );
+
+    const maxPanelsPerSurface = this.sharedService.getMaxPanelsPerSuperface();
+    console.log('Máximo de paneles por superficie:', maxPanelsPerSurface);
+
+    if (maxPanelsPerMaxPotencia >= maxPanelsPerSurface) {
+      console.log(
+        'Limitado por superficie. Estableciendo paneles a:',
+        maxPanelsPerSurface
       );
+      this.sharedService.setPanelsCountSelected(maxPanelsPerSurface);
     } else {
-      this.sharedService.setPanelsCountSelected(maxPanelsPerMaxPotencia);
+      console.log(
+        'Limitado por potencia. Estableciendo paneles a:',
+        Math.floor(maxPanelsPerMaxPotencia)
+      );
+      this.sharedService.setPanelsCountSelected(
+        Math.floor(maxPanelsPerMaxPotencia)
+      );
     }
+
+    console.log('Finalizando calcularMaxPanelsPerMaxPotencia');
   }
 
   updateConsumosMensuales(): void {
@@ -330,7 +390,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       this.potenciaMaxAsignadakW * 1000
     );
 
-    if(!this.isDialogOpen) {
+    if (!this.isDialogOpen) {
       this.checkPotenciaExcedida();
     }
     console.log('Finalizado onPotenciaInputChange');
@@ -404,7 +464,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
         this.potenciaMaxAsignadakW * 1000
       );
 
-      if(!this.isDialogOpen) {
+      if (!this.isDialogOpen) {
         this.checkPotenciaExcedida();
       }
       console.log('Después de llamar a checkPotenciaExcedida()');
@@ -423,15 +483,34 @@ export class TarifaComponent implements OnInit, AfterViewInit {
   }
 
   private updatePotenciaMaxAsignada(): void {
+    console.log('Iniciando updatePotenciaMaxAsignada');
+    console.log('Tarifa contratada:', this.tarifaContratada);
+
     const tarifaSeleccionada = this.tarifas.find(
       (t) => t.value === this.tarifaContratada
     );
+    console.log('Tarifa seleccionada:', tarifaSeleccionada);
+
     if (tarifaSeleccionada) {
-      this.potenciaMaxAsignadakW = tarifaSeleccionada.potenciaMaxAsignadakW;
-      this.sharedService.setPotenciaMaxAsignadaW(
-        this.potenciaMaxAsignadakW * 1000
+      console.log(
+        'Potencia máxima asignada (kW) antes:',
+        this.potenciaMaxAsignadakW
       );
+      this.potenciaMaxAsignadakW = tarifaSeleccionada.potenciaMaxAsignadakW;
+      console.log(
+        'Potencia máxima asignada (kW) después:',
+        this.potenciaMaxAsignadakW
+      );
+
+      const potenciaMaxAsignadaW = this.potenciaMaxAsignadakW * 1000;
+      console.log('Potencia máxima asignada (W):', potenciaMaxAsignadaW);
+      this.sharedService.setPotenciaMaxAsignadaW(potenciaMaxAsignadaW);
+      console.log('Potencia máxima asignada actualizada en SharedService');
+    } else {
+      console.log('No se encontró una tarifa seleccionada');
     }
+
+    console.log('Finalizando updatePotenciaMaxAsignada');
   }
 
   private checkPotenciaExcedida(): void {
@@ -446,7 +525,11 @@ export class TarifaComponent implements OnInit, AfterViewInit {
     console.log('Potencia instalada:', potenciaInstalada);
     console.log('Potencia máxima asignada:', potenciaMaxAsignada);
 
-    if (potenciaMaxAsignada > 0 && potenciaInstalada > potenciaMaxAsignada && !this.isDialogOpen) {
+    if (
+      potenciaMaxAsignada > 0 &&
+      potenciaInstalada > potenciaMaxAsignada &&
+      !this.isDialogOpen
+    ) {
       console.log('Abriendo diálogo de potencia excedida');
       this.openDialog();
     } else {

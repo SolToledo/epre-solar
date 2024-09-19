@@ -278,7 +278,6 @@ export class MapService {
   private validateArea(polygon: google.maps.Polygon): boolean {
     const area = this.getPolygonArea(polygon);
     const minArea = this.sharedService.calculateAreaPanels(1) * 5;
-    const maxArea = this.sharedService.calculateAreaPanels(100); 
 
     if (area < minArea) {
       this.snackBar.open(
