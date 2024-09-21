@@ -43,11 +43,14 @@ export class MapService {
     
   }
   async initializeMap(mapElement: HTMLElement) {
+    console.log('Iniciando inicialización del mapa');
     if (!window.google || !window.google.maps) {
+      console.error('API de Google Maps no cargada');
       throw new Error('Google Maps API not loaded');
     }
 
-    this.map = new google.maps.Map(mapElement, {
+    console.log('Configurando opciones del mapa');
+    const mapOptions = {
       center: this.center,
       zoom: this.zoomInicial,
       disableDefaultUI: false,
@@ -62,9 +65,16 @@ export class MapService {
       rotateControl: false,
       gestureHandling: 'cooperative',
       mapId: 'b822b45cb79aba09',
-      
-    });
+    };
+    console.log('Opciones del mapa:', mapOptions);
+
+    console.log('Creando instancia del mapa');
+    this.map = new google.maps.Map(mapElement, mapOptions);
+    console.log('Mapa creado:', this.map);
+
+    console.log('Emitiendo instancia del mapa');
     this.mapSubject.next(this.map);
+    console.log('Inicialización del mapa completada');
   }
 
   clearPolygons() {
@@ -165,6 +175,7 @@ export class MapService {
   }
 
   initializeDrawingManager() {
+    console.log('Iniciando initializeDrawingManager');
     this.drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: null,
       drawingControl: false,
@@ -184,50 +195,62 @@ export class MapService {
         strokePosition: google.maps.StrokePosition.OUTSIDE
       },
     });
+    console.log('DrawingManager configurado:', this.drawingManager);
     this.drawingManager.setMap(this.map);
+    console.log('DrawingManager asignado al mapa');
 
     // Listener para overlaycomplete
     google.maps.event.addListener(
       this.drawingManager,
       'overlaycomplete',
       (event: any) => {
+        console.log('Evento overlaycomplete disparado:', event);
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
+          console.log('Tipo de overlay: POLYGON');
           this.clearPolygons();
           this.clearPanels();
 
           const newPolygon = event.overlay as google.maps.Polygon;
+          console.log('Nuevo polígono creado:', newPolygon);
           this.polygons.push(newPolygon);
 
           // Validar el área inicial
           if (!this.validateArea(newPolygon)) {
+            console.log('Área no válida, limpiando dibujo');
             this.clearDrawing();
             return;
           }
 
           const path = newPolygon.getPath();
+          console.log('Path del polígono:', path.getArray());
           const isLocationValid = this.locationService.validatePolygonLocation(
             newPolygon,
             this.map
           );
+          console.log('¿Ubicación válida?', isLocationValid);
 
           if (isLocationValid) {
             const area = google.maps.geometry.spherical.computeArea(path);
+            console.log('Área calculada:', area);
             this.areaSubject.next(area);
 
             // Listener para el evento set_at en el polígono (cuando se edita)
             const updatePolygonAfterEdit = () => {
+              console.log('Polígono editado, actualizando...');
               const newPolygonEdit = event.overlay as google.maps.Polygon;
               const updatedArea =
                 google.maps.geometry.spherical.computeArea(path);
+              console.log('Nueva área después de edición:', updatedArea);
               if (this.validateArea(newPolygonEdit)) {
-                newPolygonEdit.setMap(this.map); // Asegura que el polígono editado se muestre
+                console.log('Área válida después de edición');
+                newPolygonEdit.setMap(this.map);
                 this.polygons[0] = newPolygonEdit;
                 this.drawPanels(newPolygonEdit);
                 this.overlayCompleteSubject.next(true);
                 this.disableDrawingMode();
                 return;
               } else {
-                console.log('no es valido');
+                console.log('Área no válida después de edición');
               }
             };
 
@@ -243,6 +266,7 @@ export class MapService {
             );
 
             // Dibuja los paneles
+            console.log('Dibujando paneles');
             this.drawPanels(newPolygon);
             this.overlayCompleteSubject.next(true);
             this.disableDrawingMode();
@@ -250,10 +274,13 @@ export class MapService {
             const bounds = new google.maps.LatLngBounds();
             path.forEach((latLng) => bounds.extend(latLng));
             const polygonCenter = bounds.getCenter();
+            console.log('Centro del polígono:', polygonCenter.toString());
 
             this.map.panTo(polygonCenter);
+            console.log('Mapa centrado en el polígono');
             return;
           } else {
+            console.log('Ubicación no válida, mostrando mensaje de error');
             this.snackBar.open(
               'La ubicación seleccionada se encuentra fuera de la Provincia de San Juan, no se puede procesar.',
               '',
@@ -273,6 +300,7 @@ export class MapService {
         }
       }
     );
+    console.log('Listener de overlaycomplete configurado');
   }
 
   private validateArea(polygon: google.maps.Polygon): boolean {

@@ -5,7 +5,7 @@
     </div>
     <div class="info-container" id="info-container">
       <div class="action-buttons">
-        <div class="editar-component">
+        <div class="editar-component" id="botonEdit">
           <button id="boton-editar" (click)="enabledDrawing()">
             Editar área
             <span class="material-icons">edit</span>
@@ -15,7 +15,10 @@
         <div class="descargar-enviar-component">
           <button id="downloadButton" (click)="downloadPDF()">
             <mat-icon class="icono-secundario">download</mat-icon>
-            <div class="custom-loader" *ngIf="isDownloading || isSendingMail"></div>
+            <div
+              class="custom-loader"
+              *ngIf="isDownloading || isSendingMail || isCalculating"
+            ></div>
           </button>
           <br />
           <button id="emailButton" (click)="openModal()">
@@ -41,9 +44,7 @@
           </div>
 
           <div class="item">
-            <app-plazo
-              
-            ></app-plazo>
+            <app-plazo></app-plazo>
           </div>
 
           <div class="item">
@@ -51,7 +52,11 @@
           </div>
 
           <div class="item">
-            <app-energia [yearlyEnergyAckWhInitial]="yearlyEnergyAckWhDefault"></app-energia>
+            <app-energia
+              [yearlyEnergyAckWhInitial]="yearlyEnergyAckWhDefault"
+              (recalculoIniciado)="onRecalculoIniciado($event)"
+              (recalculoTerminado)="onRecalculoTerminado($event)"
+            ></app-energia>
           </div>
 
           <div class="item"><app-superficie></app-superficie></div>
@@ -68,7 +73,7 @@
         </div>
         <!--container-->
 
-        <div class="container-graficos" >
+        <div class="container-graficos">
           <div class="item-grafico" id="graficos">
             <app-graficos
               [periodoVeinteanalEmisionesGEIEvitadasOriginal]="
@@ -103,45 +108,50 @@
             ⦁ Categoría de tarifa seleccionada = {{ categoriaTarifa }}.
           </p>
           <p class="hipotesis">
-            ⦁ Potencia contratada= {{potenciaContratadaHip / 1000 | number:'1.0-0'}} kW
+            ⦁ Potencia contratada=
+            {{ potenciaContratadaHip / 1000 | number : "1.0-0" }} kW
           </p>
           <p class="hipotesis">
             ⦁ Potencia de cada panel = {{ potenciaPanelHip }} W.
           </p>
           <p class="hipotesis">
-            ⦁ Eficiencia de la instalación = {{ eficienciaInstalacion * 100 | number:'1.2-2'}} %
+            ⦁ Eficiencia de la instalación =
+            {{ eficienciaInstalacion * 100 | number : "1.2-2" }} %
           </p>
           <p class="hipotesis">
-            ⦁ Degradación anual de paneles = {{ degradacionAnualPanel * 100 | number:'1.2-2'}} %
+            ⦁ Degradación anual de paneles =
+            {{ degradacionAnualPanel * 100 | number : "1.2-2" }} %
           </p>
           <p class="hipotesis">
             ⦁ Proporción de energía autoconsumida =
-            {{ proporcionAutoconsumo * 100  | number:'1.2-2'}} %
+            {{ proporcionAutoconsumo * 100 | number : "1.2-2" }} %
           </p>
           <p class="hipotesis">
-            ⦁ Proporción de energía inyectada = {{ proporcionInyectada * 100 | number:'1.2-2' }} %
+            ⦁ Proporción de energía inyectada =
+            {{ proporcionInyectada * 100 | number : "1.2-2" }} %
           </p>
           <p class="hipotesis">
             ⦁ Equipo de medición =
             {{ costoEquipoMedicion | number : "1.0-0" }} USD
-            <span *ngIf="categoriaTarifa.includes('T1'); else noIvaText"> (incluye IVA).</span>
+            <span *ngIf="categoriaTarifa.includes('T1'); else noIvaText">
+              (incluye IVA).</span
+            >
             <ng-template #noIvaText> (no incluye IVA).</ng-template>
           </p>
           <p class="hipotesis">
             ⦁ Mantenimiento anual = 1 % del costo de la instalación.
           </p>
           <p class="hipotesis">
-            ⦁ Tasa de inflación (USD) = {{ tasaInflacionUsd * 100 | number:'1.2-2' }} %
+            ⦁ Tasa de inflación (USD) =
+            {{ tasaInflacionUsd * 100 | number : "1.2-2" }} %
           </p>
-          <p class="hipotesis">
-            ⦁ Tarifas vigentes a {{fechaActual}}.
-          </p>
+          <p class="hipotesis">⦁ Tarifas vigentes a {{ fechaActual }}.</p>
           <p></p>
           <p></p>
-          <hr>
-          <p class="hipotesis"> Fecha de su consulta: {{ timestamp }}</p>
+          <hr />
+          <p class="hipotesis">Fecha de su consulta: {{ timestamp }}</p>
           <p class="hipotesis">
-             Generación Solar Distribuida San Juan v.1.0.1. (Septiembre 2024)
+            Generación Solar Distribuida San Juan v.1.0.1. (Septiembre 2024)
           </p>
         </div>
         <!--hipotesis-container-->

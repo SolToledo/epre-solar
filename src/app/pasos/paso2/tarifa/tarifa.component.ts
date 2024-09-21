@@ -95,7 +95,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     console.log('Iniciando ngOnInit en TarifaComponent');
-
+    
     this.sharedService.tarifaContratada$
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe((tarifa) => {

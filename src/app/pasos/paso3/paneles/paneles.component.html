@@ -16,17 +16,17 @@
           <mat-slider
             class="custom-slider"
             min="4"
-            [max]="maxPanelsArea$"
             step="1"
+            [max]="maxPanelsArea$"
             (change)="onSliderChange()"
             discrete
             [displayWith]="formatLabel"
           >
-            <input matSliderThumb [(ngModel)]="panelesCantidad" #slider />
+            <input matSliderThumb [(ngModel)]="panelesSelectCount" #slider />
           </mat-slider>
         </div>
         <div class="unidad-component-simple-panel">
-          <p class="resultado-panel">{{ panelesCantidad }}</p>
+          <p class="resultado-panel">{{ panelesSelectCount }}</p>
         </div>
       </div>
     </div>
@@ -34,13 +34,14 @@
 
     <div class="potencia-paneles">
       <h3 id="titulo-potencia">Potencia de paneles</h3>
-      <div class="seleccion-potencia">
+      <div class="seleccion-potencia" >
         <select id="power-select" [formControl]="potenciaPanelesControl">
           <option value="400" selected>400 W</option>
-          <option value="450">450 W</option>
-          <option value="500">500 W</option>
-          <option value="600">600 W</option>
-          <option value="700">700 W</option>
+          <!-- deshabilitar opciones -->
+          <option value="450" [disabled]="true">450 W</option>
+          <option value="500" [disabled]="true">500 W</option>
+          <option value="600" [disabled]="true">600 W</option>
+          <option value="700" [disabled]="true">700 W</option>
         </select>
       </div>
     </div>
@@ -49,10 +50,6 @@
 
   <div class="texto-inferior-panel">
     <div class="titulo-detalle">
-     <!-- <p>
-        Cantidad máxima de paneles :
-        <span>{{ maxPanelsArea$ }}</span>
-      </p>-->
       <p>
         Dimensiones del panel: 
         <span id="dimension-panel"

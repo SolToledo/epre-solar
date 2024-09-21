@@ -6,9 +6,11 @@ import { Paso3Component } from './pasos/paso3/paso3.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { LayoutPasosComponent } from './layout-pasos/layout-pasos.component';
 import { Paso0Component } from './pasos/paso0/paso0.component';
+import { RefreshHandlerComponent } from './refresh-handler/refresh-handler.component';
 
 const routes: Routes = [
   { path: '', component: WelcomeComponent },
+  { path: 'refresh', component: RefreshHandlerComponent }, // Nueva ruta para manejar recargas
   {
     path: 'pasos', component: LayoutPasosComponent,
     children: [

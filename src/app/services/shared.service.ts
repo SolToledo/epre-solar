@@ -4,6 +4,7 @@ import { ResultadosFrontDTO } from '../interfaces/resultados-front-dto';
 import { DimensionPanel } from '../interfaces/dimension-panel';
 import { YearlysAnualConfigurationFront } from '../interfaces/yearlys-anual-configuration-front';
 import { ParametrosFront } from '../interfaces/parametros-front';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -77,7 +78,21 @@ export class SharedService {
   private tarifaIntercambioUsdkWhSubject = new BehaviorSubject<number>(0);
   tarifaIntercambioUsdkWh$ = this.tarifaIntercambioUsdkWhSubject.asObservable();
 
-  constructor() {
+  private initialState = {
+    tarifaContratada: '',
+    yearlysAnualConfigurations: [],
+    yearlyEnergyAckWh: 0,
+    panelsCountSelected: 4,
+    dimensionPanels: { height: 0, width: 0 },
+    panelCapacityW: 400,
+    eficienciaInstalacion: 0,
+    costoInstalacion: 0,
+    plazoInversion: 0,
+    tarifaIntercambioUsdkWh: 0,
+    potenciaMaxAsignadaW: 0
+  };
+
+  constructor(private router: Router,) {
     console.log("Se instancia el shared service...");
     
   }
@@ -408,29 +423,16 @@ export class SharedService {
 
   resetAll() {
     console.log('Reseteando todos los valores...');
-    this.setTarifaContratada('');
-    this.setYearlysAnualConfigurations([]);
-    this.setYearlyEnergyAckWh(0);
-    this.setPanelsCountSelected(4);
-    this.setDimensionPanels({ height: 0, width: 0 });
-    this.setPanelCapacityW(400);
-    this.setEficienciaInstalacion(0);
-    this.setCostoInstalacion(0);
-    this.setPlazoInversion(0);
-    this.setTarifaIntercambioUsdkWh(0);
-    this.setPotenciaMaxAsignadaW(0);
-    console.log('Valores reseteados:', {
-      tarifaContratada: '',
-      yearlysAnualConfigurations: [],
-      yearlyEnergyAckWh: 0,
-      panelsCountSelected: 4,
-      dimensionPanels: { height: 0, width: 0 },
-      panelCapacityW: 400,
-      eficienciaInstalacion: 0,
-      costoInstalacion: 0,
-      plazoInversion: 0,
-      tarifaIntercambioUsdkWh: 0,
-      potenciaMaxAsignadaW: 0
+    Object.keys(this.initialState).forEach(key => {
+      (this as any)[`set${key.charAt(0).toUpperCase() + key.slice(1)}`](
+        this.initialState[key as keyof typeof this.initialState]
+      );
+    });
+    console.log('Valores reseteados:', this.initialState);
+    // Redirigir al inicio de la aplicación
+    this.router.navigate(['/pasos/1'], { replaceUrl: true }).then(() => {
+      // Recargar la página para asegurar un estado limpio
+      window.location.reload(); 
     });
   }
 

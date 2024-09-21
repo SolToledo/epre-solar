@@ -31,55 +31,16 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sharedService.plazoInversion$
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe((newPlazoRecupero) => {
-        if (this.plazoRecuperoInitial === 0) {
-          this.plazoRecuperoInitial = newPlazoRecupero;
-        }
         this.plazoRecupero = newPlazoRecupero;
-        this.checkValuesAndUpdate();
-      });
-  
-    this.sharedService.yearlyEnergyAckWh$
-      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
-      .subscribe((yearlyValue) => {
-        if (this.yearlyEnergykWhInitial === 0) {
-          this.yearlyEnergykWhInitial = yearlyValue;
-        }
-        this.yearlyEnergykWh = yearlyValue;
-        this.checkValuesAndUpdate();
       });
   }
   ngAfterViewInit(): void {
-    if (!this.yearlyEnergykWhInitial) {
-      this.yearlyEnergykWhInitial = this.sharedService.getYearlyEnergyAckWh();
-    }
-    if (!this.plazoRecuperoInitial) {
-      this.plazoRecuperoInitial = this.sharedService.getPlazoInversionValue();
-    }
-    if (!this.potenciaInstalacionInitialkW) {
-      this.potenciaInstalacionInitialkW =
-        this.sharedService.getPotenciaInstalacionW() / 1000;
-    }
-    if (!this.installationCostInitial) {
-        this.installationCostInitial = this.sharedService.getCostoInstalacion();
-        
-    }
-  
-    // Añadir logs para ver si los valores iniciales se están asignando
-    console.log('Valores iniciales asignados:', {
-      yearlyEnergykWhInitial: this.yearlyEnergykWhInitial,
-      plazoRecuperoInitial: this.plazoRecuperoInitial,
-      potenciaInstalacionInitialkW: this.potenciaInstalacionInitialkW,
-      installationCostInitial: this.installationCostInitial,
-    });
-  
-      this.checkValuesAndUpdate();
-      
+    /*  this.checkValuesAndUpdate(); */
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
-  private checkValuesAndUpdate(): void {
+  /*  private checkValuesAndUpdate(): void {
     if (
       this.yearlyEnergykWhInitial > 0 &&
       this.plazoRecuperoInitial > 0 &&
@@ -111,9 +72,9 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       console.warn('Valores no inicializados correctamente, no se puede calcular el plazo de recuperación.');
     }
-  }
+  } */
 
-  private updatePlazoRecupero() {
+  /* private updatePlazoRecupero() {
     if (
       this.yearlyEnergykWhInitial > 0 &&
       this.plazoRecuperoInitial > 0 &&
@@ -168,5 +129,5 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
         'Error: Los valores iniciales de ahorro, energía anual, potencia instalada o costo de instalación no pueden ser 0 o indefinidos.'
       );
     }
-  }
+  } */
 }
