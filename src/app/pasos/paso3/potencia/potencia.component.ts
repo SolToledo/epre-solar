@@ -16,7 +16,7 @@ export class PotenciaComponent implements OnInit, OnDestroy {
   panelsCountSelected!: number;
   panelCapacityW!: number;
   potenciaMaxCategoriaSelectkW!: number;
-
+  factorPotencia: number = 1;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -37,6 +37,12 @@ export class PotenciaComponent implements OnInit, OnDestroy {
     console.log('PotenciaComponent: Iniciando ngOnInit - Configurando suscripciones');
 
     try {
+      this.sharedService.factorPotencia$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe((newFactorPotencia: number) => {
+        console.log('Nuevo valor de factorPotencia recibido:', newFactorPotencia);
+        this.factorPotencia = newFactorPotencia;
+      }); 
       // Suscripción para la potencia máxima asignada
       this.sharedService.potenciaMaxAsignadaW$
         .pipe(takeUntil(this.destroy$), distinctUntilChanged())
@@ -100,6 +106,9 @@ export class PotenciaComponent implements OnInit, OnDestroy {
             console.error('Error al suscribirse a panelCapacityW$:', err);
           },
         });
+
+      
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Error en ngOnInit de PotenciaComponent:', error);
     }

@@ -23,6 +23,7 @@ export class EnergiaComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>(); // Para limpiar las suscripciones
   @Output() recalculoIniciado: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() recalculoTerminado: EventEmitter<boolean> = new EventEmitter<boolean>();
+  factorPotencia: number = 1;
 
   constructor(
     private sharedService: SharedService,
@@ -36,7 +37,12 @@ export class EnergiaComponent implements OnInit, OnDestroy {
       'Valor inicial de yearlyEnergyAckWhInitial:',
       this.yearlyEnergyAckWhInitial
     );
-
+    this.sharedService.factorPotencia$
+    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .subscribe((newFactorPotencia: number) => {
+      console.log('Nuevo valor de factorPotencia recibido:', newFactorPotencia);
+      this.factorPotencia = newFactorPotencia;
+    });
     // Asignamos el valor inicial de energía anual
     this.sharedService.yearlyEnergyAckWh$
       .pipe(takeUntil(this.destroy$))
@@ -53,6 +59,8 @@ export class EnergiaComponent implements OnInit, OnDestroy {
       'potenciaOriginalW obtenida desde sharedService:',
       this.potenciaOriginalW
     );
+
+    
   }
 
   ngAfterViewInit(): void {
@@ -87,11 +95,11 @@ export class EnergiaComponent implements OnInit, OnDestroy {
     this.recalculoIniciado.emit(true);
     const panelCapacity = this.sharedService.getPanelCapacityW();
     let panels400WCount = this.sharedService.getPanelsSelected();
-    if (panelCapacity !== 400) {
+   /*  if (panelCapacity !== 400) {
       panels400WCount = Math.round(
         this.sharedService.getPotenciaInstalacionW() / 400
       );
-    }
+    } */
     
     await this.recalculateService
       .recalculateyearlyEnergyACkWh(panels400WCount)

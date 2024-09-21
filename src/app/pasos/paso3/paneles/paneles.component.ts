@@ -69,6 +69,7 @@ export class PanelesComponent implements OnInit, OnDestroy {
         );
         const panelCapacity = parseInt(value, 10);
         this.sharedService.setPanelCapacityW(panelCapacity);
+        this.sharedService.setFactorPotencia(panelCapacity/this.sharedService.getPanelCapacityW());
         this.panelCapacityW = panelCapacity;
         console.log(
           'PanelesComponent: Nueva capacidad de panel:',
@@ -76,8 +77,8 @@ export class PanelesComponent implements OnInit, OnDestroy {
         );
 
         // Actualizar el máximo permitido y redibujar paneles
-        this.updateMaxPanels();
-        this.mapService.reDrawPanels(this.panelesSelectCount);
+        // this.updateMaxPanels();
+        // this.mapService.reDrawPanels(this.panelesSelectCount);
       });
 
     // Subscripción para obtener el máximo número de paneles permitido por el área

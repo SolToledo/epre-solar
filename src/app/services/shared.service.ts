@@ -67,6 +67,9 @@ export class SharedService {
   >({});
   resultadosFront$ = this.resultadosFrontSubject.asObservable();
 
+  private factorPotenciaSubject = new BehaviorSubject<number>(1);
+  factorPotencia$= this.factorPotenciaSubject.asObservable();
+
   private maxPanelsPerSuperfaceSubject = new BehaviorSubject<number>(0);
   maxPanelsPerSuperface$ = this.maxPanelsPerSuperfaceSubject.asObservable();
   private carbonOffSetTnAnualSubject = new BehaviorSubject<number>(0);
@@ -91,6 +94,7 @@ export class SharedService {
     tarifaIntercambioUsdkWh: 0,
     potenciaMaxAsignadaW: 0
   };
+  
 
   constructor(private router: Router,) {
     console.log("Se instancia el shared service...");
@@ -436,4 +440,14 @@ export class SharedService {
     });
   }
 
+  setFactorPotencia(factorPotencia: number) {
+    console.log('Estableciendo factor de potencia:', factorPotencia);
+    this.factorPotenciaSubject.next(factorPotencia);
+  }
+
+  getFactorPotencia(): number {
+    const value = this.factorPotenciaSubject.getValue();
+    console.log('Obteniendo factor de potencia:', value);
+    return value;
+  }
 }

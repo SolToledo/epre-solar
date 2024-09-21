@@ -6,7 +6,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, Subject, Subscription, takeUntil } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
@@ -20,6 +20,8 @@ export class EmisionesComponent implements OnInit, AfterViewInit, OnDestroy {
   yearlyEnergyAcKwh: number = 0;
   carbonOffset: number = 0;
   private subscription!: Subscription;
+  factorPotencia: number = 1;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private sharedService: SharedService,
@@ -31,6 +33,13 @@ export class EmisionesComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     console.log('EmisionesComponent: ngOnInit');
     console.log('carbonOffsetFactorTnPerMWh:', this.carbonOffsetFactorTnPerMWh);
+    
+    this.sharedService.factorPotencia$
+    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .subscribe((newFactorPotencia: number) => {
+      console.log('Nuevo valor de factorPotencia recibido:', newFactorPotencia);
+      this.factorPotencia = newFactorPotencia;
+    });
   }
 
   ngAfterViewInit(): void {
