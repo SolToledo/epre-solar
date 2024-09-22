@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { driver } from 'driver.js';
@@ -12,7 +12,7 @@ import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
   templateUrl: './paso1.component.html',
   styleUrls: ['./paso1.component.css'],
 })
-export class Paso1Component implements OnInit, OnDestroy {
+export class Paso1Component implements OnInit, OnDestroy, AfterViewInit {
   currentStep: number = 1;
   selectedArea: number = 0;
   tutorialShown: boolean = false;
@@ -29,7 +29,9 @@ export class Paso1Component implements OnInit, OnDestroy {
     private sharedService: SharedService,
     private mapService: MapService,
     private locationService: LocationService
-  ) {}
+  ) {
+    
+  }
 
   ngOnInit(): void {
     this.sharedService.tutorialShown$
@@ -59,22 +61,30 @@ export class Paso1Component implements OnInit, OnDestroy {
   }
 
   async ngAfterViewInit(): Promise<void> {
-    this.initializeMap()
-      .then(() => {
-        this.initializeAutocomplete();
-        this.mapService.initializeDrawingManager();
-        if (!this.tutorialShown) {
-          setTimeout(() => this.showTutorial(), 500);
-        }
-      })
-      .catch((error) => {
-        console.error('Error initializing map:', error);
-        this.snackBar.open(
-          'Error al cargar el mapa. Por favor, recargue la página.',
-          'Cerrar',
-          { duration: 5000 }
-        );
-      });
+    return new Promise<void>((resolve) => {
+      if (this.mapService.getMap()) {
+        this.initializeMap()
+          .then(() => {
+            this.initializeAutocomplete();
+            this.mapService.initializeDrawingManager();
+            if (!this.tutorialShown) {
+              setTimeout(() => this.showTutorial(), 500);
+            }
+            resolve();
+          })
+          .catch((error) => {
+            console.error('Error inicializando el mapa:', error);
+            this.snackBar.open(
+              'Error al cargar el mapa. Por favor, recargue la página.',
+              'Cerrar',
+              { duration: 5000 }
+            );
+            resolve();
+          });
+      } else {
+        resolve();
+      }
+    });
   }
 
   async initializeMap(): Promise<void> {

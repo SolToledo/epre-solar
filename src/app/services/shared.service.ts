@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class SharedService {
-
+ 
   private updateSubject = new BehaviorSubject<boolean>(false);
   update$ = this.updateSubject.asObservable();
 
@@ -137,6 +137,11 @@ export class SharedService {
     console.log('Seteando estado de carga: ', value);
     this.isLoadingSubject.next(value);
   }
+
+  getIsLoading() {
+    return this.isLoadingSubject.getValue();
+  }
+
 
   setPanelsCountSelected(value: number): void {
     console.log('Cantidad de paneles seleccionados: ', value);
@@ -434,9 +439,10 @@ export class SharedService {
     });
     console.log('Valores reseteados:', this.initialState);
     // Redirigir al inicio de la aplicación
+     // Recargar la página para asegurar un estado limpio
+    // redirigir a pasos/1 y recargar mapa
     this.router.navigate(['/pasos/1'], { replaceUrl: true }).then(() => {
-      // Recargar la página para asegurar un estado limpio
-      window.location.reload(); 
+      console.log('Redirigiendo a /pasos/1');
     });
   }
 

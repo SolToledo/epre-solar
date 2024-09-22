@@ -199,7 +199,7 @@ export class SolarApiService implements OnDestroy {
       this._resultados = this.resultadoService.generarResultados(
         this._resultados
       );
-
+      this.sharedService.setIsLoading(false);
       return this.getResultados;
     } catch (error) {
       console.error('Error en el método calculate:', error);
@@ -246,7 +246,6 @@ export class SolarApiService implements OnDestroy {
         const resultadosProcesados = this.resultadoService.generarResultados(this._resultados);
         this.sharedService.setYearlyEnergyAckWh(resultadosProcesados.periodoVeinteanalGeneracionFotovoltaica[0].generacionFotovoltaicaKWh);
         this.sharedService.setAhorroAnualUsd(resultadosProcesados.ahorroUsd);
-        this.sharedService.setPlazoInversion(resultadosProcesados.resultadosFinancieros.indicadoresFinancieros);
         const plazoInversionInicial =
         resultadosProcesados.resultadosFinancieros.indicadoresFinancieros
           .payBackMonths;

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GmailService } from 'src/app/services/gmail.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -70,29 +70,31 @@ export class Paso3Component implements OnInit, OnDestroy {
     private consumoTarifaService: ConsumoTarifaService,
     private consumoService: ConsumoService,
     private nearbyService: NearbyLocationService,
-    private pdfService: PdfService
+    private pdfService: PdfService,
+    private cdr: ChangeDetectorRef
   ) {
     console.log('Iniciando constructor de Paso3Component');
-    this.sharedService.isLoading$
-      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
-      .subscribe({
-        next: (value) => {
-          console.log('Valor de isLoading actualizado:', value);
-          this.isLoading = value;
-        },
-      });
+   
     this.actualizarFecha();
     console.log('Fecha actualizada:', this.fechaActual);
   }
 
   ngOnInit(): void {
     console.log('Iniciando ngOnInit de Paso3Component');
+    this.sharedService.isLoading$
+    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .subscribe({
+      next: (value) => {
+        console.log('Valor de isLoading actualizado:', value);
+        this.isLoading = value;
+      },
+    });
     this.subscribeToSharedServiceData();
     console.log('Suscripción a SharedService completada');
 
     this.sharedService.setIsLoading(true);
     console.log('IsLoading establecido a true');
-
+    this.cdr.detectChanges();
     setTimeout(() => {
       console.log('Recentrando mapa a área visible');
       this.mapService.recenterMapToVisibleArea();
@@ -112,13 +114,16 @@ export class Paso3Component implements OnInit, OnDestroy {
         .then(() => {
           console.log('Cargando campos iniciales');
           this.initialLoadFields();
+          this.cdr.detectChanges();
         })
         .then(() => {
           console.log('Cálculo completado, estableciendo isLoading a false');
           this.sharedService.setIsLoading(false);
+          this.cdr.detectChanges();
         })
         .catch((error) => {
           console.error('Error al calcular:', error);
+          this.sharedService.setIsLoading(false);
           this.snackBar.open(
             'Hubo un problema al calcular los ahorros solares. Inténtelo más tarde.',
             'Cerrar',
@@ -129,7 +134,7 @@ export class Paso3Component implements OnInit, OnDestroy {
               verticalPosition: 'top',
             }
           );
-          // this.router.navigate(['/pasos/1']);
+          this.sharedService.resetAll();
         });
     } else {
       console.log('Usando ubicación cercana para cálculos');

@@ -92,7 +92,7 @@ export class EnergiaComponent implements OnInit, OnDestroy {
   // Función para actualizar la energía anual basada en la nueva potencia
   private async updateYearlyEnergy(): Promise<void> {
     
-    this.recalculoIniciado.emit(true);
+    if(!this.sharedService.getIsLoading()) this.recalculoIniciado.emit(true);
     const panelCapacity = this.sharedService.getPanelCapacityW();
     let panels400WCount = this.sharedService.getPanelsSelected();
    /*  if (panelCapacity !== 400) {
