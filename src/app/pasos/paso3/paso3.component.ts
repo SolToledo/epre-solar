@@ -212,6 +212,7 @@ export class Paso3Component implements OnInit, OnDestroy {
         'Energía anual inicial establecida:',
         this.yearlyEnergyInitial
       );
+      this.sharedService.calculateAreaPanelsSelected(this.panelesCantidad);
     } catch (error) {
       console.error('Error en initializeGeneralData:', error);
       // Aquí podrías implementar una lógica adicional para manejar el error,
@@ -690,7 +691,9 @@ export class Paso3Component implements OnInit, OnDestroy {
 
   onRecalculoIniciado(event: boolean): void {
     console.log('Recalculo iniciado, mostrando loader:', event);
-    this.isCalculating = event; // Muestra el loader
+    if(!this.isLoading){
+      this.isCalculating = event; // Muestra el loader
+    }
   }
 
   // Método que se ejecuta cuando el recalculo termina

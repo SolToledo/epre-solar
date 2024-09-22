@@ -250,6 +250,7 @@ export class SolarApiService implements OnDestroy {
         resultadosProcesados.resultadosFinancieros.indicadoresFinancieros
           .payBackMonths;
         this.sharedService.setPlazoInversion(plazoInversionInicial);
+        this.sharedService.calculateAreaPanelsSelected(panels400WCount);
         console.log('Plazo de inversión inicial establecido:', plazoInversionInicial);
         return true;
       })
