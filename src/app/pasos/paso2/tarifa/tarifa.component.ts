@@ -54,7 +54,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       value: 'T2-CMP',
       viewValue: 'Mediana Demanda con Medición de Potencia (T2-CMP)',
       potenciaMaxSugerida: 25,
-      potenciaMaxAsignadakW: 35,
+      potenciaMaxAsignadakW: 50,
       potenciaMaxMinima: 20,
       potenciaMaxMaxima: 50,
     },
@@ -62,14 +62,14 @@ export class TarifaComponent implements OnInit, AfterViewInit {
       value: 'T3-BT',
       viewValue: 'Grande Demanda en Baja Tensión (T3-BT)',
       potenciaMaxSugerida: 95,
-      potenciaMaxAsignadakW: 50,
+      potenciaMaxAsignadakW: 95,
       potenciaMaxMinima: 50,
     },
     {
       value: 'T3-MT 13.2R',
       viewValue: 'Grande Demanda en Media Tensión (T3-MT 13,2 kV, T3-MT 33 kV)',
       potenciaMaxSugerida: 155,
-      potenciaMaxAsignadakW: 50,
+      potenciaMaxAsignadakW: 155,
       potenciaMaxMinima: 50,
     },
     {
@@ -262,7 +262,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
           this.potenciaMaxAsignadakW,
           '1.0-0'
         )} kW 
-  asignada para la tarifa seleccionada. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar 
+  asignada para la tarifa ${this.tarifaContratada}. Presione aceptar para adecuar la cantidad de paneles a la potencia contratada o cancelar 
   para volver al paso anterior y elegir otra superficie.`,
       },
     });
@@ -270,7 +270,7 @@ export class TarifaComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('Diálogo cerrado, resultado:', result);
-
+      
       if (result) {
         this.isDialogOpen = false;
         console.log('isDialogOpen establecido a false');

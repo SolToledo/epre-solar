@@ -165,7 +165,7 @@ export class SharedService {
   }
 
   getPlazoInversionValue(): number {
-    const plazo = this.plazoInversionSubject.getValue();
+    const plazo = Math.abs(this.plazoInversionSubject.getValue());
     console.log('Obteniendo plazo de inversión: ', plazo);
     return plazo;
   }

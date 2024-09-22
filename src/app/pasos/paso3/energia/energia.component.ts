@@ -95,14 +95,10 @@ export class EnergiaComponent implements OnInit, OnDestroy {
     if(!this.sharedService.getIsLoading()) this.recalculoIniciado.emit(true);
     const panelCapacity = this.sharedService.getPanelCapacityW();
     let panels400WCount = this.sharedService.getPanelsSelected();
-   /*  if (panelCapacity !== 400) {
-      panels400WCount = Math.round(
-        this.sharedService.getPotenciaInstalacionW() / 400
-      );
-    } */
+    const factorPotencia = 400/400;
     
     await this.recalculateService
-      .recalculateyearlyEnergyACkWh(panels400WCount)
+      .recalculateyearlyEnergyACkWh(panels400WCount, factorPotencia)
       .then((recalculoOk) => {
         this.cdr.detectChanges();
         console.log('recalculoOk:', recalculoOk);

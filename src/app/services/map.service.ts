@@ -423,13 +423,10 @@ export class MapService {
         }
       }
     }
-
-    if (!isReDraw) {
-      this.sharedService.setMaxPanelsPerSuperface(totalPanels);
-      
-    }
-    this.sharedService.setPanelsCountSelected(totalPanels);
-    this.sharedService.calculateAreaPanelsSelected(totalPanels);
+    let panelesMaximos = isReDraw ? maxPanels : totalPanels;
+    this.sharedService.setMaxPanelsPerSuperface(maxPanelsEfectivos);
+    this.sharedService.setPanelsCountSelected(panelesMaximos);
+    this.sharedService.calculateAreaPanelsSelected(panelesMaximos);
   }
 
   reDrawPanels(panelesCantidad: number) {

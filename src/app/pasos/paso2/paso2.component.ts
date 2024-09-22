@@ -77,11 +77,10 @@ export class Paso2Component implements OnInit, OnDestroy {
         if (potenciaMax > 0) {
           this.potenciaMaxAsignada = potenciaMax;
           console.log(
-            'Potencia máxima asignada actualizada:',
-            this.potenciaMaxAsignada
+            `Paso 2 - Actualización de potencia máxima: Se ha asignado ${potenciaMax}W como la potencia máxima. Este valor se utiliza para calcular la capacidad máxima del sistema solar que se puede instalar.`
           );
         } else {
-          console.log("Todavía no hay una potencia máxima establecida");
+          console.log("Paso 2 - Potencia máxima pendiente: Aún no se ha establecido una potencia máxima. Este valor es crucial para determinar el tamaño del sistema solar y se calculará basándose en el consumo y la tarifa del usuario.");
         }
       });
 
@@ -90,8 +89,7 @@ export class Paso2Component implements OnInit, OnDestroy {
       .subscribe((panels) => {
         this.panelsSelected = panels;
         console.log(
-          'Cantidad de paneles seleccionados actualizada:',
-          this.panelsSelected
+          `Paso 2 - Actualización de paneles seleccionados: Se han seleccionado ${panels} paneles. Esta cantidad afectará directamente la capacidad de generación del sistema solar y los cálculos de ahorro energético.`
         );
       });
 
@@ -100,8 +98,7 @@ export class Paso2Component implements OnInit, OnDestroy {
       .subscribe((potenciaInstalacion) => {
         this.potenciaInstalacionW = potenciaInstalacion;
         console.log(
-          'Potencia de instalación actualizada:',
-          this.potenciaInstalacionW
+          `Paso 2 - Actualización de potencia de instalación: La potencia de instalación se ha establecido en ${potenciaInstalacion}W. Este valor representa la capacidad total del sistema solar y se utiliza para estimar la producción de energía.`
         );
       });
 
@@ -110,8 +107,7 @@ export class Paso2Component implements OnInit, OnDestroy {
       .subscribe((tarifa) => {
         this.tarifaContratada = tarifa;
         console.log(
-          'Tarifa contratada actualizada:',
-          this.tarifaContratada
+          `Paso 2 - Actualización de tarifa contratada: Se ha seleccionado la tarifa ${tarifa}. Esta información es crucial para calcular los ahorros potenciales y determinar la viabilidad económica del sistema solar.`
         );
       });
   }
@@ -208,7 +204,7 @@ export class Paso2Component implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((event) => {
         this.onManualToggleChange(event.checked);
-        console.log('Carga manual activada:', event.checked);
+        console.log(`Paso 2 - Cambio en modo de carga: La carga manual ha sido ${event.checked ? 'activada' : 'desactivada'}. Esto permite al usuario ${event.checked ? 'ingresar manualmente' : 'usar valores predeterminados para'} los consumos mensuales, afectando los cálculos posteriores del sistema solar.`);
       });
 
     if (!this.tutorialShown) {
@@ -222,7 +218,7 @@ export class Paso2Component implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    console.log('Component Paso2 destruido');
+    console.log('Paso 2 - Destrucción del componente: Se está limpiando y destruyendo el componente Paso2. Esto asegura que todas las suscripciones y recursos asociados sean liberados correctamente.');
   }
 
   onManualToggleChange(isManual: boolean): void {
@@ -243,26 +239,26 @@ export class Paso2Component implements OnInit, OnDestroy {
   goToPaso3() {
     if (this.allFieldsFilled && this.isCategorySelected) {
       this.router.navigate(['pasos/3']);
-      console.log('Navegando a paso 3 con datos:', {
+      console.log('Paso 2 - Navegación a Paso 3: Se está avanzando al Paso 3 con los siguientes datos configurados:', {
         tarifaContratada: this.tarifaContratada,
         potenciaMaxAsignada: this.potenciaMaxAsignada,
         panelsSelected: this.panelsSelected,
         potenciaInstalacionW: this.potenciaInstalacionW,
-      });
+      }, 'Estos datos serán utilizados para realizar cálculos más detallados sobre el sistema solar y sus beneficios.');
     } else {
-      console.log('No se puede navegar a paso 3, faltan campos por completar');
+      console.log('Paso 2 - Navegación a Paso 3 bloqueada: No se puede avanzar al Paso 3 porque faltan campos por completar. Es necesario que el usuario proporcione toda la información requerida para realizar cálculos precisos.');
     }
   }
 
   onAllFieldsCompleted(event: boolean): void {
     this.allFieldsFilled = event;
-    console.log('Todos los campos completados:', this.allFieldsFilled);
+    console.log(`Paso 2 - Estado de campos: ${event ? 'Todos los campos han sido completados' : 'Aún hay campos pendientes por completar'}. Este estado determina si el usuario puede avanzar al siguiente paso y es crucial para asegurar que se tenga toda la información necesaria para los cálculos del sistema solar.`);
   }
 
   onCategorySelected(event: boolean): void {
     this.isCategorySelected = event;
     this.isFieldsDisabled = !event;
-    console.log('Categoría seleccionada:', this.isCategorySelected);
+    console.log(`Paso 2 - Selección de categoría: ${event ? 'Se ha seleccionado una categoría' : 'No se ha seleccionado una categoría'}. La selección de categoría es importante para determinar la tarifa y los consumos predeterminados, afectando los cálculos posteriores.`);
   }
 
   showInstructions() {

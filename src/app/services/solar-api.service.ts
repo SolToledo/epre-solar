@@ -60,7 +60,7 @@ export class SolarApiService implements OnDestroy {
     
   }
 
-  async calculate(panels400WCount?: number): Promise<any> {
+  async calculate(panels400WCount?: number, factorPotencia?: number): Promise<any> {
     console.log(
       'Iniciando cálculo solar - Método calculate en SolarApiService'
     );
@@ -139,6 +139,7 @@ export class SolarApiService implements OnDestroy {
         panelsSupported: this.panelsSupported,
         panelsSelected: this.sharedService.getPanelsSelected(),
         potenciaMaxAsignada: this.potenciaMaxAsignada,
+        factorPotencia: factorPotencia ?? 1,
       };
       console.log('Datos que se envían al endpoint:', datosCalculo);
 
@@ -240,8 +241,8 @@ export class SolarApiService implements OnDestroy {
     }
   }
 
-  async recalculate(panels400WCount: number): Promise<boolean> {
-    return await this.calculate(panels400WCount)
+  async recalculate(panels400WCount: number, factorPotencia: number): Promise<boolean> {
+    return await this.calculate(panels400WCount, factorPotencia)
       .then(() => {
         const resultadosProcesados = this.resultadoService.generarResultados(this._resultados);
         this.sharedService.setYearlyEnergyAckWh(resultadosProcesados.periodoVeinteanalGeneracionFotovoltaica[0].generacionFotovoltaicaKWh);

@@ -14,6 +14,7 @@ import { Paso2Component } from '../paso2/paso2.component';
 import { PdfService } from 'src/app/services/pdf.service';
 import { ParametrosFront } from 'src/app/interfaces/parametros-front';
 import { distinctUntilChanged, Subject, takeUntil, Subscription } from 'rxjs';
+import { EmisionesGeiEvitadasFront } from 'src/app/interfaces/emisiones-gei-evitadas-front';
 @Component({
   selector: 'app-paso3',
   templateUrl: './paso3.component.html',
@@ -60,6 +61,7 @@ export class Paso3Component implements OnInit, OnDestroy {
   potenciaMaxAsignadaW!: number;
   potenciaInstalacionW!: number;
   isCategoriaTarifaT1: boolean = false;
+  periodoVeinteanalEmisionesGEIEvitadasOriginal: EmisionesGeiEvitadasFront[] = [];
   constructor(
     private router: Router,
     private readonly gmailService: GmailService,
@@ -82,7 +84,7 @@ export class Paso3Component implements OnInit, OnDestroy {
   ngOnInit(): void {
     console.log('Iniciando ngOnInit de Paso3Component');
     this.sharedService.isLoading$
-    .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+    .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
     .subscribe({
       next: (value) => {
         console.log('Valor de isLoading actualizado:', value);
@@ -176,6 +178,7 @@ export class Paso3Component implements OnInit, OnDestroy {
   private initializeGeneralData(): void {
     console.log('Iniciando initializeGeneralData');
     try {
+      this.periodoVeinteanalEmisionesGEIEvitadasOriginal = this.resultadosFront.periodoVeinteanalEmisionesGEIEvitadas;
       this.isCategoriaTarifaT1 = this.sharedService.getTarifaContratada().includes('T1-R');
       // Obtener configuraciones anuales o usar un array vacío si no existen
       /* const yearlyAnualConfigurations =
@@ -215,8 +218,7 @@ export class Paso3Component implements OnInit, OnDestroy {
       this.sharedService.calculateAreaPanelsSelected(this.panelesCantidad);
     } catch (error) {
       console.error('Error en initializeGeneralData:', error);
-      // Aquí podrías implementar una lógica adicional para manejar el error,
-      // como mostrar un mensaje al usuario o establecer valores predeterminados seguros
+      
       this.handleInitializationGeneralDataError(error);
     }
     console.log('Finalizado initializeGeneralData');
