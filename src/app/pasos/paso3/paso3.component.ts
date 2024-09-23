@@ -124,7 +124,7 @@ export class Paso3Component implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         })
         .catch((error) => {
-          console.error('Error al calcular:', error);
+          /* console.error('Error al calcular:', error);
           this.sharedService.setIsLoading(false);
           this.snackBar.open(
             'Hubo un problema al calcular los ahorros solares. Inténtelo más tarde.',
@@ -135,7 +135,7 @@ export class Paso3Component implements OnInit, OnDestroy {
               horizontalPosition: 'center',
               verticalPosition: 'top',
             }
-          );
+          ); */
           this.sharedService.resetAll();
         });
     } else {
@@ -230,14 +230,14 @@ export class Paso3Component implements OnInit, OnDestroy {
       // Loguear el error para depuración
       console.error('Error detallado:', error.message);
       // Mostrar un mensaje de error al usuario
-      this.snackBar.open(
+      /* this.snackBar.open(
         'Hubo un problema al inicializar los datos. Por favor, intente nuevamente.',
         'Cerrar',
         {
           duration: 5000,
           panelClass: ['error-snackbar'],
         }
-      );
+      ); */
       this.sharedService.resetAll();
     } else {
       console.error(
@@ -286,14 +286,14 @@ export class Paso3Component implements OnInit, OnDestroy {
     if (error instanceof Error) {
       console.error('Error detallado:', error.message);
       // Mostrar un mensaje de error al usuario
-      this.snackBar.open(
+      /* this.snackBar.open(
         'Hubo un problema al inicializar los datos del panel. Por favor, intente nuevamente.',
         'Cerrar',
         {
           duration: 5000,
           panelClass: ['error-snackbar'],
         }
-      );
+      ); */
     } else {
       console.error(
         'Se produjo un error desconocido durante la inicialización de los datos del panel'
@@ -340,14 +340,14 @@ export class Paso3Component implements OnInit, OnDestroy {
     if (error instanceof Error) {
       console.error('Error detallado:', error.message);
       // Mostrar un mensaje de error al usuario
-      this.snackBar.open(
+      /* this.snackBar.open(
         'Hubo un problema al inicializar los datos financieros. Por favor, intente nuevamente.',
         'Cerrar',
         {
           duration: 5000,
           panelClass: ['error-snackbar'],
         }
-      );
+      ); */
     } else {
       console.error(
         'Se produjo un error desconocido durante la inicialización de los datos financieros'
@@ -416,14 +416,14 @@ export class Paso3Component implements OnInit, OnDestroy {
     if (error instanceof Error) {
       console.error('Error detallado:', error.message);
       // Mostrar un mensaje de error al usuario
-      this.snackBar.open(
+      /* this.snackBar.open(
         'Hubo un problema al inicializar los parámetros del sistema. Por favor, intente nuevamente.',
         'Cerrar',
         {
           duration: 5000,
           panelClass: ['error-snackbar'],
         }
-      );
+      ); */
     } else {
       console.error(
         'Se produjo un error desconocido durante la inicialización de los parámetros del sistema'
