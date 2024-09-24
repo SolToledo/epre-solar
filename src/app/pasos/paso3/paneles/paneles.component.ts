@@ -130,36 +130,27 @@ export class PanelesComponent implements OnInit, OnDestroy {
   updateMaxPanels() {
     console.log('PanelesComponent: updateMaxPanels iniciado');
   
-    // Obtener el valor máximo de potencia permitida y calcular el número máximo de paneles por potencia
-    const maxPotenciaInstalacion = this.sharedService.getPotenciaMaxAsignadaValue();
+    const maxPotenciaInstalacion = this.sharedService.getPotenciaInstalacionW();
     const maxPanelsPerPotentiaMax = Math.floor(maxPotenciaInstalacion / this.sharedService.getPanelCapacityW());
   
-    // Calcular el número máximo de paneles que soporta la superficie seleccionada
-    const maxPanelsArea = this.sharedService.getPanelsSelected();
+    const maxPanelsArea = this.sharedService.getMaxPanelsPerSuperface();
   
-    // Determinar el máximo permitido entre el área y la potencia
-    const maxAllowedPanels = maxPanelsPerPotentiaMax;
-    // const maxAllowedPanels = Math.max(maxPanelsPerPotentiaMax, maxPanelsArea);
+    const maxAllowedPanels = Math.min(maxPanelsPerPotentiaMax, maxPanelsArea);
   
     console.log('PanelesComponent: maxAllowedPanels (menor entre área y potencia):', maxAllowedPanels);
-  
-    // Actualizar el máximo del slider solo si es necesario
     if (this.slider && this.slider.max !== maxAllowedPanels) {
       this.slider.max = maxAllowedPanels;
       console.log('PanelesComponent: Slider max actualizado:', this.slider.max);
     }
   
-    // Solo actualizar el número de paneles seleccionados si ha cambiado el valor máximo permitido
     const newPanelCount = Math.min(maxAllowedPanels, this.panelesSelectCount || maxAllowedPanels);
     if (this.panelesSelectCount !== newPanelCount) {
       this.panelesSelectCount = newPanelCount;
       console.log('PanelesComponent: panelesSelectCount seteado al máximo permitido:', this.panelesSelectCount);
       
-      // Actualizar el número seleccionado de paneles en el servicio compartido
       this.sharedService.setPanelsCountSelected(this.panelesSelectCount);
       console.log('PanelesComponent: panelesSelectCount actualizado en SharedService:', this.panelesSelectCount);
       
-      // Forzar la detección de cambios si se necesita
       
     }
     this.cdr.detectChanges();

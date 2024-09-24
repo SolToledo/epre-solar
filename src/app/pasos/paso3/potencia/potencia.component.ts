@@ -107,7 +107,7 @@ export class PotenciaComponent implements OnInit, OnDestroy {
           },
         });
 
-      
+        this.instalacionPotenciakW = this.sharedService.getPanelCapacityW() * this.sharedService.getPanelsSelected() / 1000;
       this.cdr.markForCheck();
     } catch (error) {
       console.error('Error en ngOnInit de PotenciaComponent:', error);
