@@ -9,7 +9,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class TarifaDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<TarifaDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { message: string }
+    @Inject(MAT_DIALOG_DATA) public data: {
+      potenciaInstalada: number,
+      potenciaMaxAsignada: number,
+      tarifaContratada: string
+    }
   ) {}
 
   onConfirm(): void {

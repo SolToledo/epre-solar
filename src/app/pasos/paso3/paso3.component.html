@@ -1,7 +1,7 @@
 <span class="resultados" *ngIf="!isLoading">
   <div class="content" id="contentToConvert">
     <div class="titulo">
-      <h2 id="titulo">resultados</h2>
+      <h2 id="titulo">RESULTADOS ESTIMADOS</h2>
     </div>
     <div class="info-container" id="info-container">
       <div class="action-buttons">
@@ -142,7 +142,7 @@
             ⦁ Mantenimiento anual = 1 % del costo de la instalación.
           </p>
           <p class="hipotesis">
-            ⦁ Tasa de inflación (USD) =
+            ⦁ Tasa de crecimiento tarifas y de descuento (USD) =
             {{ tasaInflacionUsd * 100 | number : "1.2-2" }} %
           </p>
           <p class="hipotesis">⦁ Tarifas vigentes a {{ fechaActual }}.</p>

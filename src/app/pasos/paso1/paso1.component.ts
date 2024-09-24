@@ -95,7 +95,7 @@ export class Paso1Component implements OnInit, OnDestroy, AfterViewInit {
     if (!this.map) {
       throw new Error('El mapa no está inicializado.');
     }
-    this.map.setZoom(23);
+    this.map.setZoom(19);
     this.marker = new AdvancedMarkerElement({ map: this.map });
   }
 

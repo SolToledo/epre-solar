@@ -23,7 +23,7 @@
       discrete
       [displayWith]="formatLabel"
     >
-      <input matSliderThumb #slider [(ngModel)]="potenciaMaxAsignadakW" />
+      <input matSliderThumb #slider [(ngModel)]="seleccionUsuario" />
     </mat-slider>
     <span class="unidad-component-simple-panel" *ngIf="!isPotenciaMaxDisabled()"
       >{{ potenciaMaxAsignadakW | number:'1.0-0' }} kW</span

@@ -7,7 +7,7 @@ export interface CuadroTarifarioFront {
     | 'T3-BT'
     | 'T3-MT'
     | 'TRA-SD'
-    | 'T3-MT 13,2R';
+    | 'T3-MT 13.2R';
   cargoVariableConsumoArsKWh: number;
   cargoVariableInyeccionArsKWh: number;
   tension: 'baja' | 'media' | 'alta';

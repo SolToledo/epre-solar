@@ -233,7 +233,12 @@ export class Paso2Component implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.router.navigate(['pasos/1']);
+    this.sharedService.setPotenciaMaxAsignadaW(0);
+    this.sharedService.setPanelsCountSelected(0);
+    this.sharedService.setPotenciaInstalacionW(0);
+    this.sharedService.setTarifaContratada('');
+    this.sharedService.setTutorialShown(true);
+    this.router.navigate(['pasos/1'], { replaceUrl: true });
   }
 
   goToPaso3() {

@@ -396,7 +396,7 @@ export class Paso3Component implements OnInit, OnDestroy {
       console.log('Costo de mantenimiento:', this.costoMantenimiento);
 
       this.tasaInflacionUsd = parametros.economicas.tasaInflacionUsd;
-      console.log('Tasa de inflación USD:', this.tasaInflacionUsd);
+      console.log('Tasa de crecimiento tarifas y de descuento USD:', this.tasaInflacionUsd);
 
       this.potenciaContratadaHip =
         this.sharedService.getPotenciaMaxAsignadaValue();
