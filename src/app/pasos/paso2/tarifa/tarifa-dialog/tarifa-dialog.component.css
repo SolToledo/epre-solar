@@ -14,9 +14,37 @@ h2{
   }
 
   
-.botones-modal {
+  .botones-modal {
     margin-top: 20px;
     display: flex;
+    width: 100%;
     justify-content: space-between;
     gap: 10px;
+  }
+  .btn-confirm {
+    background-color: var(--dark-green); /* Color de fondo para el botón de confirmar */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .btn-cancel {
+    background-color: var(--light-background); /* Color de fondo para el botón de cancelar */
+    color: var(--light-green);
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
   }

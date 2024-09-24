@@ -138,7 +138,8 @@ export class PanelesComponent implements OnInit, OnDestroy {
     const maxPanelsArea = this.sharedService.getPanelsSelected();
   
     // Determinar el máximo permitido entre el área y la potencia
-    const maxAllowedPanels = Math.max(maxPanelsPerPotentiaMax, maxPanelsArea);
+    const maxAllowedPanels = maxPanelsPerPotentiaMax;
+    // const maxAllowedPanels = Math.max(maxPanelsPerPotentiaMax, maxPanelsArea);
   
     console.log('PanelesComponent: maxAllowedPanels (menor entre área y potencia):', maxAllowedPanels);
   
@@ -159,8 +160,9 @@ export class PanelesComponent implements OnInit, OnDestroy {
       console.log('PanelesComponent: panelesSelectCount actualizado en SharedService:', this.panelesSelectCount);
       
       // Forzar la detección de cambios si se necesita
-      this.cdr.markForCheck();
+      
     }
+    this.cdr.detectChanges();
   }
   
   

@@ -108,12 +108,19 @@ export class PotenciaComponent implements OnInit, OnDestroy {
         });
 
       
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     } catch (error) {
       console.error('Error en ngOnInit de PotenciaComponent:', error);
     }
 
     console.log('PotenciaComponent: ngOnInit finalizado - Todas las suscripciones configuradas');
+  }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    this.instalacionPotenciakW = this.sharedService.getPanelCapacityW() * this.sharedService.getPanelsSelected() / 1000;
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -136,6 +143,7 @@ export class PotenciaComponent implements OnInit, OnDestroy {
 
     this.actualizarSharedService();
     this.actualizarVista();
+    this.cdr.detectChanges();
   }
 
   private calcularPotencia(): number {

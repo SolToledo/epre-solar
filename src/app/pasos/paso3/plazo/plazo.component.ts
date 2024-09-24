@@ -22,6 +22,8 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
   potenciaInstalacionInitialkW!: number;
   installationCostInitial!: number;
   factorPotencia: number = 1;
+  isOutRecupero: boolean = false;
+  plazoRecuperoTexto: string = '';
   constructor(
     private sharedService: SharedService,
     private cdr: ChangeDetectorRef
@@ -38,7 +40,14 @@ export class PlazoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sharedService.plazoInversion$
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe((newPlazoRecupero) => {
+        if (newPlazoRecupero < 1) {
+          this.isOutRecupero = true;
+          this.plazoRecuperoTexto = 'más de 20 años'; // Asignar mensaje correspondiente
+          return;
+        }
         this.plazoRecupero = newPlazoRecupero;
+        this.plazoRecuperoTexto = this.plazoRecupero.toFixed(0); // Convertir a texto
+        this.isOutRecupero = false;
       });
       
   }

@@ -554,13 +554,13 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       if (index === 0) {
         return {
           year: item.year,
-          diferencia: 0, // Sin degradación en el primer año
+          emisionesTonCO2: 0, // Sin degradación en el primer año
         };
       }
       if (index === 1) {
         return {
           year: item.year,
-          diferencia: this.sharedService.getCarbonOffSetTnAnual(),
+          emisionesTonCO2: this.sharedService.getCarbonOffSetTnAnual(),
         };
       }
       const prevItem = array[index - 1];
@@ -570,14 +570,14 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       return {
         year: item.year,
-        diferencia: emisionesReducidas,
+        emisionesTonCO2: emisionesReducidas,
       };
     });
 
     // Extrae los años y el acumulado para el gráfico
     const categories = seriesData.map((d) => d.year.toString());
 
-    const data = seriesData.map((d) => d.diferencia);
+    const data = seriesData.map((d) => d.emisionesTonCO2);
     // Configura el gráfico
     const options = {
       series: [
@@ -700,7 +700,7 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Aplicar el factor a las emisiones para recalcularlas proporcionalmente
     const seriesData = this.periodoVeinteanalEmisionesGEIEvitadasCopia.map(
-      (item, index) => {
+      (item, index, array) => {
         if (index === 0) {
           return {
             year: item.year,
@@ -713,10 +713,15 @@ export class GraficosComponent implements OnInit, AfterViewInit, OnDestroy {
             emisionesTonCO2: this.sharedService.getCarbonOffSetTnAnual(),
           };
         }
-        return {
-          year: item.year,
-          emisionesTonCO2: item.emisionesTonCO2 * factor, 
-        };
+        const prevItem = array[index - 1];
+      const degradacion = this.sharedService.getDegradacionPanel();
+      const emisionesReducidas = Math.abs(
+        item.emisionesTonCO2 * degradacion - prevItem.emisionesTonCO2 
+      );
+      return {
+        year: item.year,
+        emisionesTonCO2: emisionesReducidas,
+      };
       }
     );
 
