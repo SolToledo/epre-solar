@@ -21,7 +21,7 @@ export class PdfService {
     });
     this.uniqueID = this.generateShortUUID();
     // Encabezado
-    await this.encabezadoGenerate(doc, 'RESULTADOS', true);
+    await this.encabezadoGenerate(doc, 'RESULTADOS ESTIMADOS', true);
     await this.resultadosGenerate(doc);
     this.footerGenerate(doc);
     await this.graficosGenerate(doc);
