@@ -45,8 +45,8 @@ export class PanelesComponent implements OnInit, OnDestroy {
     // Subscripción para obtener la cantidad máxima de paneles permitida por el área
     this.maxPanelsPerAreaSubscription =
       this.sharedService.maxPanelsPerSuperface$.subscribe({
-        next: (value) => {
-          this.maxPanelsArea$ = value;
+        next: (maxPanels) => {
+          this.maxPanelsArea$ = maxPanels;
           // Verificar si la potencia máxima permite colocar todos los paneles
           const maxPotenciaInstalacion =
             this.sharedService.getPotenciaMaxAsignadaValue();
