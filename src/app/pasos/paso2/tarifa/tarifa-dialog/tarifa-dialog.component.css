@@ -22,7 +22,7 @@ h2{
     gap: 10px;
   }
   .btn-confirm {
-    background-color: var(--dark-green); /* Color de fondo para el botón de confirmar */
+    background-color: var(--dark-green); 
     color: white;
     border: none;
     padding: 10px 20px;
@@ -36,7 +36,7 @@ h2{
   }
   
   .btn-cancel {
-    background-color: var(--light-background); /* Color de fondo para el botón de cancelar */
+    background-color: var(--light-background); 
     color: var(--light-green);
     border: none;
     padding: 10px 20px;
